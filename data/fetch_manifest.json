@@ -1,0 +1,29 @@
+{
+  "start_time": "2026-08-31T13:05:18",
+  "mode": "incremental",
+  "failures": [
+    "美股 FIVE Five Below: K线获取失败"
+  ],
+  "reused": [
+    "US CPB 金宝汤: 腾讯备用源行情",
+    "US KMB 金佰利: 腾讯备用源行情",
+    "US DPZ 达美乐披萨: 腾讯备用源行情",
+    "US LKNCY 瑞幸咖啡: 腾讯备用源行情",
+    "US WMT 沃尔玛: 腾讯备用源行情",
+    "US FIVE Five Below: 腾讯备用源行情",
+    "美股财务指标.csv (62行)"
+  ],
+  "sources": [
+    "东方财富 push2 ulist 批量行情",
+    "东方财富 push2his 日K",
+    "腾讯行情/ifzq 日K (备用源)",
+    "东方财富 datacenter 港股F10",
+    "SEC EDGAR companyfacts"
+  ],
+  "fx_hkdcny": 0.8575,
+  "universe_rows": 105,
+  "hk_financial_rows": 530,
+  "us_financial_rows": 62,
+  "end_time": "2026-08-31T13:30:03",
+  "elapsed_sec": 1484.3
+}
