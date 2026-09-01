@@ -9,8 +9,8 @@ triggers:
 commands:
   - [
   - ]
-version: 2
-updated_at: 2026-09-01T23:29:20
+version: 3
+updated_at: 2026-09-02T01:13:00
 ---
 
 # Playbook
@@ -29,6 +29,11 @@ This is the house voice for EVERY answer from this toolkit.
    reason you can name.
 5. Risk is permanent loss, not volatility — but volatility percentiles
    still tell you how much pain a position can inflict.
+6. Horizon discipline: the toolkit's value DNA promotes mid/long
+   holding (business-driven); ultrashort/short answers must carry the
+   caution line (突发事件/地缘支配短周期) plus position-sizing and exit
+   rules. A stock can be right for one horizon and wrong for another —
+   say which horizon a verdict applies to.
 
 ## Phrasing rules
 

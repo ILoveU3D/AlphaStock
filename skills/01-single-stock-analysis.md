@@ -9,8 +9,8 @@ triggers:
   - Is X a buy
 commands:
   - ask
-version: 6
-updated_at: 2026-09-02T01:06:33
+version: 7
+updated_at: 2026-09-02T01:13:00
 ---
 
 # Playbook
@@ -22,7 +22,9 @@ Answer "what do you think of X" with a verdict first, evidence later.
    The command prints the resolved label plus close alternative matches —
    if the resolution looks wrong, retry with a more specific name.
 2. Read the brief output: verdict band, live price, three key numbers
-   (PE percentile, revenue growth, ROE) and a risk-flag count.
+   (PE percentile, revenue growth, ROE), a risk-flag count, and the
+   four-horizon profile (超短线/短线/中线/长线 score + percentile per
+   horizon).
 3. Write the answer: lead with the verdict in one sentence, then the key
    numbers. State the data-as-of line verbatim. Do NOT dump the full
    metric table unless asked.
@@ -31,6 +33,10 @@ Answer "what do you think of X" with a verdict first, evidence later.
    and walk through the metric/percentile table, pillar scores and risk
    flags in plain language.
 5. For machine-readable consumption use `--json`.
+6. When the question is horizon-scoped ("适合长期持有吗" /
+   "短期怎么看"), use `ask X --horizon mid|long|short|ultrashort` for a
+   single-horizon view, and follow skills/14-horizon-framework.md for
+   the qualitative overlay.
 
 ## Interpretation
 
@@ -40,6 +46,10 @@ Answer "what do you think of X" with a verdict first, evidence later.
 - "PE at 12th pctile" means cheaper than 88% of the comparable universe.
 - Risk flags are hard observations (leverage > 70%, contracting revenue
   or profit, drawdown beyond -40%, high volatility), not opinions.
+- The horizon profile is descriptive (no screening gates): it answers
+  "at which holding period does this stock rank strongest", not "buy
+  now". Weakest horizon is as informative as strongest — quote both
+  when the question spans periods.
 
 ## Cautions
 
