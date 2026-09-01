@@ -9,8 +9,8 @@ triggers:
   - Is X a buy
 commands:
   - ask
-version: 4
-updated_at: 2026-09-01T23:16:26
+version: 5
+updated_at: 2026-09-02T01:00:28
 ---
 
 # Playbook
@@ -54,3 +54,4 @@ Answer "what do you think of X" with a verdict first, evidence later.
 - [2026-09-01 01:56] (ai) smoke test note: verified against 20260901 snapshot
 - [2026-09-01 23:16] (ai) metric-table percentiles are oriented goodness-ranks (higher=better, code: percentile(lower_is_better)); skill body example 'PE 12th pctile = cheaper than 88%' is inverted vs code — verified via value pillar = mean(PE/PB/P_S pctiles) on NVDA/PDD/BRK
 - [2026-09-01 23:16] (ai) resolution quirk: '伯克希尔' resolves first to leveraged HK ETF 07777; use full name '伯克希尔哈撒韦B' for BRK.B — BRK also has no SEC fundamentals in snapshot so verdict rests on value pillar only (PE/PB)
+- [2026-09-02 01:00] (ai) peer frames rebuilt from quotes CSVs carry no kline factors; build_peer_set now backfills from the kline cache — before 20260902 ask always showed momentum/safety at the 100th pctile because the target ranked against itself
