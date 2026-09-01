@@ -23,7 +23,8 @@ from .report import resolve_snapshot
 from .resolve import Match
 from .strategy.composite import apply_composite
 from .strategy.factors import PILLARS, add_pillar_scores, kline_metrics
-from .strategy.registry import get_strategy
+from .strategy.horizons import apply_horizon_score
+from .strategy.registry import get_horizon, get_strategy, list_horizons
 
 # (column, label, lower_is_better) — evidence table layout
 EVIDENCE_METRICS = [
@@ -232,7 +233,8 @@ def _target_row(match: Match, quote, fins: dict, klm: dict) -> dict:
 # ---------------------------------------------------------------------------
 # Main entry
 # ---------------------------------------------------------------------------
-def analyze_stock(match: Match, snapshot_dir=None, live: bool = True) -> dict:
+def analyze_stock(match: Match, snapshot_dir=None, live: bool = True,
+                  horizon: str | None = None) -> dict:
     """Full analysis for one resolved stock."""
     snap = None
     if snapshot_dir is not None:
@@ -244,6 +246,7 @@ def analyze_stock(match: Match, snapshot_dir=None, live: bool = True) -> dict:
             snap = None
     result = {"match": match,
               "snapshot": snap.name if snap else None,
+              "horizon": horizon,
               "warnings": []}
 
     quote = live_quote(match) if live else None
@@ -263,6 +266,7 @@ def analyze_stock(match: Match, snapshot_dir=None, live: bool = True) -> dict:
     result["kline"] = klm
 
     pct, scores, composite_pct = {}, {}, None
+    prof = {}
     if snap is not None:
         peers = build_peer_set(snap, match.market)
         peers = peers[peers["code"].astype(str) != match.code]
@@ -291,9 +295,24 @@ def analyze_stock(match: Match, snapshot_dir=None, live: bool = True) -> dict:
                     p = percentile(tgt.get(col), frame[col], lower)
                     if p is not None:
                         pct[col] = p
+            # Four-horizon suitability profile (descriptive: screening
+            # gates do not apply; momentum measured per horizon window)
+            prof = {}
+            for hz in list_horizons():
+                scored_h = apply_horizon_score(frame, hz, min_pillars=1)
+                comp = scored_h.iloc[-1].get("composite_score")
+                if comp is None or pd.isna(comp):
+                    continue
+                prof[hz.id] = {
+                    "score": round(float(comp), 1),
+                    "percentile": round(float(
+                        (scored_h["composite_score"] < comp).mean()
+                        * 100.0), 1),
+                }
     result["percentiles"] = pct
     result["scores"] = scores
     result["composite_percentile"] = composite_pct
+    result["horizon_profile"] = prof if snap is not None else {}
     result["verdict"] = verdict_band(composite_pct)
     result["risk_flags"] = risk_flags(result)
     return result
@@ -313,6 +332,29 @@ def _as_of(result: dict) -> str:
     if ld:
         parts.append(f"kline: {ld}")
     return "; ".join(parts) or "unknown"
+
+
+def _horizon_lines(result: dict) -> list[str]:
+    """The four-horizon (or single-horizon) profile block."""
+    prof = result.get("horizon_profile") or {}
+    if not prof:
+        return []
+    m = result["match"]
+    only = result.get("horizon")
+    names = {h.id: h.name for h in list_horizons()}
+    order = [h.id for h in list_horizons()]
+    entries = [(hid, prof[hid]) for hid in order if hid in prof]
+    if only:
+        entries = [(hid, v) for hid, v in entries if hid == only]
+    weakest = (min(prof, key=lambda k: prof[k]["percentile"])
+               if len(prof) > 1 else None)
+    lines = [f"horizon profile (vs {m.market} gated universe):"]
+    for hid, v in entries:
+        mark = "   <- weakest" if hid == weakest else ""
+        lines.append(f"  {hid:<11}{names.get(hid, ''):<6}"
+                     f"{v['score']:>6.1f}  ({v['percentile']:.0f}th "
+                     f"pctile){mark}")
+    return lines
 
 
 def render_brief(result: dict) -> str:
@@ -336,6 +378,11 @@ def render_brief(result: dict) -> str:
         if v is not None and not pd.isna(v):
             extra = f" ({p[col]:.0f}th pctile)" if col in p else ""
             lines.append(f"{label}: {v:,.1f}{extra}")
+    h = result.get("horizon")
+    if h:
+        hh = get_horizon(h)
+        lines.append(f"horizon lens: {hh.name} ({hh.window})")
+    lines += _horizon_lines(result)
     flags = result["risk_flags"]
     if flags:
         lines.append(f"risk flags: {len(flags)} - " + "; ".join(flags))
@@ -358,6 +405,11 @@ def render_evidence(result: dict) -> str:
     if result.get("composite_percentile") is not None:
         lines.append(f"blended composite: "
                      f"{result['composite_percentile']:.0f}th percentile")
+    h = result.get("horizon")
+    if h:
+        hh = get_horizon(h)
+        lines.append(f"horizon lens: {hh.name} ({hh.window})")
+    lines += _horizon_lines(result)
     lines += ["", f"{'metric':<20}{'value':>12}{'peer pctile':>13}"]
     for col, label, _lower in EVIDENCE_METRICS:
         v = row.get(col)
@@ -379,6 +431,8 @@ def to_json(result: dict) -> str:
         "snapshot": result.get("snapshot"),
         "verdict": result["verdict"],
         "composite_percentile": result.get("composite_percentile"),
+        "horizon": result.get("horizon"),
+        "horizon_profile": result.get("horizon_profile"),
         "scores": result.get("scores"),
         "percentiles": result.get("percentiles"),
         "metrics": {k: v for k, v in _flat_row(result).items()

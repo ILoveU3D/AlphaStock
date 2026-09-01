@@ -322,3 +322,58 @@ class TestScreenCliHorizon:
         with pytest.raises(SystemExit):
             main(["screen", "--data-dir", str(data_dir),
                   "--horizon", "decade"])
+
+
+class TestAskHorizonProfile:
+    def _result(self, tmp_path, monkeypatch, horizon=None):
+        snap = make_varied_snapshot(tmp_path)
+        monkeypatch.setattr(az, "fetch_quotes_by_secids", lambda s: pd.DataFrame(
+            [{"market": "A", "code": "600001", "name": "Alpha Co",
+              "market_id": "1", "price": 10.5, "pct_chg": 1.2,
+              "pe_ttm": 10.0, "pb": 1.1, "market_cap": 5.2e10}]))
+        monkeypatch.setattr(az, "fetch_kline_any", lambda *a, **k: None)
+        return az.analyze_stock(
+            Match("A", "600001", "Alpha Co", 100.0, "1"),
+            snapshot_dir=snap, horizon=horizon)
+
+    def test_profile_has_four_horizons(self, tmp_path, monkeypatch):
+        r = self._result(tmp_path, monkeypatch)
+        assert set(r["horizon_profile"]) == {"ultrashort", "short",
+                                             "mid", "long"}
+        for v in r["horizon_profile"].values():
+            assert 0 <= v["score"] <= 100
+            assert 0 <= v["percentile"] <= 100
+
+    def test_flat_stock_scores_low_on_momentum_horizons(self, tmp_path,
+                                                        monkeypatch):
+        # Alpha's flat kline is the worst of three -> ultrashort (0.70
+        # momentum) must rank it lower than long (momentum weight 0)
+        r = self._result(tmp_path, monkeypatch)
+        assert (r["horizon_profile"]["ultrashort"]["percentile"]
+                < r["horizon_profile"]["long"]["percentile"])
+
+    def test_brief_contains_profile(self, tmp_path, monkeypatch):
+        r = self._result(tmp_path, monkeypatch)
+        text = az.render_brief(r)
+        assert "horizon profile" in text
+        assert "ultrashort" in text and "long" in text
+
+    def test_single_horizon_view(self, tmp_path, monkeypatch):
+        r = self._result(tmp_path, monkeypatch, horizon="mid")
+        assert r["horizon"] == "mid"
+        text = az.render_brief(r)
+        assert "horizon lens" in text and "中线" in text
+        assert "ultrashort" not in text
+
+    def test_json_contains_profile(self, tmp_path, monkeypatch):
+        import json
+        r = self._result(tmp_path, monkeypatch, horizon="short")
+        data = json.loads(az.to_json(r))
+        assert data["horizon"] == "short"
+        assert "mid" in data["horizon_profile"]
+        assert "ultrashort" in data["horizon_profile"]
+
+    def test_evidence_contains_profile(self, tmp_path, monkeypatch):
+        r = self._result(tmp_path, monkeypatch)
+        text = az.render_evidence(r)
+        assert "horizon profile" in text

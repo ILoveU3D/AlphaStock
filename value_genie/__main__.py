@@ -213,7 +213,10 @@ def cmd_ask(args) -> int:
     if len(matches) > 1:
         others = ", ".join(x.label() for x in matches[1:4])
         print(f"resolved: {m.label()} (also matched: {others})")
-    result = az.analyze_stock(m)
+    if args.horizon:
+        result = az.analyze_stock(m, horizon=args.horizon)
+    else:
+        result = az.analyze_stock(m)
     if args.json:
         print(az.to_json(result))
     elif args.evidence:
@@ -376,6 +379,8 @@ def build_parser() -> argparse.ArgumentParser:
                     help="print the full metric/percentile tables")
     pa.add_argument("--json", action="store_true",
                     help="machine-readable JSON output")
+    pa.add_argument("--horizon", default=None, choices=horizon_ids,
+                    help="single-horizon view (default: all four)")
     pa.add_argument("--data-dir", default=None, help="data directory")
     pa.add_argument("--no-check", action="store_true",
                     help="skip freshness gate (for automated pipelines)")
