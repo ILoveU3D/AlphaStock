@@ -33,6 +33,7 @@ class Strategy:
     kind: str = "preset"
     skill_file: str = ""              # "07-master-buffett.md"
     triggers: list = field(default_factory=list)
+    order: int = 99                   # display rank (masters: by fame)
 
 
 _STRATEGIES: dict[str, Strategy] = {}
@@ -55,9 +56,14 @@ def get_strategy(strategy_id: str) -> Strategy:
 
 
 def list_strategies(kind: str = "") -> list[Strategy]:
-    """All registered strategies, sorted by (kind, id)."""
+    """All registered strategies, sorted by (kind, order, id).
+
+    Masters carry an explicit ``order`` (fame rank), so `strategy list`
+    shows Buffett before Munger before Graham, etc. Presets keep their
+    alphabetical order via the default order of 99.
+    """
     items = [s for s in _STRATEGIES.values() if not kind or s.kind == kind]
-    return sorted(items, key=lambda s: (s.kind, s.id))
+    return sorted(items, key=lambda s: (s.kind, s.order, s.id))
 
 
 # ---------------------------------------------------------------------------

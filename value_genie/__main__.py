@@ -334,9 +334,14 @@ def build_parser() -> argparse.ArgumentParser:
     ps.set_defaults(func=cmd_screen)
 
     psl = sub.add_parser("strategy", help="list registered strategies")
+    # accept both bare `strategy` and the documented `strategy list`
+    psl_sub = psl.add_subparsers(dest="cmd")
+    psl_sub.add_parser("list", help="list all strategies (default)")
     psl.set_defaults(func=cmd_strategy_list)
 
     psrc = sub.add_parser("source", help="list registered data sources")
+    psrc_sub = psrc.add_subparsers(dest="cmd")
+    psrc_sub.add_parser("list", help="list all data sources (default)")
     psrc.set_defaults(func=cmd_source_list)
 
     pa = sub.add_parser("ask", help="analyze one stock (verdict first)")

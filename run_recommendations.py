@@ -78,8 +78,9 @@ def main():
     run([PY, "-B", "-m", "value_genie", "strategy", "list"],
         "STRATEGY LIST", timeout=60)
 
-    # 3) Per-master screens
-    masters = ["buffett", "duan", "sheng", "livermore"]
+    # 3) Per-master screens (fame order, matches strategy registry)
+    masters = ["buffett", "munger", "graham",
+               "livermore", "duan", "sheng"]
     all_out = []
     for m in masters:
         rc, out = run(

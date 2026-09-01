@@ -76,7 +76,7 @@ def screen(master: pd.DataFrame, strategy=None, preset=None, weights=None,
     When the resolved strategy has gates (hard filters), they are
     applied before composite scoring, so gated-out stocks never appear.
     """
-    from .strategy.factors import PILLARS, add_pillar_scores
+    from .strategy.factors import PILLARS, add_derived_factors, add_pillar_scores
     from .strategy.registry import get_strategy, evaluate_gates
 
     top_n = top_n or config.DEFAULT_TOP_N
@@ -109,6 +109,10 @@ def screen(master: pd.DataFrame, strategy=None, preset=None, weights=None,
                   f"factors; weights will normalize to available pillars "
                   f"(missing: {', '.join(missing_scores)})",
                   file=sys.stderr)
+
+    # Gate inputs derived from existing columns (e.g. Graham's pe_pb =
+    # pe_ttm * pb) — cheap, so compute before gate evaluation.
+    master = add_derived_factors(master)
 
     if gates:
         master = master[evaluate_gates(master, gates)]

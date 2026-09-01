@@ -40,22 +40,28 @@ you found it.
 | "现在港股有什么机会 / what's attractive now" | market-overview | `python -m value_genie overview --markets HK` |
 | "数据新鲜吗 / is the data current" | data-ops | `python -m value_genie doctor` |
 | "巴菲特会怎么看X" | master-buffett | `python -m value_genie screen --strategy buffett` + `ask X --evidence` |
+| "芒格会怎么看X / 反过来想" | master-munger | `python -m value_genie screen --strategy munger` + `ask X --evidence` |
+| "格雷厄姆会怎么看X / 市场先生" | master-graham | `python -m value_genie screen --strategy graham` + `ask X --evidence` |
+| "利弗莫尔会怎么看X / 趋势" | master-livermore | `python -m value_genie screen --strategy livermore` + `ask X --evidence` |
 | "段永平会怎么选X" | master-duan | `python -m value_genie screen --strategy duan` + `ask X --evidence` |
 | "孙宇晨会怎么看X / 热点股" | master-sheng | `python -m value_genie screen --strategy sheng` + `ask X --evidence` |
-| "利弗莫尔会怎么看X / 趋势" | master-livermore | `python -m value_genie screen --strategy livermore` + `ask X --evidence` |
 | Macro / gold / geopolitics | macro-themes | framework + `overview` / `ask --evidence` |
 | Philosophy / how to value | investment-philosophy | house voice for every answer |
 
 ## Investment masters
 
-Four built-in master strategies each apply a distinct screening lens:
+Six built-in master strategies, ordered by fame (this ordering is
+code-enforced via the strategy registry's `order` field and mirrored
+by the skill filenames 07-12):
 
-| Master | id | Core focus | Key gates |
-|---|---|---|---|
-| Buffett | `buffett` | Cash flow + quality + safety | ROE≥15%, 毛利率≥40%, 负债率≤60%, OCF yield≥5% |
-| Duan Yongping | `duan` | Quality first, calm mind | ROE≥20%, 波动率市场内后50% |
-| Justin Sun | `sheng` | Hot-spot + momentum | ret_60d≥0 (趋势必须向上) |
-| Livermore | `livermore` | Trend + discipline + momentum | ret_60d≥0, 波动率市场内前50% |
+| # | Master | id | Core focus | Key gates |
+|---|---|---|---|---|
+| 1 | Buffett | `buffett` | Franchise + owner earnings (evolved past cigar-butts) | ROE≥15%, 毛利率≥40%, 负债率≤60%, OCF yield≥5% |
+| 2 | Munger | `munger` | Invert + latticework; wonderful at fair price | ROE≥20%, 毛利率≥40%, 负债率≤50% |
+| 3 | Graham | `graham` | Margin of safety as arithmetic | PE×PB≤22.5 (派生列), 负债率≤50%, ROE≥10% |
+| 4 | Livermore | `livermore` | Pivotal points + risk discipline; pure price | ret_60d≥0, 波动率市场内前50%, pos_52w≥60 |
+| 5 | Duan Yongping | `duan` | Business model first, no stop-losses | ROE≥20%, 毛利率≥40%, 波动率市场内后40%（pctl≤60） |
+| 6 | Justin Sun | `sheng` | Attention economics + narrative momentum | ret_60d≥0, 波动率市场内前40%（pctl≥60） |
 
 `python -m value_genie strategy list` shows all strategies (presets +
 masters). `screen --strategy <id>` applies the master's gates and

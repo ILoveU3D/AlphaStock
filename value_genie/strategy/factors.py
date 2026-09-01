@@ -90,6 +90,29 @@ def _interval_return(close: pd.Series, bars: int) -> float | None:
 
 
 # ---------------------------------------------------------------------------
+# Derived factors (gate inputs computed from existing columns)
+# ---------------------------------------------------------------------------
+def add_derived_factors(df: pd.DataFrame) -> pd.DataFrame:
+    """Add gate-ready columns derived from existing snapshot columns.
+
+    Currently derives:
+    - ``pe_pb``: PE(ttm) x PB — Benjamin Graham's defensive-investor
+      rule (PE x PB <= 22.5) needs the product, not the two ratios
+      separately. Only computed when both ratios are positive; loss
+      makers / negative book get NaN, which fails `<=` gates (correct:
+      they are outside Graham's universe by construction).
+    """
+    out = df
+    if ("pe_ttm" in out.columns and "pb" in out.columns
+            and "pe_pb" not in out.columns):
+        out = out.copy()
+        pe = pd.to_numeric(out["pe_ttm"], errors="coerce")
+        pb = pd.to_numeric(out["pb"], errors="coerce")
+        out["pe_pb"] = pe.where(pe > 0) * pb.where(pb > 0)
+    return out
+
+
+# ---------------------------------------------------------------------------
 # Pillar scores
 # ---------------------------------------------------------------------------
 def add_pillar_scores(df: pd.DataFrame) -> pd.DataFrame:
