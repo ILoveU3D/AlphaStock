@@ -3,13 +3,16 @@ id: investment-philosophy
 title: Investment Philosophy (House Voice)
 order: 6
 triggers:
-  - "什么是好公司"
-  - "价值投资"
-  - "how to think about valuation"
-commands: []
-version: 1
-updated_at: 2026-09-01T12:00:00
+  - 什么是好公司
+  - 价值投资
+  - how to think about valuation
+commands:
+  - [
+  - ]
+version: 2
+updated_at: 2026-09-01T23:29:20
 ---
+
 # Playbook
 
 This is the house voice for EVERY answer from this toolkit.
@@ -38,3 +41,4 @@ This is the house voice for EVERY answer from this toolkit.
 
 ## Field Notes
 - [2026-09-02 00:55] (ai) User mandate 2026-09-01: AI must run every command itself, then re-evaluate outputs against policy, geopolitics, market action and sentiment before answering; never just hand the user a script to run; if a run fails, debug it.
+- [2026-09-01 23:29] (ai) User mandate 2026-09-02: for any holding/portfolio question follow skills/13-holding-deep-review.md - business model, moat, culture, earn/lose paths, >=2 master frameworks, policy transmission chains; data is evidence, never the answer

@@ -37,6 +37,7 @@ you found it.
 | "你怎么看待X / what do you think of X" | single-stock-analysis | `python -m value_genie ask X` |
 | "...but why / 证据" | single-stock-analysis | `python -m value_genie ask X --evidence` |
 | "X和Y哪个好 / X vs Y" | compare-stocks | `python -m value_genie compare X Y` |
+| "审视我的持仓 / 深度分析持仓" | holding-deep-review | `ask X --evidence` per holding + `screen --strategy <master>` (business model, moat, culture, earn/lose paths, two master frameworks) |
 | "现在港股有什么机会 / what's attractive now" | market-overview | `python -m value_genie overview --markets HK` |
 | "数据新鲜吗 / is the data current" | data-ops | `python -m value_genie doctor` |
 | "巴菲特会怎么看X" | master-buffett | `python -m value_genie screen --strategy buffett` + `ask X --evidence` |
