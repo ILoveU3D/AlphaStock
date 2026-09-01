@@ -46,6 +46,7 @@ def _register_masters():
         skill_file="07-master-buffett.md",
         triggers=["巴菲特", "buffett", "现金流", "能力圈", "安全边际"],
         order=1,
+        horizon="long",        # buffett: "he can afford to wait years"
     ))
 
     # --- Munger: invert + latticework + wonderful at fair price (order 2) ---
@@ -65,6 +66,7 @@ def _register_masters():
         skill_file="08-master-munger.md",
         triggers=["芒格", "munger", "反过来想", "格栅思维", "坐等投资法"],
         order=2,
+        horizon="long",        # munger: sit-on-your-ass investing
     ))
 
     # --- Graham: margin of safety as arithmetic (order 3) ---
@@ -84,6 +86,7 @@ def _register_masters():
         skill_file="09-master-graham.md",
         triggers=["格雷厄姆", "graham", "市场先生", "烟蒂股", "净流动资产"],
         order=3,
+        horizon="mid",         # graham: statistical repair window ~1-2y
     ))
 
     # --- Livermore: pivotal points + discipline, pure price (order 4) ---
@@ -103,6 +106,7 @@ def _register_masters():
         skill_file="10-master-livermore.md",
         triggers=["利弗莫尔", "livermore", "趋势", "止损", "关键价位"],
         order=4,
+        horizon="short",       # livermore: pivotal points, 10% stops
     ))
 
     # --- Duan: business model first, hold 10 years, no stops (order 5) ---
@@ -122,6 +126,7 @@ def _register_masters():
         skill_file="11-master-duan.md",
         triggers=["段永平", "duan", "平常心", "本分", "不懂不做"],
         order=5,
+        horizon="long",        # duan: "这门生意十年后会是什么样"
     ))
 
     # --- Sun: attention economics + high-beta momentum (order 6) ---
@@ -140,6 +145,7 @@ def _register_masters():
         skill_file="12-master-sheng.md",
         triggers=["孙宇晨", "sheng", "热点", "风口", "注意力经济"],
         order=6,
+        horizon="ultrashort",  # sheng: "快进快出……never a hold"
     ))
 
 

@@ -34,6 +34,7 @@ class Strategy:
     skill_file: str = ""              # "07-master-buffett.md"
     triggers: list = field(default_factory=list)
     order: int = 99                   # display rank (masters: by fame)
+    horizon: str = ""                 # natural holding period (masters)
 
 
 _STRATEGIES: dict[str, Strategy] = {}
@@ -64,6 +65,53 @@ def list_strategies(kind: str = "") -> list[Strategy]:
     """
     items = [s for s in _STRATEGIES.values() if not kind or s.kind == kind]
     return sorted(items, key=lambda s: (s.kind, s.order, s.id))
+
+
+# ---------------------------------------------------------------------------
+# Horizon registry
+# ---------------------------------------------------------------------------
+@dataclass
+class Horizon:
+    """A holding-period lens over the six pillars.
+
+    weights: pillar weights for standalone horizon screening.
+    momentum_cols: return columns defining the horizon's momentum
+    window (the default pillar momentum uses ret_60d/ret_250d).
+    gates: hard filters applied before composite screening
+    (ultrashort/short need the trend proven; mid/long rely on weights).
+    """
+
+    id: str
+    name: str
+    window: str                       # "1-10 交易日"
+    weights: dict                     # {pillar: float}
+    momentum_cols: tuple = ("ret_60d", "ret_250d")
+    gates: list = field(default_factory=list)
+    order: int = 99                   # ultrashort=1 ... long=4
+
+
+_HORIZONS: dict[str, Horizon] = {}
+
+
+def register_horizon(h: Horizon) -> Horizon:
+    """Register a horizon; replaces if id exists."""
+    _HORIZONS[h.id] = h
+    return h
+
+
+def get_horizon(horizon_id: str) -> Horizon:
+    """Fetch a registered horizon; ValueError if unknown."""
+    try:
+        return _HORIZONS[horizon_id]
+    except KeyError:
+        known = ", ".join(sorted(_HORIZONS))
+        raise ValueError(
+            f"unknown horizon {horizon_id!r}; available: {known}") from None
+
+
+def list_horizons() -> list[Horizon]:
+    """All registered horizons, ultrashort -> long."""
+    return sorted(_HORIZONS.values(), key=lambda h: h.order)
 
 
 # ---------------------------------------------------------------------------
