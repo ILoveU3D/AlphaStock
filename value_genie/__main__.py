@@ -78,26 +78,48 @@ def cmd_screen(args) -> int:
     except FileNotFoundError as exc:
         raise SystemExit(str(exc)) from None
 
+    from .strategy.registry import get_horizon, get_strategy
+
     strategy = args.strategy or args.preset
+    explicit_strategy = (bool(args.strategy)
+                         or args.preset != config.DEFAULT_PRESET)
+    horizon_only = bool(args.horizon) and not explicit_strategy \
+        and not weights
+
     try:
-        top = report.screen(master, strategy=strategy if not weights else None,
-                            weights=weights, top_n=args.top, markets=markets)
+        top = report.screen(
+            master,
+            strategy=None if (horizon_only or weights) else strategy,
+            weights=weights or None,
+            horizon=args.horizon,
+            snap_dir=snap_dir,
+            top_n=args.top,
+            markets=markets)
     except ValueError as exc:
         raise SystemExit(str(exc)) from None
     if top.empty:
         raise SystemExit("no stocks passed the strategy; try another one")
 
-    from .strategy.registry import get_strategy
     if weights:
         profile = report.normalize_weights(weights)
         label = "custom"
+    elif horizon_only:
+        profile = report.normalize_weights(
+            get_horizon(args.horizon).weights)
+        label = args.horizon
     else:
         s = get_strategy(strategy)
         profile = report.normalize_weights(s.weights)
-        label = strategy
+        label = (f"{strategy}-{args.horizon}" if args.horizon
+                 else strategy)
+
     print(f"== Value Genie screen ==")
     print(f"snapshot : {snap_dir.name}")
     print(f"strategy : {label} ({report.describe_weights(profile)})")
+    if args.horizon:
+        h = get_horizon(args.horizon)
+        print(f"horizon  : {h.name} ({h.window}), momentum on "
+              f"{'+'.join(h.momentum_cols)}")
     print(f"markets  : {', '.join(markets or config.MARKETS)}")
     print()
     print(report.format_console(top))
@@ -295,9 +317,10 @@ def cmd_skill(args) -> int:
 # ---------------------------------------------------------------------------
 def build_parser() -> argparse.ArgumentParser:
     # Ensure registry is populated before listing strategy choices
-    from .strategy import registry, presets, masters  # noqa: F401
-    from .strategy.registry import list_strategies
+    from .strategy import registry, presets, masters, horizons  # noqa: F401
+    from .strategy.registry import list_horizons, list_strategies
     strategy_ids = [s.id for s in list_strategies()]
+    horizon_ids = [h.id for h in list_horizons()]
 
     parser = argparse.ArgumentParser(
         prog="value_genie", description=__doc__,
@@ -322,6 +345,9 @@ def build_parser() -> argparse.ArgumentParser:
     ps.add_argument("--preset", default=config.DEFAULT_PRESET,
                     help="(legacy alias for --strategy; default: "
                          f"{config.DEFAULT_PRESET})")
+    ps.add_argument("--horizon", default=None, choices=horizon_ids,
+                    help="holding-period lens: ultrashort|short|mid|long "
+                         "(see `horizon list`)")
     ps.add_argument("--set", nargs="*", metavar="PILLAR=W",
                     help="custom weights, e.g. value=0.4 growth=0.2"
                          " (overrides --strategy)")

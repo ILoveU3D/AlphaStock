@@ -6,6 +6,8 @@ import pandas as pd
 import pytest
 
 from value_genie import analyze as az
+from value_genie import report
+from value_genie.__main__ import main
 from value_genie.fetch.pipeline import backfill_kline_factors
 from value_genie.resolve import Match
 from value_genie.strategy.factors import kline_metrics
@@ -228,3 +230,95 @@ class TestPeerBackfill:
                              snapshot_dir=snap)
         mom = r["scores"]["momentum"]
         assert mom is None or mom < 100.0
+
+
+# ---------------------------------------------------------------------------
+# screen --horizon
+# ---------------------------------------------------------------------------
+def _horizon_master() -> pd.DataFrame:
+    """Three A-shares; value scores and short-window momentum are
+    deliberately anti-correlated so weight choices flip the ranking."""
+    rows = []
+    for i, code in enumerate(["600001", "600002", "600003"]):
+        rows.append({
+            "market": "A", "code": code, "name": f"S{i}", "industry": "x",
+            "price": 10.0, "market_cap": 1e11, "pe_ttm": 10.0 + i,
+            "pb": 1.0, "ps": 1.0, "dividend_yield": 1.0,
+            "rev_yoy": 10.0, "profit_yoy": 10.0, "roe": 15.0,
+            "gross_margin": 40.0, "net_margin": 10.0, "debt_ratio": 40.0,
+            "ret_5d": [10.0, 2.0, -3.0][i],
+            "ret_20d": [20.0, 5.0, -8.0][i],
+            "ret_60d": [30.0, 10.0, -5.0][i],
+            "ret_250d": [40.0, 15.0, -10.0][i],
+            "volatility": [50.0, 30.0, 20.0][i],
+            "pos_52w": [80.0, 50.0, 20.0][i],
+            "drawdown_52w": [-5.0, -15.0, -40.0][i],
+            "report_date": "2026-06-30",
+            "value_score": [40.0, 60.0, 50.0][i],
+            "growth_score": [50.0, 50.0, 50.0][i],
+            "quality_score": [50.0, 50.0, 50.0][i],
+            "safety_score": [50.0, 50.0, 50.0][i],
+            "momentum_score": [50.0, 50.0, 50.0][i],
+            "cashflow_score": float("nan"),
+            "data_completeness": 1.0,
+        })
+    return pd.DataFrame(rows)
+
+
+class TestScreenHorizon:
+    def test_horizon_alone_weights_and_gates(self):
+        # ultrashort gates: vol pctl>=50 (rows 0,1) and ret_5d>=0
+        # (rows 0,1) -> 600003 excluded; momentum 0.70 ranks 600001 first
+        top = report.screen(_horizon_master(), horizon="ultrashort",
+                            top_n=5)
+        assert list(top["code"]) == ["600001", "600002"]
+
+    def test_horizon_recomputes_momentum(self):
+        # momentum-only weights on the ultrashort window: order follows
+        # ret_5d/ret_20d (600001 best), NOT the stored momentum_score tie
+        top = report.screen(_horizon_master(), weights={"momentum": 1.0},
+                            horizon="ultrashort", top_n=5)
+        assert list(top["code"])[0] == "600001"
+
+    def test_strategy_plus_horizon_keeps_strategy_weights(self):
+        # buffett has momentum weight 0 -> ranking driven by value_score
+        # (600002 has 60) even though momentum is measured on short window
+        top = report.screen(_horizon_master(), strategy="buffett",
+                            horizon="short", top_n=5)
+        assert list(top["code"])[0] == "600002"
+
+    def test_no_horizon_unchanged(self):
+        top = report.screen(_horizon_master(), top_n=5)
+        assert list(top["code"])[0] == "600002"   # balanced: value-heavy
+
+
+class TestScreenCliHorizon:
+    def _snap(self, tmp_path):
+        snap = tmp_path / "snapshots" / "20260201"
+        snap.mkdir(parents=True)
+        _horizon_master().to_csv(snap / "master.csv", index=False)
+        return tmp_path
+
+    def test_screen_horizon_flag(self, tmp_path):
+        data_dir = self._snap(tmp_path)
+        out_dir = tmp_path / "out"
+        rc = main(["screen", "--data-dir", str(data_dir),
+                   "--out-dir", str(out_dir), "--horizon", "short",
+                   "--top", "5"])
+        assert rc == 0
+        assert (out_dir / "20260201_short.csv").exists()
+
+    def test_screen_strategy_horizon_combo(self, tmp_path):
+        data_dir = self._snap(tmp_path)
+        out_dir = tmp_path / "out"
+        rc = main(["screen", "--data-dir", str(data_dir),
+                   "--out-dir", str(out_dir), "--strategy", "buffett",
+                   "--horizon", "short", "--top", "5"])
+        assert rc == 0
+        assert (out_dir / "20260201_buffett-short.csv").exists()
+
+    def test_screen_rejects_unknown_horizon(self, tmp_path):
+        data_dir = self._snap(tmp_path)
+        with pytest.raises(SystemExit):
+            main(["screen", "--data-dir", str(data_dir),
+                  "--horizon", "decade"])

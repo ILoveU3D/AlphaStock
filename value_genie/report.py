@@ -11,6 +11,7 @@ import pandas as pd
 
 from . import config
 from .strategy.composite import apply_composite, rank_top
+from .strategy.horizons import recompute_momentum_score
 from .strategy.presets import normalize_weights
 
 REPORT_COLUMNS = [
@@ -66,34 +67,46 @@ def load_master(snapshot_dir) -> pd.DataFrame:
 # Screening
 # ---------------------------------------------------------------------------
 def screen(master: pd.DataFrame, strategy=None, preset=None, weights=None,
-           top_n=None, markets=None) -> pd.DataFrame:
-    """Apply a strategy to a master frame; return the ranked top rows.
+           horizon=None, snap_dir=None, top_n=None,
+           markets=None) -> pd.DataFrame:
+    """Apply a strategy/horizon to a master frame; return ranked rows.
 
-    ``strategy`` is a registry id (covers both presets and masters).
-    ``preset`` is a backward-compatible alias for ``strategy``.
-    ``weights`` (custom pillar weights) takes precedence when given.
+    ``strategy`` is a registry id (presets + masters); ``preset`` is a
+    backward-compatible alias. ``weights`` (custom pillar weights) takes
+    precedence when given (gates are then skipped, as before).
 
-    When the resolved strategy has gates (hard filters), they are
-    applied before composite scoring, so gated-out stocks never appear.
+    ``horizon`` adds the holding-period lens:
+    - horizon alone (no strategy/preset/weights): the horizon IS the
+      strategy — its weights and gates are used.
+    - strategy + horizon: the strategy's weights and gates stay; only
+      the momentum measurement window switches to the horizon's.
+    - weights + horizon: custom weights (no gates), horizon window.
+    ``snap_dir`` enables short-window factor backfill from the
+    snapshot's kline cache for old snapshots.
     """
-    from .strategy.factors import PILLARS, add_derived_factors, add_pillar_scores
-    from .strategy.registry import get_strategy, evaluate_gates
+    from pathlib import Path as _Path
+
+    from .strategy.factors import PILLARS, add_derived_factors, \
+        add_pillar_scores
+    from .strategy.registry import evaluate_gates, get_horizon, \
+        get_strategy
 
     top_n = top_n or config.DEFAULT_TOP_N
+    h = get_horizon(horizon) if horizon else None
     if weights:
         profile = normalize_weights(weights)
         gates = []
+    elif h and not (strategy or preset):
+        profile = normalize_weights(h.weights)
+        gates = h.gates or []
     else:
         sid = strategy or preset or config.DEFAULT_PRESET
         s = get_strategy(sid)
         profile = normalize_weights(s.weights)
         gates = s.gates or []
 
-    # Backfill missing pillar score columns from available raw factors.
-    # Old snapshots (pre-six-pillar) lack momentum_score / cashflow_score;
-    # momentum can be recomputed on the fly from ret_60d / ret_250d which
-    # are always present, while cashflow_score stays NaN (weights then
-    # normalize to the remaining pillars inside apply_composite).
+    # Backfill missing pillar score columns from available raw factors
+    # (old snapshots; see git history for the original 4-pillar case).
     missing_scores = [f"{p}_score" for p in PILLARS
                       if f"{p}_score" not in master.columns]
     if missing_scores:
@@ -102,7 +115,8 @@ def screen(master: pd.DataFrame, strategy=None, preset=None, weights=None,
                         and "ret_250d" in master.columns)
         if recomputable:
             print(f"[WARN] backfilling pillar scores from raw factors "
-                  f"(missing: {', '.join(missing_scores)})", file=sys.stderr)
+                  f"(missing: {', '.join(missing_scores)})",
+                  file=sys.stderr)
             master = add_pillar_scores(master)
         else:
             print(f"[WARN] snapshot missing score columns and raw kline "
@@ -110,9 +124,19 @@ def screen(master: pd.DataFrame, strategy=None, preset=None, weights=None,
                   f"(missing: {', '.join(missing_scores)})",
                   file=sys.stderr)
 
-    # Gate inputs derived from existing columns (e.g. Graham's pe_pb =
-    # pe_ttm * pb) — cheap, so compute before gate evaluation.
+    # Old snapshots lack ret_5d/ret_20d/vol_20d; refill from kline cache
+    # when screening on a horizon that needs them.
+    if h is not None and snap_dir is not None:
+        from .fetch.pipeline import backfill_kline_factors
+        master = backfill_kline_factors(master, _Path(snap_dir))
+
+    # Gate inputs derived from existing columns (e.g. Graham's pe_pb).
     master = add_derived_factors(master)
+
+    if h is not None:
+        master = master.copy()
+        master["momentum_score"] = recompute_momentum_score(
+            master, h.momentum_cols)
 
     if gates:
         master = master[evaluate_gates(master, gates)]
