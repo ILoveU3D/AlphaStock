@@ -7,7 +7,7 @@ import pytest
 
 from value_genie import analyze as az
 from value_genie import report
-from value_genie.__main__ import main
+from value_genie.__main__ import build_parser, main
 from value_genie.fetch.pipeline import backfill_kline_factors
 from value_genie.resolve import Match
 from value_genie.strategy.factors import kline_metrics
@@ -377,3 +377,26 @@ class TestAskHorizonProfile:
         r = self._result(tmp_path, monkeypatch)
         text = az.render_evidence(r)
         assert "horizon profile" in text
+
+
+class TestHorizonCli:
+    def test_horizon_list(self, capsys):
+        rc = main(["horizon", "list"])
+        out = capsys.readouterr().out
+        assert rc == 0
+        assert "ultrashort" in out and "超短线" in out
+        assert "long" in out and "长线" in out
+        assert "ret_5d+ret_20d" in out
+
+    def test_strategy_list_shows_horizons(self, capsys):
+        rc = main(["strategy", "list"])
+        out = capsys.readouterr().out
+        assert rc == 0
+        assert "ultrashort" in out and "long" in out
+
+    def test_ask_accepts_horizon_flag(self):
+        p = build_parser()
+        args = p.parse_args(["ask", "X", "--horizon", "mid"])
+        assert args.horizon == "mid"
+        args = p.parse_args(["screen", "--horizon", "short"])
+        assert args.horizon == "short"

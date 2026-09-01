@@ -147,13 +147,33 @@ def cmd_strategy_list(args) -> int:
     if not items:
         print("no strategies registered")
         return 1
-    print(f"{'id':<16} {'kind':<8} {'name':<48} weights")
-    print("-" * 100)
+    print(f"{'id':<16} {'kind':<8} {'horizon':<11} {'name':<44} weights")
+    print("-" * 110)
     for s in items:
         w = " / ".join(f"{p}={s.weights.get(p, 0):.2f}"
                        for p in PILLARS if s.weights.get(p, 0) > 0)
         gates = f"  gates: {len(s.gates)}" if s.gates else ""
-        print(f"{s.id:<16} {s.kind:<8} {s.name:<48} {w}{gates}")
+        hz = s.horizon or "-"
+        print(f"{s.id:<16} {s.kind:<8} {hz:<11} {s.name:<44} {w}{gates}")
+    return 0
+
+
+def cmd_horizon_list(args) -> int:
+    """List all registered horizons."""
+    from .strategy.factors import PILLARS
+    from .strategy.registry import list_horizons
+    items = list_horizons()
+    if not items:
+        print("no horizons registered")
+        return 1
+    print(f"{'id':<12} {'name':<8} {'window':<12} weights")
+    print("-" * 96)
+    for h in items:
+        w = " / ".join(f"{p}={h.weights.get(p, 0):.2f}"
+                       for p in PILLARS if h.weights.get(p, 0) > 0)
+        mom = f"  momentum: {'+'.join(h.momentum_cols)}"
+        gates = f"  gates: {len(h.gates)}" if h.gates else ""
+        print(f"{h.id:<12} {h.name:<8} {h.window:<12} {w}{mom}{gates}")
     return 0
 
 
@@ -367,6 +387,11 @@ def build_parser() -> argparse.ArgumentParser:
     psl_sub = psl.add_subparsers(dest="cmd")
     psl_sub.add_parser("list", help="list all strategies (default)")
     psl.set_defaults(func=cmd_strategy_list)
+
+    phz = sub.add_parser("horizon", help="list registered horizons")
+    phz_sub = phz.add_subparsers(dest="cmd")
+    phz_sub.add_parser("list", help="list all horizons (default)")
+    phz.set_defaults(func=cmd_horizon_list)
 
     psrc = sub.add_parser("source", help="list registered data sources")
     psrc_sub = psrc.add_subparsers(dest="cmd")
