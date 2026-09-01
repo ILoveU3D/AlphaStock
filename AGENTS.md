@@ -1,0 +1,96 @@
+# AGENTS.md — Value Genie for AI Agents
+
+You are operating **Value Genie**, a value-investment research toolkit
+covering A-share, Hong Kong and US equities. This file tells you what
+the toolkit can do, when to use what, and how to leave it smarter than
+you found it.
+
+## What this repo is
+
+- `python -m value_genie fetch` builds a dated snapshot: full-market
+  quotes + financials (Eastmoney / SEC EDGAR), funnel to ~200
+  candidates per market, deep klines + HK F10, scored `master.csv`.
+- Analysis commands read the latest snapshot (and live quotes where
+  noted) — no LLM runs inside the toolkit; you write the prose.
+- `streamlit run app.py` is the human-facing dashboard; agents use the
+  CLI.
+
+## Freshness contract (code-enforced)
+
+- `ask`, `compare`, and `overview` run a **freshness gate** before any
+  output. The gate calls `doctor.run_checks()` internally:
+  - **FAIL** (no snapshot / ancient data) → command prints
+    `[FRESHNESS BLOCKED]` to stderr and exits with code 1. No output.
+  - **WARN** (stale but usable) → command prints `[FRESHNESS WARN]` to
+    stderr and proceeds. State the staleness in your answer.
+  - **PASS** → silent, proceed normally.
+- `--no-check` skips the gate (for automated pipelines / testing only).
+- `ask` always pulls the LIVE quote for price/PE/PB; fundamentals and
+  percentiles come from the latest snapshot.
+- Never present snapshot-day numbers as "current" — cite the
+  data-as-of line the commands print.
+
+## Routing table
+
+| The human asks | Skill | Command |
+|---|---|---|
+| "你怎么看待X / what do you think of X" | single-stock-analysis | `python -m value_genie ask X` |
+| "...but why / 证据" | single-stock-analysis | `python -m value_genie ask X --evidence` |
+| "X和Y哪个好 / X vs Y" | compare-stocks | `python -m value_genie compare X Y` |
+| "现在港股有什么机会 / what's attractive now" | market-overview | `python -m value_genie overview --markets HK` |
+| "数据新鲜吗 / is the data current" | data-ops | `python -m value_genie doctor` |
+| "巴菲特会怎么看X" | master-buffett | `python -m value_genie screen --strategy buffett` + `ask X --evidence` |
+| "段永平会怎么选X" | master-duan | `python -m value_genie screen --strategy duan` + `ask X --evidence` |
+| "孙宇晨会怎么看X / 热点股" | master-sheng | `python -m value_genie screen --strategy sheng` + `ask X --evidence` |
+| "利弗莫尔会怎么看X / 趋势" | master-livermore | `python -m value_genie screen --strategy livermore` + `ask X --evidence` |
+| Macro / gold / geopolitics | macro-themes | framework + `overview` / `ask --evidence` |
+| Philosophy / how to value | investment-philosophy | house voice for every answer |
+
+## Investment masters
+
+Four built-in master strategies each apply a distinct screening lens:
+
+| Master | id | Core focus | Key gates |
+|---|---|---|---|
+| Buffett | `buffett` | Cash flow + quality + safety | ROE≥15%, 毛利率≥40%, 负债率≤60%, OCF yield≥5% |
+| Duan Yongping | `duan` | Quality first, calm mind | ROE≥20%, 波动率市场内后50% |
+| Justin Sun | `sheng` | Hot-spot + momentum | ret_60d≥0 (趋势必须向上) |
+| Livermore | `livermore` | Trend + discipline + momentum | ret_60d≥0, 波动率市场内前50% |
+
+`python -m value_genie strategy list` shows all strategies (presets +
+masters). `screen --strategy <id>` applies the master's gates and
+weights. Each master has a skill playbook in `skills/` — read it
+before answering in that voice.
+
+Playbooks live in `skills/` — read the relevant one before answering.
+`python -m value_genie skill list` indexes them.
+
+## Answer shape (hard rules)
+
+1. Verdict first, one sentence. Then key numbers with units and the
+   data-as-of line. Evidence tables only when asked.
+2. Percentiles are within the stock's own market universe; say "12th
+   percentile of the HK gated universe", not "12th percentile globally".
+3. Report risk flags verbatim as observations; never soften them.
+4. If resolution, data or coverage failed, say exactly what is missing
+   — do not improvise numbers.
+
+## Self-refinement protocol (leave the toolkit smarter)
+
+After answering, if you hit a quirk or found a better procedure
+(resolution trick, source failure workaround, ambiguity in a skill),
+record it in one concrete line:
+
+    python -m value_genie skill note single-stock-analysis "smartbox resolves names missing from snapshot after delistings"
+
+Notes append to the skill's Field Notes; every future agent inherits
+them. Humans periodically promote good notes into the playbook body
+via the Streamlit Skills Manager. Agents never rewrite bodies —
+append-only keeps the system trustworthy.
+
+## Environment
+
+- Python 3.10+; pandas + requests only (`libs/` vendors them if the
+  host lacks them: set PYTHONPATH to include `libs/`).
+- Tests: `python -B -m pytest tests -q` (each file standalone).
+- Data lives in `data/snapshots/YYYYMMDD/`; never edit snapshot files.

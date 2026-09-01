@@ -12,6 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"
 SNAPSHOTS_DIR = DATA_DIR / "snapshots"
 OUTPUT_DIR = BASE_DIR / "output"
+SKILLS_DIR = BASE_DIR / "skills"
 LATEST_POINTER = DATA_DIR / "latest.json"
 
 # ---------------------------------------------------------------------------
@@ -32,10 +33,6 @@ EM_FS = {
     "US": "m:105,m:106,m:107",
 }
 
-# Eastmoney market id -> kline secid prefix.
-EM_MARKET_ID = {"A": ("0", "1"), "HK": ("116",),
-                "US": ("105", "106", "107")}
-
 # ---------------------------------------------------------------------------
 # Eastmoney push2 endpoints
 # ---------------------------------------------------------------------------
@@ -43,13 +40,17 @@ EM_UT_LIST = "bd1d9ddb04089700cf9c27f6f7426281"
 EM_UT_QUOTE = "fa5fd1943c7b386f172d6893dbfba10b"
 EM_UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
          "(KHTML, like Gecko) Chrome/124.0 Safari/537.36")
-# http (not https) is required for push2/push2his, https gets connection-reset.
-EM_PUSH2_HOSTS = ["push2.eastmoney.com", "33.push2.eastmoney.com",
-                  "17.push2.eastmoney.com", "88.push2.eastmoney.com"]
-
-CLIST_URL = "http://push2.eastmoney.com/api/qt/clist/get"
-KLINE_URL = "http://push2his.eastmoney.com/api/qt/stock/kline/get"
-ULIST_URL = "http://push2.eastmoney.com/api/qt/ulist.np/get"
+# push2 mirror hosts, tried in order. The `delay` mirrors serve the same
+# clist/ulist/kline APIs (~15 min lag, irrelevant for daily screening) and
+# are far more tolerant of heavy automated traffic.
+# http (not https) is required for push2, https gets connection-reset.
+EM_PUSH2_HOSTS = ["push2delay.eastmoney.com", "push2.eastmoney.com",
+                  "33.push2.eastmoney.com", "17.push2.eastmoney.com",
+                  "88.push2.eastmoney.com"]
+# Skip a mirror for this many seconds after it fails once.
+EM_HOST_COOLDOWN = 60.0
+# Retries for a single clist page before continuing with partial data.
+QUOTE_PAGE_RETRIES = 3
 
 # clist field map: EM field id -> master column name.
 CLIST_FIELDS = {
@@ -68,6 +69,7 @@ DC_SEC_URL = "https://datacenter.eastmoney.com/securities/api/data/v1/get"
 
 # A-share batch performance report (业绩报表), paged by REPORTDATE.
 A_REPORT_NAME = "RPT_LICO_FN_CPD"
+A_CASHFLOW_REPORT_NAME = "RPT_DMSK_FN_CASHFLOW"
 A_PAGE_SIZE = 500
 # A report is considered "current season" when at least this many rows exist.
 A_MIN_REPORT_ROWS = 1000
@@ -80,31 +82,55 @@ HK_REPORT_NAME = "RPT_HKF10_FN_MAININDICATOR"
 # ---------------------------------------------------------------------------
 SEC_FRAMES_URL = "https://data.sec.gov/api/xbrl/frames/us-gaap/{concept}/{unit}/{frame}.json"
 SEC_TICKERS_URL = "https://www.sec.gov/files/company_tickers.json"
+# SEC requires a declared automated-tool UA with contact info:
+# https://www.sec.gov/os/accessing-edgar-data
 SEC_HEADERS = {
-    "User-Agent": "ValueGenie value-screening research script (github.com/value-genie)",
+    "User-Agent": "ValueGenie Research valuegenie.research@outlook.com",
     "Accept-Encoding": "gzip, deflate",
 }
 
-# (concept, unit, frame) tuples fetched for the whole US market.
-# Annual frames give YoY bases; Q2 frames give latest-quarter YoY.
+# US frames spec: (concept, kind, period_keys).
+# kind "duration" concepts take frames like CY2025 / CY2026Q2;
+# kind "instant" concepts take frames like CY2025Q4I (period-end values).
+# Period keys: cy / cy_prev = latest and prior complete calendar years,
+# q / q_prev = latest reported quarter and its year-ago counterpart.
 US_FRAMES_SPEC = [
-    ("RevenueFromContractWithCustomerExcludingAssessedTax", "USD", "{cy}"),
-    ("RevenueFromContractWithCustomerExcludingAssessedTax", "USD", "{cy_prev}"),
-    ("Revenues", "USD", "{cy}"),
-    ("Revenues", "USD", "{cy_prev}"),
-    ("RevenueFromContractWithCustomerExcludingAssessedTax", "USD", "{q}"),
-    ("RevenueFromContractWithCustomerExcludingAssessedTax", "USD", "{q_prev}"),
-    ("NetIncomeLoss", "USD", "{cy}"),
-    ("NetIncomeLoss", "USD", "{cy_prev}"),
-    ("GrossProfit", "USD", "{cy}"),
-    ("StockholdersEquity", "USD", "{cy}"),
-    ("StockholdersEquity", "USD", "{cy_prev}"),
-    ("Liabilities", "USD", "{cy}"),
-    ("Assets", "USD", "{cy}"),
+    ("RevenueFromContractWithCustomerExcludingAssessedTax", "duration",
+     ["cy", "cy_prev", "q", "q_prev"]),
+    ("Revenues", "duration", ["cy", "cy_prev"]),
+    ("NetIncomeLoss", "duration", ["cy", "cy_prev"]),
+    ("NetCashProvidedByUsedInOperatingActivities", "duration", ["cy"]),
+    ("GrossProfit", "duration", ["cy"]),
+    ("StockholdersEquity", "instant", ["cy", "cy_prev"]),
+    ("Liabilities", "instant", ["cy"]),
+    ("Assets", "instant", ["cy"]),
+    # one-off P&L items (must stay in sync with US_ONEOFF_CONCEPTS below)
+    ("DisposalGroupNotDiscontinuedOperationGainLossOnDisposal", "duration",
+     ["cy", "cy_prev"]),
+    ("GainLossOnDispositionOfAssets1", "duration", ["cy", "cy_prev"]),
+    ("GainLossOnSaleOfBusiness", "duration", ["cy", "cy_prev"]),
 ]
 
-# Tencent fallback endpoints for klines.
-TX_KLINE_URL = "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get"
+# One-off (disposal) gain/loss concepts summed into `oneoff` and stripped
+# from net income so profit_yoy / net_margin / roe reflect RECURRING
+# earnings. Filers tag the same economic event differently: WTM's Bamboo
+# disposal used the first concept, Boyd's FanDuel stake sale the second,
+# most business sales the third. Values are pre-tax, so affected names
+# are scored conservatively (see derive_us_metrics).
+US_ONEOFF_CONCEPTS = (
+    "DisposalGroupNotDiscontinuedOperationGainLossOnDisposal",
+    "GainLossOnDispositionOfAssets1",
+    "GainLossOnSaleOfBusiness",
+)
+
+# Tencent fallback endpoints for klines, tried in order. The legacy
+# fqkline/get path started returning HTTP 501 (2026-08); newfqkline/get and
+# the proxy.finance.qq.com mirror of the old path both still serve data.
+TX_KLINE_URLS = [
+    "https://web.ifzq.gtimg.cn/appstock/app/newfqkline/get",
+    "https://proxy.finance.qq.com/ifzqgtimg/appstock/app/fqkline/get",
+    "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get",
+]
 TX_UA = {"User-Agent": "Mozilla/5.0"}
 US_TX_SUFFIX = {"105": "OQ", "106": "N", "107": "A", "138": "PS"}
 
@@ -118,6 +144,19 @@ MIN_PILLARS = 3                                         # for composite score
 
 # A-share risk-name exclusion substrings.
 A_EXCLUDE_NAME_SUBSTR = ("ST", "退")
+
+# US non-operating product exclusion patterns (regex, case-insensitive):
+# leveraged/inverse ETPs, preferred share classes, sector basket products.
+# Eastmoney mixes English and localized Chinese display names.
+US_EXCLUDE_NAME_PATTERNS = (
+    r"\b\d+(?:\.\d+)?x\b",           # 2x / 3x / 1.5x leverage multipliers
+    r"inverse|leveraged|leverage",
+    r"\bpfd\b|preferred",
+    r"\bseries [a-z]\b",             # "Series D" preferred classes
+    r"\b(?:etf|etn|etrn|uit)\b",
+    r"microsectors",                   # MicroSectors leveraged baskets
+    r"做多|做空|两倍|二倍|三倍|四倍|五倍|优先股",  # localized leveraged/pfd
+)
 
 # ---------------------------------------------------------------------------
 # Funnel (stage-1 pre-ranking, before deep data)
