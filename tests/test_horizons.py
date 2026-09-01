@@ -400,3 +400,12 @@ class TestHorizonCli:
         assert args.horizon == "mid"
         args = p.parse_args(["screen", "--horizon", "short"])
         assert args.horizon == "short"
+
+
+class TestSkillFile:
+    def test_horizon_skill_loads(self):
+        from value_genie import config, skills as sk
+        items, errors = sk.load_skills(config.SKILLS_DIR)
+        ids = {s.id for s in items}
+        assert "horizon-framework" in ids
+        assert not any("14-horizon" in e for e in errors)

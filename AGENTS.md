@@ -47,6 +47,9 @@ you found it.
 | "段永平会怎么选X" | master-duan | `python -m value_genie screen --strategy duan` + `ask X --evidence` |
 | "孙宇晨会怎么看X / 热点股" | master-sheng | `python -m value_genie screen --strategy sheng` + `ask X --evidence` |
 | Macro / gold / geopolitics | macro-themes | framework + `overview` / `ask --evidence` |
+| "短期内最推荐/最被低估的股票" | horizon-framework | `python -m value_genie screen --horizon short` |
+| "超短线/短线有什么机会" | horizon-framework | `python -m value_genie screen --horizon ultrashort`（必须附短炒警示） |
+| "X适合中长期持有吗" | horizon-framework | `python -m value_genie ask X`（四周期剖面）+ 14 号 playbook 质性层 |
 | Philosophy / how to value | investment-philosophy | house voice for every answer |
 
 ## Investment masters
@@ -71,6 +74,18 @@ before answering in that voice.
 
 Playbooks live in `skills/` — read the relevant one before answering.
 `python -m value_genie skill list` indexes them.
+
+## Holding-period dimension
+
+Four horizons (registry-backed, `python -m value_genie horizon list`):
+ultrashort (1-10 交易日, ret_5d+ret_20d), short (10日-3月,
+ret_20d+ret_60d), mid (3月-3年, 估值修复+业绩兑现), long (3年+,
+商业模式+现金流). `screen --horizon H` screens under the horizon;
+`--strategy X --horizon Y` keeps the master's weights/gates and swaps
+only the momentum window; `ask X` prints a four-horizon suitability
+profile. The value DNA of this toolkit: mid/long are the promoted
+horizons; ultrashort/short answers must carry the caution line and
+position-sizing discipline.
 
 ## Answer shape (hard rules)
 
