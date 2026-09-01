@@ -83,3 +83,58 @@ class TestHorizonRegistry:
 
     def test_presets_have_empty_horizon(self):
         assert get_strategy("balanced").horizon == ""
+
+
+from value_genie.strategy.horizons import (apply_horizon_score,
+                                           recompute_momentum_score)
+
+
+class TestMomentumWindow:
+    def _frame(self):
+        # ret_60d/ret_250d deliberately run OPPOSITE to ret_5d/ret_20d,
+        # so a window switch must flip the ranking
+        return pd.DataFrame({
+            "market": ["A"] * 4,
+            "ret_5d": [10.0, 5.0, 0.0, -5.0],
+            "ret_20d": [20.0, 10.0, 0.0, -10.0],
+            "ret_60d": [-5.0, 0.0, 5.0, 10.0],
+            "ret_250d": [-10.0, 0.0, 10.0, 20.0],
+            "value_score": [50.0] * 4, "growth_score": [50.0] * 4,
+            "quality_score": [50.0] * 4, "safety_score": [50.0] * 4,
+            "cashflow_score": [50.0] * 4,
+        })
+
+    def test_ultrashort_ranks_short_window(self):
+        scored = apply_horizon_score(self._frame(),
+                                     get_horizon("ultrashort"),
+                                     min_pillars=1)
+        cs = scored["composite_score"]
+        assert cs.iloc[0] == cs.max()      # best short-window momentum
+        assert cs.iloc[3] == cs.min()
+
+    def test_mid_keeps_default_window(self):
+        scored = apply_horizon_score(self._frame(), get_horizon("mid"),
+                                     min_pillars=1)
+        cs = scored["composite_score"]
+        assert cs.iloc[3] == cs.max()      # best ret_60d/ret_250d wins
+
+    def test_base_weights_override(self):
+        scored = apply_horizon_score(
+            self._frame(), get_horizon("long"),
+            base_weights={"value": 0, "growth": 0, "quality": 1.0,
+                          "safety": 0, "momentum": 0, "cashflow": 0},
+            min_pillars=1)
+        # quality-only weights: all rows equal, momentum window is noise
+        assert scored["composite_score"].nunique() == 1
+
+    def test_missing_cols_fall_back_with_warn(self, capsys):
+        df = self._frame().drop(columns=["ret_5d", "ret_20d"])
+        s = recompute_momentum_score(df, ("ret_5d", "ret_20d"))
+        assert "falling back" in capsys.readouterr().err
+        assert s.notna().all()
+
+    def test_all_cols_missing_gives_nan(self):
+        df = self._frame().drop(columns=["ret_5d", "ret_20d", "ret_60d",
+                                         "ret_250d"])
+        s = recompute_momentum_score(df, ("ret_5d", "ret_20d"))
+        assert s.isna().all()
