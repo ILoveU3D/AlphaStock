@@ -35,12 +35,13 @@ MASTER_COLUMNS = [
     "rev_q_yoy", "roe", "gross_margin", "net_margin", "debt_ratio",
     "ocf_yield", "cash_conversion",
     "pos_52w", "drawdown_52w", "ret_250d", "ret_60d", "volatility",
+    "ret_5d", "ret_20d", "vol_20d",
     "report_date", "value_score", "growth_score", "quality_score",
     "safety_score", "momentum_score", "cashflow_score", "data_completeness",
 ]
 
 KLINE_FEATURES = ("pos_52w", "drawdown_52w", "ret_250d", "ret_60d",
-                  "volatility")
+                  "volatility", "ret_5d", "ret_20d", "vol_20d")
 
 
 # ---------------------------------------------------------------------------
@@ -219,6 +220,40 @@ def fetch_hk_deep(codes, snap_dir: Path, reuse_dirs: list,
 def kline_features(snap_dir: Path, market: str, code: str) -> dict:
     return kline_metrics(load_kline(kline_cache_path(snap_dir, market,
                                                      str(code))))
+
+
+def backfill_kline_factors(df: pd.DataFrame, snap_dir: Path) -> pd.DataFrame:
+    """Add kline-derived factor columns from the snapshot's kline cache.
+
+    Peer frames rebuilt from quotes CSVs lack kline metrics (those live
+    only in master.csv); without this, a target ranks its momentum
+    against itself and always shows the 100th percentile. Rows without
+    a cached kline stay NaN — pandas ranks skip NaN.
+    """
+    import sys
+
+    if df is None or df.empty:
+        return df
+    missing = [c for c in KLINE_FEATURES if c not in df.columns]
+    if not missing:
+        return df
+    out = df.copy()
+    for col in missing:
+        out[col] = float("nan")
+    filled = 0
+    for i, row in out.iterrows():
+        feats = kline_features(snap_dir, row["market"], str(row["code"]))
+        if not feats:
+            continue
+        filled += 1
+        for col in missing:
+            v = feats.get(col)
+            if v is not None:
+                out.at[i, col] = v
+    if filled:
+        print(f"[INFO] backfilled kline factors for {filled} rows "
+              f"from kline cache", file=sys.stderr)
+    return out
 
 
 # ---------------------------------------------------------------------------

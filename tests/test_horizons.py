@@ -1,8 +1,13 @@
 """Tests for the time-horizon dimension (registry, scoring, CLI, ask)."""
 
+from pathlib import Path
+
 import pandas as pd
 import pytest
 
+from value_genie import analyze as az
+from value_genie.fetch.pipeline import backfill_kline_factors
+from value_genie.resolve import Match
 from value_genie.strategy.factors import kline_metrics
 from value_genie.strategy import horizons  # noqa: F401 — registration
 from value_genie.strategy import masters   # noqa: F401
@@ -138,3 +143,88 @@ class TestMomentumWindow:
                                          "ret_250d"])
         s = recompute_momentum_score(df, ("ret_5d", "ret_20d"))
         assert s.isna().all()
+
+
+# ---------------------------------------------------------------------------
+# Varied-slope snapshot: three peers with clearly different kline trends
+# ---------------------------------------------------------------------------
+def _write_kline(snap: Path, market: str, code: str, slope: float):
+    dates = pd.bdate_range(end=pd.Timestamp.today().normalize(),
+                           periods=300)
+    close = pd.Series([100.0 * ((1.0 + slope) ** t) for t in range(300)])
+    pd.DataFrame({
+        "date": dates.strftime("%Y-%m-%d"), "open": close, "close": close,
+        "high": close * 1.01, "low": close * 0.99,
+        "volume": [1e6] * 300, "amount": [1e8] * 300,
+    }).to_csv(snap / "kline" / f"{market}_{code}.csv", index=False)
+
+
+def make_varied_snapshot(tmp_path: Path) -> Path:
+    snap = tmp_path / "20260901"
+    (snap / "kline").mkdir(parents=True)
+    codes = ["600001", "600002", "600003"]
+    quotes = pd.DataFrame({
+        "market": "A", "code": codes,
+        "name": ["Alpha Co", "Beta Co", "Gamma Co"],
+        "market_id": "1", "industry": "food",
+        "price": [10.0, 20.0, 30.0],
+        "pe_ttm": [10.0, 20.0, 30.0], "pb": [1.0, 2.0, 3.0],
+        "market_cap": [5e10, 6e10, 7e10],
+    })
+    quotes.to_csv(snap / "a_quotes.csv", index=False)
+    fins = pd.DataFrame({
+        "code": codes,
+        "report_date": ["2026-06-30"] * 3,
+        "revenue": [1e10, 2e10, 3e10],
+        "rev_yoy": [10.0, 20.0, 5.0],
+        "profit": [1e9, 2e9, 3e9],
+        "profit_yoy": [15.0, 25.0, -5.0],
+        "roe": [15.0, 20.0, 10.0],
+        "gross_margin": [30.0, 40.0, 20.0],
+    })
+    fins.to_csv(snap / "a_financials.csv", index=False)
+    for code, slope in [("600001", 0.000),   # flat: worst momentum
+                        ("600002", 0.002), ("600003", 0.004)]:
+        _write_kline(snap, "A", code, slope)
+    return snap
+
+
+class TestPeerBackfill:
+    def test_build_peer_set_carries_kline_factors(self, tmp_path):
+        snap = make_varied_snapshot(tmp_path)
+        peers = az.build_peer_set(snap, "A")
+        for col in ("ret_5d", "ret_20d", "vol_20d", "ret_60d",
+                    "ret_250d", "volatility"):
+            assert col in peers.columns
+        assert peers["ret_5d"].notna().all()
+
+    def test_missing_kline_stays_nan(self, tmp_path):
+        snap = make_varied_snapshot(tmp_path)
+        (snap / "kline" / "A_600003.csv").unlink()
+        peers = az.build_peer_set(snap, "A")
+        flat = peers["code"].astype(str) == "600003"
+        assert peers.loc[flat, "ret_5d"].isna().all()
+        assert peers.loc[~flat, "ret_5d"].notna().all()
+
+    def test_backfill_unit(self, tmp_path):
+        snap = make_varied_snapshot(tmp_path)
+        df = pd.DataFrame({"market": ["A", "A"],
+                           "code": ["600001", "600002"]})
+        out = backfill_kline_factors(df, snap)
+        assert out["ret_60d"].notna().all()
+        assert "vol_20d" in out.columns
+
+    def test_flat_target_not_100th_pctile_momentum(self, tmp_path,
+                                                   monkeypatch):
+        """Regression: peers now carry kline factors, so a flat target
+        must NOT rank itself 100th percentile on momentum."""
+        snap = make_varied_snapshot(tmp_path)
+        monkeypatch.setattr(az, "fetch_quotes_by_secids", lambda s: pd.DataFrame(
+            [{"market": "A", "code": "600001", "name": "Alpha Co",
+              "market_id": "1", "price": 10.5, "pct_chg": 1.2,
+              "pe_ttm": 10.0, "pb": 1.1, "market_cap": 5.2e10}]))
+        monkeypatch.setattr(az, "fetch_kline_any", lambda *a, **k: None)
+        r = az.analyze_stock(Match("A", "600001", "Alpha Co", 100.0, "1"),
+                             snapshot_dir=snap)
+        mom = r["scores"]["momentum"]
+        assert mom is None or mom < 100.0

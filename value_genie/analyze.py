@@ -16,8 +16,8 @@ from . import config
 from .fetch.fundamentals import fetch_hk_f10
 from .fetch.kline import (fetch_kline_any, kline_cache_path,
                           kline_is_fresh, load_kline)
-from .fetch.pipeline import apply_gates, merge_a_financials, \
-    merge_us_financials
+from .fetch.pipeline import apply_gates, backfill_kline_factors, \
+    merge_a_financials, merge_us_financials
 from .fetch.quotes import fetch_quotes_by_secids
 from .report import resolve_snapshot
 from .resolve import Match
@@ -135,7 +135,8 @@ def build_peer_set(snapshot_dir, market: str) -> pd.DataFrame:
         df = merge_us_financials(quotes, fin)
     else:
         df = quotes
-    return apply_gates(df, market)
+    gated = apply_gates(df, market)
+    return backfill_kline_factors(gated, snap)
 
 
 def live_quote(match: Match):
