@@ -64,15 +64,23 @@ def kline_metrics(kl: pd.DataFrame | None) -> dict:
 
     ret_250 = _interval_return(close, 250)
     ret_60 = _interval_return(close, 60)
+    ret_20 = _interval_return(close, 20)
+    ret_5 = _interval_return(close, 5)
     if ret_250 is not None:
         out["ret_250d"] = ret_250
     if ret_60 is not None:
         out["ret_60d"] = ret_60
+    if ret_20 is not None:
+        out["ret_20d"] = ret_20
+    if ret_5 is not None:
+        out["ret_5d"] = ret_5
 
     if n >= MIN_BARS + 1:
         daily = close.pct_change().dropna()
         if len(daily) >= 20:
             out["volatility"] = float(daily.std()) * math.sqrt(
+                TRADING_DAYS_YEAR) * 100.0
+            out["vol_20d"] = float(daily.tail(20).std()) * math.sqrt(
                 TRADING_DAYS_YEAR) * 100.0
     return out
 
