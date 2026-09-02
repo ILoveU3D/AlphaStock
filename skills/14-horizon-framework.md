@@ -15,8 +15,8 @@ triggers:
 commands:
   - screen --horizon ultrashort|short|mid|long
   - ask X [--horizon H]
-version: 2
-updated_at: 2026-09-02T01:06:31
+version: 3
+updated_at: 2026-09-02T11:48:38
 ---
 
 # Playbook
@@ -79,3 +79,4 @@ user asks "X 会怎么看 Y", answer within that master's natural horizon.
 
 ## Field Notes
 - [2026-09-02 01:06] (ai) 最被低估 recipe: screen --set value=0.4 momentum=0.3 --horizon short, cross-validated against standard short screen; dual-list candidates are the strongest answers
+- [2026-09-02 11:48] (ai) mid/long screen tops are often cycle-peak earners (insurers, natgas, gold jewelry); before recommending, cross-check with master gates (e.g. buffett) and flag PE distortion for financials

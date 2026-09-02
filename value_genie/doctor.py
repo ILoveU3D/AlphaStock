@@ -21,6 +21,18 @@ def _parse_day(name: str):
         return None
 
 
+def _snapshot_hours(snap: Path):
+    """Hours since the snapshot pipeline last wrote (manifest mtime)."""
+    src = snap / "manifest.json"
+    if not src.exists():
+        src = snap
+    try:
+        mtime = datetime.fromtimestamp(src.stat().st_mtime)
+        return (datetime.now() - mtime).total_seconds() / 3600.0
+    except OSError:
+        return None
+
+
 def _kline_lag(path: Path):
     try:
         df = pd.read_csv(path, usecols=["date"])
@@ -41,9 +53,24 @@ def run_checks(data_dir=None) -> list:
     out = [("PASS", "-", f"latest snapshot: {snap.name}")]
     d = _parse_day(snap.name)
     if d:
-        age = (date.today() - d).days
-        status = "PASS" if age <= 1 else ("WARN" if age <= 7 else "FAIL")
-        out.append((status, "-", f"snapshot age: {age} day(s)"))
+        age_days = (date.today() - d).days
+        hours = _snapshot_hours(snap)
+        if hours is not None:
+            # Hour-granularity contract: >24h is stale (WARN), >7d blocks.
+            # Name-based day age stays as the FAIL ceiling.
+            if age_days > 7 or hours > 7 * 24:
+                status = "FAIL"
+            elif hours > 24:
+                status = "WARN"
+            else:
+                status = "PASS"
+            out.append((status, "-",
+                        f"snapshot age: {hours:.1f} hour(s) "
+                        f"({age_days} day(s) by name)"))
+        else:
+            status = ("PASS" if age_days <= 1
+                      else ("WARN" if age_days <= 7 else "FAIL"))
+            out.append((status, "-", f"snapshot age: {age_days} day(s)"))
     for mk in config.MARKETS:
         q = snap / f"{mk.lower()}_quotes.csv"
         if not q.exists():

@@ -19,11 +19,14 @@ you found it.
 
 - `ask`, `compare`, and `overview` run a **freshness gate** before any
   output. The gate calls `doctor.run_checks()` internally:
-  - **FAIL** (no snapshot / ancient data) → command prints
+  - **FAIL** (no snapshot / ancient data >7 days) → command prints
     `[FRESHNESS BLOCKED]` to stderr and exits with code 1. No output.
-  - **WARN** (stale but usable) → command prints `[FRESHNESS WARN]` to
-    stderr and proceeds. State the staleness in your answer.
-  - **PASS** → silent, proceed normally.
+  - **WARN** (snapshot older than 24 hours, but usable) → command
+    prints `[FRESHNESS WARN]` to stderr and proceeds. State the
+    staleness (hours + kline lag) in your answer.
+  - **PASS** (snapshot <24h old) → silent, proceed normally.
+- Snapshot age is measured in **hours** (manifest mtime), not days —
+  a next-day snapshot is already stale; recommend `fetch` when WARN.
 - `--no-check` skips the gate (for automated pipelines / testing only).
 - `ask` always pulls the LIVE quote for price/PE/PB; fundamentals and
   percentiles come from the latest snapshot.

@@ -9,8 +9,8 @@ triggers:
 commands:
   - doctor
   - fetch
-version: 6
-updated_at: 2026-09-01T22:55:42
+version: 8
+updated_at: 2026-09-02T12:15:55
 ---
 
 # Playbook
@@ -45,3 +45,5 @@ known snapshot is older than one trading day:
 - [2026-09-01 20:07] (ai) PDD present in us_quotes.csv but absent from 20260901 master.csv (SEC financials likely failed/skipped at build) - ask resolves it via fallback with live quote, but screen/master strategies cannot see it; re-run fetch or audit SEC coverage for mega-caps after any screen misses a famous name
 - [2026-09-01 22:21] (ai) Sandbox file-sync bug: Edit tool can report success while the change is lost on disk - always re-verify edits with an independent Grep/Read before committing
 - [2026-09-01 22:55] (ai) same-day reuse can serve stale-schema hk_f10.csv/us_financials.csv (no ocf column) from runs before the cashflow feature; buffett screen then returns 0 stocks silently — move stale files to a backup dir outside snapshots/ and re-run fetch to restore ocf_yield coverage (A 100%/US 98%/HK ~61%, interim reports often lack NETCASH_OPERATE)
+- [2026-09-02 11:52] (ai) 2026-09-02 用户指令：新鲜度契约须按小时粒度计量而非按天——隔日快照（如 doctor 显示 1 day）不得视为新鲜/PASS；价格敏感回答前先报告快照的小时年龄（含 US klines 的滞后天数），并主动建议刷新快照
+- [2026-09-02 12:15] (ai) fetch 全量刷新 20260902 实测约 15.5 分钟（930.6s）：US SEC financials 是最慢一步约 10 分钟，其次三市场行情约 5 分钟，K线/F10 从前一日快照复用——按小时更新指令执行前先预估此成本

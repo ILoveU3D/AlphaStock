@@ -121,6 +121,16 @@ class TestDoctor:
         assert status == "FAIL"
         assert "no snapshots" in msg
 
+    def test_stale_snapshot_hours_warns(self, tmp_path):
+        import os
+        import time
+        snap = make_snap(tmp_path)
+        old = time.time() - 30 * 3600  # 30h ago: beyond 24h contract
+        os.utime(snap / "manifest.json", (old, old))
+        checks = dr.run_checks(data_dir=tmp_path)
+        age_checks = [c for c in checks if "hour(s)" in c[2]]
+        assert age_checks and age_checks[0][0] == "WARN"
+
     def test_freshness_gate_healthy_is_pass(self, tmp_path):
         make_snap(tmp_path)
         status, msg = dr.freshness_gate(data_dir=tmp_path)
