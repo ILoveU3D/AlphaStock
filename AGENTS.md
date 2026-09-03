@@ -147,8 +147,10 @@ append-only keeps the system trustworthy.
 
 ## Environment
 
-- Python 3.10+; pandas + requests only (`libs/` vendors them if the
-  host lacks them: set PYTHONPATH to include `libs/`).
+- Python 3.10+; pandas + requests only, installed in the **global
+  Python** (user-maintained). **Never vendor packages into the repo**
+  (no `libs/` folder — user-mandated policy): if dependencies are
+  missing, stop and ask the user to install them.
 - Tests: `python -B -m pytest tests -q` (each file standalone).
 - Data lives in `data/snapshots/YYYYMMDD/`; never edit snapshot files.
   `data/` as a whole is **regenerable run-time state — safe to wipe

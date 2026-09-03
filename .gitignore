@@ -19,8 +19,7 @@ test_results.txt
 # Skill edit backups (skills.py keeps last 10 versions at runtime)
 skills/.backup/
 
-# Local dependency installs / tooling caches (dev machine only)
-libs/
+# Tooling caches
 pipcache/
 wheels/
 tmp/
