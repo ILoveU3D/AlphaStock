@@ -229,7 +229,10 @@ def test_cli_user_set_style(users_dir, capsys):
     assert u.style["horizon"] == "long"
 
     out = capsys.readouterr().out
-    assert "screen --strategy me" in out
+    assert "style set for me" in out
+    assert "gates: roe >= 15" in out
+    assert "horizon: long" in out
+    assert "usable as" not in out   # human coaching removed (AI-only CLI)
 
 
 def test_cli_holding_add_requires_user(users_dir, monkeypatch, capsys):

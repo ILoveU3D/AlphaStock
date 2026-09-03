@@ -5,6 +5,7 @@ among the top-50 and the top-N table — enough for an AI to answer
 "what looks attractive in HK right now".
 """
 
+import json
 from pathlib import Path
 
 import pandas as pd
@@ -76,3 +77,14 @@ def render_overview(ov_data: dict) -> str:
         lines.append(t[cols].to_string(
             index=False, float_format=lambda v: f"{v:.1f}"))
     return "\n".join(lines)
+
+
+def to_json(ov_data: dict) -> str:
+    """`overview --json` payload: digest dict with tables serialized."""
+    markets = {}
+    for mk, d in ov_data["markets"].items():
+        entry = {k: v for k, v in d.items() if k != "top"}
+        entry["top"] = report.df_records(d["top"])
+        markets[mk] = entry
+    return json.dumps({"snapshot": ov_data["snapshot"], "markets": markets},
+                      ensure_ascii=False, indent=2)

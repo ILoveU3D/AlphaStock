@@ -16,6 +16,11 @@ Usage:
     python -m value_genie doctor
     python -m value_genie skill list|show|note|edit ...
 
+Every data command (ask / screen / compare / overview / recommend /
+holding list / doctor) accepts ``--json``: stdout becomes pure JSON
+with full float precision, for AI agents that re-parse output or cite
+exact numbers. Console tables remain the default for prose.
+
 Strategies are weight profiles over six pillars (value / growth /
 quality / safety / momentum / cashflow).  ``--strategy`` covers both
 presets (balanced, garp, ...) and masters (buffett, duan, sheng,
@@ -30,6 +35,7 @@ report. See AGENTS.md for the AI-facing playbook.
 """
 
 import argparse
+import json
 from pathlib import Path
 
 from . import config, report
@@ -71,7 +77,6 @@ def cmd_fetch(args) -> int:
     snap_dir = run_fetch(markets=markets, data_dir=args.data_dir,
                          refresh=args.refresh)
     print(f"\nsnapshot ready: {snap_dir}")
-    print("next: python -m value_genie screen")
     return 0
 
 
@@ -118,6 +123,16 @@ def cmd_screen(args) -> int:
         profile = report.normalize_weights(s.weights)
         label = (f"{strategy}-{args.horizon}" if args.horizon
                  else strategy)
+
+    if args.json:
+        # Pure-JSON stdout contract: no banner, no CSV/Markdown exports.
+        meta = {"snapshot": snap_dir.name, "strategy": label,
+                "weights": {p: round(v, 4) for p, v in profile.items()},
+                "markets": markets or list(config.MARKETS)}
+        if args.horizon:
+            meta["horizon"] = args.horizon
+        print(report.to_json(top, meta))
+        return 0
 
     print(f"== Value Genie screen ==")
     print(f"snapshot : {snap_dir.name}")
@@ -220,9 +235,6 @@ def cmd_user(args) -> int:
         except ValueError as exc:
             raise SystemExit(str(exc)) from None
         print(f"created user {u.id} ({u.name}) -> {usr.user_path(u.id)}")
-        if not args.horizon:
-            print("next: python -m value_genie user set-style "
-                  f"{u.id} --weight value=0.4 ...")
         return 0
 
     if args.user_cmd == "list":
@@ -265,8 +277,6 @@ def cmd_user(args) -> int:
             opened = f" opened {h.opened}" if h.opened else ""
             print(f"  - {h.market}/{h.code} {h.name}: "
                   f"{h.qty:,.0f} 股 @ {h.cost:,.2f} {h.currency}{opened}")
-        print(f"screen with your style: python -m value_genie screen "
-              f"--strategy {u.id}")
         return 0
 
     if args.user_cmd == "set-style":
@@ -294,7 +304,6 @@ def cmd_user(args) -> int:
                 f"{c} {o} {v:g}" for c, o, v in gates))
         if u.style.get("horizon"):
             print(f"horizon: {u.style['horizon']}")
-        print(f"usable as: screen --strategy {u.id} | recommend --user {u.id}")
         return 0
     return 1
 
@@ -379,8 +388,11 @@ def cmd_holding(args) -> int:
         except FileNotFoundError as exc:
             snap = None
         health = rec.holdings_health(user, snap)
-        print(f"== holdings: {user.id} ({user.name}) ==")
-        print(rec.render_holdings(health))
+        if args.json:
+            print(rec.health_to_json(health))
+        else:
+            print(f"== holdings: {user.id} ({user.name}) ==")
+            print(rec.render_holdings(health))
         return 0
     return 1
 
@@ -397,7 +409,10 @@ def cmd_recommend(args) -> int:
             top_n=args.top, markets=markets)
     except FileNotFoundError as exc:
         raise SystemExit(str(exc)) from None
-    print(rec.render_recommend(result))
+    if args.json:
+        print(rec.to_json(result))
+    else:
+        print(rec.render_recommend(result))
     return 0
 
 
@@ -474,6 +489,10 @@ def cmd_compare(args) -> int:
             seen.add((m.market, m.code))
             uniq.append(m)
     df = az.compare_stocks(uniq)
+    if args.json:
+        print(json.dumps({"stocks": report.df_records(df)},
+                         ensure_ascii=False, indent=2))
+        return 0
     print("== Value Genie compare ==")
     print(df.to_string(index=False, float_format=lambda v: f"{v:.1f}"))
     if len(df) >= 2:
@@ -500,14 +519,20 @@ def cmd_overview(args) -> int:
                                   data_dir=args.data_dir)
     except FileNotFoundError as exc:
         raise SystemExit(str(exc)) from None
-    print(ov.render_overview(data))
+    if args.json:
+        print(ov.to_json(data))
+    else:
+        print(ov.render_overview(data))
     return 0
 
 
 def cmd_doctor(args) -> int:
     from . import doctor as dr
     checks = dr.run_checks(args.data_dir)
-    print(dr.render_checks(checks))
+    if args.json:
+        print(dr.to_json(checks))
+    else:
+        print(dr.render_checks(checks))
     return dr.doctor_exit_code(checks)
 
 
@@ -591,6 +616,9 @@ def build_parser() -> argparse.ArgumentParser:
                     help="markets to include (default: all)")
     ps.add_argument("--data-dir", default=None, help="data directory")
     ps.add_argument("--out-dir", default=None, help="output directory")
+    ps.add_argument("--json", action="store_true",
+                    help="pure-JSON stdout (full precision, no file "
+                         "exports)")
     ps.set_defaults(func=cmd_screen)
 
     psl = sub.add_parser("strategy", help="list registered strategies")
@@ -670,6 +698,8 @@ def build_parser() -> argparse.ArgumentParser:
     ph_ls.add_argument("--data-dir", default=None, help="data directory")
     ph_ls.add_argument("--no-check", action="store_true",
                        help="skip freshness gate (for automated pipelines)")
+    ph_ls.add_argument("--json", action="store_true",
+                       help="pure-JSON stdout (full precision)")
     ph.set_defaults(func=cmd_holding)
 
     pr = sub.add_parser(
@@ -687,6 +717,8 @@ def build_parser() -> argparse.ArgumentParser:
     pr.add_argument("--data-dir", default=None, help="data directory")
     pr.add_argument("--no-check", action="store_true",
                     help="skip freshness gate (for automated pipelines)")
+    pr.add_argument("--json", action="store_true",
+                    help="pure-JSON stdout (full precision)")
     pr.set_defaults(func=cmd_recommend)
 
     pa = sub.add_parser("ask", help="analyze one stock (verdict first)")
@@ -707,6 +739,8 @@ def build_parser() -> argparse.ArgumentParser:
     pc.add_argument("--data-dir", default=None, help="data directory")
     pc.add_argument("--no-check", action="store_true",
                     help="skip freshness gate (for automated pipelines)")
+    pc.add_argument("--json", action="store_true",
+                    help="pure-JSON stdout (full precision)")
     pc.set_defaults(func=cmd_compare)
 
     po = sub.add_parser("overview", help="market digest from latest snapshot")
@@ -717,10 +751,14 @@ def build_parser() -> argparse.ArgumentParser:
     po.add_argument("--data-dir", default=None, help="data directory")
     po.add_argument("--no-check", action="store_true",
                     help="skip freshness gate (for automated pipelines)")
+    po.add_argument("--json", action="store_true",
+                    help="pure-JSON stdout (full precision)")
     po.set_defaults(func=cmd_overview)
 
     pdoc = sub.add_parser("doctor", help="check snapshot health/freshness")
     pdoc.add_argument("--data-dir", default=None, help="data directory")
+    pdoc.add_argument("--json", action="store_true",
+                      help="pure-JSON stdout (status + checks + action)")
     pdoc.set_defaults(func=cmd_doctor)
 
     psk = sub.add_parser("skill", help="inspect / evolve AI skills")
