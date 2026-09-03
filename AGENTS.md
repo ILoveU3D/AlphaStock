@@ -29,6 +29,11 @@ you found it.
 - Snapshot age is measured in **hours** (manifest mtime), not days —
   a next-day snapshot is already stale; recommend `fetch` when WARN.
 - `--no-check` skips the gate (for automated pipelines / testing only).
+- **Agent house rule (user-mandated 2026-09-03)**: every conversation
+  starts by checking snapshot age; if older than **1 hour**, run
+  `python -m value_genie fetch` first and answer from the new snapshot.
+  The 24h/7d gates above are CLI defaults — the agent standard is
+  1 hour. Never analyze on stale data without fetching.
 - `ask` always pulls the LIVE quote for price/PE/PB; fundamentals and
   percentiles come from the latest snapshot. `recommend` /
   `holding list` price holdings live with a snapshot-price fallback.
@@ -145,6 +150,7 @@ append-only keeps the system trustworthy.
 - Python 3.10+; pandas + requests only (`libs/` vendors them if the
   host lacks them: set PYTHONPATH to include `libs/`).
 - Tests: `python -B -m pytest tests -q` (each file standalone).
-- Data lives in `data/snapshots/YYYYMMDD/`; never edit snapshot files.
-  Per-user profiles live in `data/users/<id>.json` — modify them only
-  through the `user` / `holding` CLI commands, never by hand.
+- Data lives in `data/snapshots/YYYYMMDD/`; never edit snapshot files
+  (git-ignored, regenerable via `fetch`). Per-user profiles live in
+  `data/users/<id>.json` — **git-tracked durable state**; modify them
+  only through the `user` / `holding` CLI commands, never by hand.

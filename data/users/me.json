@@ -1,0 +1,80 @@
+{
+  "id": "me",
+  "name": "me",
+  "created_at": "2026-09-03T11:38:43",
+  "style": {
+    "weights": {
+      "value": 0.15,
+      "growth": 0.3,
+      "quality": 0.3,
+      "safety": 0.15,
+      "momentum": 0.05,
+      "cashflow": 0.05
+    },
+    "gates": [
+      [
+        "ret_20d",
+        "<=",
+        -3.0
+      ],
+      [
+        "roe",
+        ">=",
+        10.0
+      ],
+      [
+        "rev_yoy",
+        ">=",
+        0.0
+      ]
+    ],
+    "horizon": ""
+  },
+  "holdings": [
+    {
+      "market": "A",
+      "code": "688795",
+      "name": "摩尔线程-U",
+      "qty": 400.0,
+      "cost": 560.0,
+      "currency": "CNY",
+      "opened": ""
+    },
+    {
+      "market": "A",
+      "code": "588060",
+      "name": "上证科创ETF",
+      "qty": 62000.0,
+      "cost": 0.975,
+      "currency": "CNY",
+      "opened": ""
+    },
+    {
+      "market": "US",
+      "code": "NVDA",
+      "name": "英伟达",
+      "qty": 10.0,
+      "cost": 218.29,
+      "currency": "USD",
+      "opened": ""
+    },
+    {
+      "market": "US",
+      "code": "PDD",
+      "name": "拼多多",
+      "qty": 24.0,
+      "cost": 83.8,
+      "currency": "USD",
+      "opened": ""
+    },
+    {
+      "market": "US",
+      "code": "BRK_B",
+      "name": "伯克希尔哈撒韦-B",
+      "qty": 6.0,
+      "cost": 502.03,
+      "currency": "USD",
+      "opened": ""
+    }
+  ]
+}
