@@ -24,8 +24,8 @@ any AI environment can run it without installing anything.
 
 Evolution contract:
 - agents append one-line lessons via append_note() (author "ai");
-- humans rewrite bodies/triggers via save_skill()/edit_skill()
-  (author "human") or the Streamlit Skills Manager;
+- body/trigger rewrites go through save_skill()/edit_skill()
+  (author "human"), invoked via the CLI by the user's AI agent;
 - every overwrite bumps the version, timestamps the file and keeps a
   backup under skills/.backup/<file-stem>/ (last 10 versions).
 """

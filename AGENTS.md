@@ -141,9 +141,10 @@ record it in one concrete line:
     python -m value_genie skill note single-stock-analysis "smartbox resolves names missing from snapshot after delistings"
 
 Notes append to the skill's Field Notes; every future agent inherits
-them. Humans periodically promote good notes into the playbook body
-via the Streamlit Skills Manager. Agents never rewrite bodies —
-append-only keeps the system trustworthy.
+them. Body/trigger rewrites are the only human-supervised channel,
+executed via `skill edit` on the CLI by the user's agent. Agents
+never rewrite bodies on their own initiative — append-only keeps the
+system trustworthy.
 
 ## Environment
 

@@ -11,16 +11,15 @@
 
 内置**持有周期维度**：超短线（1-10 交易日）/ 短线（10日-3月）/ 中线（3月-3年）/ 长线（3年+）四个视角，每个周期有自己的权重、动量测量窗口与门槛——"寒武纪适合中线但不适合长线持有"这类问题第一次有了量化+质性的双层回答框架。
 
-## 两条使用路径
+## 使用模式
 
 ```
-人类路径                        AI 路径
-┌─────────────────┐            ┌──────────────────────────┐
-│ streamlit run    │            │ 读 AGENTS.md → 路由表      │
-│   app.py         │            │ ask / compare / overview  │
-│ 仪表盘 + 技能管理  │            │ screen --horizon / skill  │
-└─────────────────┘            └──────────────────────────┘
+人类 ──对话──▶ AI 助手 ──CLI──▶ Value Genie（本仓库）
+                     ▲                    │
+                     └──── 结构化结果 ◀────┘
 ```
+
+AI 是最先进的交互 UI：没有网页、没有仪表盘、没有人类脚本，只有 AI 可执行的 CLI 与 AI 可读的文档。
 
 ## 快速开始
 
@@ -34,10 +33,7 @@ python -m value_genie screen         # 命令行选股 Top 20（默认 balanced�
 python -m value_genie screen --strategy graham   # 用格雷厄姆策略筛选
 python -m value_genie screen --horizon short     # 短线周期筛选（10日-3月）
 python -m value_genie ask 茶百道      # 单股速览 + 四周期剖面（AI 入口）
-streamlit run app.py                 # 交互式网页
 ```
-
-一键运行测试 + 生成六大大师今日推荐：`python run_recommendations.py`（自动探测 venv）。
 
 运行测试：`python -B -m pytest tests -q`
 
@@ -138,7 +134,7 @@ python -m value_genie skill edit single-stock-analysis --add-trigger "X还能买
 `skills/` 目录收录 14 个剧本（6 通用 + 6 投资大师 + 持仓深度审视 + 时间维度框架），每个带触发词与操作步骤。技能是**活文档**，进化分两层：
 
 - **知识层（AI 自主进化）**：AI 回答问题后学到经验，执行 `skill note <id> "经验内容"` 追加一行笔记，自动版本化落盘，后续**所有** AI 自动继承——每个 agent 都站在前任的肩膀上
-- **策略层（人类把关）**：笔记经 Streamlit Skills Manager 人工晋升进剧本正文；策略权重与门槛只由人修改
+- **策略层（人类把关）**：笔记经 `skill edit` 命令晋升进剧本正文（由用户的 AI 代理执行）；策略权重与门槛只由人修改
 
 这是有意的分权设计：**AI 进化知识，人类进化策略**——append-only 契约保证 agent 永远不会悄悄改自己的脑。每次修改自动版本化，`skills/.backup/` 保留最近 10 版可回滚。
 
@@ -254,9 +250,8 @@ value_genie/
 └── __main__.py      # CLI 入口
 
 skills/              # AI 技能剧本（14 个：6 通用 + 6 大师 + 持仓审视 + 时间维度）
-tests/               # 290 个单元测试（全离线）
-app.py               # Streamlit 网页
-run_recommendations.py  # 一键测试 + 六大师今日推荐
+tests/               # 315 个单元测试（全离线）
+users/               # 用户画像与持仓（git 持久状态）
 AGENTS.md            # AI 助手入口文档
 ```
 
