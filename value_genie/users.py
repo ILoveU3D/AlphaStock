@@ -7,9 +7,10 @@ kind="user" (see ``register_user_strategies``), so ``screen --strategy
 <user_id>``, gate evaluation and horizon combination all work with
 zero extra plumbing.
 
-Files live under ``data/users/<user_id>.json`` and stay
-human-readable; all writes are atomic (tmp file + rename), the same
-contract as skills persistence.
+Files live under ``users/<user_id>.json`` (top-level, git-tracked,
+durable — deliberately NOT under the cleanable ``data/`` tree) and
+stay human-readable; all writes are atomic (tmp file + rename), the
+same contract as skills persistence.
 """
 
 import json

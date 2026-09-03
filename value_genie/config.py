@@ -9,9 +9,9 @@ from pathlib import Path
 # Paths
 # ---------------------------------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = BASE_DIR / "data"
+DATA_DIR = BASE_DIR / "data"      # regenerable run-time state, cleanable
 SNAPSHOTS_DIR = DATA_DIR / "snapshots"
-USERS_DIR = DATA_DIR / "users"
+USERS_DIR = BASE_DIR / "users"    # durable state, never inside cleanable data/
 OUTPUT_DIR = BASE_DIR / "output"
 SKILLS_DIR = BASE_DIR / "skills"
 LATEST_POINTER = DATA_DIR / "latest.json"

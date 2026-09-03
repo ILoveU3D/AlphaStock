@@ -150,7 +150,9 @@ append-only keeps the system trustworthy.
 - Python 3.10+; pandas + requests only (`libs/` vendors them if the
   host lacks them: set PYTHONPATH to include `libs/`).
 - Tests: `python -B -m pytest tests -q` (each file standalone).
-- Data lives in `data/snapshots/YYYYMMDD/`; never edit snapshot files
-  (git-ignored, regenerable via `fetch`). Per-user profiles live in
-  `data/users/<id>.json` — **git-tracked durable state**; modify them
-  only through the `user` / `holding` CLI commands, never by hand.
+- Data lives in `data/snapshots/YYYYMMDD/`; never edit snapshot files.
+  `data/` as a whole is **regenerable run-time state — safe to wipe
+  daily** (user-mandated policy; `fetch` rebuilds it). Per-user
+  profiles live in the top-level git-tracked `users/` dir — modify
+  them only through the `user` / `holding` CLI commands, never by
+  hand.
