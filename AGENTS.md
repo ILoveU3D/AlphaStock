@@ -17,8 +17,9 @@ you found it.
 
 ## Freshness contract (code-enforced)
 
-- `ask`, `compare`, and `overview` run a **freshness gate** before any
-  output. The gate calls `doctor.run_checks()` internally:
+- `ask`, `compare`, `overview`, `recommend`, and `holding list` run a
+  **freshness gate** before any output. The gate calls
+  `doctor.run_checks()` internally:
   - **FAIL** (no snapshot / ancient data >7 days) → command prints
     `[FRESHNESS BLOCKED]` to stderr and exits with code 1. No output.
   - **WARN** (snapshot older than 24 hours, but usable) → command
@@ -29,9 +30,32 @@ you found it.
   a next-day snapshot is already stale; recommend `fetch` when WARN.
 - `--no-check` skips the gate (for automated pipelines / testing only).
 - `ask` always pulls the LIVE quote for price/PE/PB; fundamentals and
-  percentiles come from the latest snapshot.
+  percentiles come from the latest snapshot. `recommend` /
+  `holding list` price holdings live with a snapshot-price fallback.
 - Never present snapshot-day numbers as "current" — cite the
   data-as-of line the commands print.
+
+## Users, styles and holdings (per-user state)
+
+Users live in `data/users/<id>.json` (one file per user; human-
+readable, CLI-maintained, atomic writes). A user carries:
+
+- **style**: six-pillar weights + optional hard gates (registry DSL:
+  `>=`, `<=`, `pctl>=`, `pctl<=`) + preferred horizon. Styles are
+  auto-registered as `kind="user"` strategies at CLI startup, so
+  `screen --strategy <user_id>`, `strategy list` and `--horizon`
+  combination all work unchanged.
+- **holdings**: full positions (market/code in master.csv form, qty,
+  per-share cost, currency, opened date).
+
+Commands: `user create|list|show|set-style` (style can start from an
+existing strategy via `--base buffett`), `holding add|update|remove|
+list` (the stock argument goes through the normal resolve chain — any
+name/code/ticker form works), and `recommend --user <id>` (freshness-
+gated): screens the latest snapshot under the user's style, **excludes
+stocks already held**, and prints a holdings health report (live P&L,
+position weights in CNY via manifest FX — gaps stated, US positions
+excluded when no USD rate, concentration observations verbatim).
 
 ## Routing table
 
@@ -40,7 +64,10 @@ you found it.
 | "你怎么看待X / what do you think of X" | single-stock-analysis | `python -m value_genie ask X` |
 | "...but why / 证据" | single-stock-analysis | `python -m value_genie ask X --evidence` |
 | "X和Y哪个好 / X vs Y" | compare-stocks | `python -m value_genie compare X Y` |
-| "审视我的持仓 / 深度分析持仓" | holding-deep-review | `ask X --evidence` per holding + `screen --strategy <master>` (business model, moat, culture, earn/lose paths, two master frameworks) |
+| "今天给我推荐股票（按我的风格、结合我的持仓）" | user-recommend | `python -m value_genie recommend --user me` |
+| "设置/修改我的投资风格" | user-profile | `python -m value_genie user set-style me --base buffett --weight value=0.3` |
+| "录入/修改/查看我的持仓" | user-portfolio | `python -m value_genie holding add|update|remove|list` |
+| "审视我的持仓 / 深度分析持仓" | holding-deep-review | `holding list` 先看体检，再 `ask X --evidence` per holding + `screen --strategy <master>` (business model, moat, culture, earn/lose paths, two master frameworks) |
 | "现在港股有什么机会 / what's attractive now" | market-overview | `python -m value_genie overview --markets HK` |
 | "数据新鲜吗 / is the data current" | data-ops | `python -m value_genie doctor` |
 | "巴菲特会怎么看X" | master-buffett | `python -m value_genie screen --strategy buffett` + `ask X --evidence` |
@@ -119,3 +146,5 @@ append-only keeps the system trustworthy.
   host lacks them: set PYTHONPATH to include `libs/`).
 - Tests: `python -B -m pytest tests -q` (each file standalone).
 - Data lives in `data/snapshots/YYYYMMDD/`; never edit snapshot files.
+  Per-user profiles live in `data/users/<id>.json` — modify them only
+  through the `user` / `holding` CLI commands, never by hand.

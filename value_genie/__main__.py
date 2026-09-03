@@ -10,6 +10,9 @@ Usage:
     python -m value_genie ask 茶百道 [--evidence] [--json]
     python -m value_genie compare 茶百道 古茗
     python -m value_genie overview [--markets A,HK] [--top 10]
+    python -m value_genie recommend [--user me] [--top 10]
+    python -m value_genie user create|list|show|set-style ...
+    python -m value_genie holding add|update|remove|list ...
     python -m value_genie doctor
     python -m value_genie skill list|show|note|edit ...
 
@@ -20,7 +23,10 @@ livermore).  ``--preset`` is kept as a backward-compatible alias.
 ``screen --set value=0.5 quality=0.5`` overrides with custom weights.
 `ask` resolves any name/code to a stock and prints a brief verdict
 (live quote + snapshot percentiles); `--evidence` adds the full table.
-See AGENTS.md for the AI-facing playbook.
+Users carry a style (registered as kind="user" strategies, so
+`screen --strategy me` works) plus holdings; `recommend` screens under
+the user's style, excludes held stocks and prints a holdings health
+report. See AGENTS.md for the AI-facing playbook.
 """
 
 import argparse
@@ -193,6 +199,209 @@ def cmd_source_list(args) -> int:
 
 
 # ---------------------------------------------------------------------------
+# User / holdings commands
+# ---------------------------------------------------------------------------
+def _load_user_or_exit(user_id):
+    from . import users as usr
+    try:
+        return usr.load_user(user_id), usr
+    except FileNotFoundError as exc:
+        raise SystemExit(str(exc)) from None
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from None
+
+
+def cmd_user(args) -> int:
+    from . import users as usr
+    if args.user_cmd == "create":
+        try:
+            u = usr.create_user(args.user_id, name=args.name,
+                                horizon=args.horizon or "")
+        except ValueError as exc:
+            raise SystemExit(str(exc)) from None
+        print(f"created user {u.id} ({u.name}) -> {usr.user_path(u.id)}")
+        if not args.horizon:
+            print("next: python -m value_genie user set-style "
+                  f"{u.id} --weight value=0.4 ...")
+        return 0
+
+    if args.user_cmd == "list":
+        items = usr.list_users()
+        if not items:
+            print(f"no users under {usr.users_dir()}; "
+                  "create one with `user create <id>`")
+            return 1
+        print(f"{'id':<16} {'name':<16} {'holdings':>9}  style")
+        print("-" * 72)
+        for u in items:
+            style = " / ".join(
+                f"{p}={u.style['weights'][p]:.2f}"
+                for p in u.style.get("weights", {})
+                if u.style["weights"].get(p, 0) > 0) or "-"
+            print(f"{u.id:<16} {u.name[:14]:<16} {len(u.holdings):>9}  "
+                  f"{style}")
+        return 0
+
+    if args.user_cmd == "show":
+        u, _ = _load_user_or_exit(args.user_id)
+        print(f"== user {u.id} ==")
+        print(f"name      : {u.name}")
+        print(f"created   : {u.created_at}")
+        if u.has_style():
+            w = u.style.get("weights") or {}
+            print("style     : " + " / ".join(
+                f"{p}={w[p]:.2f}" for p in w if w.get(p, 0) > 0))
+            gates = u.style.get("gates") or []
+            if gates:
+                print("gates     : " + ", ".join(
+                    f"{c} {o} {v:g}" for c, o, v in gates))
+            if u.style.get("horizon"):
+                print(f"horizon   : {u.style['horizon']}")
+        else:
+            print("style     : (unset; screen/recommend fall back to "
+                  f"{config.DEFAULT_PRESET})")
+        print(f"holdings  : {len(u.holdings)}")
+        for h in u.holdings:
+            opened = f" opened {h.opened}" if h.opened else ""
+            print(f"  - {h.market}/{h.code} {h.name}: "
+                  f"{h.qty:,.0f} 股 @ {h.cost:,.2f} {h.currency}{opened}")
+        print(f"screen with your style: python -m value_genie screen "
+              f"--strategy {u.id}")
+        return 0
+
+    if args.user_cmd == "set-style":
+        weights = _parse_weights(args.weight) if args.weight else None
+        gates = None
+        if args.gate:
+            try:
+                gates = [usr.parse_gate(g) for g in args.gate]
+            except ValueError as exc:
+                raise SystemExit(str(exc)) from None
+        horizon = "" if getattr(args, "clear_horizon", False) else args.horizon
+        try:
+            u = usr.set_style(args.user_id, weights=weights, gates=gates,
+                              clear_gates=args.clear_gates,
+                              horizon=horizon, base=args.base)
+        except (FileNotFoundError, ValueError) as exc:
+            raise SystemExit(str(exc)) from None
+        w = u.style.get("weights") or {}
+        print(f"style set for {u.id}: "
+              + (" / ".join(f"{p}={w[p]:.2f}"
+                            for p in w if w.get(p, 0) > 0) or "(no weights)"))
+        gates = u.style.get("gates") or []
+        if gates:
+            print("gates: " + ", ".join(
+                f"{c} {o} {v:g}" for c, o, v in gates))
+        if u.style.get("horizon"):
+            print(f"horizon: {u.style['horizon']}")
+        print(f"usable as: screen --strategy {u.id} | recommend --user {u.id}")
+        return 0
+    return 1
+
+
+def _resolve_stock_or_exit(query):
+    from .resolve import resolve as resolve_stock
+    try:
+        snap = report.resolve_snapshot()
+    except FileNotFoundError:
+        snap = None
+    matches = resolve_stock(query, snapshot_dir=snap)
+    if not matches:
+        raise SystemExit(
+            f"no match for {query!r}; try a full name or code "
+            f"(e.g. 600519 / 00116 / AAPL)")
+    m = matches[0]
+    if len(matches) > 1:
+        others = ", ".join(x.label() for x in matches[1:4])
+        print(f"resolved: {m.label()} (also matched: {others})")
+    return m
+
+
+def cmd_holding(args) -> int:
+    from . import users as usr
+    if args.holding_cmd == "add":
+        try:
+            user = usr.load_user(args.user_id)
+        except FileNotFoundError:
+            try:
+                user = usr.create_user(args.user_id, name=args.user_id)
+            except ValueError as exc:
+                raise SystemExit(str(exc)) from None
+            print(f"created user {user.id} ({usr.user_path(user.id)})")
+        except ValueError as exc:
+            raise SystemExit(str(exc)) from None
+        m = _resolve_stock_or_exit(args.stock)
+        try:
+            h = usr.add_holding(user, m, qty=args.qty, cost=args.cost,
+                                opened=args.opened or "")
+        except ValueError as exc:
+            raise SystemExit(str(exc)) from None
+        usr.save_user(user)
+        print(f"added {h.market}/{h.code} {h.name}: {h.qty:,.0f} 股 @ "
+              f"{h.cost:,.2f} {h.currency}"
+              + (f" (opened {h.opened})" if h.opened else ""))
+        return 0
+
+    if args.holding_cmd == "update":
+        user, _ = _load_user_or_exit(args.user_id)
+        m = _resolve_stock_or_exit(args.stock)
+        try:
+            h = usr.update_holding(user, m.market, m.code, qty=args.qty,
+                                   cost=args.cost, opened=args.opened,
+                                   name=args.name)
+        except ValueError as exc:
+            raise SystemExit(str(exc)) from None
+        usr.save_user(user)
+        print(f"updated {h.market}/{h.code} {h.name}: {h.qty:,.0f} 股 @ "
+              f"{h.cost:,.2f} {h.currency}"
+              + (f" (opened {h.opened})" if h.opened else ""))
+        return 0
+
+    if args.holding_cmd == "remove":
+        user, _ = _load_user_or_exit(args.user_id)
+        m = _resolve_stock_or_exit(args.stock)
+        try:
+            h = usr.remove_holding(user, m.market, m.code)
+        except ValueError as exc:
+            raise SystemExit(str(exc)) from None
+        usr.save_user(user)
+        print(f"removed {h.market}/{h.code} {h.name} "
+              f"(was {h.qty:,.0f} 股 @ {h.cost:,.2f})")
+        return 0
+
+    if args.holding_cmd == "list":
+        if not _check_freshness(args):
+            return 1
+        user, _ = _load_user_or_exit(args.user_id)
+        from . import recommend as rec
+        try:
+            snap = report.resolve_snapshot(args.data_dir, args.snapshot)
+        except FileNotFoundError as exc:
+            snap = None
+        health = rec.holdings_health(user, snap)
+        print(f"== holdings: {user.id} ({user.name}) ==")
+        print(rec.render_holdings(health))
+        return 0
+    return 1
+
+
+def cmd_recommend(args) -> int:
+    if not _check_freshness(args):
+        return 1
+    from . import recommend as rec
+    markets = _parse_markets(args.markets)
+    try:
+        result = rec.build_recommendation(
+            args.user, data_dir=args.data_dir, snapshot=args.snapshot,
+            strategy=args.strategy, horizon=args.horizon,
+            top_n=args.top, markets=markets)
+    except FileNotFoundError as exc:
+        raise SystemExit(str(exc)) from None
+    print(rec.render_recommend(result))
+    return 0
+
+
+# ---------------------------------------------------------------------------
 # AI-toolkit commands (ask / compare / overview / doctor / skill)
 # ---------------------------------------------------------------------------
 def _check_freshness(args) -> bool:
@@ -342,6 +551,8 @@ def build_parser() -> argparse.ArgumentParser:
     # Ensure registry is populated before listing strategy choices
     from .strategy import registry, presets, masters, horizons  # noqa: F401
     from .strategy.registry import list_horizons, list_strategies
+    from . import users as _users
+    _users.register_user_strategies()  # kind="user" strategies from files
     strategy_ids = [s.id for s in list_strategies()]
     horizon_ids = [h.id for h in list_horizons()]
 
@@ -397,6 +608,86 @@ def build_parser() -> argparse.ArgumentParser:
     psrc_sub = psrc.add_subparsers(dest="cmd")
     psrc_sub.add_parser("list", help="list all data sources (default)")
     psrc.set_defaults(func=cmd_source_list)
+
+    # -- user / holdings / recommend -------------------------------
+    pu = sub.add_parser("user", help="manage user profiles (style)")
+    pu_sub = pu.add_subparsers(dest="user_cmd", required=True)
+    pu_create = pu_sub.add_parser("create", help="create a user")
+    pu_create.add_argument("user_id")
+    pu_create.add_argument("--name", default="", help="display name")
+    pu_create.add_argument("--horizon", default=None, choices=horizon_ids,
+                           help="preferred holding period")
+    pu_sub.add_parser("list", help="list all users")
+    pu_show = pu_sub.add_parser("show", help="show one user's profile")
+    pu_show.add_argument("user_id")
+    pu_style = pu_sub.add_parser("set-style", help="set the user's style")
+    pu_style.add_argument("user_id")
+    pu_style.add_argument("--weight", action="append", default=None,
+                          metavar="PILLAR=W",
+                          help="pillar weight, e.g. value=0.4 (repeatable; "
+                               "overrides individual pillars, then "
+                               "renormalizes)")
+    pu_style.add_argument("--gate", action="append", default=None,
+                          metavar="COL>=V",
+                          help="hard gate, e.g. roe>=15 debt_ratio<=60 "
+                               "volatility pctl>=60 (repeatable; replaces)")
+    pu_style.add_argument("--clear-gates", action="store_true",
+                          help="drop all gates")
+    pu_style.add_argument("--base", default=None, metavar="STRATEGY",
+                          help="start from an existing strategy's "
+                               "weights/gates/horizon, then apply overrides")
+    pu_style.add_argument("--horizon", default=None, choices=horizon_ids,
+                          help="preferred holding period")
+    pu_style.add_argument("--clear-horizon", action="store_true",
+                          help="clear the preferred horizon (flexible)")
+    pu.set_defaults(func=cmd_user)
+
+    ph = sub.add_parser("holding", help="manage holdings for a user")
+    ph_sub = ph.add_subparsers(dest="holding_cmd", required=True)
+    ph_add = ph_sub.add_parser("add", help="add a position")
+    ph_add.add_argument("user_id")
+    ph_add.add_argument("stock", help="stock name/code/ticker to resolve")
+    ph_add.add_argument("--qty", type=float, required=True)
+    ph_add.add_argument("--cost", type=float, required=True,
+                        help="per-share cost")
+    ph_add.add_argument("--opened", default=None, metavar="YYYY-MM-DD")
+    ph_upd = ph_sub.add_parser("update", help="update a position")
+    ph_upd.add_argument("user_id")
+    ph_upd.add_argument("stock")
+    ph_upd.add_argument("--qty", type=float, default=None)
+    ph_upd.add_argument("--cost", type=float, default=None)
+    ph_upd.add_argument("--name", default=None,
+                        help="display name override (e.g. ETFs not in "
+                             "snapshot name search)")
+    ph_upd.add_argument("--opened", default=None, metavar="YYYY-MM-DD",
+                        help="set/clear the opened date ('' clears)")
+    ph_rm = ph_sub.add_parser("remove", help="remove a position")
+    ph_rm.add_argument("user_id")
+    ph_rm.add_argument("stock")
+    ph_ls = ph_sub.add_parser("list", help="holdings with live P&L")
+    ph_ls.add_argument("user_id", nargs="?", default="me")
+    ph_ls.add_argument("--snapshot", default=None, metavar="YYYYMMDD")
+    ph_ls.add_argument("--data-dir", default=None, help="data directory")
+    ph_ls.add_argument("--no-check", action="store_true",
+                       help="skip freshness gate (for automated pipelines)")
+    ph.set_defaults(func=cmd_holding)
+
+    pr = sub.add_parser(
+        "recommend", help="daily picks under user style + holdings health")
+    pr.add_argument("--user", default="me", help="user id (default: me)")
+    pr.add_argument("--strategy", default=None, choices=strategy_ids,
+                    help="override the user's style (default: user style)")
+    pr.add_argument("--horizon", default=None, choices=horizon_ids,
+                    help="override the user's preferred horizon")
+    pr.add_argument("--top", type=int, default=10,
+                    help="candidate count (default: 10)")
+    pr.add_argument("--markets", default=None, metavar="A,HK,US",
+                    help="markets to include (default: all)")
+    pr.add_argument("--snapshot", default=None, metavar="YYYYMMDD")
+    pr.add_argument("--data-dir", default=None, help="data directory")
+    pr.add_argument("--no-check", action="store_true",
+                    help="skip freshness gate (for automated pipelines)")
+    pr.set_defaults(func=cmd_recommend)
 
     pa = sub.add_parser("ask", help="analyze one stock (verdict first)")
     pa.add_argument("query", help="stock name, code or ticker (Chinese ok)")

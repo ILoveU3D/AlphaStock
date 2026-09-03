@@ -467,3 +467,18 @@ def fetch_fx_hkdcny() -> float:
             return p
     print("    [FX] HKD/CNY not fetched, using fallback 0.92")
     return 0.92
+
+
+def fetch_fx_usdcny() -> float:
+    """USD/CNY rate via Eastmoney ulist (USDCNH spot); ~7.2 fallback."""
+    d = em_push2_get("/api/qt/ulist.np/get", params={
+        "secids": "133.USDCNH,119.USDCNY",
+        "fields": "f2,f12,f13", "ut": config.EM_UT_QUOTE,
+        "fltt": 2, "invt": 2, "pn": 1, "np": 1,
+    })
+    for r in ((d or {}).get("data") or {}).get("diff") or []:
+        p = num(r.get("f2"))
+        if p and 5.0 < p < 9.0:
+            return p
+    print("    [FX] USD/CNY not fetched, using fallback 7.2")
+    return 7.2

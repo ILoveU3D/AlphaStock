@@ -9,8 +9,8 @@ triggers:
   - Is X a buy
 commands:
   - ask
-version: 7
-updated_at: 2026-09-02T01:13:00
+version: 8
+updated_at: 2026-09-03T17:44:51
 ---
 
 # Playbook
@@ -66,3 +66,4 @@ Answer "what do you think of X" with a verdict first, evidence later.
 - [2026-09-01 23:16] (ai) resolution quirk: '伯克希尔' resolves first to leveraged HK ETF 07777; use full name '伯克希尔哈撒韦B' for BRK.B — BRK also has no SEC fundamentals in snapshot so verdict rests on value pillar only (PE/PB)
 - [2026-09-02 01:00] (ai) peer frames rebuilt from quotes CSVs carry no kline factors; build_peer_set now backfills from the kline cache — before 20260902 ask always showed momentum/safety at the 100th pctile because the target ranked against itself
 - [2026-09-02 01:06] (ai) HK peer frames carry F10 only for funnel candidates: ask growth/quality percentiles for HK names are self-ranked (100.0/50.0 signatures) - trust screen-internal comparisons and absolute PE/PB/dividend_yield instead
+- [2026-09-03 17:44] (ai) US ticker code forms accept dot/underscore class suffixes (BRK.B -> Eastmoney BRK_B); snapshot us_quotes enrichment fills name+market_id even when smartbox returns non-JSON

@@ -45,13 +45,15 @@ def parse_code_form(query: str):
     m = re.fullmatch(r"(?:sh|sz|bj)?(\d{6})(?:\.(?:sh|sz|bj))?", q)
     if m:
         code = m.group(1)
-        return ("A", code, "1" if code[0] == "6" else "0")
+        # 6xxxxx stocks + 5xxxxx funds (ETF) are Shanghai; the rest SZ/BJ
+        return ("A", code, "1" if code[0] in "56" else "0")
     m = re.fullmatch(r"(?:hk)?(\d{1,5})(?:\.hk)?", q)
     if m:
         return ("HK", m.group(1).zfill(5), "116")
-    m = re.fullmatch(r"(?:us)?([a-z]{1,6})", q)
+    # US tickers may carry class suffixes (BRK.B -> Eastmoney BRK_B)
+    m = re.fullmatch(r"(?:us)?([a-z][a-z0-9._]{0,9})", q)
     if m:
-        return ("US", query.strip().upper(), "")
+        return ("US", m.group(1).replace(".", "_").upper(), "")
     return None
 
 
@@ -147,4 +149,13 @@ def resolve(query: str, snapshot_dir=None, live: bool = True) -> list:
                 m.name = str(hit.iloc[0]["name"])
                 if not m.market_id and "market_id" in hit.columns:
                     m.market_id = str(hit.iloc[0].get("market_id") or "")
+        # not in snapshot (ETF/new listing) -> smartbox knows the name
+        if m.name == m.code or m.name == query.strip():
+            for cand in out:
+                if ((cand.market, cand.code) == (m.market, m.code)
+                        and cand.name not in (m.code, query.strip())):
+                    m.name = cand.name
+                    if not m.market_id:
+                        m.market_id = cand.market_id
+                    break
     return res

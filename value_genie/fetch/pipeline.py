@@ -379,6 +379,11 @@ def run_fetch(markets=None, data_dir=None, refresh: bool = False,
         fx = fetch_fx_hkdcny()
         manifest["fx_hkdcny"] = fx
         log(f"    [FX] HKD/CNY = {fx}")
+    if "US" in markets:
+        from .fundamentals import fetch_fx_usdcny
+        fx_us = fetch_fx_usdcny()
+        manifest["fx_usdcny"] = fx_us
+        log(f"    [FX] USD/CNY = {fx_us}")
 
     def _load_or_fetch(path: Path, fetcher, dtype_col: str,
                       label: str) -> pd.DataFrame | None:

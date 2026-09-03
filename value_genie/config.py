@@ -11,6 +11,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"
 SNAPSHOTS_DIR = DATA_DIR / "snapshots"
+USERS_DIR = DATA_DIR / "users"
 OUTPUT_DIR = BASE_DIR / "output"
 SKILLS_DIR = BASE_DIR / "skills"
 LATEST_POINTER = DATA_DIR / "latest.json"
