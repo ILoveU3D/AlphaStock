@@ -9,8 +9,8 @@ triggers:
   - Is X a buy
 commands:
   - ask
-version: 8
-updated_at: 2026-09-03T17:44:51
+version: 9
+updated_at: 2026-09-05T01:23:45
 ---
 
 # Playbook
@@ -67,3 +67,4 @@ Answer "what do you think of X" with a verdict first, evidence later.
 - [2026-09-02 01:00] (ai) peer frames rebuilt from quotes CSVs carry no kline factors; build_peer_set now backfills from the kline cache — before 20260902 ask always showed momentum/safety at the 100th pctile because the target ranked against itself
 - [2026-09-02 01:06] (ai) HK peer frames carry F10 only for funnel candidates: ask growth/quality percentiles for HK names are self-ranked (100.0/50.0 signatures) - trust screen-internal comparisons and absolute PE/PB/dividend_yield instead
 - [2026-09-03 17:44] (ai) US ticker code forms accept dot/underscore class suffixes (BRK.B -> Eastmoney BRK_B); snapshot us_quotes enrichment fills name+market_id even when smartbox returns non-JSON
+- [2026-09-05 01:23] (ai) windfall-earnings trap: HK 00613 梧桐国际 ranked #1 by screen (PE 6.1) but 2026H1 revenue only 75.8M vs profit ~730M (net_margin 959%) - earnings are non-operating gains; check net_margin>100% or PE_dyn far below PE_static on tiny revenue before recommending
