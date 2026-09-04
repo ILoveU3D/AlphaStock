@@ -166,3 +166,49 @@ def test_validate_qty_a_and_us():
     assert tr.validate_qty("US", "AAPL", 1) == 1
     with pytest.raises(tr.TradeError):
         tr.validate_qty("US", "AAPL", 0)
+
+
+# ---------------------------------------------------------------------------
+# Trading days and settlement
+# ---------------------------------------------------------------------------
+def test_next_trading_day_skips_weekend():
+    from value_genie import trade as tr
+    # Fri 2026-09-04 -> +1 trading day = Mon 2026-09-07
+    assert tr.next_trading_day("2026-09-04", 1) == "2026-09-07"
+    # Sat 2026-09-05 -> +2 trading days = Tue 2026-09-08
+    assert tr.next_trading_day("2026-09-05", 2) == "2026-09-08"
+
+
+def _season_with_settling(trade_dir):
+    from value_genie import trade as tr
+    s = tr.new_season("s001", base="HKD", capital=10000.0, markets=["HK"])
+    s["cash"]["HKD"] = 0.0  # all funds are in the settling queue
+    s["settling"] = [{
+        "currency": "HKD", "amount": 5000.0, "origin_market": "HK",
+        "available_date": "2026-09-08", "fx_date": "2026-09-09"}]
+    tr.save_season(s)
+    return s
+
+
+def test_settle_due_moves_only_matured(trade_dir):
+    from value_genie import trade as tr
+    _season_with_settling(trade_dir)
+    s = tr.load_season("s001")
+    settled = tr.settle_due(s, "2026-09-08")
+    assert settled == [] and s["cash"]["HKD"] == 0.0
+    settled = tr.settle_due(s, "2026-09-09")
+    assert s["cash"]["HKD"] == 5000.0 and s["settling"] == []
+    assert len(settled) == 1
+
+
+def test_spendable_and_deduct_for_buy(trade_dir):
+    from value_genie import trade as tr
+    _season_with_settling(trade_dir)
+    s = tr.load_season("s001")
+    s["cash"]["HKD"] = 1000.0
+    assert tr.spendable_for_buy(s, "HK", "HKD", "2026-09-07") == 1000.0
+    assert tr.spendable_for_buy(s, "HK", "HKD", "2026-09-08") == 6000.0
+    assert tr.spendable_for_buy(s, "US", "USD", "2026-09-08") == 0.0
+    tr._deduct_buy(s, "HK", "HKD", "2026-09-08", 4500.0)
+    assert s["cash"]["HKD"] == 0.0
+    assert s["settling"][0]["amount"] == 1500.0

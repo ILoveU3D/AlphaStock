@@ -283,3 +283,98 @@ def validate_qty(market: str, code: str, qty, lot_override=None) -> int:
             f"qty {qty:g} not a multiple of board lot {step} for "
             f"{market}/{code} (minimum {lo})")
     return lo
+
+
+# ---------------------------------------------------------------------------
+# Trading days and settlement
+# ---------------------------------------------------------------------------
+def next_trading_day(date_str: str, n: int = 1) -> str:
+    """n-th next trading day (weekdays only; holidays not tracked —
+    trades only happen when the user triggers them on real trading days,
+    so the approximation is documented, not solved)."""
+    d = date.fromisoformat(date_str)
+    added = 0
+    while added < n:
+        d += timedelta(days=1)
+        if d.weekday() < 5:
+            added += 1
+    return d.isoformat()
+
+
+def settle_due(season: dict, today: str) -> list:
+    """Move settling entries whose fx_date has matured into cash.
+    Returns the settled entries (for reporting)."""
+    settled, keep = [], []
+    for e in season["settling"]:
+        if e["fx_date"] <= today:
+            cur = e["currency"]
+            season["cash"][cur] = round(
+                season["cash"].get(cur, 0.0) + e["amount"], 2)
+            settled.append(e)
+        else:
+            keep.append(e)
+    season["settling"] = keep
+    return settled
+
+
+def spendable_for_buy(season: dict, market: str, currency: str,
+                      today: str) -> float:
+    """Settled cash + same-market settling proceeds already available
+    (HK T+1 rebuy rule: yesterday's HK sale can rebuy HK today, but is
+    not yet usable for FX or other markets)."""
+    total = season["cash"].get(currency, 0.0)
+    for e in season["settling"]:
+        if (e["currency"] == currency and e["origin_market"] == market
+                and e["available_date"] <= today):
+            total += e["amount"]
+    return total
+
+
+def _deduct_buy(season: dict, market: str, currency: str, today: str,
+                amount: float) -> None:
+    """Spend ``amount`` for a same-market buy: settled cash first, then
+    same-market available settling entries. Caller must have checked
+    spendable_for_buy >= amount."""
+    cash = season["cash"].get(currency, 0.0)
+    if cash >= amount - EPS:
+        season["cash"][currency] = round(cash - amount, 2)
+        return
+    amount -= cash
+    season["cash"][currency] = 0.0
+    for e in season["settling"]:
+        if amount <= EPS:
+            break
+        if (e["currency"] == currency and e["origin_market"] == market
+                and e["available_date"] <= today):
+            take = min(e["amount"], amount)
+            e["amount"] = round(e["amount"] - take, 2)
+            amount -= take
+    season["settling"] = [e for e in season["settling"] if e["amount"] > EPS]
+
+
+def _find_pos(season: dict, market: str, code: str):
+    for p in season["positions"]:
+        if p["market"] == market and p["code"] == code:
+            return p
+    return None
+
+
+def _session_flag(market: str) -> str:
+    """'in'/'out' — informational only (fills always execute at the
+    live_price quote; out-of-session quotes are the latest close)."""
+    now = datetime.now()
+    t = now.hour * 60 + now.minute
+    if now.weekday() >= 5:
+        return "out"
+    if market == "A":
+        return "in" if (570 <= t <= 690) or (780 <= t <= 900) else "out"
+    if market == "HK":
+        return "in" if (570 <= t <= 720) or (780 <= t <= 960) else "out"
+    # US in Beijing time (DST not modeled): 21:30-04:00
+    return "in" if (t >= 1290 or t <= 240) else "out"
+
+
+def _append_fill(season: dict, fill: dict) -> dict:
+    fill["seq"] = len(season["fills"]) + 1
+    season["fills"].append(fill)
+    return fill
