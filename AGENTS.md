@@ -16,6 +16,12 @@ you found it.
   SEC companyconcept, A-share single-stock filters) into
   `watchlist.csv`; `holding list` / `recommend` read it as fallback
   when a holding is absent from `master.csv`.
+- `python -m value_genie trade ...` manages the AI's own virtual
+  portfolio (multi-season paper trading): CITIC/ZA-Bank fee models,
+  T+1/T+2 settlement, board-lot checks, multi-currency cash with FX
+  spread, daily NAV marking, withdrawal tracking and a review journal.
+  Seasons live in git-tracked `trading/seasons/`; lessons accumulate in
+  the `trading` skill Field Notes.
 - Analysis commands read the latest snapshot (and live quotes where
   noted) — no LLM runs inside the toolkit; you write the prose.
 - There is **no human UI**: the CLI is the only entry point and AI
@@ -103,6 +109,9 @@ excluded when no USD rate, concentration observations verbatim).
 | "段永平会怎么选X" | master-duan | `python -m value_genie screen --strategy duan` + `ask X --evidence` |
 | "孙宇晨会怎么看X / 热点股" | master-sheng | `python -m value_genie screen --strategy sheng` + `ask X --evidence` |
 | Macro / gold / geopolitics | macro-themes | framework + `overview` / `ask --evidence` |
+| "你的虚拟盘怎么样 / 你的资产情况" | trading | `python -m value_genie trade status` |
+| "虚拟盘买入/卖出 X" | trading | `python -m value_genie trade buy/sell <season> X --qty N --note 理由` |
+| "复盘虚拟盘 / 记教训" | trading | `python -m value_genie trade journal <season> --text ...` + `skill note trading "..."` |
 | "短期内最推荐/最被低估的股票" | horizon-framework | `python -m value_genie screen --horizon short` |
 | "超短线/短线有什么机会" | horizon-framework | `python -m value_genie screen --horizon ultrashort`（必须附短炒警示） |
 | "X适合中长期持有吗" | horizon-framework | `python -m value_genie ask X`（四周期剖面）+ 14 号 playbook 质性层 |
