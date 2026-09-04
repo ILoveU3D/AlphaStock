@@ -192,3 +192,94 @@ def _require_active(season):
         raise TradeError(
             f"season {season['id']!r} is {season['status']}; "
             f"resume it with `trade season resume {season['id']}` first")
+
+
+# ---------------------------------------------------------------------------
+# Fees (CITIC for A-shares, ZA Bank for HK/US; see config docstrings)
+# ---------------------------------------------------------------------------
+def _is_a_fund(code: str) -> bool:
+    """A-share ETF/LOF: SH 5xxxxx funds, SZ 15/16/18xxxx funds."""
+    c = str(code)
+    return c[:1] == "5" or c[:2] in ("15", "16", "18")
+
+
+def calc_fees(market: str, code: str, qty: float, price: float,
+              side: str) -> dict:
+    """Fee breakdown for one fill. ``side`` is 'buy' or 'sell'."""
+    gross = qty * price
+    fees = {}
+    if market == "A":
+        fees["commission"] = max(gross * config.A_COMMISSION_RATE,
+                                 config.A_COMMISSION_MIN)
+        if not _is_a_fund(code):
+            fees["transfer"] = gross * config.A_TRANSFER_FEE
+            if side == "sell":
+                fees["stamp"] = gross * config.A_STAMP_SELL
+    elif market == "HK":
+        fees["platform"] = max(gross * config.HK_PLATFORM_RATE,
+                               config.HK_PLATFORM_MIN)
+        fees["stamp"] = gross * config.HK_STAMP
+    elif market == "US":
+        fees["platform"] = min(
+            max(qty * config.US_PLATFORM_PER_SHARE, config.US_PLATFORM_MIN),
+            gross * config.US_PLATFORM_CAP)
+    else:
+        raise TradeError(f"unknown market {market!r}")
+    return {k: round(v, 2) for k, v in fees.items()}
+
+
+# ---------------------------------------------------------------------------
+# Board lots (buy-side validation; sells only check qty <= holding)
+# ---------------------------------------------------------------------------
+def lot_rule(market: str, code: str):
+    """(min_qty, step) for A/US; (None, None) for HK (per-stock TRADE_UNIT)."""
+    c = str(code)
+    if market == "US":
+        return 1, 1
+    if market == "HK":
+        return None, None
+    if c[:3] == "688":                      # STAR board
+        return 200, 1
+    if _is_a_fund(c):
+        return 100, 100
+    if c[:1] in ("8", "4") or c[:2] == "92":  # Beijing exchange
+        return 100, 1
+    return 100, 100                          # SH/SZ main + GEM
+
+
+def resolve_lot(market: str, code: str, override=None) -> int:
+    if override is not None:
+        if int(override) < 1:
+            raise TradeError(f"--lot must be >= 1, got {override}")
+        return int(override)
+    if market == "HK":
+        lot = hk_lot(code)
+        if not lot:
+            raise TradeError(
+                f"HK board lot unknown for {code} (F10 unreachable); "
+                f"pass --lot N explicitly")
+        return int(lot)
+    lo, _ = lot_rule(market, code)
+    return lo
+
+
+def validate_qty(market: str, code: str, qty, lot_override=None) -> int:
+    """Validate a buy quantity against board-lot rules; returns the lot."""
+    if qty <= 0:
+        raise TradeError(f"qty must be positive, got {qty}")
+    qty = float(qty)
+    if market == "HK":
+        lot = resolve_lot(market, code, lot_override)
+        lo = step = lot
+    else:
+        if lot_override is not None:
+            raise TradeError("--lot only applies to HK stocks")
+        lo, step = lot_rule(market, code)
+    if qty < lo - EPS:
+        raise TradeError(
+            f"qty {qty:g} below board lot {lo} for {market}/{code}")
+    if step and abs((qty - lo) % step) > EPS:
+        raise TradeError(
+            f"qty {qty:g} not a multiple of board lot {step} for "
+            f"{market}/{code} (minimum {lo})")
+    return lo
