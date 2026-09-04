@@ -212,3 +212,97 @@ def test_spendable_and_deduct_for_buy(trade_dir):
     tr._deduct_buy(s, "HK", "HKD", "2026-09-08", 4500.0)
     assert s["cash"]["HKD"] == 0.0
     assert s["settling"][0]["amount"] == 1500.0
+
+
+# ---------------------------------------------------------------------------
+# Buy / sell
+# ---------------------------------------------------------------------------
+PRICES = {("US", "AAPL"): 230.0, ("A", "600519"): 1500.0,
+          ("HK", "00700"): 400.0}
+
+
+@pytest.fixture
+def prices(monkeypatch):
+    from value_genie import trade as tr
+    def fake(market, code, name, snap_dir=None):
+        p = PRICES.get((market, code))
+        return (p, "live") if p is not None else (None, "")
+    monkeypatch.setattr(tr, "live_price", fake)
+
+
+@pytest.fixture
+def hk_lot_100(monkeypatch):
+    from value_genie import trade as tr
+    monkeypatch.setattr(tr, "hk_lot", lambda code: 100)
+
+
+def _match(market, code, name):
+    from value_genie.resolve import Match
+    return Match(market, code, name, 100.0, "")
+
+
+def test_buy_us_full_flow(trade_dir, snap, prices):
+    from value_genie import trade as tr
+    tr.new_season("s001", base="USD", capital=2000.0, markets=["US"])
+    fill = tr.buy("s001", _match("US", "AAPL", "Apple"), qty=5,
+                  note="franchise at fair price",
+                  snap_dir=snap, today="2026-09-04")
+    assert fill["action"] == "buy"
+    assert fill["gross"] == 1150.0
+    assert fill["fees"] == {"platform": 1.99}
+    assert fill["cash_delta"] == -1151.99
+    s = tr.load_season("s001")
+    assert s["cash"]["USD"] == round(2000.0 - 1151.99, 2)
+    pos = s["positions"][0]
+    assert pos["qty"] == 5.0
+    assert pos["avg_cost"] == round(1151.99 / 5, 4)
+    assert pos["last_buy_date"] == "2026-09-04"
+    assert s["fills"][0]["note"] == "franchise at fair price"
+
+
+def test_buy_rejects_market_outside_rules(trade_dir, snap, prices):
+    from value_genie import trade as tr
+    tr.new_season("s001", base="USD", capital=20000.0, markets=["US"])
+    with pytest.raises(tr.TradeError, match="not allowed"):
+        tr.buy("s001", _match("HK", "00700", "Tencent"), qty=100,
+               snap_dir=snap, today="2026-09-04")
+
+
+def test_buy_insufficient_cash(trade_dir, snap, prices):
+    from value_genie import trade as tr
+    tr.new_season("s001", base="USD", capital=100.0, markets=["US"])
+    with pytest.raises(tr.TradeError, match="insufficient"):
+        tr.buy("s001", _match("US", "AAPL", "Apple"), qty=5,
+               snap_dir=snap, today="2026-09-04")
+
+
+def test_buy_no_price_rejected(trade_dir, snap, monkeypatch):
+    from value_genie import trade as tr
+    monkeypatch.setattr(tr, "live_price",
+                        lambda m, c, n, snap_dir=None: (None, ""))
+    tr.new_season("s001", base="USD", capital=10000.0, markets=["US"])
+    with pytest.raises(tr.TradeError, match="no price"):
+        tr.buy("s001", _match("US", "AAPL", "Apple"), qty=1,
+               snap_dir=snap, today="2026-09-04")
+
+
+def test_buy_paused_season_rejected(trade_dir, snap, prices):
+    from value_genie import trade as tr
+    tr.new_season("s001", base="USD", capital=10000.0, markets=["US"])
+    tr.set_season_status("s001", "paused")
+    with pytest.raises(tr.TradeError, match="paused"):
+        tr.buy("s001", _match("US", "AAPL", "Apple"), qty=1,
+               snap_dir=snap, today="2026-09-04")
+
+
+def test_buy_hk_uses_board_lot(trade_dir, snap, prices, hk_lot_100):
+    from value_genie import trade as tr
+    tr.new_season("s001", base="HKD", capital=100000.0, markets=["HK"])
+    with pytest.raises(tr.TradeError, match="board lot"):
+        tr.buy("s001", _match("HK", "00700", "Tencent"), qty=50,
+               snap_dir=snap, today="2026-09-04")
+    fill = tr.buy("s001", _match("HK", "00700", "Tencent"), qty=100,
+                  snap_dir=snap, today="2026-09-04")
+    s = tr.load_season("s001")
+    assert s["positions"][0]["lot"] == 100
+    assert fill["fees"] == {"platform": 20.0, "stamp": 40.0}

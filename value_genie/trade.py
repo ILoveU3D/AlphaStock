@@ -378,3 +378,61 @@ def _append_fill(season: dict, fill: dict) -> dict:
     fill["seq"] = len(season["fills"]) + 1
     season["fills"].append(fill)
     return fill
+
+
+# ---------------------------------------------------------------------------
+# Buy / sell
+# ---------------------------------------------------------------------------
+def buy(sid, match, qty, note="", lot_override=None, snap_dir=None,
+        today=None) -> dict:
+    """Market buy at the live/snapshot quote. Returns the fill dict.
+    Raises TradeError with the rejection reason."""
+    season = load_season(sid)
+    today = _today(today)
+    _require_active(season)
+    settle_due(season, today)
+    market, code = match.market, match.code
+    if market not in season["rules"]["markets"]:
+        raise TradeError(
+            f"market {market} not allowed in season {sid} "
+            f"(rules: {','.join(season['rules']['markets'])})")
+    cur = config.MARKET_CURRENCIES[market]
+    price, source = live_price(market, code, match.name, snap_dir)
+    if price is None:
+        raise TradeError(
+            f"no price for {market}/{code} (live and snapshot both failed)")
+    lot = validate_qty(market, code, qty, lot_override)
+    qty = float(qty)
+    fees = calc_fees(market, code, qty, price, "buy")
+    fees_total = round(sum(fees.values()), 2)
+    gross = round(qty * price, 2)
+    total = round(gross + fees_total, 2)
+    spendable = spendable_for_buy(season, market, cur, today)
+    if spendable < total - EPS:
+        raise TradeError(
+            f"insufficient {cur}: need {total:,.2f} (incl fees "
+            f"{fees_total:,.2f}), spendable {spendable:,.2f}")
+    _deduct_buy(season, market, cur, today, total)
+    pos = _find_pos(season, market, code)
+    if pos:
+        new_qty = round(pos["qty"] + qty, 4)
+        pos["avg_cost"] = round(
+            (pos["avg_cost"] * pos["qty"] + total) / new_qty, 4)
+        pos["qty"] = new_qty
+        pos["last_buy_date"] = today
+        pos["lot"] = lot
+    else:
+        season["positions"].append({
+            "market": market, "code": code, "name": match.name,
+            "qty": qty, "avg_cost": round(total / qty, 4),
+            "currency": cur, "last_buy_date": today, "lot": lot})
+    fill = _append_fill(season, {
+        "ts": _now(), "date": today, "action": "buy",
+        "market": market, "code": code, "name": match.name,
+        "qty": qty, "price": float(price), "gross": gross,
+        "fees": fees, "fees_total": fees_total,
+        "cash_delta": -total, "currency": cur,
+        "session": _session_flag(market), "note": note,
+        "settle_amount": 0.0})
+    save_season(season)
+    return fill
