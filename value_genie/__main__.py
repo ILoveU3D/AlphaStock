@@ -416,6 +416,204 @@ def cmd_recommend(args) -> int:
     return 0
 
 
+def cmd_trade(args) -> int:
+    import sys
+    from . import trade as tr
+
+    def _snap():
+        try:
+            return report.resolve_snapshot(args.data_dir, args.snapshot)
+        except FileNotFoundError:
+            return None
+
+    def _season_or_exit(sid):
+        try:
+            return tr.load_season(sid)
+        except FileNotFoundError as exc:
+            raise SystemExit(str(exc)) from None
+
+    cmd = args.trade_cmd
+    if cmd == "season":
+        sub = args.season_cmd
+        if sub == "new":
+            markets = [m.strip().upper() for m in args.markets.split(",")
+                       if m.strip()]
+            try:
+                s = tr.new_season(
+                    args.season_id, name=args.name,
+                    base=args.base.upper(), capital=args.capital,
+                    markets=markets, fx_spread=args.fx_spread)
+            except ValueError as exc:
+                raise SystemExit(str(exc)) from None
+            print(f"created season {s['id']} ({s['name']}): "
+                  f"{s['initial_capital']:,.2f} {s['base_currency']}, "
+                  f"markets {','.join(s['rules']['markets'])} -> "
+                  f"{tr.season_path(s['id'])}")
+            return 0
+        if sub == "list":
+            items = tr.list_seasons()
+            if not items:
+                print("no seasons; create one with `trade season new`")
+                return 0
+            for s in items:
+                last = (s["nav_history"][-1]["nav"]
+                        if s["nav_history"] else None)
+                print(f"{s['id']:16} {s['status']:7} "
+                      f"{s['name']} | initial "
+                      f"{s['initial_capital']:,.2f} "
+                      f"{s['base_currency']}"
+                      + (f" | last NAV {last:,.2f}"
+                         f" ({s['nav_history'][-1]['date']})"
+                         if last is not None else ""))
+            return 0
+        if sub == "show":
+            season = _season_or_exit(args.season_id)
+            if args.json:
+                print(tr.to_json(season))
+            else:
+                print(tr.render_season(season))
+            return 0
+        if sub == "rule":
+            markets = [m.strip().upper() for m in args.markets.split(",")
+                       if m.strip()]
+            try:
+                tr.update_rules(args.season_id, markets=markets)
+            except (ValueError, FileNotFoundError) as exc:
+                raise SystemExit(str(exc)) from None
+            print(f"season {args.season_id} markets -> "
+                  f"{','.join(markets)} (existing positions stay "
+                  f"sellable, new buys follow the new rules)")
+            return 0
+        if sub in ("close", "pause", "resume"):
+            status = {"close": "closed", "pause": "paused",
+                      "resume": "active"}[sub]
+            try:
+                s = tr.set_season_status(args.season_id, status)
+            except (ValueError, FileNotFoundError) as exc:
+                raise SystemExit(str(exc)) from None
+            print(f"season {s['id']} -> {s['status']}")
+            return 0
+        if sub == "delete":
+            if not args.confirm:
+                raise SystemExit(
+                    f"deleting season {args.season_id!r} removes its "
+                    f"entire fill/nav/journal history; prefer `trade "
+                    f"season close`. Re-run with --confirm to delete.")
+            try:
+                tr.delete_season(args.season_id)
+            except FileNotFoundError as exc:
+                raise SystemExit(str(exc)) from None
+            print(f"deleted season {args.season_id}")
+            return 0
+        return 1
+
+    if cmd in ("buy", "sell"):
+        if not _check_freshness(args):
+            return 1
+        m = _resolve_stock_or_exit(args.stock)
+        try:
+            if cmd == "buy":
+                fill = tr.buy(args.season_id, m, qty=args.qty,
+                              note=args.note or "",
+                              lot_override=args.lot, snap_dir=_snap())
+            else:
+                fill = tr.sell(args.season_id, m, qty=args.qty,
+                               note=args.note or "", snap_dir=_snap())
+        except tr.TradeError as exc:
+            print(f"[TRADE REJECTED] {exc}", file=sys.stderr)
+            return 1
+        if args.json:
+            print(tr.to_json(fill))
+        else:
+            print(tr.render_fill(fill))
+        return 0
+
+    if cmd == "fx":
+        if not _check_freshness(args):
+            return 1
+        if "->" not in args.pair:
+            raise SystemExit(
+                f"pair must look like USD->HKD, got {args.pair!r}")
+        src, dst = [x.strip().upper() for x in args.pair.split("->", 1)]
+        try:
+            fill = tr.fx(args.season_id, src, dst, args.amount,
+                         snap_dir=_snap())
+        except tr.TradeError as exc:
+            print(f"[TRADE REJECTED] {exc}", file=sys.stderr)
+            return 1
+        if args.json:
+            print(tr.to_json(fill))
+        else:
+            print(tr.render_fill(fill))
+        return 0
+
+    if cmd == "cash":
+        if not _check_freshness(args):
+            return 1
+        try:
+            fill = tr.cash_move(args.season_id, args.action, args.amount,
+                                args.currency.upper(),
+                                note=args.note or "", snap_dir=_snap())
+        except tr.TradeError as exc:
+            print(f"[TRADE REJECTED] {exc}", file=sys.stderr)
+            return 1
+        if args.json:
+            print(tr.to_json(fill))
+        else:
+            print(tr.render_fill(fill))
+        return 0
+
+    if cmd == "nav":
+        if not _check_freshness(args):
+            return 1
+        _season_or_exit(args.season_id)
+        try:
+            entry = tr.mark_nav(args.season_id, snap_dir=_snap())
+        except tr.TradeError as exc:
+            print(f"[NAV FAILED] {exc}", file=sys.stderr)
+            return 1
+        if args.json:
+            print(tr.to_json(entry))
+        else:
+            print(tr.render_nav(entry))
+        return 0
+
+    if cmd == "journal":
+        if not _check_freshness(args):
+            return 1
+        if args.show:
+            season = _season_or_exit(args.season_id)
+            entries = season["journal"][-args.last:]
+            if args.json:
+                print(tr.to_json(entries))
+            else:
+                print(tr.render_journal(entries))
+            return 0
+        if not args.text:
+            raise SystemExit("pass --text '...' to write, or --show")
+        _season_or_exit(args.season_id)
+        try:
+            j = tr.write_journal(args.season_id, args.text,
+                                 snap_dir=_snap())
+        except tr.TradeError as exc:
+            print(f"[JOURNAL FAILED] {exc}", file=sys.stderr)
+            return 1
+        print(f"journal [{j['date']}] nav {j['nav']:,.2f} day "
+              f"{j['day_pnl']:+,.2f}: {j['text']}")
+        return 0
+
+    if cmd == "status":
+        if not _check_freshness(args):
+            return 1
+        summaries = tr.status_all(snap_dir=_snap())
+        if args.json:
+            print(tr.to_json(summaries))
+        else:
+            print(tr.render_status(summaries))
+        return 0
+    return 1
+
+
 # ---------------------------------------------------------------------------
 # AI-toolkit commands (ask / compare / overview / doctor / skill)
 # ---------------------------------------------------------------------------
@@ -720,6 +918,107 @@ def build_parser() -> argparse.ArgumentParser:
     pr.add_argument("--json", action="store_true",
                     help="pure-JSON stdout (full precision)")
     pr.set_defaults(func=cmd_recommend)
+
+    # -- trading (AI virtual portfolio) ------------------------------
+    pt = sub.add_parser(
+        "trade", help="AI virtual portfolio: multi-season paper trading")
+    pt_sub = pt.add_subparsers(dest="trade_cmd", required=True)
+
+    pt_se = pt_sub.add_parser("season", help="manage seasons")
+    pt_se_sub = pt_se.add_subparsers(dest="season_cmd", required=True)
+    pt_new = pt_se_sub.add_parser("new", help="create a season")
+    pt_new.add_argument("season_id")
+    pt_new.add_argument("--name", default="", help="display name")
+    pt_new.add_argument("--base", default="USD", metavar="CNY|HKD|USD",
+                        help="base currency (default: USD)")
+    pt_new.add_argument("--capital", type=float, required=True,
+                        help="initial capital in base currency")
+    pt_new.add_argument("--markets", default="US,HK", metavar="A,HK,US",
+                        help="allowed markets (default: US,HK)")
+    pt_new.add_argument("--fx-spread", type=float, default=None,
+                        help="FX spread, e.g. 0.003 (default: "
+                             f"{config.TRADE_FX_SPREAD})")
+    pt_se_sub.add_parser("list", help="list all seasons")
+    pt_show = pt_se_sub.add_parser("show", help="show one season")
+    pt_show.add_argument("season_id")
+    pt_show.add_argument("--json", action="store_true")
+    pt_rule = pt_se_sub.add_parser("rule", help="change allowed markets")
+    pt_rule.add_argument("season_id")
+    pt_rule.add_argument("--markets", required=True, metavar="A,HK,US")
+    for act, help_txt in (
+            ("close", "stop trading, keep history"),
+            ("pause", "temporarily stop trading"),
+            ("resume", "reactivate a paused season")):
+        p_act = pt_se_sub.add_parser(act, help=help_txt)
+        p_act.add_argument("season_id")
+    p_del = pt_se_sub.add_parser("delete", help="delete a season + history")
+    p_del.add_argument("season_id")
+    p_del.add_argument("--confirm", action="store_true",
+                       help="required: deleting removes all fills/nav/"
+                            "journal history")
+    pt_se.set_defaults(func=cmd_trade)
+
+    def _trade_common(p):
+        p.add_argument("--snapshot", default=None, metavar="YYYYMMDD")
+        p.add_argument("--data-dir", default=None, help="data directory")
+        p.add_argument("--no-check", action="store_true",
+                       help="skip freshness gate (for automated pipelines)")
+        p.add_argument("--json", action="store_true",
+                       help="pure-JSON stdout (full precision)")
+
+    pt_buy = pt_sub.add_parser("buy", help="market buy at live price")
+    pt_buy.add_argument("season_id")
+    pt_buy.add_argument("stock", help="name/code/ticker to resolve")
+    pt_buy.add_argument("--qty", type=float, required=True)
+    pt_buy.add_argument("--note", default=None,
+                        help="AI's trade rationale (recorded in the fill)")
+    pt_buy.add_argument("--lot", type=int, default=None,
+                        help="HK board lot override when F10 is "
+                             "unreachable")
+    _trade_common(pt_buy)
+
+    pt_sell = pt_sub.add_parser("sell", help="market sell at live price")
+    pt_sell.add_argument("season_id")
+    pt_sell.add_argument("stock")
+    pt_sell.add_argument("--qty", type=float, required=True)
+    pt_sell.add_argument("--note", default=None)
+    _trade_common(pt_sell)
+
+    pt_fx = pt_sub.add_parser("fx", help="convert settled cash")
+    pt_fx.add_argument("season_id")
+    pt_fx.add_argument("pair", metavar="FROM->TO",
+                       help="e.g. USD->HKD")
+    pt_fx.add_argument("--amount", type=float, required=True)
+    _trade_common(pt_fx)
+
+    pt_cash = pt_sub.add_parser("cash", help="deposit/withdraw")
+    pt_cash.add_argument("season_id")
+    pt_cash.add_argument("action", choices=["deposit", "withdraw"])
+    pt_cash.add_argument("--amount", type=float, required=True)
+    pt_cash.add_argument("--currency", required=True,
+                         metavar="CNY|HKD|USD")
+    pt_cash.add_argument("--note", default=None,
+                         help="e.g. 'living costs' for withdrawals")
+    _trade_common(pt_cash)
+
+    pt_nav = pt_sub.add_parser("nav", help="mark-to-market snapshot")
+    pt_nav.add_argument("season_id")
+    _trade_common(pt_nav)
+
+    pt_jr = pt_sub.add_parser("journal", help="write/show review journal")
+    pt_jr.add_argument("season_id")
+    pt_jr.add_argument("--text", default=None,
+                       help="journal entry (why money was made/lost, "
+                            "what to repeat/avoid)")
+    pt_jr.add_argument("--show", action="store_true",
+                       help="print recent entries instead of writing")
+    pt_jr.add_argument("--last", type=int, default=5,
+                       help="entries to show (default: 5)")
+    _trade_common(pt_jr)
+
+    pt_st = pt_sub.add_parser("status", help="all active seasons overview")
+    _trade_common(pt_st)
+    pt.set_defaults(func=cmd_trade)
 
     pa = sub.add_parser("ask", help="analyze one stock (verdict first)")
     pa.add_argument("query", help="stock name, code or ticker (Chinese ok)")

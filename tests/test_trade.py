@@ -21,6 +21,10 @@ def snap(tmp_path):
     d.mkdir(parents=True)
     (d / "manifest.json").write_text(
         json.dumps({"fx_hkdcny": 0.92, "fx_usdcny": 7.2}), encoding="utf-8")
+    # master.csv makes the dir a valid snapshot for report.resolve_snapshot
+    # (used by the CLI's --data-dir path)
+    (d / "master.csv").write_text(
+        "market,code,name,price\nUS,AAPL,Apple,230.0\n", encoding="utf-8")
     for name, text in {
         "us_quotes.csv": "code,name,market_id,price\nAAPL,Apple,105,230.0\n",
         "a_quotes.csv": "code,name,market_id,price\n600519,Moutai,1,1500.0\n",
@@ -524,3 +528,88 @@ def test_to_json_pure(trade_dir, snap, prices):
     summaries = tr.status_all(snap_dir=snap, today="2026-09-04")
     parsed = json.loads(tr.to_json(summaries))
     assert parsed[0]["nav"] == 1998.01
+
+
+# ---------------------------------------------------------------------------
+# CLI
+# ---------------------------------------------------------------------------
+def test_cli_season_new_and_buy(trade_dir, snap, prices, hk_lot_100,
+                                monkeypatch, capsys):
+    from value_genie.__main__ import main
+    from value_genie import trade as tr
+    monkeypatch.setattr(
+        "value_genie.__main__._resolve_stock_or_exit",
+        lambda q: _match("US", "AAPL", "Apple"))
+    rc = main(["trade", "season", "new", "s001", "--name", "练手",
+               "--base", "USD", "--capital", "2000", "--markets", "US"])
+    assert rc == 0
+    rc = main(["trade", "buy", "s001", "AAPL", "--qty", "5",
+               "--note", "first trade", "--no-check",
+               "--data-dir", str(snap.parent.parent)])
+    assert rc == 0
+    out = capsys.readouterr().out
+    assert "AAPL" in out
+    s = tr.load_season("s001")
+    assert s["cash"]["USD"] == round(2000.0 - 1151.99, 2)
+
+
+def test_cli_status_json_pure(trade_dir, snap, prices, monkeypatch, capsys):
+    from value_genie.__main__ import main
+    monkeypatch.setattr(
+        "value_genie.__main__._resolve_stock_or_exit",
+        lambda q: _match("US", "AAPL", "Apple"))
+    main(["trade", "season", "new", "s001", "--base", "USD",
+          "--capital", "2000", "--markets", "US"])
+    capsys.readouterr()          # flush the "created season" banner
+    rc = main(["trade", "status", "--no-check",
+               "--data-dir", str(snap.parent.parent), "--json"])
+    assert rc == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload[0]["id"] == "s001"
+    assert payload[0]["nav"] == 2000.0
+
+
+def test_cli_rejection_message(trade_dir, snap, prices, monkeypatch, capsys):
+    from value_genie.__main__ import main
+    monkeypatch.setattr(
+        "value_genie.__main__._resolve_stock_or_exit",
+        lambda q: _match("US", "AAPL", "Apple"))
+    main(["trade", "season", "new", "s001", "--base", "USD",
+          "--capital", "100", "--markets", "US"])
+    rc = main(["trade", "buy", "s001", "AAPL", "--qty", "5",
+               "--no-check", "--data-dir", str(snap.parent.parent)])
+    assert rc != 0
+    err = capsys.readouterr().err
+    assert "TRADE REJECTED" in err
+
+
+def test_cli_season_rule_close_delete(trade_dir, monkeypatch, capsys):
+    from value_genie.__main__ import main
+    from value_genie import trade as tr
+    main(["trade", "season", "new", "s001", "--base", "USD",
+          "--capital", "100", "--markets", "US"])
+    main(["trade", "season", "rule", "s001", "--markets", "A,HK,US"])
+    assert tr.load_season("s001")["rules"]["markets"] == ["A", "HK", "US"]
+    main(["trade", "season", "close", "s001"])
+    assert tr.load_season("s001")["status"] == "closed"
+    main(["trade", "season", "resume", "s001"])
+    assert tr.load_season("s001")["status"] == "active"
+    main(["trade", "season", "delete", "s001", "--confirm"])
+    assert tr.list_seasons() == []
+
+
+def test_cli_journal_write_and_show(trade_dir, snap, prices, monkeypatch,
+                                     capsys):
+    from value_genie.__main__ import main
+    monkeypatch.setattr(
+        "value_genie.__main__._resolve_stock_or_exit",
+        lambda q: _match("US", "AAPL", "Apple"))
+    main(["trade", "season", "new", "s001", "--base", "USD",
+          "--capital", "2000", "--markets", "US"])
+    rc = main(["trade", "journal", "s001", "--text", "开学第一天",
+               "--no-check", "--data-dir", str(snap.parent.parent)])
+    assert rc == 0
+    rc = main(["trade", "journal", "s001", "--show", "--no-check",
+               "--data-dir", str(snap.parent.parent)])
+    assert rc == 0
+    assert "开学第一天" in capsys.readouterr().out
