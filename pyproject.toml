@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "value-genie"
 version = "1.0.0"
-description = "Value Genie (价值投资精灵) - a full-market A/HK/US value-investment stock screener with an interactive web UI"
+description = "Value Genie (价值投资精灵) - a full-market A/HK/US value-investment stock screener driven by AI agents through its CLI (no human UI)"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }

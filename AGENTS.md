@@ -12,8 +12,9 @@ you found it.
   candidates per market, deep klines + HK F10, scored `master.csv`.
 - Analysis commands read the latest snapshot (and live quotes where
   noted) — no LLM runs inside the toolkit; you write the prose.
-- `streamlit run app.py` is the human-facing dashboard; agents use the
-  CLI.
+- There is **no human UI**: the CLI is the only entry point and AI
+  agents are the only operators. `README.md` describes the system
+  (architecture / methodology); this file is your operating manual.
 
 ## Freshness contract (code-enforced)
 
@@ -40,10 +41,24 @@ you found it.
 - Never present snapshot-day numbers as "current" — cite the
   data-as-of line the commands print.
 
+## Machine-readable output (`--json`)
+
+- Every data command accepts `--json`: `ask`, `screen`, `compare`,
+  `overview`, `recommend`, `holding list`, `doctor`.
+- With `--json`, stdout is **pure JSON** — full float precision,
+  NaN→null, no banner lines, no `wrote ...` chatter. `screen --json`
+  also skips the CSV/Markdown side-effect files. Exit codes and the
+  freshness gate are unchanged (`doctor --json` still exits 1 on FAIL).
+- Console tables remain the default and are fine for composing prose;
+  switch to `--json` when you must cite exact numbers (gate thresholds
+  like PE×PB≤22.5, weights, P&L) or re-parse output programmatically.
+  `ask X --json` is the canonical machine form of a single-stock view.
+
 ## Users, styles and holdings (per-user state)
 
-Users live in `data/users/<id>.json` (one file per user; human-
-readable, CLI-maintained, atomic writes). A user carries:
+Users live in `users/<id>.json` (top-level git-tracked dir, one file
+per user; human-readable, CLI-maintained, atomic writes). A user
+carries:
 
 - **style**: six-pillar weights + optional hard gates (registry DSL:
   `>=`, `<=`, `pctl>=`, `pctl<=`) + preferred horizon. Styles are

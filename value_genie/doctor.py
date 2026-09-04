@@ -116,18 +116,39 @@ def run_checks(data_dir=None) -> list:
     return out
 
 
+def _recommended_action(checks: list):
+    """None or a fetch hint, mirroring the console renderer."""
+    if any(c[0] == "FAIL" and "no snapshots" in c[2] for c in checks):
+        return "python -m value_genie fetch"
+    if (any(c[0] == "FAIL" for c in checks)
+            or any(c[0] == "WARN" and "age" in c[2] for c in checks)):
+        return "python -m value_genie fetch   (refresh stale data)"
+    return None
+
+
 def render_checks(checks: list) -> str:
     icon = {"PASS": "ok  ", "WARN": "warn", "FAIL": "FAIL"}
     lines = ["== Value Genie doctor =="]
     for status, market, msg in checks:
         lines.append(f"[{icon[status]}] {market:>3}  {msg}")
-    if any(c[0] == "FAIL" and "no snapshots" in c[2] for c in checks):
-        lines += ["", "action: python -m value_genie fetch"]
-    elif (any(c[0] == "FAIL" for c in checks)
-          or any(c[0] == "WARN" and "age" in c[2] for c in checks)):
-        lines += ["",
-                  "action: python -m value_genie fetch   (refresh stale data)"]
+    action = _recommended_action(checks)
+    if action:
+        lines += ["", f"action: {action}"]
     return "\n".join(lines)
+
+
+def to_json(checks: list) -> str:
+    """`doctor --json` payload: worst status, per-check rows, action."""
+    worst = ("FAIL" if any(c[0] == "FAIL" for c in checks)
+             else "WARN" if any(c[0] == "WARN" for c in checks)
+             else "PASS")
+    payload = {
+        "status": worst,
+        "checks": [{"status": s, "market": m, "message": msg}
+                   for s, m, msg in checks],
+        "action": _recommended_action(checks),
+    }
+    return json.dumps(payload, ensure_ascii=False, indent=2)
 
 
 def doctor_exit_code(checks: list) -> int:

@@ -2,9 +2,11 @@
 
 The fetch pipeline writes date-stamped snapshots with a scored master.csv;
 this module turns a snapshot into a ranked pick list under a chosen
-strategy preset (or custom pillar weights) and exports CSV / Markdown.
+strategy preset (or custom pillar weights) and exports CSV / Markdown
+plus machine-readable JSON for the `screen --json` contract.
 """
 
+import json
 from pathlib import Path
 
 import pandas as pd
@@ -203,3 +205,22 @@ def format_console(df: pd.DataFrame) -> str:
     """Compact table for terminal output."""
     cols = [c for c in CONSOLE_COLUMNS if c in df.columns]
     return df[cols].to_string(index=False, float_format=lambda v: f"{v:.1f}")
+
+
+# ---------------------------------------------------------------------------
+# Machine-readable output (--json contract for AI agents)
+# ---------------------------------------------------------------------------
+def df_records(df: pd.DataFrame) -> list:
+    """DataFrame -> JSON-safe records (NaN/NaT become None, full float
+    precision kept — unlike the rounded console tables)."""
+    if df is None:
+        return []
+    return json.loads(df.to_json(orient="records"))
+
+
+def to_json(top: pd.DataFrame, meta: dict) -> str:
+    """`screen --json` payload: run metadata + ranked rows."""
+    payload = dict(meta)
+    payload["count"] = int(len(top))
+    payload["rows"] = df_records(top)
+    return json.dumps(payload, ensure_ascii=False, indent=2)

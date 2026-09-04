@@ -422,3 +422,21 @@ def render_recommend(result: dict) -> str:
     lines.append("")
     lines.append("注: 以上为结构化事实; 买卖判断需结合 AI 的政策/情绪/地缘评估。")
     return "\n".join(lines)
+
+
+def health_to_json(health: dict) -> str:
+    """`holding list --json` payload (rows/totals/flags, full precision)."""
+    return json.dumps(health, ensure_ascii=False, indent=2)
+
+
+def to_json(result: dict) -> str:
+    """`recommend --json` payload: header + candidates + holdings health."""
+    user = result["user"]
+    payload = {
+        "user": user.id, "user_name": user.name,
+        "snapshot": result["snapshot"], "strategy": result["strategy"],
+        "horizon": result["horizon"],
+        "candidates": report.df_records(result["candidates"]),
+        "health": result["health"],
+    }
+    return json.dumps(payload, ensure_ascii=False, indent=2)

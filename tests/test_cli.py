@@ -1,6 +1,8 @@
 """Tests for the value_genie CLI (python -m value_genie)."""
 
+import json
 from pathlib import Path
+from types import SimpleNamespace
 
 import pandas as pd
 import pytest
@@ -123,10 +125,26 @@ def test_screen_unknown_preset_rejected(snapshot):
               "--preset", "not_a_preset"])
 
 
+def test_screen_json_pure_stdout(snapshot, tmp_path, capsys):
+    out_dir = tmp_path / "out"
+    rc = main(["screen", "--data-dir", str(snapshot),
+               "--out-dir", str(out_dir), "--top", "2", "--json"])
+    out = capsys.readouterr().out
+    assert rc == 0
+    data = json.loads(out)               # stdout is pure JSON
+    assert data["snapshot"] == "20260201"
+    assert data["strategy"] == "balanced"
+    assert data["count"] == 2
+    assert [r["code"] for r in data["rows"]] == ["600519", "AAPL"]
+    assert data["rows"][0]["pe_ttm"] == 25.0   # full precision kept
+    assert "Value Genie screen" not in out     # no banner chatter
+    assert not (out_dir / "20260201_balanced.csv").exists()  # no exports
+
+
 # ---------------------------------------------------------------------------
 # fetch subcommand
 # ---------------------------------------------------------------------------
-def test_fetch_calls_pipeline(snapshot, tmp_path, monkeypatch):
+def test_fetch_calls_pipeline(snapshot, tmp_path, monkeypatch, capsys):
     from value_genie import __main__ as cli
 
     calls = []
@@ -143,6 +161,7 @@ def test_fetch_calls_pipeline(snapshot, tmp_path, monkeypatch):
     assert rc == 0
     assert calls == [{"markets": ["A", "HK"], "data_dir": str(tmp_path),
                       "refresh": False}]
+    assert "next:" not in capsys.readouterr().out   # no human coaching
 
 
 def test_fetch_refresh_flag(snapshot, tmp_path, monkeypatch):
@@ -253,6 +272,25 @@ class TestAsk:
         assert rc == 0
         assert "Alpha Co" in out
 
+    def test_compare_json(self, capsys, monkeypatch):
+        monkeypatch.setattr("value_genie.doctor.freshness_gate",
+                            lambda d=None: ("PASS", "ok"))
+        monkeypatch.setattr(
+            "value_genie.resolve.resolve",
+            lambda q, **k: [Match("A", "600001", "Alpha Co", 100.0, "1")])
+        monkeypatch.setattr(
+            "value_genie.analyze.compare_stocks",
+            lambda ms, snapshot_dir=None: pd.DataFrame([{
+                "market": "A", "code": "600001", "name": "Alpha Co",
+                "price": 10.0, "pe_ttm": 10.0, "pe_pctile": 83.3,
+                "rev_yoy": 10.0, "roe": 15.0, "composite_pctile": 80.0,
+                "verdict": "attractive", "risks": 0}]))
+        rc = main(["compare", "Alpha Co", "--json"])
+        data = json.loads(capsys.readouterr().out)
+        assert rc == 0
+        assert data["stocks"][0]["code"] == "600001"
+        assert data["stocks"][0]["pe_pctile"] == 83.3
+
 
 class TestOverviewCli:
     def test_overview(self, capsys, monkeypatch):
@@ -266,6 +304,33 @@ class TestOverviewCli:
         out = capsys.readouterr().out
         assert rc == 0
         assert "20260901" in out
+
+    def test_overview_json(self, capsys, monkeypatch):
+        top = pd.DataFrame([
+            {"rank": 1, "code": "600519", "name": "Moutai",
+             "price": 1500.0, "pe_ttm": 25.0, "rev_yoy": 15.0,
+             "roe": 30.0, "composite_score": 60.0,
+             "drawdown_52w": float("nan")}])
+        monkeypatch.setattr("value_genie.doctor.freshness_gate",
+                            lambda d=None: ("PASS", "ok"))
+        monkeypatch.setattr(
+            "value_genie.overview.market_overview",
+            lambda markets=None, top_n=10, data_dir=None: {
+                "snapshot": "20260901",
+                "markets": {"A": {"candidates": 100,
+                                  "median_pe": 20.0, "median_pb": 2.0,
+                                  "median_rev_yoy": 5.0,
+                                  "top_sectors": {"Liquor": 1},
+                                  "top": top}}})
+        rc = main(["overview", "--json"])
+        data = json.loads(capsys.readouterr().out)
+        assert rc == 0
+        assert data["snapshot"] == "20260901"
+        row = data["markets"]["A"]["top"][0]
+        assert row["code"] == "600519"
+        assert row["pe_ttm"] == 25.0
+        assert row["drawdown_52w"] is None    # NaN -> null
+        assert data["markets"]["A"]["candidates"] == 100
 
 
 class TestFreshnessGate:
@@ -352,6 +417,75 @@ class TestDoctorCli:
         assert rc == 1
         assert "fetch" in capsys.readouterr().out
 
+    def test_doctor_json(self, capsys, monkeypatch):
+        monkeypatch.setattr(
+            "value_genie.doctor.run_checks",
+            lambda data_dir=None: [("PASS", "-", "ok"),
+                                   ("WARN", "A", "kline lag 3 day(s)")])
+        rc = main(["doctor", "--json"])
+        data = json.loads(capsys.readouterr().out)
+        assert rc == 0
+        assert data["status"] == "WARN"
+        assert data["checks"][0]["message"] == "ok"
+        assert data["checks"][1]["market"] == "A"
+
+
+_HEALTH = {
+    "rows": [{"market": "A", "code": "600519", "name": "Moutai",
+              "qty": 100.0, "cost": 1500.0, "price": 1600.0,
+              "price_src": "live", "currency": "CNY",
+              "value": 160000.0, "pnl": 10000.0, "pnl_pct": 6.67,
+              "value_cny": 160000.0, "industry": "Liquor",
+              "composite_score": 60.0, "pe_ttm": 25.0, "ret_60d": 5.0,
+              "drawdown_52w": -10.0, "weight": 100.0}],
+    "total_cny": 160000.0, "fx": {"CNY": 1.0},
+    "industries": {"Liquor": 160000.0},
+    "market_dist": {"A": 160000.0}, "flags": [],
+}
+
+
+class TestRecommendJsonCli:
+    def test_recommend_json(self, capsys, monkeypatch):
+        fake = {"user": SimpleNamespace(id="u1", name="U1"),
+                "snapshot": "20260201", "strategy": "u1",
+                "horizon": None,
+                "candidates": pd.DataFrame([
+                    {"market": "A", "code": "600519", "name": "Moutai",
+                     "composite_score": 60.0, "pe_ttm": 25.0}]),
+                "health": _HEALTH}
+        monkeypatch.setattr("value_genie.doctor.freshness_gate",
+                            lambda d=None: ("PASS", "ok"))
+        monkeypatch.setattr(
+            "value_genie.recommend.build_recommendation",
+            lambda *a, **k: fake)
+        rc = main(["recommend", "--user", "u1", "--json"])
+        data = json.loads(capsys.readouterr().out)
+        assert rc == 0
+        assert data["user"] == "u1"
+        assert data["candidates"][0]["code"] == "600519"
+        assert data["health"]["total_cny"] == 160000.0
+        assert data["health"]["rows"][0]["pnl_pct"] == 6.67
+
+
+class TestHoldingListJsonCli:
+    def test_holding_list_json(self, capsys, monkeypatch):
+        monkeypatch.setattr("value_genie.doctor.freshness_gate",
+                            lambda d=None: ("PASS", "ok"))
+        monkeypatch.setattr(
+            "value_genie.users.load_user",
+            lambda uid: SimpleNamespace(id="u1", name="U1", holdings=[],
+                                        style={}))
+        monkeypatch.setattr(
+            "value_genie.recommend.holdings_health",
+            lambda user, snap_dir=None: _HEALTH)
+        rc = main(["holding", "list", "u1", "--json"])
+        out = capsys.readouterr().out
+        data = json.loads(out)
+        assert rc == 0
+        assert data["rows"][0]["code"] == "600519"
+        assert data["rows"][0]["weight"] == 100.0
+        assert not out.startswith("== holdings")   # pure JSON, no banner
+
 
 class TestSkillCli:
     def test_skill_list_real_dir(self, capsys, monkeypatch):
@@ -396,3 +530,11 @@ class TestParserSurface:
         assert p.parse_args(["overview", "--top", "5"]).top == 5
         assert p.parse_args(["overview", "--no-check"]).no_check
         assert p.parse_args(["skill", "note", "id", "text"]).text == "text"
+
+    def test_parser_json_flags_everywhere(self):
+        p = build_parser()
+        for argv in (["screen"], ["compare", "X"], ["overview"],
+                     ["recommend"], ["doctor"]):
+            assert p.parse_args(argv + ["--json"]).json, argv
+        assert p.parse_args(
+            ["holding", "list", "me", "--json"]).json
