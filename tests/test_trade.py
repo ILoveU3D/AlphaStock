@@ -437,3 +437,56 @@ def test_cash_deposit_withdraw_totals(trade_dir, snap):
     with pytest.raises(tr.TradeError, match="insufficient"):
         tr.cash_move("s001", "withdraw", 99999.0, "USD",
                      snap_dir=snap, today="2026-09-04")
+
+
+# ---------------------------------------------------------------------------
+# NAV / status / journal
+# ---------------------------------------------------------------------------
+def test_mark_nav_multi_currency(trade_dir, snap, prices, hk_lot_100):
+    from value_genie import trade as tr
+    tr.new_season("s001", base="USD", capital=2000.0, markets=["US", "HK"])
+    tr.buy("s001", _match("US", "AAPL", "Apple"), qty=5,
+           snap_dir=snap, today="2026-09-04")
+    s = tr.load_season("s001")
+    s["cash"]["HKD"] = 100.0
+    tr.save_season(s)
+    entry = tr.mark_nav("s001", snap_dir=snap, today="2026-09-04")
+    expected = round(848.01 + 100 * 0.92 / 7.2 + 1150.0, 2)
+    assert entry["nav"] == expected
+    assert entry["cash_total"] == round(848.01 + 100 * 0.92 / 7.2, 2)
+    assert entry["positions"][0]["code"] == "AAPL"
+    tr.mark_nav("s001", snap_dir=snap, today="2026-09-04")
+    s = tr.load_season("s001")
+    assert len(s["nav_history"]) == 1
+
+
+def test_status_dual_goal_metrics(trade_dir, snap, prices):
+    from value_genie import trade as tr
+    tr.new_season("s001", base="USD", capital=2000.0, markets=["US"])
+    tr.buy("s001", _match("US", "AAPL", "Apple"), qty=5,
+           snap_dir=snap, today="2026-09-04")
+    tr.cash_move("s001", "withdraw", 50.0, "USD", snap_dir=snap,
+                 today="2026-09-04")
+    summaries = tr.status_all(snap_dir=snap, today="2026-09-04")
+    assert len(summaries) == 1
+    sm = summaries[0]
+    assert sm["nav"] == 1948.01            # 2000 - 1.99 fees - 50 withdrawn
+    assert sm["withdrawal_pct"] == 2.5     # 50/2000
+    assert sm["net_return_pct"] == round(
+        (1948.01 + 50.0) / 2000.0 * 100 - 100, 2)
+
+
+def test_journal_day_pnl(trade_dir, snap, prices):
+    from value_genie import trade as tr
+    tr.new_season("s001", base="USD", capital=2000.0, markets=["US"])
+    tr.mark_nav("s001", snap_dir=snap, today="2026-09-04")
+    j = tr.write_journal("s001", "day one: no positions yet",
+                         snap_dir=snap, today="2026-09-04")
+    assert j["day_pnl"] == 0.0
+    j2 = tr.write_journal("s001", "still flat",
+                          snap_dir=snap, today="2026-09-07")
+    assert j2["day_pnl"] == 0.0
+    s = tr.load_season("s001")
+    assert len(s["journal"]) == 2
+    assert [e["date"] for e in s["nav_history"]] == [
+        "2026-09-04", "2026-09-07"]

@@ -574,3 +574,116 @@ def cash_move(sid, action, amount, currency, note="", snap_dir=None,
         "base_value": base_val, "note": note})
     save_season(season)
     return fill
+
+
+# ---------------------------------------------------------------------------
+# NAV marking, status, journal
+# ---------------------------------------------------------------------------
+def _to_base(amount, currency, rates, base):
+    if currency not in rates:
+        raise TradeError(f"no FX rate for {currency}")
+    return amount * rates[currency] / rates[base]
+
+
+def mark_nav(sid, snap_dir=None, today=None) -> dict:
+    """Mark-to-market snapshot (upsert by date). NAV = settled cash +
+    settling proceeds (face) + positions at live prices, all converted
+    at snapshot mid FX rates."""
+    season = load_season(sid)
+    today = _today(today)
+    settle_due(season, today)
+    rates = fx_rates(snap_dir, need_usd=True)
+    base = season["base_currency"]
+    if base not in rates:
+        raise TradeError(f"no FX rate for base currency {base}")
+    cash_base = sum(
+        _to_base(v, c, rates, base)
+        for c, v in season["cash"].items() if v)
+    settling_base = sum(
+        _to_base(e["amount"], e["currency"], rates, base)
+        for e in season["settling"])
+    pos_rows, pos_base = [], 0.0
+    for p in season["positions"]:
+        price, _src = live_price(p["market"], p["code"], p["name"],
+                                 snap_dir)
+        if price is None:
+            raise TradeError(
+                f"no price for {p['market']}/{p['code']} "
+                f"(live and snapshot both failed)")
+        vb = _to_base(price * p["qty"], p["currency"], rates, base)
+        pos_base += vb
+        pos_rows.append({
+            "market": p["market"], "code": p["code"], "name": p["name"],
+            "qty": p["qty"], "price": float(price),
+            "currency": p["currency"], "value_base": round(vb, 2)})
+    nav = round(cash_base + settling_base + pos_base, 2)
+    entry = {
+        "date": today, "nav": nav,
+        "cash_total": round(cash_base, 2),
+        "settling_total": round(settling_base, 2),
+        "positions": pos_rows, "fx": dict(rates)}
+    hist = season["nav_history"]
+    for i, e in enumerate(hist):
+        if e["date"] == today:
+            hist[i] = entry
+            break
+    else:
+        hist.append(entry)
+    save_season(season)
+    return entry
+
+
+def _prev_nav(season, today):
+    prev = [e for e in season["nav_history"] if e["date"] < today]
+    return prev[-1]["nav"] if prev else None
+
+
+def _summary_from(season, entry) -> dict:
+    prev = _prev_nav(season, entry["date"])
+    day_pnl = round(entry["nav"] - prev, 2) if prev is not None else 0.0
+    initial = season["initial_capital"]
+    t = season["totals"]
+    net_ret = (None if not initial else round(
+        (entry["nav"] + t["withdrawn"] - t["deposited"])
+        / initial * 100 - 100, 2))
+    wd = (None if not initial else round(
+        t["withdrawn"] / initial * 100, 2))
+    return {
+        "id": season["id"], "name": season["name"],
+        "status": season["status"],
+        "base_currency": season["base_currency"],
+        "initial_capital": initial, "nav": entry["nav"],
+        "day_pnl": day_pnl, "net_return_pct": net_ret,
+        "withdrawal_pct": wd,
+        "deposited": t["deposited"], "withdrawn": t["withdrawn"],
+        "cash": {c: v for c, v in season["cash"].items() if v},
+        "settling": [dict(e) for e in season["settling"]],
+        "positions": entry["positions"],
+        "last_nav_date": entry["date"]}
+
+
+def status_all(snap_dir=None, today=None) -> list:
+    """Summaries of all active seasons; marks NAV first (the daily
+    mark the AI performs at conversation start)."""
+    out = []
+    for s in list_seasons():
+        if s["status"] != "active":
+            continue
+        entry = mark_nav(s["id"], snap_dir=snap_dir, today=today)
+        out.append(_summary_from(load_season(s["id"]), entry))
+    return out
+
+
+def write_journal(sid, text, snap_dir=None, today=None) -> dict:
+    """Append a journal entry; marks today's NAV first so the entry
+    carries the day's numbers for review-time attribution."""
+    entry = mark_nav(sid, snap_dir=snap_dir, today=today)
+    season = load_season(sid)
+    today = entry["date"]
+    prev = _prev_nav(season, today)
+    day_pnl = round(entry["nav"] - prev, 2) if prev is not None else 0.0
+    j = {"date": today, "ts": _now(), "nav": entry["nav"],
+         "day_pnl": day_pnl, "text": text}
+    season["journal"].append(j)
+    save_season(season)
+    return j
