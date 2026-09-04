@@ -375,3 +375,65 @@ def test_sell_market_dropped_from_rules_still_allowed(trade_dir, snap,
     fill = tr.sell("s001", _match("HK", "00700", "Tencent"), qty=100,
                    snap_dir=snap, today="2026-09-05")
     assert fill["action"] == "sell"
+
+
+# ---------------------------------------------------------------------------
+# FX and cash movements
+# ---------------------------------------------------------------------------
+def test_fx_exchange_with_spread(trade_dir, snap):
+    from value_genie import trade as tr
+    tr.new_season("s001", base="USD", capital=2000.0, markets=["US", "HK"])
+    fill = tr.fx("s001", "USD", "HKD", 100.0,
+                 snap_dir=snap, today="2026-09-04")
+    rate = 7.2 / 0.92
+    expected = round(100.0 * rate * (1 - config.TRADE_FX_SPREAD), 2)
+    assert fill["received"] == expected
+    s = tr.load_season("s001")
+    assert s["cash"]["USD"] == 1900.0
+    assert s["cash"]["HKD"] == expected
+
+
+def test_fx_rejects_bad_requests(trade_dir, snap):
+    from value_genie import trade as tr
+    tr.new_season("s001", base="USD", capital=100.0, markets=["US"])
+    with pytest.raises(tr.TradeError, match="insufficient"):
+        tr.fx("s001", "USD", "HKD", 500.0, snap_dir=snap, today="2026-09-04")
+    with pytest.raises(tr.TradeError, match="must be one of"):
+        tr.fx("s001", "USD", "EUR", 10.0, snap_dir=snap, today="2026-09-04")
+    with pytest.raises(tr.TradeError, match="from == to"):
+        tr.fx("s001", "USD", "USD", 10.0, snap_dir=snap, today="2026-09-04")
+
+
+def test_fx_blocked_while_hk_proceeds_unsettled(trade_dir, snap, prices,
+                                                hk_lot_100):
+    from value_genie import trade as tr
+    tr.new_season("s001", base="HKD", capital=50000.0, markets=["HK"])
+    tr.buy("s001", _match("HK", "00700", "Tencent"), qty=100,
+           snap_dir=snap, today="2026-09-04")
+    s = tr.load_season("s001")
+    s["cash"]["HKD"] = 0.0        # force reliance on settling proceeds
+    tr.save_season(s)
+    tr.sell("s001", _match("HK", "00700", "Tencent"), qty=100,
+            snap_dir=snap, today="2026-09-04")
+    with pytest.raises(tr.TradeError, match="insufficient HKD"):
+        tr.fx("s001", "HKD", "USD", 1000.0,
+              snap_dir=snap, today="2026-09-07")
+    tr.fx("s001", "HKD", "USD", 1000.0, snap_dir=snap, today="2026-09-08")
+
+
+def test_cash_deposit_withdraw_totals(trade_dir, snap):
+    from value_genie import trade as tr
+    tr.new_season("s001", base="USD", capital=2000.0, markets=["US"])
+    tr.cash_move("s001", "deposit", 500.0, "USD",
+                 snap_dir=snap, today="2026-09-04")
+    s = tr.load_season("s001")
+    assert s["cash"]["USD"] == 2500.0
+    assert s["totals"]["deposited"] == 500.0
+    tr.cash_move("s001", "withdraw", 200.0, "USD", note="living costs",
+                 snap_dir=snap, today="2026-09-04")
+    s = tr.load_season("s001")
+    assert s["cash"]["USD"] == 2300.0
+    assert s["totals"]["withdrawn"] == 200.0
+    with pytest.raises(tr.TradeError, match="insufficient"):
+        tr.cash_move("s001", "withdraw", 99999.0, "USD",
+                     snap_dir=snap, today="2026-09-04")

@@ -487,3 +487,90 @@ def sell(sid, match, qty, note="", snap_dir=None, today=None) -> dict:
         "session": _session_flag(market), "note": note})
     save_season(season)
     return fill
+
+
+# ---------------------------------------------------------------------------
+# FX and cash movements
+# ---------------------------------------------------------------------------
+def fx(sid, from_cur, to_cur, amount, snap_dir=None, today=None) -> dict:
+    """Convert settled cash at the snapshot mid rate less the season
+    spread. Settling proceeds become usable for FX only after fx_date."""
+    season = load_season(sid)
+    today = _today(today)
+    _require_active(season)
+    settle_due(season, today)
+    for c in (from_cur, to_cur):
+        if c not in config.TRADE_CURRENCIES:
+            raise TradeError(
+                f"currency must be one of {config.TRADE_CURRENCIES}, "
+                f"got {c!r}")
+    if from_cur == to_cur:
+        raise TradeError("from == to currency")
+    if amount <= 0:
+        raise TradeError("amount must be positive")
+    rates = fx_rates(snap_dir, need_usd=True)
+    for c in (from_cur, to_cur):
+        if c not in rates:
+            raise TradeError(f"no FX rate for {c}")
+    cash = season["cash"].get(from_cur, 0.0)
+    if cash < amount - EPS:
+        raise TradeError(
+            f"insufficient {from_cur} cash: have {cash:,.2f}, "
+            f"want {amount:,.2f}")
+    spread = float(season["rules"].get("fx_spread",
+                                       config.TRADE_FX_SPREAD))
+    rate = rates[from_cur] / rates[to_cur]
+    received = round(amount * rate * (1 - spread), 2)
+    season["cash"][from_cur] = round(cash - amount, 2)
+    season["cash"][to_cur] = round(
+        season["cash"].get(to_cur, 0.0) + received, 2)
+    fill = _append_fill(season, {
+        "ts": _now(), "date": today, "action": "fx",
+        "from_cur": from_cur, "to_cur": to_cur, "amount": float(amount),
+        "rate": round(rate, 6), "received": received, "spread": spread,
+        "note": ""})
+    save_season(season)
+    return fill
+
+
+def cash_move(sid, action, amount, currency, note="", snap_dir=None,
+              today=None) -> dict:
+    """Deposit into / withdraw from the season (withdraw = the
+    'dividend-style living costs' stream of the dual goal)."""
+    season = load_season(sid)
+    today = _today(today)
+    _require_active(season)
+    if action not in ("deposit", "withdraw"):
+        raise TradeError(
+            f"action must be deposit or withdraw, got {action!r}")
+    if amount <= 0:
+        raise TradeError("amount must be positive")
+    if currency not in config.TRADE_CURRENCIES:
+        raise TradeError(
+            f"currency must be one of {config.TRADE_CURRENCIES}, "
+            f"got {currency!r}")
+    rates = fx_rates(snap_dir, need_usd=True)
+    if currency not in rates or season["base_currency"] not in rates:
+        raise TradeError(f"no FX rate for {currency}")
+    base_val = round(
+        amount * rates[currency] / rates[season["base_currency"]], 2)
+    if action == "deposit":
+        season["cash"][currency] = round(
+            season["cash"].get(currency, 0.0) + amount, 2)
+        season["totals"]["deposited"] = round(
+            season["totals"]["deposited"] + base_val, 2)
+    else:
+        cash = season["cash"].get(currency, 0.0)
+        if cash < amount - EPS:
+            raise TradeError(
+                f"insufficient {currency} cash: have {cash:,.2f}, "
+                f"want {amount:,.2f}")
+        season["cash"][currency] = round(cash - amount, 2)
+        season["totals"]["withdrawn"] = round(
+            season["totals"]["withdrawn"] + base_val, 2)
+    fill = _append_fill(season, {
+        "ts": _now(), "date": today, "action": action,
+        "currency": currency, "amount": float(amount),
+        "base_value": base_val, "note": note})
+    save_season(season)
+    return fill
