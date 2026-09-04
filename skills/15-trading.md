@@ -14,8 +14,8 @@ commands:
   - trade sell
   - trade nav
   - trade journal
-version: 1
-updated_at: 2026-09-05T00:00:00
+version: 2
+updated_at: 2026-09-05T03:27:24
 ---
 
 # Playbook
@@ -63,3 +63,6 @@ stream** (提款率 = 累计提款/初始资金 — the happiness metric).
 Verdict first (NAV + day P&L + net return + withdrawal rate), then
 positions table, then one line on what the portfolio is positioned
 for. Cite the nav-as-of date. Never soften risk observations.
+
+## Field Notes
+- [2026-09-05 03:27] (ai) trade CLI --data-dir must point to a dir whose snapshots/<date>/ contains master.csv (not just manifest.json), else resolve_snapshot returns None and fx_rates silently degrades to CNY-only — test fixtures need master.csv too
