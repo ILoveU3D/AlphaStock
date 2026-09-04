@@ -10,6 +10,12 @@ you found it.
 - `python -m value_genie fetch` builds a dated snapshot: full-market
   quotes + financials (Eastmoney / SEC EDGAR), funnel to ~200
   candidates per market, deep klines + HK F10, scored `master.csv`.
+- **Watchlist redundancy**: user holdings that the funnel excludes
+  (loss-makers, out-of-universe ETFs) still get quotes + klines +
+  financials + pillar scores via per-source fallbacks (Tencent quotes,
+  SEC companyconcept, A-share single-stock filters) into
+  `watchlist.csv`; `holding list` / `recommend` read it as fallback
+  when a holding is absent from `master.csv`.
 - Analysis commands read the latest snapshot (and live quotes where
   noted) — no LLM runs inside the toolkit; you write the prose.
 - There is **no human UI**: the CLI is the only entry point and AI

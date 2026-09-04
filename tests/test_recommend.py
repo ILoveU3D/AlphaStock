@@ -164,6 +164,30 @@ def test_holdings_health_snapshot_price_fallback(data_dir, fake_live,
     assert r["price"] == 1500.0 and r["price_src"] == "snapshot"
 
 
+def test_holdings_health_uses_watchlist_fallback(data_dir, fake_live,
+                                                 monkeypatch):
+    """A held symbol excluded from the funnel (loss-maker) gets its
+    composite score and factors from watchlist.csv."""
+    snap = data_dir / "snapshots" / "20260201"
+    pd.DataFrame([{
+        "market": "A", "code": "688795", "name": "摩尔线程-U",
+        "industry": "Semiconductors", "pe_ttm": -30.0,
+        "ret_60d": -5.0, "drawdown_52w": -20.0,
+        "value_score": 40.0, "growth_score": 80.0,
+        "quality_score": 30.0, "safety_score": 45.0,
+    }]).to_csv(snap / "watchlist.csv", index=False)
+    u = usr.create_user("me")
+    usr.set_style("me", weights={"value": 0.5, "quality": 0.5})
+    u = usr.load_user("me")
+    usr.add_holding(u, Match("A", "688795", "摩尔线程-U", 100.0, "1"),
+                    qty=100, cost=50.0)
+    health = rec.holdings_health(u, snap)
+    r = health["rows"][0]
+    assert r["composite_score"] is not None       # from watchlist row
+    assert r["pe_ttm"] == -30.0
+    assert not any("不在快照候选池" in f for f in health["flags"])
+
+
 # ---------------------------------------------------------------------------
 # Recommendation
 # ---------------------------------------------------------------------------

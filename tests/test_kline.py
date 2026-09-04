@@ -44,6 +44,25 @@ class TestFetchKline:
         assert df["amount"].iloc[1] == 13100.0
 
 
+class TestTxSymbolCandidates:
+    def test_us_class_share_dot_variant(self):
+        # Tencent serves BRK class shares under the dot-separated SEC
+        # form (usBRK.B.N); the underscore form returns no data there
+        syms = k.tx_symbol_candidates("US", "BRK_B", "106")
+        assert syms[0] == "usBRK_B.N"
+        assert "usBRK.B.N" in syms
+        assert syms.index("usBRK_B.N") < syms.index("usBRK.B.N")
+
+    def test_plain_us_ticker_no_dot_variant(self):
+        syms = k.tx_symbol_candidates("US", "AAPL", "105")
+        assert syms[0] == "usAAPL.OQ"
+        assert all("." not in s[2:-3] for s in syms)
+
+    def test_a_share_prefixes(self):
+        assert k.tx_symbol_candidates("A", "600519") == ["sh600519"]
+        assert k.tx_symbol_candidates("A", "000858") == ["sz000858"]
+
+
 class TestFetchKlineTx:
     def test_parses_qfqday(self):
         d = {"data": {"sh600519": {"qfqday": [

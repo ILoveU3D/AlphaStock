@@ -70,7 +70,12 @@ def tx_symbol_candidates(market: str, code: str,
     primary = config.US_TX_SUFFIX.get(market_id or "")
     suffixes = ([primary] if primary else []) + [
         s for s in config.US_TX_SUFFIX.values() if s != primary]
-    return [f"us{code}.{s}" for s in suffixes]
+    syms = [f"us{code}.{s}" for s in suffixes]
+    if "_" in code:
+        # class shares: Tencent uses the dot-separated SEC form
+        # (BRK_B -> usBRK.B.N); Eastmoney's underscore form fails there
+        syms += [f"us{code.replace('_', '.')}.{s}" for s in suffixes]
+    return syms
 
 
 def fetch_kline_tx(symbol: str, lmt: int = 320) -> pd.DataFrame | None:

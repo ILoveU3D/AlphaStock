@@ -103,6 +103,16 @@ def run_checks(data_dir=None) -> list:
             n = len(pd.read_csv(p))
             out.append(("PASS" if n >= min_rows else "WARN",
                         name.split("_")[0].upper(), f"{name} rows: {n}"))
+    wp = snap / "watchlist.csv"
+    if not wp.exists():
+        out.append(("WARN", "-",
+                    "watchlist.csv missing (old snapshot or no holdings)"))
+    else:
+        try:
+            n = len(pd.read_csv(wp))
+            out.append(("PASS", "-", f"watchlist rows: {n}"))
+        except (OSError, pd.errors.ParserError, ValueError):
+            out.append(("WARN", "-", "watchlist.csv unreadable"))
     mp = snap / "manifest.json"
     if mp.exists():
         try:

@@ -21,13 +21,13 @@ from .. import config
 from ..strategy.composite import apply_composite
 from ..strategy.factors import PILLARS, add_pillar_scores, kline_metrics
 from .fundamentals import (fetch_a_cashflow, fetch_a_financials,
-                           fetch_fx_hkdcny,
+                           fetch_a_financials_one, fetch_fx_hkdcny,
                            fetch_hk_f10, fetch_us_financials,
-                           frames_year_context)
+                           fetch_us_financials_one, frames_year_context)
 from .kline import (fetch_kline_any, kline_cache_path, kline_is_fresh,
                     load_kline, save_kline)
 from .quotes import (exclude_non_operating_names, exclude_risk_names,
-                     fetch_market_quotes)
+                     fetch_market_quotes, fetch_quote_any)
 
 MASTER_COLUMNS = [
     "market", "code", "name", "industry", "currency", "price", "market_cap",
@@ -259,6 +259,32 @@ def backfill_kline_factors(df: pd.DataFrame, snap_dir: Path) -> pd.DataFrame:
 # ---------------------------------------------------------------------------
 # Master assembly
 # ---------------------------------------------------------------------------
+def _apply_hk_f10(df: pd.DataFrame, hk_map: dict, fx: float | None) -> None:
+    """Merge HK F10 metrics into rows in place (F10 amounts are CNY)."""
+    for code, rec in hk_map.items():
+        mask = df["code"].astype(str) == code
+        if not mask.any():
+            continue
+        for col in ("report_date", "rev_yoy", "profit_yoy", "roe",
+                    "gross_margin", "net_margin", "debt_ratio",
+                    "dividend_yield", "ocf"):
+            df.loc[mask, col] = rec.get(col)
+        rev = rec.get("revenue")
+        # F10 revenue is CNY; convert to HKD for price-to-sales
+        if rev and fx and fx > 0:
+            df.loc[mask, "ps"] = df.loc[mask, "market_cap"] * fx / rev
+        ocf = rec.get("ocf")
+        profit = rec.get("profit")
+        if ocf and profit and profit != 0:
+            # both CNY — no FX mismatch
+            df.loc[mask, "cash_conversion"] = ocf / profit * 100.0
+        if ocf and fx and fx > 0:
+            # ocf is CNY; market cap is HKD — convert via fx
+            caps = df.loc[mask, "market_cap"]
+            df.loc[mask, "ocf_yield"] = (
+                ocf / fx / caps.where(caps > 0) * 100.0)
+
+
 def build_master(cands_by_market: dict, snap_dir: Path,
                  hk_f10: pd.DataFrame | None,
                  fx: float | None) -> pd.DataFrame:
@@ -274,28 +300,7 @@ def build_master(cands_by_market: dict, snap_dir: Path,
         df = cands.copy()
         df["currency"] = config.MARKET_CURRENCIES[market]
         if market == "HK":
-            for code, rec in hk_map.items():
-                mask = df["code"].astype(str) == code
-                if not mask.any():
-                    continue
-                for col in ("report_date", "rev_yoy", "profit_yoy", "roe",
-                            "gross_margin", "net_margin", "debt_ratio",
-                            "dividend_yield", "ocf"):
-                    df.loc[mask, col] = rec.get(col)
-                rev = rec.get("revenue")
-                # F10 revenue is CNY; convert to HKD for price-to-sales
-                if rev and fx and fx > 0:
-                    df.loc[mask, "ps"] = df.loc[mask, "market_cap"] * fx / rev
-                ocf = rec.get("ocf")
-                profit = rec.get("profit")
-                if ocf and profit and profit != 0:
-                    # both CNY — no FX mismatch
-                    df.loc[mask, "cash_conversion"] = ocf / profit * 100.0
-                if ocf and fx and fx > 0:
-                    # ocf is CNY; market cap is HKD — convert via fx
-                    caps = df.loc[mask, "market_cap"]
-                    df.loc[mask, "ocf_yield"] = (
-                        ocf / fx / caps.where(caps > 0) * 100.0)
+            _apply_hk_f10(df, hk_map, fx)
         feats = pd.DataFrame(
             [kline_features(snap_dir, market, c) for c in df["code"]],
             index=df.index)
@@ -320,6 +325,254 @@ def build_master(cands_by_market: dict, snap_dir: Path,
     master["data_completeness"] = (
         master[score_cols].notna().sum(axis=1) / len(PILLARS))
     return master.reindex(columns=MASTER_COLUMNS)
+
+
+# ---------------------------------------------------------------------------
+# Holdings watchlist (deep data for held symbols the funnel excludes)
+# ---------------------------------------------------------------------------
+def collect_watch_symbols(max_symbols: int | None = None) -> list:
+    """Deduped [(market, code, name)] across every user's holdings.
+
+    Held symbols deserve deep data even when the funnel excludes them:
+    loss-makers fail the pe>0 gate (摩尔线程), ETFs sit outside the stock
+    universe (科创50ETF), negative profit_yoy names fail the final gate
+    (PDD), share classes used to miss the SEC ticker join (BRK_B).
+    Capped at config.WATCHLIST_MAX so a bloated portfolio cannot stall
+    the pipeline.
+    """
+    from .. import users
+
+    out: dict = {}
+    try:
+        profiles = users.list_users()
+    except Exception:  # noqa: BLE001 — watchlist must never break fetch
+        return []
+    for u in profiles:
+        for h in u.holdings:
+            out.setdefault((h.market, str(h.code)), h.name)
+    items = [(m, c, n) for (m, c), n in out.items()]
+    return items[:max_symbols or config.WATCHLIST_MAX]
+
+
+def _watch_quote(market: str, code: str, quotes_row) -> dict:
+    """Quote dict for a watch symbol: snapshot row first, else a live
+    fetch (EM ulist -> Tencent realtime) for out-of-universe symbols."""
+    if quotes_row is not None:
+        rec = dict(quotes_row)
+        rec["code"] = str(rec.get("code") or code)
+        return rec
+    return fetch_quote_any(market, code) or {}
+
+
+def _has_price(row: dict) -> bool:
+    p = row.get("price")
+    try:
+        return p is not None and not pd.isna(p) and float(p) > 0
+    except (TypeError, ValueError):
+        return False
+
+
+def _watch_a_financials(codes: list, snap_dir: Path) -> pd.DataFrame:
+    """A-share financials for watch codes: batch file + per-stock
+    fallback for names missing from it (recent IPO late filers)."""
+    fin = pd.DataFrame()
+    p = snap_dir / "a_financials.csv"
+    if p.exists():
+        try:
+            fin = pd.read_csv(p, dtype={"code": str})
+        except (OSError, pd.errors.ParserError, ValueError):
+            fin = pd.DataFrame()
+    if fin.empty or "code" not in fin.columns:
+        return fin
+    have = set(fin["code"].astype(str))
+    extra = []
+    for c in codes:
+        if c in have:
+            continue
+        one = fetch_a_financials_one(c)
+        if one is not None and not one.empty:
+            extra.append(one.iloc[0])
+    if extra:
+        fin = pd.concat([fin, pd.DataFrame(extra)], ignore_index=True)
+    return fin
+
+
+def _watch_us_financials(codes: list, snap_dir: Path) -> pd.DataFrame:
+    """US financials for watch codes: frames file + SEC companyconcept
+    fallback for tickers the frames aggregation misses entirely, and
+    for rows whose derivable columns are gaps (an older frames pull
+    has no cost column, so PDD-style gross margins never derived)."""
+    fin = pd.DataFrame()
+    p = snap_dir / "us_financials.csv"
+    if p.exists():
+        try:
+            fin = pd.read_csv(p, dtype={"ticker": str})
+        except (OSError, pd.errors.ParserError, ValueError):
+            fin = pd.DataFrame()
+    cols = (list(fin.columns) if not fin.empty and "ticker" in fin.columns
+            else ["ticker", "rev", "rev_prev", "rev_q", "rev_q_prev",
+                  "profit", "profit_prev", "gross_profit", "cost",
+                  "equity", "equity_prev", "liabilities", "assets",
+                  "ocf", "rev_yoy", "profit_yoy", "rev_q_yoy",
+                  "net_margin", "gross_margin", "ps_revenue", "roe",
+                  "debt_ratio", "cash_conversion"])
+    extra = []
+    for c in codes:
+        hit = (fin.index[fin["ticker"].astype(str) == c]
+               if not fin.empty and "ticker" in fin.columns else [])
+        if len(hit):
+            # derivable-column gap in the batch row -> single-stock
+            # fallback fills ONLY the missing fields (never overwrites)
+            row = fin.loc[hit[0]]
+            gap = any(col in row.index and pd.isna(row.get(col))
+                      for col in ("gross_margin", "rev_yoy", "roe"))
+            if not gap:
+                continue
+            rec = fetch_us_financials_one(c)
+            if rec:
+                for k, v in rec.items():
+                    if k == "ticker":
+                        continue
+                    if k not in fin.columns:
+                        fin[k] = None
+                    if pd.isna(fin.at[hit[0], k]):
+                        fin.at[hit[0], k] = v
+            continue
+        rec = fetch_us_financials_one(c)
+        if rec:
+            row = {k: None for k in cols}
+            row.update(rec)
+            row["ticker"] = c
+            extra.append(row)
+    if extra:
+        fin = pd.concat([fin, pd.DataFrame(extra)], ignore_index=True)
+    return fin
+
+
+def build_watchlist(snap_dir: Path, reuse_dirs: list,
+                    master: pd.DataFrame, hk_f10: pd.DataFrame | None,
+                    fx: float | None, manifest: dict,
+                    quiet: bool = False) -> pd.DataFrame:
+    """Deep data for held symbols missing from master.csv -> watchlist.csv.
+
+    For every user-held symbol the funnel excluded: a quote (snapshot
+    row, else EM ulist, else Tencent), a cached kline (same reuse chain
+    as candidates), fundamentals (batch file, else per-stock fallback)
+    and kline-derived factors. Pillar scores are percentiles against
+    the master pool + watch peers. master.csv semantics stay untouched.
+    """
+    log = (lambda *a: None) if quiet else print
+    empty = pd.DataFrame(columns=MASTER_COLUMNS)
+    if master is None:
+        master = pd.DataFrame()
+    master_keys = set()
+    if master is not None and not master.empty:
+        master_keys = set(zip(master["market"].astype(str),
+                              master["code"].astype(str)))
+    watch = [s for s in collect_watch_symbols()
+             if (s[0], s[1]) not in master_keys]
+    if not watch:
+        empty.to_csv(snap_dir / "watchlist.csv", index=False)
+        manifest["datasets"]["watchlist"] = 0
+        return empty
+
+    quotes_lookup: dict = {}
+    for market in config.MARKETS:
+        p = snap_dir / f"{market.lower()}_quotes.csv"
+        if not p.exists():
+            continue
+        try:
+            df = pd.read_csv(p, dtype={"code": str})
+        except (OSError, pd.errors.ParserError, ValueError):
+            continue
+        if "code" not in df.columns:
+            continue
+        for _, r in df.iterrows():
+            quotes_lookup[(market, str(r["code"]))] = r
+
+    hk_map = {}
+    if hk_f10 is not None and not hk_f10.empty:
+        hk_map = {str(r["code"]): dict(r) for _, r in hk_f10.iterrows()}
+
+    by_market: dict = {}
+    for market, code, name in watch:
+        row = _watch_quote(market, code, quotes_lookup.get((market, code)))
+        if not _has_price(row):
+            # out-of-universe symbol neither EM nor Tencent serves
+            manifest["failures"].append(
+                f"watchlist {market}/{code}: no quote from any source")
+            continue
+        row.setdefault("name", name)
+        row.setdefault("market", market)
+        row["code"] = str(code)
+        by_market.setdefault(market, []).append(row)
+
+    frames = []
+    wstats = {"fetched": 0, "reused": 0, "failed": 0}
+    a_cf = None
+    p = snap_dir / "a_cashflow.csv"
+    if p.exists():
+        try:
+            a_cf = pd.read_csv(p, dtype={"code": str})
+        except (OSError, pd.errors.ParserError, ValueError):
+            a_cf = None
+    for market, rows in by_market.items():
+        df = pd.DataFrame(rows)
+        # snapshot quote rows already carry a market column
+        if "market" not in df.columns:
+            df.insert(0, "market", market)
+        else:
+            df["market"] = market
+        if market == "HK":
+            df["code"] = df["code"].astype(str).str.zfill(5)
+        # klines for watch symbols (same cache/reuse chain as candidates)
+        fetch_klines(df, market, snap_dir, reuse_dirs, wstats)
+        # fundamentals per market, reusing the funnel merge logic
+        if market == "A":
+            fin = _watch_a_financials(list(df["code"].astype(str)),
+                                      snap_dir)
+            df = merge_a_financials(df, fin, a_cf)
+        elif market == "US":
+            fin = _watch_us_financials(list(df["code"].astype(str)),
+                                       snap_dir)
+            df = merge_us_financials(df, fin)
+        elif market == "HK":
+            sub_map = {c: hk_map[c] for c in df["code"].astype(str)
+                       if c in hk_map}
+            _apply_hk_f10(df, sub_map, fx)
+        df["currency"] = config.MARKET_CURRENCIES[market]
+        feats = pd.DataFrame(
+            [kline_features(snap_dir, market, c) for c in df["code"]],
+            index=df.index)
+        for col in KLINE_FEATURES:
+            df[col] = feats[col] if col in feats.columns else None
+        frames.append(df)
+
+    if not frames:
+        empty.to_csv(snap_dir / "watchlist.csv", index=False)
+        manifest["datasets"]["watchlist"] = 0
+        return empty
+
+    watch_df = pd.concat(frames, ignore_index=True)
+
+    # score against master peers + watch peers (percentiles by market)
+    score_frame = pd.concat(
+        [master, watch_df], ignore_index=True, sort=False)
+    score_frame = add_pillar_scores(score_frame)
+    scored = score_frame.iloc[len(score_frame) - len(watch_df):]
+    score_cols = [f"{p}_score" for p in PILLARS]
+    for col in score_cols:
+        if col not in scored.columns:
+            scored[col] = float("nan")
+    scored["data_completeness"] = (
+        scored[score_cols].notna().sum(axis=1) / len(PILLARS))
+    out = scored.reindex(columns=MASTER_COLUMNS)
+    out.to_csv(snap_dir / "watchlist.csv", index=False)
+    manifest["datasets"]["watchlist"] = len(out)
+    manifest["datasets"]["watchlist_klines"] = dict(wstats)
+    log(f"    [watchlist] {len(out)} held symbols "
+        f"(klines {wstats})")
+    return out
 
 
 # ---------------------------------------------------------------------------
@@ -469,17 +722,26 @@ def run_fetch(markets=None, data_dir=None, refresh: bool = False,
         if not quiet:
             log(f"    [{market}] klines {kstats[market]}")
 
+    # held-but-excluded symbols need HK F10 too (watchlist deep pass)
+    watch_syms = collect_watch_symbols()
+
     hk_f10 = None
     if "HK" in cands_by_market:
         hk_stats = {"fetched": 0, "reused": 0, "failed": 0}
-        hk_f10 = fetch_hk_deep(cands_by_market["HK"]["code"].astype(str),
-                               snap_dir, f10_reuse, hk_stats)
+        hk_codes = list(cands_by_market["HK"]["code"].astype(str))
+        hk_codes += [c for m, c, _ in watch_syms
+                     if m == "HK" and c not in set(hk_codes)]
+        hk_f10 = fetch_hk_deep(hk_codes, snap_dir, f10_reuse, hk_stats)
         manifest["datasets"]["hk_f10"] = dict(hk_stats)
         log(f"    [HK] f10 {hk_stats}")
 
     master = build_master(cands_by_market, snap_dir, hk_f10, fx)
     master.to_csv(snap_dir / "master.csv", index=False)
     manifest["datasets"]["master"] = len(master)
+
+    # deep data for holdings the funnel excluded (watchlist.csv)
+    build_watchlist(snap_dir, kline_reuse, master, hk_f10, fx, manifest,
+                    quiet=quiet)
 
     manifest["elapsed_sec"] = round(time.time() - t0, 1)
     (snap_dir / "manifest.json").write_text(
