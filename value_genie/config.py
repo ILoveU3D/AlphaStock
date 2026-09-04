@@ -196,3 +196,33 @@ DEEP_FRESH_DAYS = 7
 
 DEFAULT_PRESET = "balanced"
 DEFAULT_TOP_N = 20
+
+# ---------------------------------------------------------------------------
+# AI trading (virtual portfolio)
+# ---------------------------------------------------------------------------
+TRADING_DIR = BASE_DIR / "trading"   # durable virtual-portfolio state,
+# git-tracked; deliberately NOT under the cleanable data/ tree
+TRADE_CURRENCIES = ("CNY", "HKD", "USD")
+TRADE_FX_SPREAD = 0.003              # default FX spread per season
+
+# A-share fills (CITIC model): commission 0.025% both ways, min 5 CNY;
+# stamp 0.05% sell only (stocks; ETFs exempt); transfer fee 0.001% both ways.
+A_COMMISSION_RATE = 0.00025
+A_COMMISSION_MIN = 5.0
+A_STAMP_SELL = 0.0005
+A_TRANSFER_FEE = 0.00001
+
+# HK fills (ZA Bank model, 2026-02 fee schedule): platform fee 0.05% per
+# side, min 18 HKD; stamp 0.1% both ways.
+HK_PLATFORM_RATE = 0.0005
+HK_PLATFORM_MIN = 18.0
+HK_STAMP = 0.001
+
+# US fills (ZA Bank model): platform fee 0.0099 USD/share, min 1.99 USD,
+# capped at 1.5% of gross.
+US_PLATFORM_PER_SHARE = 0.0099
+US_PLATFORM_MIN = 1.99
+US_PLATFORM_CAP = 0.015
+
+# HK F10 organization profile (board lot / TRADE_UNIT lookup).
+HK_ORGPROFILE_REPORT = "RPT_HKF10_INFO_ORGPROFILE"

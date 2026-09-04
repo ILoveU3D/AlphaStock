@@ -582,6 +582,26 @@ def fetch_hk_f10(code5: str) -> pd.DataFrame | None:
     return df
 
 
+def fetch_hk_lot(code5: str) -> int | None:
+    """Board lot size (TRADE_UNIT) for one HK stock; None on failure."""
+    d = DC.get_json(config.DC_SEC_URL, params={
+        "reportName": config.HK_ORGPROFILE_REPORT,
+        "columns": "ALL",
+        "filter": f'(SECUCODE="{code5}.HK")',
+        "pageNumber": 1,
+        "pageSize": 1,
+        "source": "F10",
+        "client": "PC",
+    })
+    rows = ((d or {}).get("result") or {}).get("data") or []
+    if not rows:
+        return None
+    try:
+        return int(rows[0].get("TRADE_UNIT") or 0) or None
+    except (TypeError, ValueError):
+        return None
+
+
 # ---------------------------------------------------------------------------
 # FX
 # ---------------------------------------------------------------------------
