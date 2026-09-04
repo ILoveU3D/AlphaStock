@@ -11,8 +11,8 @@ triggers:
 commands:
   - ask --evidence
   - screen --strategy <master>
-version: 3
-updated_at: 2026-09-03T17:44:53
+version: 4
+updated_at: 2026-09-04T18:38:09
 ---
 
 # Playbook
@@ -81,3 +81,4 @@ master-grade depth on fundamentals.
 - [2026-09-02 04:30] (human) 用户要求原话大意：不喜欢"直接 ask 数据然后一通分析"；要结合投资大师们的风范谨慎回答；持仓分析必须覆盖基本面、商业模式、企业文化、后续赚钱还是亏钱；地缘因素要深入；请把要求写进 skills 做成新的功能倾向。
 - [2026-09-03 11:41] (ai) holdings now persist per-user (data/users/<id>.json); run holding list <user> first for live P&L/weights/concentration facts, then ask X --evidence per holding
 - [2026-09-03 17:44] (ai) master.csv stores pillar scores only (no composite_score) - compute it from pillar scores with user weights; quotes CSVs carry industry for holdings outside the master pool; A-share ETFs (5xxxxx) are SSE market_id 1, absent from a_quotes - set display name via holding update --name
+- [2026-09-04 18:38] (ai) Holdings missing from master.csv (funnel-gated or out-of-universe like ETFs) are served by snapshot watchlist.csv with full pillar scores; holding list/health reads it as fallback, so cite watchlist rows for those names

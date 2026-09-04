@@ -10,7 +10,7 @@ import time
 import pandas as pd
 
 from .. import config
-from .http import em_push2_get, num
+from .http import TX, em_push2_get, num
 
 PAGE_SIZE = 100
 PAGE_SLEEP = 0.6
@@ -98,6 +98,86 @@ def fetch_quotes_by_secids(secids: list) -> pd.DataFrame:
     })
     rows = ((d or {}).get("data") or {}).get("diff") or []
     return pd.DataFrame(_parse_clist_rows(rows))
+
+
+# ---------------------------------------------------------------------------
+# Tencent realtime quote fallback (price redundancy when EM ulist fails)
+# ---------------------------------------------------------------------------
+def fetch_quote_tx(symbol: str) -> dict | None:
+    """Tencent realtime quote (GBK text), e.g. sh588060 / hk00700 / usAAPL.
+
+    Returns {code, name, price, prev_close, pct_chg} or None. Layout:
+    idx1 name, idx2 code, idx3 price, idx4 prev close.
+    """
+    try:
+        r = TX.session.get(config.TX_QUOTE_URL + symbol, timeout=10)
+        if r.status_code != 200:
+            return None
+        text = r.content.decode("gbk", errors="replace")
+    except Exception:  # noqa: BLE001 — network layer must never raise
+        return None
+    line = text.strip().splitlines()[0] if text.strip() else ""
+    if "=" not in line:
+        return None
+    payload = line.split("=", 1)[1].strip().strip(';').strip('"')
+    parts = payload.split("~")
+    if len(parts) < 5:
+        return None
+    name, code = parts[1], parts[2]
+    price, prev = num(parts[3]), num(parts[4])
+    if not name or price is None:
+        return None
+    pct = ((price / prev - 1.0) * 100.0
+           if prev is not None and prev > 0 else None)
+    return {"code": code, "name": name, "price": price,
+            "prev_close": prev, "pct_chg": pct}
+
+
+def _tx_quote_symbols(market: str, code: str) -> list:
+    """Tencent symbol candidates for a realtime quote (US: no suffix)."""
+    if market == "A":
+        # SH: 6/9 stocks, 5 funds (ETFs like 588060); SZ: everything else
+        if code.startswith(("5", "6", "9")):
+            return [f"sh{code}"]
+        if code.startswith(("4", "8")):
+            return [f"bj{code}", f"sz{code}"]
+        return [f"sz{code}"]
+    if market == "HK":
+        return [f"hk{code}"]
+    syms = [f"us{code}"]
+    if "_" in code:
+        # class shares: Tencent may know the dot-separated form (BRK.B)
+        syms.append(f"us{code.replace('_', '.')}")
+    return syms
+
+
+def fetch_quote_any(market: str, code: str, market_id: str = "") -> dict | None:
+    """One quote row, EM ulist first, Tencent realtime as fallback.
+
+    Covers symbols outside the clist universe (ETFs, funds) and EM
+    outages. Returns a dict with code/name/price/pe_ttm/pb/market_cap/
+    market_id where available, or None when both sources fail.
+    """
+    secid = None
+    if market == "A":
+        secid = ("1." if str(code)[:1] in ("5", "6") else "0.") + code
+    elif market == "HK":
+        secid = "116." + str(code).zfill(5)
+    elif market == "US" and market_id:
+        secid = f"{market_id}.{code}"
+    if secid:
+        df = fetch_quotes_by_secids([secid])
+        if not df.empty:
+            row = df.iloc[0].to_dict()
+            if market == "HK":
+                row["code"] = str(row["code"]).zfill(5)
+            return row
+    for sym in _tx_quote_symbols(market, str(code)):
+        q = fetch_quote_tx(sym)
+        if q is not None:
+            q["market_id"] = market_id
+            return q
+    return None
 
 
 def exclude_risk_names(df: pd.DataFrame) -> pd.DataFrame:

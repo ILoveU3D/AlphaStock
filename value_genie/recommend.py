@@ -90,6 +90,20 @@ def _snapshot_price(snap_dir, market: str, code: str):
         return None
 
 
+def _load_watchlist(snap_dir):
+    """watchlist.csv — deep data for held symbols outside the candidate
+    pool (loss-makers, ETFs, ...). None when absent/unreadable."""
+    if snap_dir is None:
+        return None
+    p = Path(snap_dir) / "watchlist.csv"
+    if not p.exists():
+        return None
+    try:
+        return pd.read_csv(p, dtype={"market": str, "code": str})
+    except (OSError, pd.errors.ParserError, ValueError):
+        return None
+
+
 def live_price(market: str, code: str, name: str, snap_dir=None,
                us_market_ids=None):
     """(price, source) — live via push2, snapshot fallback, else None."""
@@ -183,11 +197,13 @@ def _composite_for(mrow, weights):
 def holdings_health(user, snap_dir=None) -> dict:
     """Portfolio snapshot: per-holding P&L + weights + observations."""
     master = None
+    watch = None
     if snap_dir is not None:
         try:
             master = report.load_master(snap_dir)
         except (FileNotFoundError, OSError):
             master = None
+        watch = _load_watchlist(snap_dir)
     style_weights = (user.style or {}).get("weights") or {}
     if not style_weights:  # styleless users still get a composite
         from .strategy.registry import get_strategy
@@ -206,6 +222,11 @@ def holdings_health(user, snap_dir=None) -> dict:
         if master is not None:
             hit = master[(master["market"] == h.market)
                          & (master["code"] == h.code)]
+            mrow = hit.iloc[0] if not hit.empty else None
+        if mrow is None and watch is not None:
+            # held symbol outside the funnel: watchlist deep data
+            hit = watch[(watch["market"] == h.market)
+                        & (watch["code"] == h.code)]
             mrow = hit.iloc[0] if not hit.empty else None
         price, src = live_price(h.market, h.code, h.name, snap_dir, us_ids)
         value = None
@@ -272,7 +293,7 @@ def holdings_health(user, snap_dir=None) -> dict:
             flags.append(f"现价缺失: {r['name']} ({r['market']}/{r['code']})")
         if r["composite_score"] is None:
             flags.append(
-                f"不在快照候选池: {r['name']} "
+                f"不在快照候选池/持仓观察池: {r['name']} "
                 f"({r['market']}/{r['code']})")
         if r["drawdown_52w"] is not None and r["drawdown_52w"] < -40:
             flags.append(

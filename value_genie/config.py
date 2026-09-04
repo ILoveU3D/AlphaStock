@@ -82,6 +82,8 @@ HK_REPORT_NAME = "RPT_HKF10_FN_MAININDICATOR"
 # SEC EDGAR endpoints (US fundamentals via XBRL frames)
 # ---------------------------------------------------------------------------
 SEC_FRAMES_URL = "https://data.sec.gov/api/xbrl/frames/us-gaap/{concept}/{unit}/{frame}.json"
+SEC_CONCEPT_URL = ("https://data.sec.gov/api/xbrl/companyconcept/"
+                   "CIK{cik:010d}/us-gaap/{concept}.json")
 SEC_TICKERS_URL = "https://www.sec.gov/files/company_tickers.json"
 # SEC requires a declared automated-tool UA with contact info:
 # https://www.sec.gov/os/accessing-edgar-data
@@ -102,6 +104,11 @@ US_FRAMES_SPEC = [
     ("NetIncomeLoss", "duration", ["cy", "cy_prev"]),
     ("NetCashProvidedByUsedInOperatingActivities", "duration", ["cy"]),
     ("GrossProfit", "duration", ["cy"]),
+    # cost of revenue: some filers (PDD) stopped tagging GrossProfit after
+    # CY2022 but keep tagging cost — gross margin is then derived as
+    # (rev - cost) / rev in derive_us_metrics.
+    ("CostOfRevenue", "duration", ["cy"]),
+    ("CostOfGoodsAndServicesSold", "duration", ["cy"]),
     ("StockholdersEquity", "instant", ["cy", "cy_prev"]),
     ("Liabilities", "instant", ["cy"]),
     ("Assets", "instant", ["cy"]),
@@ -132,6 +139,8 @@ TX_KLINE_URLS = [
     "https://proxy.finance.qq.com/ifzqgtimg/appstock/app/fqkline/get",
     "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get",
 ]
+# Tencent realtime quote endpoint (GBK text); US symbols carry no suffix.
+TX_QUOTE_URL = "https://qt.gtimg.cn/q="
 TX_UA = {"User-Agent": "Mozilla/5.0"}
 US_TX_SUFFIX = {"105": "OQ", "106": "N", "107": "A", "138": "PS"}
 
@@ -163,6 +172,11 @@ US_EXCLUDE_NAME_PATTERNS = (
 # Funnel (stage-1 pre-ranking, before deep data)
 # ---------------------------------------------------------------------------
 CANDIDATES_PER_MARKET = 200
+
+# Holdings watchlist: user-held symbols outside the funnel (loss-makers,
+# ETFs, class shares...) still get deep data each fetch. Safety cap so a
+# bloated portfolio cannot stall the pipeline.
+WATCHLIST_MAX = 60
 
 # Stage-1 blend weights per market over available pillar scores.
 FUNNEL_WEIGHTS = {

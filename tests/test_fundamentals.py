@@ -1,6 +1,7 @@
 """Tests for value_genie.fetch.fundamentals (no network)."""
 
 from datetime import date
+from types import SimpleNamespace
 
 import pandas as pd
 import pytest
@@ -189,3 +190,122 @@ class TestSumOneoffFrames:
 
     def test_empty(self):
         assert f.sum_oneoff_frames({}, "cy", ["A"]) == {}
+
+
+class TestNormalizeUsTicker:
+    def test_class_share_forms(self):
+        # SEC ticker file uses hyphen/dot class separators; Eastmoney
+        # quote codes use underscores — the join key must be normalized
+        assert f.normalize_us_ticker("BRK-A") == "BRK_A"
+        assert f.normalize_us_ticker("BRK.B") == "BRK_B"
+        assert f.normalize_us_ticker("brk-b") == "BRK_B"
+
+    def test_plain_ticker_unchanged(self):
+        assert f.normalize_us_ticker("AAPL") == "AAPL"
+
+
+class TestDeriveUsMetricsCostFallback:
+    def test_gross_margin_from_cost(self):
+        # PDD stopped tagging GrossProfit but keeps tagging CostOfRevenue
+        out = f.derive_us_metrics({"rev": 100.0, "cost": 60.0})
+        assert out["gross_margin"] == 40.0
+
+    def test_gross_profit_preferred_over_cost(self):
+        out = f.derive_us_metrics({"rev": 100.0, "cost": 60.0,
+                                   "gross_profit": 50.0})
+        assert out["gross_margin"] == 50.0
+
+    def test_neither_present_no_margin(self):
+        out = f.derive_us_metrics({"rev": 100.0})
+        assert "gross_margin" not in out
+
+
+class TestFetchUsFinancialsOne:
+    """SEC companyconcept fallback for held tickers the frames
+    aggregation misses (e.g. BRK_B)."""
+
+    @pytest.fixture()
+    def mock_sec(self, monkeypatch):
+        ctx = f.frames_year_context()
+        cy, cy_p = ctx["cy"], ctx["cy_prev"]
+
+        def dur(year, val):
+            return {"frame": f"CY{year}", "val": val,
+                    "start": f"{year}-01-01", "end": f"{year}-12-31"}
+
+        def inst(year, val):
+            return {"frame": f"CY{year}Q4I", "val": val,
+                    "end": f"{year}-12-31"}
+
+        facts = {
+            "RevenueFromContractWithCustomerExcludingAssessedTax": [
+                dur(cy, 300000.0), dur(cy_p, 250000.0)],
+            "NetIncomeLoss": [dur(cy, 60000.0), dur(cy_p, 50000.0)],
+            "GrossProfit": [],                       # not tagged (PDD case)
+            "CostOfRevenue": [dur(cy, 180000.0)],
+            "StockholdersEquity": [inst(cy, 500000.0), inst(cy_p, 450000.0)],
+            "Liabilities": [inst(cy, 700000.0)],
+            "Assets": [inst(cy, 1200000.0)],
+            "NetCashProvidedByUsedInOperatingActivities": [dur(cy, 80000.0)],
+        }
+
+        def fake_get_json(url, **kw):
+            for concept, fs in facts.items():
+                if f"/{concept}.json" in url:
+                    return {"units": {"USD": fs}}
+            return None
+
+        monkeypatch.setattr(f, "SEC", SimpleNamespace(get_json=fake_get_json))
+        monkeypatch.setattr(f, "load_sec_cik_map",
+                            lambda: {"BRK_B": 1067983})
+        return {"cy": cy, "cy_p": cy_p}
+
+    def test_resolves_financials(self, mock_sec):
+        rec = f.fetch_us_financials_one("BRK_B", quiet=True)
+        assert rec is not None
+        assert rec["rev"] == 300000.0
+        assert rec["profit"] == 60000.0
+        assert rec["rev_yoy"] == 20.0
+        assert rec["gross_margin"] == 40.0   # (300k-180k)/300k via cost
+        assert rec["debt_ratio"] == pytest.approx(700000.0 / 1200000.0
+                                                  * 100.0)
+        assert rec["cash_conversion"] == pytest.approx(80.0 / 60.0 * 100.0)
+
+    def test_unknown_ticker_returns_none(self, mock_sec, monkeypatch):
+        # cik map has no entry -> nothing to query
+        monkeypatch.setattr(f, "load_sec_cik_map", lambda: {})
+        assert f.fetch_us_financials_one("GHOST", quiet=True) is None
+
+    def test_no_data_returns_none(self, mock_sec, monkeypatch):
+        # every concept request returns None -> rev/profit both None
+        monkeypatch.setattr(f, "load_sec_cik_map", lambda: {"GHOST": 1})
+        monkeypatch.setattr(f, "SEC",
+                            SimpleNamespace(get_json=lambda url, **kw: None))
+        assert f.fetch_us_financials_one("GHOST", quiet=True) is None
+
+
+class TestFetchAFinancialsOne:
+    def test_single_stock_filter(self, monkeypatch):
+        payload = {"result": {"data": [{
+            "SECURITY_CODE": "688795", "REPORTDATE": "2026-06-30 00:00:00",
+            "TOTAL_OPERATE_INCOME": 5.0e8, "YSTZ": 60.0,
+            "PARENT_NETPROFIT": -2.0e8, "SJLTZ": None,
+            "WEIGHTAVG_ROE": -5.0, "XSMLL": 30.0, "BPS": 8.0,
+        }]}}
+        monkeypatch.setattr(f, "DC", SimpleNamespace(
+            get_json=lambda url, params=None, **kw: payload))
+        df = f.fetch_a_financials_one("688795")
+        assert len(df) == 1
+        row = df.iloc[0]
+        assert row["code"] == "688795"
+        assert row["report_date"] == "2026-06-30"
+        assert row["revenue"] == 5.0e8
+        assert row["rev_yoy"] == 60.0
+        assert row["profit"] == -2.0e8
+        assert row["gross_margin"] == 30.0
+
+    def test_no_rows_empty(self, monkeypatch):
+        monkeypatch.setattr(f, "DC", SimpleNamespace(
+            get_json=lambda url, params=None, **kw: {}))
+        df = f.fetch_a_financials_one("588060")    # ETF: no report rows
+        assert df.empty

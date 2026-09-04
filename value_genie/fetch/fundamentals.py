@@ -261,12 +261,27 @@ def parse_frame(d: dict) -> dict:
     return out
 
 
+def normalize_us_ticker(ticker: str) -> str:
+    """SEC ticker form -> Eastmoney code form.
+
+    SEC's ticker file writes class shares as ``BRK-A`` / ``BRK.B`` while
+    Eastmoney quote codes use ``BRK_B`` — normalize to underscores so
+    frames data joins quotes for every share class.
+    """
+    return str(ticker).upper().replace("-", "_").replace(".", "_")
+
+
 def load_sec_cik_map() -> dict:
-    """ticker -> cik mapping from SEC's official ticker file."""
+    """normalized ticker -> cik from SEC's official ticker file.
+
+    Class shares (BRK-A/BRK-B -> one cik) each keep their own entry, so
+    every traded class can find its registrant's financials.
+    """
     d = SEC.get_json(config.SEC_TICKERS_URL, timeout=30)
     if not d:
         return {}
-    return {v["ticker"].upper(): int(v["cik_str"]) for v in d.values()}
+    return {normalize_us_ticker(v["ticker"]): int(v["cik_str"])
+            for v in d.values()}
 
 
 def sum_oneoff_frames(frames: dict, key: str, concepts) -> dict:
@@ -291,6 +306,10 @@ def derive_us_metrics(rec: dict) -> dict:
     Bamboo disposal, Boyd's FanDuel stake sale) no longer boosts
     profit_yoy / net_margin / roe. One-offs are pre-tax while net income
     is after-tax, so affected names are scored conservatively.
+
+    Gross margin falls back to (rev - cost_of_revenue) / rev when the
+    filer does not tag GrossProfit for the period (PDD stopped after
+    CY2022 but keeps tagging CostOfRevenue).
     """
     rev, rev_p = rec.get("rev"), rec.get("rev_prev")
     ni, ni_p = rec.get("profit"), rec.get("profit_prev")
@@ -311,6 +330,8 @@ def derive_us_metrics(rec: dict) -> dict:
         if ni is not None:
             out["net_margin"] = ni / rev * 100.0
         gp = rec.get("gross_profit")
+        if gp is None and rec.get("cost") is not None:
+            gp = rev - rec["cost"]
         if gp is not None:
             out["gross_margin"] = gp / rev * 100.0
         out["ps_revenue"] = rev  # denominator for price-to-sales
@@ -324,6 +345,24 @@ def derive_us_metrics(rec: dict) -> dict:
     if ocf_val is not None and ni is not None and ni != 0:
         out["cash_conversion"] = ocf_val / ni * 100.0
     return out
+
+
+def fetch_a_financials_one(code: str) -> pd.DataFrame:
+    """Per-stock A-share financials fallback (same report, same schema as
+    the batch fetch) for held names missing from the batch file — e.g.
+    very recent IPOs that filed after the batch page was pulled."""
+    d = DC.get_json(config.DC_WEB_URL, params={
+        "reportName": config.A_REPORT_NAME,
+        "columns": "ALL",
+        "filter": f'(SECURITY_CODE="{code}")',
+        "pageNumber": 1,
+        "pageSize": 2,
+        "sortTypes": "-1",
+        "sortColumns": "REPORTDATE",
+        "source": "WEB",
+        "client": "WEB",
+    }, retries=2) or {}
+    return _parse_lico(d)
 
 
 def fetch_us_financials(quiet: bool = False) -> pd.DataFrame:
@@ -351,7 +390,10 @@ def fetch_us_financials(quiet: bool = False) -> pd.DataFrame:
                       f"{len(frames[(concept, key)])} entities")
 
     cik_map = load_sec_cik_map()
-    cik_to_ticker = {c: t for t, c in cik_map.items()}
+    # one cik may trade under several normalized tickers (BRK_A / BRK_B)
+    cik_to_tickers: dict = {}
+    for t, c in cik_map.items():
+        cik_to_tickers.setdefault(c, []).append(t)
 
     def pref(primary, secondary):
         merged = dict(secondary or {})
@@ -370,6 +412,8 @@ def fetch_us_financials(quiet: bool = False) -> pd.DataFrame:
     ni = frames[("NetIncomeLoss", "cy")]
     ni_p = frames[("NetIncomeLoss", "cy_prev")]
     gp = frames[("GrossProfit", "cy")]
+    cost = pref(frames.get(("CostOfRevenue", "cy")),
+                frames.get(("CostOfGoodsAndServicesSold", "cy")))
     eq = frames[("StockholdersEquity", "cy")]
     eq_p = frames[("StockholdersEquity", "cy_prev")]
     liab = frames[("Liabilities", "cy")]
@@ -382,24 +426,111 @@ def fetch_us_financials(quiet: bool = False) -> pd.DataFrame:
 
     rows = []
     for cik in set(rev) | set(ni):
-        ticker = cik_to_ticker.get(cik)
-        if not ticker:
+        tickers = cik_to_tickers.get(cik)
+        if not tickers:
             continue
-        rec = {"ticker": ticker,
-               "rev": rev.get(cik), "rev_prev": rev_p.get(cik),
+        rec = {"rev": rev.get(cik), "rev_prev": rev_p.get(cik),
                "rev_q": rev_q.get(cik), "rev_q_prev": rev_q_p.get(cik),
                "profit": ni.get(cik), "profit_prev": ni_p.get(cik),
-               "gross_profit": gp.get(cik),
+               "gross_profit": gp.get(cik), "cost": cost.get(cik),
                "equity": eq.get(cik), "equity_prev": eq_p.get(cik),
                "liabilities": liab.get(cik), "assets": assets.get(cik),
                "oneoff": oneoff.get(cik), "oneoff_prev": oneoff_p.get(cik),
                "ocf": ocf.get(cik)}
         rec.update(derive_us_metrics(rec))
-        rows.append(rec)
+        for ticker in tickers:
+            row = dict(rec)
+            row["ticker"] = ticker
+            rows.append(row)
     df = pd.DataFrame(rows)
     if not quiet:
         print(f"    [US] financials: {len(df)} tickers")
     return df
+
+
+# ---------------------------------------------------------------------------
+# US per-stock fallback (SEC companyconcept) — redundancy for held names
+# the market-wide frames file misses entirely
+# ---------------------------------------------------------------------------
+def _concept_facts(d: dict) -> list:
+    return ((d or {}).get("units") or {}).get("USD") or []
+
+
+def _pick_fact(facts: list, frame: str, start: str = "",
+               end: str = ""):
+    """Fact dict for a target frame; falls back to period dates.
+
+    ``frame`` matches the XBRL frame tag (CY2025, CY2025Q4I...); when no
+    fact carries it (some filings never enter the frames aggregation),
+    duration facts are matched by (start, end) and instant facts by end.
+    """
+    for e in facts:
+        if e.get("frame") == frame:
+            return e
+    if start and end:
+        for e in facts:
+            if e.get("start") == start and e.get("end") == end:
+                return e
+    if end and not start:
+        cands = [e for e in facts if e.get("end") == end]
+        if cands:
+            return cands[-1]
+    return None
+
+
+def fetch_us_financials_one(ticker: str, quiet: bool = False) -> dict | None:
+    """Per-ticker US fundamentals via SEC companyconcept (all periods of
+    one concept for one registrant). Used when the frames file has no row
+    for a held ticker. Returns a rec in fetch_us_financials row form
+    (without ``ticker`` key) or None when nothing resolves."""
+    cik = load_sec_cik_map().get(normalize_us_ticker(ticker))
+    if not cik:
+        return None
+    ctx = frames_year_context()
+    cy, cy_prev = ctx["cy"], ctx["cy_prev"]
+
+    def concept_val(concept: str, frame: str, start: str = "",
+                    end: str = ""):
+        url = config.SEC_CONCEPT_URL.format(cik=cik, concept=concept)
+        d = SEC.get_json(url, timeout=30, retries=1)
+        fact = _pick_fact(_concept_facts(d), frame, start, end)
+        return num(fact.get("val")) if fact else None
+
+    def dur(year):
+        return (f"{year}-01-01", f"{year}-12-31")
+
+    s, e = dur(cy)
+    sp, ep = dur(cy_prev)
+    rev = concept_val("RevenueFromContractWithCustomerExcludingAssessedTax",
+                      f"CY{cy}", s, e)
+    if rev is None:
+        rev = concept_val("Revenues", f"CY{cy}", s, e)
+    rev_p = concept_val(
+        "RevenueFromContractWithCustomerExcludingAssessedTax",
+        f"CY{cy_prev}", sp, ep)
+    if rev_p is None:
+        rev_p = concept_val("Revenues", f"CY{cy_prev}", sp, ep)
+    rec = {
+        "rev": rev, "rev_prev": rev_p,
+        "profit": concept_val("NetIncomeLoss", f"CY{cy}", s, e),
+        "profit_prev": concept_val("NetIncomeLoss", f"CY{cy_prev}", sp, ep),
+        "gross_profit": concept_val("GrossProfit", f"CY{cy}", s, e),
+        "cost": concept_val("CostOfRevenue", f"CY{cy}", s, e),
+        "equity": concept_val("StockholdersEquity", f"CY{cy}Q4I", end=e),
+        "equity_prev": concept_val("StockholdersEquity", f"CY{cy_prev}Q4I",
+                                   end=ep),
+        "liabilities": concept_val("Liabilities", f"CY{cy}Q4I", end=e),
+        "assets": concept_val("Assets", f"CY{cy}Q4I", end=e),
+        "ocf": concept_val("NetCashProvidedByUsedInOperatingActivities",
+                           f"CY{cy}", s, e),
+    }
+    if rec["rev"] is None and rec["profit"] is None:
+        return None
+    rec.update(derive_us_metrics(rec))
+    if not quiet:
+        print(f"    [US] companyconcept fallback {ticker}: "
+              f"rev={rec.get('rev')}")
+    return rec
 
 
 # ---------------------------------------------------------------------------

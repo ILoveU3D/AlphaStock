@@ -1,8 +1,14 @@
 """Tests for value_genie.fetch.quotes (no network)."""
 
+from types import SimpleNamespace
+
+import pandas as pd
+import pytest
+
 from value_genie.fetch.quotes import (_parse_clist_rows,
                                       exclude_non_operating_names,
-                                      exclude_risk_names)
+                                      exclude_risk_names,
+                                      fetch_quote_any, fetch_quote_tx)
 
 
 def _row(code="600519", price="1500.5", name="Kweichow Moutai", **kw):
@@ -110,3 +116,85 @@ class TestFetchMarketQuotes:
         df = q.fetch_market_quotes("A")
         assert df.empty
         assert calls == [1] * (config.QUOTE_PAGE_RETRIES + 1)
+
+
+# ---------------------------------------------------------------------------
+# Tencent realtime fallback + fetch_quote_any (price redundancy)
+# ---------------------------------------------------------------------------
+def _tx_session(payload: bytes, status: int = 200):
+    class FakeResp:
+        pass
+
+    resp = FakeResp()
+    resp.status_code = status
+    resp.content = payload
+
+    class FakeSession:
+        @staticmethod
+        def get(url, timeout=10):
+            return resp
+
+    return SimpleNamespace(session=FakeSession())
+
+
+class TestFetchQuoteTx:
+    def test_parses_gbk_payload(self, monkeypatch):
+        from value_genie.fetch import quotes as q
+
+        # layout: idx1 name, idx2 code, idx3 price, idx4 prev close
+        raw = 'v_sh588060="1~上证科创ETF~588060~1.05~1.04~1.06~1.03~...~";'
+        monkeypatch.setattr(q, "TX", _tx_session(raw.encode("gbk")))
+        out = q.fetch_quote_tx("sh588060")
+        assert out["name"] == "上证科创ETF"
+        assert out["code"] == "588060"
+        assert out["price"] == 1.05
+        assert out["prev_close"] == 1.04
+        assert out["pct_chg"] == pytest.approx(
+            (1.05 / 1.04 - 1.0) * 100.0)
+
+    def test_garbage_returns_none(self, monkeypatch):
+        from value_genie.fetch import quotes as q
+
+        monkeypatch.setattr(q, "TX", _tx_session(b"pv_none=1;"))
+        assert q.fetch_quote_tx("sh000000") is None
+
+    def test_http_error_returns_none(self, monkeypatch):
+        from value_genie.fetch import quotes as q
+
+        monkeypatch.setattr(q, "TX", _tx_session(b"", status=502))
+        assert q.fetch_quote_tx("sh588060") is None
+
+
+class TestFetchQuoteAny:
+    def test_em_ulist_preferred(self, monkeypatch):
+        from value_genie.fetch import quotes as q
+
+        monkeypatch.setattr(
+            q, "fetch_quotes_by_secids",
+            lambda s: pd.DataFrame([{"code": "600519", "name": "Moutai",
+                                     "price": 1500.0, "pe_ttm": 25.0}]))
+        out = q.fetch_quote_any("A", "600519")
+        assert out["price"] == 1500.0
+
+    def test_tencent_fallback_for_out_of_universe_etf(self, monkeypatch):
+        from value_genie.fetch import quotes as q
+
+        monkeypatch.setattr(q, "fetch_quotes_by_secids",
+                            lambda s: pd.DataFrame())
+        # EM cannot serve the ETF; Tencent serves it under sh (5-prefix)
+        monkeypatch.setattr(
+            q, "fetch_quote_tx",
+            lambda sym: {"code": "588060", "name": "上证科创ETF",
+                         "price": 1.05, "prev_close": 1.04,
+                         "pct_chg": 0.96} if sym == "sh588060" else None)
+        out = q.fetch_quote_any("A", "588060")
+        assert out["price"] == 1.05
+        assert out["market_id"] == ""
+
+    def test_all_sources_fail_returns_none(self, monkeypatch):
+        from value_genie.fetch import quotes as q
+
+        monkeypatch.setattr(q, "fetch_quotes_by_secids",
+                            lambda s: pd.DataFrame())
+        monkeypatch.setattr(q, "fetch_quote_tx", lambda sym: None)
+        assert q.fetch_quote_any("HK", "00700") is None

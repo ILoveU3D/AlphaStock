@@ -9,8 +9,8 @@ triggers:
 commands:
   - doctor
   - fetch
-version: 9
-updated_at: 2026-09-03T10:43:21
+version: 12
+updated_at: 2026-09-04T18:37:58
 ---
 
 # Playbook
@@ -48,3 +48,6 @@ known snapshot is older than one trading day:
 - [2026-09-02 11:52] (ai) 2026-09-02 用户指令：新鲜度契约须按小时粒度计量而非按天——隔日快照（如 doctor 显示 1 day）不得视为新鲜/PASS；价格敏感回答前先报告快照的小时年龄（含 US klines 的滞后天数），并主动建议刷新快照
 - [2026-09-02 12:15] (ai) fetch 全量刷新 20260902 实测约 15.5 分钟（930.6s）：US SEC financials 是最慢一步约 10 分钟，其次三市场行情约 5 分钟，K线/F10 从前一日快照复用——按小时更新指令执行前先预估此成本
 - [2026-09-03 10:43] (ai) host python has no pandas: set PYTHONPATH to repo libs/ dir before any python -m value_genie command, else ModuleNotFoundError on import pandas
+- [2026-09-04 18:37] (ai) US class shares live under 3 symbol forms (SEC hyphen BRK-B / EM underscore BRK_B / Tencent dot usBRK.B.N); normalize_us_ticker + tx dot-variants handle all, kline needs the dot form on Tencent
+- [2026-09-04 18:37] (ai) PDD-style gross_margin gap: SEC GrossProfit tag discontinued after CY2022; derive from (Revenue - CostOfRevenue) in derive_us_metrics, and companyconcept per-stock fallback fills NaN derived columns in batch rows without overwriting
+- [2026-09-04 18:37] (ai) Watchlist pipeline: user holdings excluded by funnel gates (e.g. loss-makers fail pe>0) or outside EM_FS universe (ETFs like 588060, 5-prefix = Shanghai funds) still get quotes+kline+financials via watchlist.csv; quote fallback is Tencent, US financials fallback is SEC companyconcept

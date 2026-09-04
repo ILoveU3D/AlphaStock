@@ -52,6 +52,8 @@ def make_snap(tmp_path: Path, stale_kline: bool = False) -> Path:
                  ).to_csv(snap / "us_financials.csv", index=False)
     pd.DataFrame({"code": [str(i) for i in range(60)]}
                  ).to_csv(snap / "hk_f10.csv", index=False)
+    pd.DataFrame({"market": ["A"], "code": ["688795"]}
+                 ).to_csv(snap / "watchlist.csv", index=False)
     kdir = snap / "kline"
     kdir.mkdir(exist_ok=True)
     end = (pd.Timestamp.today() - (pd.Timedelta(days=30)
@@ -103,6 +105,17 @@ class TestDoctor:
         statuses = {c[0] for c in checks}
         assert "FAIL" not in statuses
         assert dr.doctor_exit_code(checks) == 0
+
+    def test_watchlist_check(self, tmp_path):
+        snap = make_snap(tmp_path)
+        checks = dr.run_checks(data_dir=tmp_path)
+        wl = [c for c in checks if "watchlist" in c[2]]
+        assert wl and wl[0][0] == "PASS"
+        assert "rows: 1" in wl[0][2]
+        (snap / "watchlist.csv").unlink()
+        checks = dr.run_checks(data_dir=tmp_path)
+        wl = [c for c in checks if "watchlist" in c[2]]
+        assert wl and wl[0][0] == "WARN" and "missing" in wl[0][2]
 
     def test_stale_kline_warns(self, tmp_path):
         make_snap(tmp_path, stale_kline=True)
