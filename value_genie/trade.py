@@ -436,3 +436,54 @@ def buy(sid, match, qty, note="", lot_override=None, snap_dir=None,
         "settle_amount": 0.0})
     save_season(season)
     return fill
+
+
+def sell(sid, match, qty, note="", snap_dir=None, today=None) -> dict:
+    """Market sell. A-share same-day round trips are rejected (T+1).
+    Proceeds enter the settling queue: same-market rebuy at T+1,
+    FX/cross-market use at T+1 (A/US) or T+2 (HK)."""
+    season = load_season(sid)
+    today = _today(today)
+    _require_active(season)
+    settle_due(season, today)
+    market, code = match.market, match.code
+    pos = _find_pos(season, market, code)
+    if not pos:
+        raise TradeError(f"no position in {market}/{code} in this season")
+    qty = float(qty)
+    if qty <= 0 or qty > pos["qty"] + EPS:
+        raise TradeError(
+            f"qty {qty:g} exceeds holding {pos['qty']:g} of "
+            f"{market}/{code}")
+    if market == "A" and pos.get("last_buy_date") == today:
+        raise TradeError(
+            f"A-share T+1: {code} bought {today} cannot be sold today")
+    price, source = live_price(market, code, match.name, snap_dir)
+    if price is None:
+        raise TradeError(
+            f"no price for {market}/{code} (live and snapshot both failed)")
+    cur = config.MARKET_CURRENCIES[market]
+    fees = calc_fees(market, code, qty, price, "sell")
+    fees_total = round(sum(fees.values()), 2)
+    gross = round(qty * price, 2)
+    proceeds = round(gross - fees_total, 2)
+    realized = round((price - pos["avg_cost"]) * qty - fees_total, 2)
+    pos["qty"] = round(pos["qty"] - qty, 4)
+    if pos["qty"] <= EPS:
+        season["positions"].remove(pos)
+    avail_d = next_trading_day(today, 1)
+    fx_d = next_trading_day(today, 2 if market == "HK" else 1)
+    season["settling"].append({
+        "currency": cur, "amount": proceeds, "origin_market": market,
+        "available_date": avail_d, "fx_date": fx_d})
+    fill = _append_fill(season, {
+        "ts": _now(), "date": today, "action": "sell",
+        "market": market, "code": code, "name": match.name,
+        "qty": qty, "price": float(price), "gross": gross,
+        "fees": fees, "fees_total": fees_total,
+        "cash_delta": 0.0, "settle_amount": proceeds,
+        "available_date": avail_d, "fx_date": fx_d,
+        "realized_pnl": realized, "currency": cur,
+        "session": _session_flag(market), "note": note})
+    save_season(season)
+    return fill
