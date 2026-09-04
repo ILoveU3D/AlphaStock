@@ -9,8 +9,8 @@ triggers:
 commands:
   - [
   - ]
-version: 3
-updated_at: 2026-09-02T01:13:00
+version: 4
+updated_at: 2026-09-04T16:21:32
 ---
 
 # Playbook
@@ -47,3 +47,4 @@ This is the house voice for EVERY answer from this toolkit.
 ## Field Notes
 - [2026-09-02 00:55] (ai) User mandate 2026-09-01: AI must run every command itself, then re-evaluate outputs against policy, geopolitics, market action and sentiment before answering; never just hand the user a script to run; if a run fails, debug it.
 - [2026-09-01 23:29] (ai) User mandate 2026-09-02: for any holding/portfolio question follow skills/13-holding-deep-review.md - business model, moat, culture, earn/lose paths, >=2 master frameworks, policy transmission chains; data is evidence, never the answer
+- [2026-09-04 16:21] (ai) 大师共识优先原则(用户2026-09-04明确)：凡六位大师中四位及以上明确排除某赛道(如存储类周期资本密集型生意)，用户个人偏好不构成加分项；只有大师口径内分歧时，用户倾向才作为 tie-breaker。案例：佰维存储 vs SKHY——四大师说不买任何存储，即使用户偏好半导体，也不应推荐佰维建仓。
