@@ -490,3 +490,37 @@ def test_journal_day_pnl(trade_dir, snap, prices):
     assert len(s["journal"]) == 2
     assert [e["date"] for e in s["nav_history"]] == [
         "2026-09-04", "2026-09-07"]
+
+
+# ---------------------------------------------------------------------------
+# Rendering / JSON
+# ---------------------------------------------------------------------------
+def test_render_smoke(trade_dir, snap, prices):
+    from value_genie import trade as tr
+    tr.new_season("s001", name="港美练手", base="USD", capital=2000.0,
+                  markets=["US"])
+    fill = tr.buy("s001", _match("US", "AAPL", "Apple"), qty=5,
+                  note="test", snap_dir=snap, today="2026-09-04")
+    txt = tr.render_fill(fill)
+    assert "BUY" in txt and "AAPL" in txt and "1,151.99" in txt
+    summaries = tr.status_all(snap_dir=snap, today="2026-09-04")
+    st = tr.render_status(summaries)
+    assert "s001" in st and "港美练手" in st
+    j = tr.render_journal([{"date": "2026-09-04", "nav": 1998.01,
+                            "day_pnl": -1.99, "text": "first day"}])
+    assert "first day" in j
+    season_txt = tr.render_season(tr.load_season("s001"))
+    assert "s001" in season_txt
+
+
+def test_to_json_pure(trade_dir, snap, prices):
+    from value_genie import trade as tr
+    tr.new_season("s001", base="USD", capital=2000.0, markets=["US"])
+    tr.buy("s001", _match("US", "AAPL", "Apple"), qty=5,
+           snap_dir=snap, today="2026-09-04")
+    payload = json.loads(tr.to_json(tr.load_season("s001")))
+    assert payload["id"] == "s001"
+    assert payload["positions"][0]["code"] == "AAPL"
+    summaries = tr.status_all(snap_dir=snap, today="2026-09-04")
+    parsed = json.loads(tr.to_json(summaries))
+    assert parsed[0]["nav"] == 1998.01

@@ -687,3 +687,136 @@ def write_journal(sid, text, snap_dir=None, today=None) -> dict:
     season["journal"].append(j)
     save_season(season)
     return j
+
+
+# ---------------------------------------------------------------------------
+# Rendering / JSON
+# ---------------------------------------------------------------------------
+def to_json(payload) -> str:
+    """Pure-JSON stdout contract (full precision, no banners)."""
+    return json.dumps(payload, ensure_ascii=False, indent=2)
+
+
+def render_fill(f: dict) -> str:
+    a = f["action"]
+    if a == "buy":
+        fees = " + ".join(f"{k} {v:,.2f}" for k, v in f["fees"].items())
+        lines = [
+            f"[BUY] {f['market']}/{f['code']} {f['name']} @ "
+            f"{f['price']:,.2f} x {f['qty']:g} = {f['gross']:,.2f} "
+            f"{f['currency']}",
+            f"  fees {fees} (total {f['fees_total']:,.2f}) | "
+            f"cash {f['cash_delta']:,.2f} {f['currency']}"
+            f" | fill #{f['seq']} {f['date']} session={f['session']}"]
+    elif a == "sell":
+        fees = " + ".join(f"{k} {v:,.2f}" for k, v in f["fees"].items())
+        lines = [
+            f"[SELL] {f['market']}/{f['code']} {f['name']} @ "
+            f"{f['price']:,.2f} x {f['qty']:g} = {f['gross']:,.2f} "
+            f"{f['currency']}",
+            f"  fees {fees} (total {f['fees_total']:,.2f}) | proceeds "
+            f"{f['settle_amount']:,.2f} {f['currency']} settle "
+            f"{f['available_date']} (fx {f['fx_date']}) | realized "
+            f"{f['realized_pnl']:+,.2f} {f['currency']}"
+            f" | fill #{f['seq']} {f['date']}"]
+    elif a == "fx":
+        lines = [
+            f"[FX] {f['amount']:,.2f} {f['from_cur']} -> "
+            f"{f['received']:,.2f} {f['to_cur']} @ {f['rate']:.4f} "
+            f"(spread {f['spread'] * 100:.2f}%) | fill #{f['seq']} "
+            f"{f['date']}"]
+    else:
+        lines = [
+            f"[{a.upper()}] {f['amount']:,.2f} {f['currency']} "
+            f"(base value {f['base_value']:,.2f}) | fill #{f['seq']} "
+            f"{f['date']}"]
+    if f.get("note"):
+        lines.append(f"  note: {f['note']}")
+    return "\n".join(lines)
+
+
+def render_status(summaries: list) -> str:
+    if not summaries:
+        return ("no active seasons; create one with `trade season new "
+                "<id> --capital N --base USD --markets US,HK`")
+    lines = ["== trading status =="]
+    for s in summaries:
+        lines.append(
+            f"[{s['id']}] {s['name']} ({s['status']}, "
+            f"{s['base_currency']})")
+        cash = ", ".join(f"{v:,.2f} {c}" for c, v in s["cash"].items())
+        lines.append(
+            f"  NAV {s['nav']:,.2f} {s['base_currency']} | day "
+            f"{s['day_pnl']:+,.2f} | net {s['net_return_pct']:+.2f}% | "
+            f"withdrawn {s['withdrawal_pct']:.2f}% of initial")
+        lines.append(
+            f"  cash {cash or '0'} | settling {len(s['settling'])} | "
+            f"positions {len(s['positions'])} | nav as of "
+            f"{s['last_nav_date']}")
+    return "\n".join(lines)
+
+
+def render_nav(entry: dict) -> str:
+    lines = [
+        f"== NAV {entry['date']} == {entry['nav']:,.2f} "
+        f"(cash {entry['cash_total']:,.2f}, settling "
+        f"{entry['settling_total']:,.2f})"]
+    for p in entry["positions"]:
+        lines.append(
+            f"  {p['market']}/{p['code']} {p['name']}: {p['qty']:g} @ "
+            f"{p['price']:,.2f} {p['currency']} = "
+            f"{p['value_base']:,.2f} (base)")
+    return "\n".join(lines)
+
+
+def render_journal(entries: list) -> str:
+    if not entries:
+        return "no journal entries yet"
+    lines = ["== trading journal =="]
+    for e in entries:
+        lines.append(
+            f"[{e['date']}] NAV {e['nav']:,.2f} | day "
+            f"{e['day_pnl']:+,.2f}\n  {e['text']}")
+    return "\n".join(lines)
+
+
+def render_season(season: dict) -> str:
+    r = season["rules"]
+    lines = [
+        f"== season {season['id']}: {season['name']} "
+        f"({season['status']}) ==",
+        f"initial {season['initial_capital']:,.2f} "
+        f"{season['base_currency']} | markets "
+        f"{','.join(r['markets'])} | fx_spread {r['fx_spread'] * 100:.2f}%",
+        f"created {season['created_at']}"]
+    cash = ", ".join(f"{v:,.2f} {c}"
+                     for c, v in season["cash"].items() if v)
+    lines.append(f"cash: {cash or '0'}")
+    if season["settling"]:
+        lines.append("settling:")
+        for e in season["settling"]:
+            lines.append(
+                f"  {e['amount']:,.2f} {e['currency']} from "
+                f"{e['origin_market']} (rebuy {e['available_date']}, "
+                f"fx {e['fx_date']})")
+    if season["positions"]:
+        lines.append("positions:")
+        for p in season["positions"]:
+            lines.append(
+                f"  {p['market']}/{p['code']} {p['name']}: {p['qty']:g} @ "
+                f"{p['avg_cost']:,.4f} {p['currency']} (lot {p['lot']}, "
+                f"last buy {p['last_buy_date']})")
+    t = season["totals"]
+    lines.append(
+        f"totals: deposited {t['deposited']:,.2f}, withdrawn "
+        f"{t['withdrawn']:,.2f} ({season['base_currency']})")
+    lines.append(f"fills: {len(season['fills'])} | nav days: "
+                 f"{len(season['nav_history'])} | journal: "
+                 f"{len(season['journal'])}")
+    for f in season["fills"][-5:]:
+        lines.append(f"  #{f['seq']} {f['date']} {f['action']} "
+                     f"{f.get('market', '')}/{f.get('code', '') or f.get('to_cur', '')}"
+                     f" {f.get('qty', f.get('amount', ''))}")
+    for j in season["journal"][-3:]:
+        lines.append(f"  journal [{j['date']}] {j['text'][:60]}")
+    return "\n".join(lines)
