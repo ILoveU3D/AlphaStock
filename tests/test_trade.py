@@ -613,3 +613,47 @@ def test_cli_journal_write_and_show(trade_dir, snap, prices, monkeypatch,
                "--data-dir", str(snap.parent.parent)])
     assert rc == 0
     assert "开学第一天" in capsys.readouterr().out
+
+
+# ---------------------------------------------------------------------------
+# Dashboard
+# ---------------------------------------------------------------------------
+def test_dashboard_write_and_render(trade_dir, snap, prices):
+    from value_genie import trade as tr
+    tr.new_season("s001", name="一期", base="USD", capital=2000.0,
+                  markets=["US"])
+    tr.buy("s001", _match("US", "AAPL", "Apple"), qty=5,
+           note="franchise", snap_dir=snap, today="2026-09-04")
+    tr.write_journal("s001", "day one: opened AAPL",
+                     snap_dir=snap, today="2026-09-04")
+    path, text = tr.write_dashboard("s001", snap_dir=snap,
+                                    today="2026-09-04")
+    assert path == trade_dir / "dashboards" / "s001.md"
+    assert path.exists()
+    # header + record
+    assert "一期" in text and "s001" in text
+    assert "1,998.01" in text                      # NAV
+    assert "-0.10%" in text                        # net return
+    assert "0.00%" in text                         # withdrawal
+    # positions with unrealized pnl (230 vs avg_cost 230.398)
+    assert "AAPL" in text and "-0.17%" in text
+    # cash, fees, fills, journal, nav history
+    assert "848.01" in text                        # USD cash
+    assert "1.99" in text                          # total fees
+    assert "franchise" in text                     # fill note
+    assert "day one: opened AAPL" in text          # journal text
+    assert "2026-09-04" in text                    # nav history date
+
+
+def test_cli_dashboard(trade_dir, snap, prices, monkeypatch, capsys):
+    from value_genie.__main__ import main
+    monkeypatch.setattr(
+        "value_genie.__main__._resolve_stock_or_exit",
+        lambda q: _match("US", "AAPL", "Apple"))
+    main(["trade", "season", "new", "s001", "--base", "USD",
+          "--capital", "2000", "--markets", "US"])
+    rc = main(["trade", "dashboard", "s001", "--no-check",
+               "--data-dir", str(snap.parent.parent)])
+    assert rc == 0
+    assert "wrote" in capsys.readouterr().out
+    assert (trade_dir / "dashboards" / "s001.md").exists()

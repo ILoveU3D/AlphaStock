@@ -780,6 +780,156 @@ def render_journal(entries: list) -> str:
     return "\n".join(lines)
 
 
+# ---------------------------------------------------------------------------
+# Dashboard (per-season markdown, committed to git for public review)
+# ---------------------------------------------------------------------------
+def dashboard_path(sid: str) -> Path:
+    return Path(config.TRADING_DIR) / "dashboards" / f"{sid}.md"
+
+
+def _fmt_pct(v) -> str:
+    return "-" if v is None else f"{v:+.2f}%"
+
+
+def _max_drawdown_pct(season: dict) -> float:
+    navs = [season["initial_capital"]] + [
+        e["nav"] for e in season["nav_history"]]
+    peak, max_dd = navs[0], 0.0
+    for v in navs[1:]:
+        peak = max(peak, v)
+        max_dd = min(max_dd, (v - peak) / peak * 100)
+    return round(max_dd, 2)
+
+
+def _fees_paid_base(season: dict, fx: dict, base: str) -> float:
+    total = 0.0
+    for f in season["fills"]:
+        if f["action"] in ("buy", "sell") and f["currency"] in fx:
+            total += f["fees_total"] * fx[f["currency"]] / fx[base]
+    return round(total, 2)
+
+
+def render_dashboard(season: dict, entry: dict, summary: dict) -> str:
+    """Markdown dashboard: record + positions + cash + fills + journal."""
+    sm, base = summary, summary["base_currency"]
+    r = season["rules"]
+    fx = entry.get("fx") or {}
+    lines = [
+        f"# 交易看板 · {sm['name'] or sm['id']}",
+        "",
+        f"> season `{sm['id']}` · {sm['status']} · 基准 {base} · "
+        f"初始资金 {sm['initial_capital']:,.2f} · 市场 "
+        f"{','.join(r['markets'])} · 换汇点差 "
+        f"{r['fx_spread'] * 100:.2f}%",
+        f"> 创建于 {season['created_at'][:10]} · NAV 数据截至 "
+        f"{sm['last_nav_date']} · 由 trade 引擎生成，请勿手改",
+        "",
+        "## 战绩",
+        "",
+        "| 指标 | 数值 |",
+        "|---|---|",
+        f"| 当前 NAV | **{sm['nav']:,.2f} {base}** |",
+        f"| 净值收益率（含提款还原） | {_fmt_pct(sm['net_return_pct'])} |",
+        f"| 当日盈亏 | {sm['day_pnl']:+,.2f} {base} |",
+        f"| 累计提款率 | "
+        f"{sm['withdrawal_pct']:.2f}% |",
+        f"| 最大回撤 | {_fmt_pct(_max_drawdown_pct(season))} |",
+        f"| 累计交易成本 | {_fees_paid_base(season, fx, base):,.2f} "
+        f"{base}（约） |",
+        f"| 成交笔数 / 持仓数 / 净值天数 | {len(season['fills'])} / "
+        f"{len(sm['positions'])} / {len(season['nav_history'])} |",
+        "",
+        "## 当前持仓",
+        ""]
+    if sm["positions"]:
+        price_by_key = {(p["market"], p["code"]): p["price"]
+                        for p in entry["positions"]}
+        lines += [
+            "| 市场 | 代码 | 名称 | 数量 | 均价 | 现价 | 市值"
+            f"（{base}） | 浮盈% |", "|---|---|---|---|---|---|---|---|"]
+        for p in season["positions"]:
+            price = price_by_key.get((p["market"], p["code"]))
+            vb = next((e["value_base"] for e in entry["positions"]
+                       if e["code"] == p["code"]), 0.0)
+            pnl = ("-" if not price or not p["avg_cost"] else
+                   f"{(price / p['avg_cost'] - 1) * 100:+.2f}%")
+            lines.append(
+                f"| {p['market']} | {p['code']} | {p['name']} | "
+                f"{p['qty']:g} | {p['avg_cost']:,.2f} {p['currency']} | "
+                f"{price:,.2f} {p['currency']} | {vb:,.2f} | {pnl} |")
+    else:
+        lines.append("（空仓）")
+    lines += ["", "## 现金", ""]
+    if sm["cash"]:
+        lines += ["| 币种 | 金额 | 折算（%s） |" % base, "|---|---|---|"]
+        for c, v in sm["cash"].items():
+            vb = (f"{v * fx[c] / fx[base]:,.2f}"
+                  if c in fx and base in fx else "-")
+            lines.append(f"| {c} | {v:,.2f} | {vb} |")
+    else:
+        lines.append("（零现金）")
+    if sm["settling"]:
+        lines += ["", "## 在途款项（交收中）", "",
+                  "| 金额 | 币种 | 可回补日 | 可换汇日 | 来源市场 |",
+                  "|---|---|---|---|---|"]
+        for e in sm["settling"]:
+            lines.append(
+                f"| {e['amount']:,.2f} | {e['currency']} | "
+                f"{e['available_date']} | {e['fx_date']} | "
+                f"{e['origin_market']} |")
+    fills = season["fills"][-10:]
+    lines += ["", "## 成交记录（最近 %d 笔）" % len(fills), "",
+              "| # | 日期 | 动作 | 标的 / 明细 | 理由 |",
+              "|---|---|---|---|---|"]
+    for f in fills:
+        if f["action"] in ("buy", "sell"):
+            detail = (f"{f['market']}/{f['code']} {f['name']} "
+                      f"{f['qty']:g} × {f['price']:,.2f} "
+                      f"{f['currency']}")
+        elif f["action"] == "fx":
+            detail = (f"{f['from_cur']}→{f['to_cur']} "
+                      f"{f['amount']:,.2f} @ {f['rate']:.4f}")
+        else:
+            detail = f"{f['currency']} {f['amount']:,.2f}"
+        note = (f["note"][:40] + "…") if len(f.get("note", "")) > 40 \
+            else f.get("note", "")
+        zh = {"buy": "买入", "sell": "卖出", "fx": "换汇",
+              "deposit": "入金", "withdraw": "提款"}[f["action"]]
+        lines.append(f"| {f['seq']} | {f['date']} | {zh} | {detail} "
+                     f"| {note} |")
+    journal = season["journal"][-5:]
+    lines += ["", "## 复盘日志（最近 %d 条）" % len(journal), ""]
+    for j in journal:
+        lines.append(f"**[{j['date']}]** NAV {j['nav']:,.2f} · 当日 "
+                     f"{j['day_pnl']:+,.2f}")
+        lines.append(f"> {j['text']}")
+        lines.append("")
+    hist = season["nav_history"][-15:]
+    lines += ["## NAV 历史（最近 %d 天）" % len(hist), "",
+              "| 日期 | NAV |", "|---|---|"]
+    for e in hist:
+        lines.append(f"| {e['date']} | {e['nav']:,.2f} |")
+    lines += [
+        "",
+        "---",
+        f"*由 Value Genie trade 引擎自动生成 · NAV 数据截至 "
+        f"{sm['last_nav_date']} · 每笔成交与每日净值标记后刷新*"]
+    return "\n".join(lines)
+
+
+def write_dashboard(sid, snap_dir=None, today=None):
+    """Mark NAV then write trading/dashboards/<sid>.md. Returns
+    (path, text). Works on paused/closed seasons too (final record)."""
+    entry = mark_nav(sid, snap_dir=snap_dir, today=today)
+    season = load_season(sid)
+    summary = _summary_from(season, entry)
+    text = render_dashboard(season, entry, summary)
+    path = dashboard_path(sid)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+    return path, text
+
+
 def render_season(season: dict) -> str:
     r = season["rules"]
     lines = [

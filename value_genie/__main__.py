@@ -611,6 +611,24 @@ def cmd_trade(args) -> int:
         else:
             print(tr.render_status(summaries))
         return 0
+
+    if cmd == "dashboard":
+        if not _check_freshness(args):
+            return 1
+        _season_or_exit(args.season_id)
+        try:
+            path, text = tr.write_dashboard(args.season_id,
+                                            snap_dir=_snap())
+        except tr.TradeError as exc:
+            print(f"[DASHBOARD FAILED] {exc}", file=sys.stderr)
+            return 1
+        if args.json:
+            season = tr.load_season(args.season_id)
+            entry = season["nav_history"][-1]
+            print(tr.to_json(tr._summary_from(season, entry)))
+        else:
+            print(f"wrote {path}")
+        return 0
     return 1
 
 
@@ -1018,6 +1036,12 @@ def build_parser() -> argparse.ArgumentParser:
 
     pt_st = pt_sub.add_parser("status", help="all active seasons overview")
     _trade_common(pt_st)
+
+    pt_db = pt_sub.add_parser(
+        "dashboard", help="write trading/dashboards/<id>.md "
+                          "(positions + record + journal, for git)")
+    pt_db.add_argument("season_id")
+    _trade_common(pt_db)
     pt.set_defaults(func=cmd_trade)
 
     pa = sub.add_parser("ask", help="analyze one stock (verdict first)")
