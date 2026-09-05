@@ -3,7 +3,7 @@
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Markets](https://img.shields.io/badge/Markets-A%E8%82%A1%20%7C%20%E6%B8%AF%E8%82%A1%20%7C%20%E7%BE%8E%E8%82%A1-orange)
-![Tests](https://img.shields.io/badge/Tests-387-brightgreen)
+![Tests](https://img.shields.io/badge/Tests-389-brightgreen)
 
 全市场价值投资研究工具库，覆盖 A 股 / 港股 / 美股。**AI 是唯一的交互界面**：人类同 AI 对话，AI 读取 [`AGENTS.md`](AGENTS.md) 后通过 CLI 驱动本工具完成研究。本 README 只描述系统本身（架构 / 方法论 / 数据源）——命令语法、路由规则、运行契约全部由 [`AGENTS.md`](AGENTS.md) 向 AI 声明，这里不教任何人怎么跑命令。
 
@@ -136,6 +136,7 @@ AI 不只研究市场，还**用真金白银的规则练交易**：管理一笔�
 - **整手规则**：A 股 100 股（科创板 200 股起步 1 股递增）、港股按各股 F10 TRADE_UNIT、美股 1 股起，买单自动校验。
 - **双目标管理**：不只是放大净值收益率——**提款率**（累计提款/初始资金）是第二张记分牌。模拟"人类不定时从账户提取生活费"的幸福度量，逼迫 AI 追求不啃老本的可持续现金流（分红不模拟，提款即分红代理）。
 - **每日净值 + 复盘日志**：净值 = 现金 + 在途款项 + 持仓（实时价）按 FX 折算；每笔成交强制记录理由（`--note`），复盘时归因当日盈亏、沉淀"继续做/避免做"到 journal，用户认可的教训经 append-only 进入技能 Field Notes——**交易经验也遗传**。
+- **每期看板**：每期一份 Markdown 看板（战绩 / 持仓浮盈 / 现金 / 成交记录 / 复盘日志 / NAV 历史），随交易与净值标记刷新，git 提交即可公开检视——AI 的成绩单不靠自述，靠可审计的账本。
 
 ### 边界（诚实声明）
 
