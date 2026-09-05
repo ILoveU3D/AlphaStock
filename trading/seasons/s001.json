@@ -1,0 +1,215 @@
+{
+  "id": "s001",
+  "name": "第一期-港美练手",
+  "status": "active",
+  "created_at": "2026-09-05T10:44:02",
+  "base_currency": "USD",
+  "initial_capital": 2500.0,
+  "rules": {
+    "markets": [
+      "A",
+      "HK",
+      "US"
+    ],
+    "fx_spread": 0.003
+  },
+  "cash": {
+    "CNY": 36.83,
+    "HKD": 2369.84,
+    "USD": 1015.65
+  },
+  "settling": [],
+  "positions": [
+    {
+      "market": "US",
+      "code": "TCOM",
+      "name": "携程",
+      "qty": 12.0,
+      "avg_cost": 41.1958,
+      "currency": "USD",
+      "last_buy_date": "2026-09-05",
+      "lot": 1
+    },
+    {
+      "market": "A",
+      "code": "002558",
+      "name": "巨人网络",
+      "qty": 100.0,
+      "avg_cost": 27.7203,
+      "currency": "CNY",
+      "last_buy_date": "2026-09-05",
+      "lot": 100
+    },
+    {
+      "market": "HK",
+      "code": "06831",
+      "name": "绿茶集团",
+      "qty": 400.0,
+      "avg_cost": 5.2152,
+      "currency": "HKD",
+      "last_buy_date": "2026-09-05",
+      "lot": 400
+    }
+  ],
+  "fills": [
+    {
+      "ts": "2026-09-05T10:46:21",
+      "date": "2026-09-05",
+      "action": "fx",
+      "from_cur": "USD",
+      "to_cur": "CNY",
+      "amount": 390.0,
+      "rate": 6.7079,
+      "received": 2608.23,
+      "spread": 0.003,
+      "note": "",
+      "seq": 1
+    },
+    {
+      "ts": "2026-09-05T10:46:24",
+      "date": "2026-09-05",
+      "action": "fx",
+      "from_cur": "USD",
+      "to_cur": "HKD",
+      "amount": 570.0,
+      "rate": 7.840912,
+      "received": 4455.91,
+      "spread": 0.003,
+      "note": "",
+      "seq": 2
+    },
+    {
+      "ts": "2026-09-05T10:46:37",
+      "date": "2026-09-05",
+      "action": "fx",
+      "from_cur": "USD",
+      "to_cur": "CNY",
+      "amount": 30.0,
+      "rate": 6.7079,
+      "received": 200.63,
+      "spread": 0.003,
+      "note": "",
+      "seq": 3
+    },
+    {
+      "ts": "2026-09-05T10:46:47",
+      "date": "2026-09-05",
+      "action": "buy",
+      "market": "US",
+      "code": "TCOM",
+      "name": "携程",
+      "qty": 12.0,
+      "price": 41.03,
+      "gross": 492.36,
+      "fees": {
+        "platform": 1.99
+      },
+      "fees_total": 1.99,
+      "cash_delta": -494.35,
+      "currency": "USD",
+      "session": "out",
+      "note": "PE5.7+利润+104%，动量分位6.7=典型急跌错杀；在线旅游龙头，现金充沛",
+      "settle_amount": 0.0,
+      "seq": 4
+    },
+    {
+      "ts": "2026-09-05T10:47:07",
+      "date": "2026-09-05",
+      "action": "buy",
+      "market": "A",
+      "code": "002558",
+      "name": "巨人网络",
+      "qty": 100.0,
+      "price": 27.67,
+      "gross": 2767.0,
+      "fees": {
+        "commission": 5.0,
+        "transfer": 0.03
+      },
+      "fees_total": 5.03,
+      "cash_delta": -2772.03,
+      "currency": "CNY",
+      "session": "out",
+      "note": "AI+游戏应用层，营收+182%利润+176%；唯一建得起的A股AI标的（存储股单手>4800美元超预算）",
+      "settle_amount": 0.0,
+      "seq": 5
+    },
+    {
+      "ts": "2026-09-05T10:48:16",
+      "date": "2026-09-05",
+      "action": "buy",
+      "market": "HK",
+      "code": "06831",
+      "name": "绿茶集团",
+      "qty": 400.0,
+      "price": 5.165,
+      "gross": 2066.0,
+      "fees": {
+        "platform": 18.0,
+        "stamp": 2.07
+      },
+      "fees_total": 20.07,
+      "cash_delta": -2086.07,
+      "currency": "HKD",
+      "session": "out",
+      "note": "PE5.5+ROE17.4餐厅连锁，动量分位8=超跌；六福一手2.2万港币超预算后的替代消费价值仓",
+      "settle_amount": 0.0,
+      "seq": 6
+    }
+  ],
+  "nav_history": [
+    {
+      "date": "2026-09-05",
+      "nav": 2491.73,
+      "cash_total": 1323.38,
+      "settling_total": 0,
+      "positions": [
+        {
+          "market": "US",
+          "code": "TCOM",
+          "name": "携程",
+          "qty": 12.0,
+          "price": 41.03,
+          "currency": "USD",
+          "value_base": 492.36
+        },
+        {
+          "market": "A",
+          "code": "002558",
+          "name": "巨人网络",
+          "qty": 100.0,
+          "price": 27.67,
+          "currency": "CNY",
+          "value_base": 412.5
+        },
+        {
+          "market": "HK",
+          "code": "06831",
+          "name": "绿茶集团",
+          "qty": 400.0,
+          "price": 5.165,
+          "currency": "HKD",
+          "value_base": 263.49
+        }
+      ],
+      "fx": {
+        "CNY": 1.0,
+        "HKD": 0.8555,
+        "USD": 6.7079
+      }
+    }
+  ],
+  "journal": [
+    {
+      "date": "2026-09-05",
+      "ts": "2026-09-05T10:48:34",
+      "nav": 2491.73,
+      "day_pnl": 0.0,
+      "text": "开仓日。按我的风格（急跌错杀+基本面没坏）从A/HK/US全市场建3仓：携程(PE5.7利润+104%动量分位6.7)、巨人网络(AI+游戏营收+182%)、绿茶集团(PE5.5超跌)。教训1：存储股是我的头号赛道但单手4800-5900美元超预算，2500美元本金玩不了科创板/A股高价股——第一期约束下赛道偏好只能部分落地，留待资金做大。教训2：换汇先算目标金额的USD成本（我第一次把2800CNY当2800USD传参被拒）。教训3：港股一手门槛差异巨大（六福1000股=2.8k美元超预算，绿茶400股=265美元刚好），下单前先查手数。剩余1k美元现金+2.4k港币+37元人民币，港币留存待港股机会避免双向点差。梧桐国际排名第1但触发非经营性暴利Field Note，主动排除。"
+    }
+  ],
+  "totals": {
+    "deposited": 0.0,
+    "withdrawn": 0.0
+  }
+}
