@@ -30,7 +30,8 @@ you found it.
 
 ## Freshness contract (code-enforced)
 
-- `ask`, `compare`, `overview`, `recommend`, and `holding list` run a
+- `ask`, `compare`, `overview`, `recommend`, `holding list`, and
+  `trade buy/sell/fx/cash/nav/journal/status/dashboard` run a
   **freshness gate** before any output. The gate calls
   `doctor.run_checks()` internally:
   - **FAIL** (no snapshot / ancient data >7 days) → command prints
@@ -112,6 +113,7 @@ excluded when no USD rate, concentration observations verbatim).
 | "你的虚拟盘怎么样 / 你的资产情况" | trading | `python -m value_genie trade status` |
 | "虚拟盘买入/卖出 X" | trading | `python -m value_genie trade buy/sell <season> X --qty N --note 理由` |
 | "复盘虚拟盘 / 记教训" | trading | `python -m value_genie trade journal <season> --text ...` + `skill note trading "..."` |
+| "看看你的战绩 / 更新看板" | trading | `python -m value_genie trade dashboard <season>` (writes `trading/dashboards/<id>.md`, commit it) |
 | "短期内最推荐/最被低估的股票" | horizon-framework | `python -m value_genie screen --horizon short` |
 | "超短线/短线有什么机会" | horizon-framework | `python -m value_genie screen --horizon ultrashort`（必须附短炒警示） |
 | "X适合中长期持有吗" | horizon-framework | `python -m value_genie ask X`（四周期剖面）+ 14 号 playbook 质性层 |
