@@ -270,6 +270,64 @@ def fetch_a_cashflow_annual(quiet: bool = False) -> pd.DataFrame:
 
 
 # ---------------------------------------------------------------------------
+# A-share cash dividends (分红送配事件表) — div_paid input
+# ---------------------------------------------------------------------------
+A_DIVIDEND_REPORT_NAME = "RPT_SHAREBONUS_DET"
+
+
+def _fetch_dividend_page(year: str, page: int) -> dict:
+    """One page of A-share cash-dividend events for a fiscal year."""
+    return DC.get_json(config.DC_WEB_URL, params={
+        "reportName": A_DIVIDEND_REPORT_NAME,
+        "columns": "ALL",
+        "filter": (f"(REPORT_DATE>='{year}-01-01')"
+                   f"(REPORT_DATE<='{year}-12-31')"),
+        "pageNumber": page,
+        "pageSize": config.A_PAGE_SIZE,
+        "sortTypes": "1",
+        "sortColumns": "SECURITY_CODE",
+        "source": "WEB",
+        "client": "WEB",
+    }, retries=3) or {}
+
+
+def fetch_a_dividends(years: list, quiet: bool = False) -> pd.DataFrame:
+    """FY cash dividends declared per A-share, aggregated from the
+    dividend-events report: div_paid = sum(PRETAX_BONUS_RMB / 10
+    x TOTAL_SHARES) over events whose REPORT_DATE falls in the fiscal
+    year. Events without a cash amount (bare commitments) are skipped.
+
+    This is the A-share div_paid input for borrowed_dividend — the
+    mechanism is strongest here: a dividend record is a precondition
+    for refinancing eligibility, so strained companies keep paying.
+    """
+    rows = []
+    for year in years:
+        d = _fetch_dividend_page(year, 1)
+        total = ((d.get("result") or {}).get("count")) or 0
+        if not total:
+            continue
+        acc: dict = {}
+        for pn in range(1, total // config.A_PAGE_SIZE + 2):
+            page = (((_fetch_dividend_page(year, pn).get("result") or {})
+                     .get("data")) or [])
+            for r in page:
+                dps = num(r.get("PRETAX_BONUS_RMB"))  # CNY per 10 shares
+                shares = num(r.get("TOTAL_SHARES"))
+                code = str(r.get("SECURITY_CODE") or "")
+                if not code or dps is None or not shares:
+                    continue
+                key = (code, year)
+                acc[key] = acc.get(key, 0.0) + dps / 10.0 * shares
+            time.sleep(0.4)
+        if not quiet:
+            print(f"    [A] dividends {year}: {len(acc)} stocks")
+        rows += [{"code": c, "fy": y, "div_paid": v}
+                 for (c, y), v in acc.items()]
+    return pd.DataFrame(rows, columns=["code", "fy", "div_paid"])
+
+
+# ---------------------------------------------------------------------------
 # US batch financials (SEC EDGAR frames)
 # ---------------------------------------------------------------------------
 def frames_year_context(today: date | None = None) -> dict:

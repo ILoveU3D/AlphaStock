@@ -365,3 +365,33 @@ class TestFetchACashflowAnnual:
         out = f.fetch_a_cashflow_annual(quiet=True)
         assert len(out) == 1
         assert out.iloc[0]["code"] == "000001"
+
+
+class TestFetchADividends:
+    def test_aggregates_events_per_fy(self, monkeypatch):
+        # two FY2025 events for 600519 (interim + annual), one bare
+        # commitment row without amounts must be skipped
+        def fake_page(year, pn):
+            if year != "2025" or pn > 1:
+                return {"result": {"count": 3, "data": []}}
+            return {"result": {"count": 3, "data": [
+                {"SECURITY_CODE": "600519", "REPORT_DATE": "2025-09-30",
+                 "PRETAX_BONUS_RMB": "239.57", "TOTAL_SHARES": "1256197800"},
+                {"SECURITY_CODE": "600519", "REPORT_DATE": "2025-12-31",
+                 "PRETAX_BONUS_RMB": "280.2423", "TOTAL_SHARES": "1256197800"},
+                {"SECURITY_CODE": "000002", "REPORT_DATE": "2026-06-30",
+                 "PRETAX_BONUS_RMB": None, "TOTAL_SHARES": None},
+            ]}}
+
+        monkeypatch.setattr(f, "_fetch_dividend_page", fake_page)
+        out = f.fetch_a_dividends(["2025"], quiet=True)
+        assert len(out) == 1
+        r = out.iloc[0]
+        assert r["code"] == "600519" and r["fy"] == "2025"
+        assert r["div_paid"] == pytest.approx(
+            (239.57 + 280.2423) / 10.0 * 1256197800)
+
+    def test_no_events_returns_empty(self, monkeypatch):
+        monkeypatch.setattr(f, "_fetch_dividend_page",
+                            lambda year, pn: {"result": {"count": 0}})
+        assert f.fetch_a_dividends(["2025"], quiet=True).empty
