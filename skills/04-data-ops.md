@@ -9,8 +9,8 @@ triggers:
 commands:
   - doctor
   - fetch
-version: 12
-updated_at: 2026-09-04T18:37:58
+version: 13
+updated_at: 2026-09-07T00:02:48
 ---
 
 # Playbook
@@ -51,3 +51,4 @@ known snapshot is older than one trading day:
 - [2026-09-04 18:37] (ai) US class shares live under 3 symbol forms (SEC hyphen BRK-B / EM underscore BRK_B / Tencent dot usBRK.B.N); normalize_us_ticker + tx dot-variants handle all, kline needs the dot form on Tencent
 - [2026-09-04 18:37] (ai) PDD-style gross_margin gap: SEC GrossProfit tag discontinued after CY2022; derive from (Revenue - CostOfRevenue) in derive_us_metrics, and companyconcept per-stock fallback fills NaN derived columns in batch rows without overwriting
 - [2026-09-04 18:37] (ai) Watchlist pipeline: user holdings excluded by funnel gates (e.g. loss-makers fail pe>0) or outside EM_FS universe (ETFs like 588060, 5-prefix = Shanghai funds) still get quotes+kline+financials via watchlist.csv; quote fallback is Tencent, US financials fallback is SEC companyconcept
+- [2026-09-07 00:02] (ai) git workflow lesson 2026-09-06: NEVER push origin main directly — repo has PR-required branch protection and the stored credential silently bypasses it; always create a feature branch and push ONLY the branch; gh CLI is not installed; the human opens/merges PRs on GitHub themselves
