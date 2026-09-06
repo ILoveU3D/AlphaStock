@@ -112,6 +112,10 @@ US_FRAMES_SPEC = [
     ("StockholdersEquity", "instant", ["cy", "cy_prev"]),
     ("Liabilities", "instant", ["cy"]),
     ("Assets", "instant", ["cy"]),
+    # cashflow-first factors: capex / dividends paid / net financing
+    ("PaymentsToAcquirePropertyPlantAndEquipment", "duration", ["cy"]),
+    ("PaymentsOfDividendsCommonStock", "duration", ["cy"]),
+    ("NetCashProvidedByUsedInFinancingActivities", "duration", ["cy"]),
     # one-off P&L items (must stay in sync with US_ONEOFF_CONCEPTS below)
     ("DisposalGroupNotDiscontinuedOperationGainLossOnDisposal", "duration",
      ["cy", "cy_prev"]),

@@ -446,3 +446,34 @@ class TestHkCashflow:
             f.DC, "get_json", lambda *a, **k: {"result": {"data": data}})
         r = f.fetch_hk_cashflow("06831").iloc[0]
         assert pd.isna(r.get("div_paid"))
+
+
+class TestUsCashflowFrames:
+    def test_spec_contains_new_concepts(self):
+        from value_genie import config
+        concepts = {c for c, _, _ in config.US_FRAMES_SPEC}
+        assert "PaymentsToAcquirePropertyPlantAndEquipment" in concepts
+        assert "PaymentsOfDividendsCommonStock" in concepts
+        assert "NetCashProvidedByUsedInFinancingActivities" in concepts
+
+    def test_one_ticker_gains_cashflow_fields(self, monkeypatch):
+        ctx = f.frames_year_context()
+        vals = {
+            "PaymentsToAcquirePropertyPlantAndEquipment": 200.0,
+            "PaymentsOfDividendsCommonStock": 50.0,
+            "NetCashProvidedByUsedInFinancingActivities": 80.0,
+            "RevenueFromContractWithCustomerExcludingAssessedTax": 1000.0,
+        }
+
+        def fake_get_json(url, *args, **kwargs):
+            if "company_tickers" in url:
+                return {"0": {"ticker": "PDD", "cik_str": 123}}
+            concept = url.rsplit("/", 1)[-1].split(".")[0]
+            return {"units": {"USD": [
+                {"frame": f"CY{ctx['cy']}", "val": vals.get(concept)}]}}
+
+        monkeypatch.setattr(f.SEC, "get_json", fake_get_json)
+        rec = f.fetch_us_financials_one("PDD", quiet=True)
+        assert rec["capex"] == 200.0
+        assert rec["div_paid"] == 50.0
+        assert rec["net_fin_cf"] == 80.0

@@ -536,6 +536,11 @@ def fetch_us_financials(quiet: bool = False) -> pd.DataFrame:
     liab = frames[("Liabilities", "cy")]
     assets = frames[("Assets", "cy")]
     ocf = frames.get(("NetCashProvidedByUsedInOperatingActivities", "cy")) or {}
+    capex = frames.get(("PaymentsToAcquirePropertyPlantAndEquipment",
+                        "cy")) or {}
+    div_paid = frames.get(("PaymentsOfDividendsCommonStock", "cy")) or {}
+    net_fin = frames.get(
+        ("NetCashProvidedByUsedInFinancingActivities", "cy")) or {}
 
     oneoff = sum_oneoff_frames(frames, "cy", config.US_ONEOFF_CONCEPTS)
     oneoff_p = sum_oneoff_frames(frames, "cy_prev",
@@ -553,7 +558,9 @@ def fetch_us_financials(quiet: bool = False) -> pd.DataFrame:
                "equity": eq.get(cik), "equity_prev": eq_p.get(cik),
                "liabilities": liab.get(cik), "assets": assets.get(cik),
                "oneoff": oneoff.get(cik), "oneoff_prev": oneoff_p.get(cik),
-               "ocf": ocf.get(cik)}
+               "ocf": ocf.get(cik),
+               "capex": capex.get(cik), "div_paid": div_paid.get(cik),
+               "net_fin_cf": net_fin.get(cik)}
         rec.update(derive_us_metrics(rec))
         for ticker in tickers:
             row = dict(rec)
@@ -640,6 +647,12 @@ def fetch_us_financials_one(ticker: str, quiet: bool = False) -> dict | None:
         "assets": concept_val("Assets", f"CY{cy}Q4I", end=e),
         "ocf": concept_val("NetCashProvidedByUsedInOperatingActivities",
                            f"CY{cy}", s, e),
+        "capex": concept_val(
+            "PaymentsToAcquirePropertyPlantAndEquipment", f"CY{cy}", s, e),
+        "div_paid": concept_val(
+            "PaymentsOfDividendsCommonStock", f"CY{cy}", s, e),
+        "net_fin_cf": concept_val(
+            "NetCashProvidedByUsedInFinancingActivities", f"CY{cy}", s, e),
     }
     if rec["rev"] is None and rec["profit"] is None:
         return None
