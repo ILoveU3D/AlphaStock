@@ -16,7 +16,8 @@ from . import config
 from .fetch.fundamentals import fetch_hk_f10
 from .fetch.kline import (fetch_kline_any, kline_cache_path,
                           kline_is_fresh, load_kline)
-from .fetch.pipeline import apply_gates, backfill_kline_factors, \
+from .fetch.pipeline import add_cashflow_factors, apply_gates, \
+    backfill_kline_factors, load_annual_cashflows, \
     merge_a_financials, merge_us_financials
 from .fetch.quotes import fetch_quotes_by_secids
 from .report import resolve_snapshot
@@ -43,6 +44,9 @@ EVIDENCE_METRICS = [
     ("ret_60d", "3m return %", False),
     ("volatility", "Volatility %", True),
     ("drawdown_52w", "Drawdown %", False),
+    ("ocf_yield", "OCF yield % (annual)", False),
+    ("fcf_yield", "FCF yield % (annual)", False),
+    ("capex_to_ocf", "Capex/OCF", True),
 ]
 
 VERDICTS = [
@@ -80,10 +84,46 @@ def verdict_band(pct):
 def _flat_row(result: dict) -> dict:
     row = dict(result.get("quote") or {})
     row.update(result.get("fundamentals") or {})
+    row.update(result.get("cashflow_factors") or {})
     for k, v in (result.get("kline") or {}).items():
         if not k.startswith("_"):
             row[k] = v
     return row
+
+
+def _snapshot_factors(snap, market: str, code: str) -> dict:
+    """Cashflow-first factors for the target from the snapshot's
+    master/watchlist rows (annual basis, snapshot market cap)."""
+    if snap is None:
+        return {}
+    for fname in ("master.csv", "watchlist.csv"):
+        p = snap / fname
+        if not p.exists():
+            continue
+        try:
+            df = pd.read_csv(p, dtype={"code": str})
+        except (OSError, pd.errors.ParserError, ValueError):
+            continue
+        if "market" not in df.columns or "code" not in df.columns:
+            continue
+        hit = df[(df["market"] == market)
+                 & (df["code"].astype(str) == str(code))]
+        if not hit.empty:
+            r = hit.iloc[0]
+            return {k: r.get(k) for k in ("ocf_yield", "fcf_yield",
+                                         "capex_to_ocf",
+                                         "borrowed_dividend")}
+    return {}
+
+
+def _manifest_fx(snap) -> float | None:
+    """HKD/CNY rate recorded by the fetch run, if any."""
+    try:
+        m = json.loads((snap / "manifest.json").read_text(encoding="utf-8"))
+        v = m.get("fx_hkdcny")
+        return float(v) if v else None
+    except (OSError, ValueError, TypeError):
+        return None
 
 
 def risk_flags(result: dict) -> list:
@@ -109,6 +149,9 @@ def risk_flags(result: dict) -> list:
         flags.append(f"deep drawdown: {v:.0f}% from 52w high")
     if (v := _num("volatility")) is not None and v > 60:
         flags.append(f"high volatility: {v:.0f}% annualized")
+    if (v := _num("borrowed_dividend")) is not None and v > 0:
+        flags.append("borrowed dividend: 年报分红超过自由现金流且筹资净流入"
+                     "（A 股语境：保再融资资格的借钱分红，危险信号）")
     if result.get("warnings"):
         flags.append("incomplete data: " + "; ".join(result["warnings"]))
     return flags
@@ -137,6 +180,9 @@ def build_peer_set(snapshot_dir, market: str) -> pd.DataFrame:
     else:
         df = quotes
     gated = apply_gates(df, market)
+    annual = load_annual_cashflows(snap)
+    if not annual.empty:
+        gated = add_cashflow_factors(gated, _manifest_fx(snap), annual)
     return backfill_kline_factors(gated, snap)
 
 
@@ -261,6 +307,8 @@ def analyze_stock(match: Match, snapshot_dir=None, live: bool = True,
     if not fins:
         result["warnings"].append("no fundamentals available")
     result["fundamentals"] = fins
+    result["cashflow_factors"] = _snapshot_factors(snap, match.market,
+                                                   match.code)
 
     klm = target_kline_metrics(match, snap)
     result["kline"] = klm
@@ -274,6 +322,9 @@ def analyze_stock(match: Match, snapshot_dir=None, live: bool = True,
             result["warnings"].append("empty peer universe")
         else:
             row = _target_row(match, quote, fins, klm)
+            row.update({k: v for k, v in result["cashflow_factors"].items()
+                        if v is not None
+                        and not (isinstance(v, float) and pd.isna(v))})
             frame = pd.concat(
                 [peers, pd.DataFrame([row])], ignore_index=True)
             frame = add_pillar_scores(frame)
@@ -373,7 +424,8 @@ def render_brief(result: dict) -> str:
         lines.append(f"blended rank: {result['composite_percentile']:.0f}th "
                      f"percentile of the {m.market} gated universe")
     for col, label in (("pe_ttm", "PE"), ("rev_yoy", "rev YoY"),
-                       ("roe", "ROE")):
+                       ("roe", "ROE"), ("fcf_yield", "FCF yield"),
+                       ("capex_to_ocf", "capex/ocf")):
         v = row.get(col)
         if v is not None and not pd.isna(v):
             extra = f" ({p[col]:.0f}th pctile)" if col in p else ""

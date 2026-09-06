@@ -203,3 +203,39 @@ class TestCompare:
         assert len(df) == 2
         assert set(df.columns) >= {"name", "pe_ttm", "verdict",
                                    "composite_pctile", "risks"}
+
+
+class TestSnapshotFactors:
+    def test_reads_master_row(self, tmp_path):
+        pd.DataFrame({"market": ["A"], "code": ["600519"],
+                      "fcf_yield": [8.0], "borrowed_dividend": [0],
+                      "capex_to_ocf": [0.2], "ocf_yield": [10.0]}
+                     ).to_csv(tmp_path / "master.csv", index=False)
+        out = az._snapshot_factors(tmp_path, "A", "600519")
+        assert out["fcf_yield"] == 8.0
+        assert out["borrowed_dividend"] == 0
+
+    def test_falls_back_to_watchlist(self, tmp_path):
+        pd.DataFrame({"market": ["US"], "code": ["PDD"],
+                      "fcf_yield": [12.0], "borrowed_dividend": [1]}
+                     ).to_csv(tmp_path / "watchlist.csv", index=False)
+        out = az._snapshot_factors(tmp_path, "US", "PDD")
+        assert out["fcf_yield"] == 12.0
+        assert out["borrowed_dividend"] == 1
+
+    def test_no_snapshot_returns_empty(self, tmp_path):
+        assert az._snapshot_factors(tmp_path, "A", "600519") == {}
+
+
+class TestBorrowedDividendFlag:
+    def test_flagged_verbatim(self):
+        result = {"quote": {}, "fundamentals": {}, "warnings": [],
+                  "cashflow_factors": {"borrowed_dividend": 1}}
+        flags = az.risk_flags(result)
+        assert any("borrowed dividend" in fl for fl in flags)
+
+    def test_clean_row_not_flagged(self):
+        result = {"quote": {}, "fundamentals": {}, "warnings": [],
+                  "cashflow_factors": {"borrowed_dividend": 0}}
+        assert not any("borrowed dividend" in fl
+                       for fl in az.risk_flags(result))
