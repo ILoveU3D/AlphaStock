@@ -127,11 +127,11 @@ by the skill filenames 07-12):
 
 | # | Master | id | Core focus | Key gates |
 |---|---|---|---|---|
-| 1 | Buffett | `buffett` | Franchise + owner earnings (evolved past cigar-butts) | ROE≥15%, 毛利率≥40%, 负债率≤60%, OCF yield≥5% |
-| 2 | Munger | `munger` | Invert + latticework; wonderful at fair price | ROE≥20%, 毛利率≥40%, 负债率≤50% |
-| 3 | Graham | `graham` | Margin of safety as arithmetic | PE×PB≤22.5 (派生列), 负债率≤50%, ROE≥10% |
+| 1 | Buffett | `buffett` | Franchise + owner earnings (evolved past cigar-butts) | ROE≥15%, 毛利率≥40%, 负债率≤60%, OCF yield≥5%, FCF yield≥4%, 借钱分红否决 |
+| 2 | Munger | `munger` | Invert + latticework; wonderful at fair price | ROE≥20%, 毛利率≥40%, 负债率≤50%, 借钱分红否决 |
+| 3 | Graham | `graham` | Margin of safety as arithmetic | PE×PB≤22.5 (派生列), 负债率≤50%, ROE≥10%, 借钱分红否决 |
 | 4 | Livermore | `livermore` | Pivotal points + risk discipline; pure price | ret_60d≥0, 波动率市场内前50%, pos_52w≥60 |
-| 5 | Duan Yongping | `duan` | Business model first, no stop-losses | ROE≥20%, 毛利率≥40%, 波动率市场内后40%（pctl≤60） |
+| 5 | Duan Yongping | `duan` | Business model first, no stop-losses | ROE≥20%, 毛利率≥40%, 波动率市场内后40%（pctl≤60）, 借钱分红否决 |
 | 6 | Justin Sun | `sheng` | Attention economics + narrative momentum | ret_60d≥0, 波动率市场内前40%（pctl≥60） |
 
 `python -m value_genie strategy list` shows all strategies (presets +

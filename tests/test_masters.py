@@ -182,3 +182,30 @@ class TestMasterGates:
         # row 1: ret fail -> False
         # row 2: vol pctl 33.3 fail, pos_52w 50 < 60 fail -> False
         assert mask.tolist() == [True, False, False]
+
+
+class TestCashflowFirstGates:
+    def test_buffett_absorbs_both(self):
+        gates = {c: (op, v) for c, op, v in get_strategy("buffett").gates}
+        assert gates["borrowed_dividend"] == ("<=", 0.0)
+        assert gates["fcf_yield"] == (">=", 4.0)
+
+    def test_fundamental_masters_reject_borrowed_dividend(self):
+        for sid in ("munger", "graham", "duan"):
+            assert any(c == "borrowed_dividend"
+                       for c, _, _ in get_strategy(sid).gates), sid
+
+    def test_price_masters_untouched(self):
+        for sid in ("livermore", "sheng"):
+            assert not any(c == "borrowed_dividend"
+                           for c, _, _ in get_strategy(sid).gates), sid
+
+    def test_flagged_row_excluded_from_buffett(self):
+        df = pd.DataFrame({
+            "market": ["A", "A"], "code": ["1", "2"],
+            "roe": [20.0, 20.0], "gross_margin": [50.0, 50.0],
+            "debt_ratio": [30.0, 30.0], "ocf_yield": [8.0, 8.0],
+            "fcf_yield": [6.0, 6.0],
+            "borrowed_dividend": [0, 1]})
+        mask = evaluate_gates(df, get_strategy("buffett").gates)
+        assert list(mask) == [True, False]
