@@ -1,8 +1,16 @@
 # 现金流优先的估值体系升级 — 设计文档
 
-日期：2026-09-05（v2）
+日期：2026-09-05（v2.1）
 状态：已与用户逐项确认（四点建议 → 三次决策问答 → v1 六节通过 →
 用户三点修订：港股补齐 / 借钱分红机制 / 大师策略吸收 → v2 通过）
+
+v2.1（写计划时的事实修正，未经用户重审但方向一致——检测更严）：
+探测发现 A 股行情接口（CLIST_FIELDS）**不含股息率字段**，DMSK 现金流表
+也无分红支付列——v2 的"股息率×市值近似"不可行。改为直接抓取东财
+分红送配事件表 `RPT_SHAREBONUS_DET`（含每10股股息税前
+`PRETAX_BONUS_RMB` 与 `TOTAL_SHARES`，茅台实测有值）：按
+(code, 分红年度 REPORT_DATE 所在年份) 聚合 `div_paid = Σ 股息/10 ×
+总股本`，与年报现金流期对齐。比近似更准。
 
 ## 背景与用户诉求
 
@@ -65,8 +73,11 @@ A 股现行再融资规则要求近年现金分红记录，分红因此成为再
   - `NETCASH_FINANCE` → net_fin_cf
 - 字段已随现有请求的 `columns: "ALL"` 返回，成本仅为一期额外翻页
   （全市场约 +23 页 × 0.4s）。
-- A 股分红支付额**近似**：`div_paid ≈ dividend_yield/100 × market_cap`
-  （trailing 股息率 × 市值，年报口径无当日股息支付额字段）。
+- **A 股分红支付额（v2.1 直接源）**：新增批量抓取
+  `RPT_SHAREBONUS_DET`（分红送配事件表，filter REPORT_DATE 年度区间，
+  分页全市场），输出 `a_dividends.csv`（code, fy, div_paid）：
+  `div_paid = Σ PRETAX_BONUS_RMB/10 × TOTAL_SHARES`（按 code+年度
+  聚合，无金额的预案行跳过）；fy 与年报现金流 report_date 年份对齐。
 
 ### 港股（同文件 + `fetch/pipeline.py` deep pass）
 
@@ -119,7 +130,8 @@ A 股现行再融资规则要求近年现金分红记录，分红因此成为再
   cy frame，不变）。`cash_conversion` 保持期中/期中匹配，不动。
 - **缺失语义**：年报现金流缺失 → 三因子 NaN；`borrowed_dividend` 写入
   master 时 `fillna(0)`（无罪推定，gate 可用），数据缺失由既有
-  "incomplete data" 旗标在 ask 中提示。
+  "incomplete data" 旗标在 ask 中提示。A 股 div_paid 来自
+  `a_dividends.csv`（v2.1：直接源，不再用股息率近似）。
 - **支柱评分**：`PILLAR_FACTORS["cashflow"]` 追加 `("fcf_yield", 1)`；
   `capex_to_ocf`、`borrowed_dividend` 不进支柱（前者方向争议留给定性层，
   后者是排除项不是评分项）。value 支柱组成不变（DCF 重视由权重体现）。
@@ -181,6 +193,7 @@ user set-style me \
   - 假阳反例：ocf=100, capex=120, div=5, net_fin=+50 → 0（借钱搞资本开支）；
   - 净筹资为负 → 0；div_paid 缺失 → 0。
 - A 股年报表：年报期选取（含回填）、新列解析、传递到 master。
+- A 股分红表：事件聚合（同年多笔求和）、无金额行跳过、fy 对齐。
 - HK 现金流量表解析：
   - 长表→宽表（科目映射 003999/005005+005007/007004/007999）；
   - 财年识别：12 月年结、3 月年结（START_DATE 跨度≈365 天）两种 fixture；
