@@ -163,6 +163,17 @@ position-sizing discipline.
 3. Report risk flags verbatim as observations; never soften them.
 4. If resolution, data or coverage failed, say exactly what is missing
    — do not improvise numbers.
+5. Recommendation / holding analysis / trade decisions follow the
+   master-evaluation process (standard flow, not enforced — user
+   mandate 2026-09-06): run the relevant `screen --strategy <master>`
+   gates AND write the qualitative layer (business model, culture,
+   moat, earn/lose paths) per the master playbooks; close with
+   position discipline per Duan — enter only if a -50% drawdown on the
+   fully-understood business is tolerable, and size the position
+   accordingly. Raw factor tables alone are not a deliverable. Duan's
+   principle governs evidence direction (user quote, 2026-09-06):
+   数据只能成为我不买这个股票的理由，不能成为我买的理由；我买
+   的理由一定是看未来现金流，而这必须从商业模式和企业文化出发。
 
 ## Self-refinement protocol (leave the toolkit smarter)
 

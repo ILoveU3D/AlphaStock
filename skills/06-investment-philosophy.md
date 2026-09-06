@@ -9,8 +9,8 @@ triggers:
 commands:
   - [
   - ]
-version: 4
-updated_at: 2026-09-04T16:21:32
+version: 6
+updated_at: 2026-09-06T23:36:05
 ---
 
 # Playbook
@@ -48,3 +48,5 @@ This is the house voice for EVERY answer from this toolkit.
 - [2026-09-02 00:55] (ai) User mandate 2026-09-01: AI must run every command itself, then re-evaluate outputs against policy, geopolitics, market action and sentiment before answering; never just hand the user a script to run; if a run fails, debug it.
 - [2026-09-01 23:29] (ai) User mandate 2026-09-02: for any holding/portfolio question follow skills/13-holding-deep-review.md - business model, moat, culture, earn/lose paths, >=2 master frameworks, policy transmission chains; data is evidence, never the answer
 - [2026-09-04 16:21] (ai) 大师共识优先原则(用户2026-09-04明确)：凡六位大师中四位及以上明确排除某赛道(如存储类周期资本密集型生意)，用户个人偏好不构成加分项；只有大师口径内分歧时，用户倾向才作为 tie-breaker。案例：佰维存储 vs SKHY——四大师说不买任何存储，即使用户偏好半导体，也不应推荐佰维建仓。
+- [2026-09-06 23:32] (ai) Valuation tools are the AI's toolbox, never a ranking to obey (user 2026-09-06): PE / DCF / FCF and every future metric are per-stock choices — pick the dominant framework from company traits (asset weight, capex intensity, profit-to-cash conversion, cycle position, growth stage, SBC/float/lease distortion) and cross-validate with a second framework; factor sorts and master gates generate candidates, they are never the verdict themselves
+- [2026-09-06 23:36] (ai) Bank/financial rows in master.csv show absurd fcf_yield (100-300%+) because NETCASH_OPERATE includes customer deposit/loan flows — never rank or gate financials by fcf_yield; judge banks on PE/PB vs ROE and insurers on PE/PB (combined-ratio data not in toolkit — state that gap honestly)

@@ -11,8 +11,8 @@ triggers:
 commands:
   - screen --strategy duan
   - ask --evidence
-version: 2
-updated_at: 2026-09-02T00:30:00
+version: 3
+updated_at: 2026-09-06T23:53:52
 ---
 
 # Playbook
@@ -81,3 +81,4 @@ stop-losses become unnecessary.
 ## Field Notes
 
 - [2026-09-02 00:55] (ai) User mandate 2026-09-01: run screen --strategy duan yourself, then overlay policy/geopolitics/market/sentiment checks on top names; state which names were cut or downgraded and why.
+- [2026-09-06 23:53] (ai) User-recorded principle (2026-09-06, verbatim): 数据只能成为我不买这个股票的理由，不能成为我买的理由，我买的理由一定是看未来现金流，而这必须从商业模式和企业文化出发 — gates/factors are exclusion filters only; the buy thesis must be future cash flows reasoned from the business model and the culture

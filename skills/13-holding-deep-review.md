@@ -11,8 +11,8 @@ triggers:
 commands:
   - ask --evidence
   - screen --strategy <master>
-version: 5
-updated_at: 2026-09-06T23:17:58
+version: 7
+updated_at: 2026-09-06T23:53:59
 ---
 
 # Playbook
@@ -83,3 +83,5 @@ master-grade depth on fundamentals.
 - [2026-09-03 17:44] (ai) master.csv stores pillar scores only (no composite_score) - compute it from pillar scores with user weights; quotes CSVs carry industry for holdings outside the master pool; A-share ETFs (5xxxxx) are SSE market_id 1, absent from a_quotes - set display name via holding update --name
 - [2026-09-04 18:38] (ai) Holdings missing from master.csv (funnel-gated or out-of-universe like ETFs) are served by snapshot watchlist.csv with full pillar scores; holding list/health reads it as fallback, so cite watchlist rows for those names
 - [2026-09-06 23:17] (ai) 四问测试 + DCF 三问（未来现金流从哪来/多少/什么折现率）+ borrowed_dividend 检查（年报分红超 FCF 且筹资净流入 = 借钱分红，一票否决）
+- [2026-09-06 23:50] (ai) MANDATE 2026-09-06: every holding analysis must show per-holding master evaluation (gates + business model / culture / earn-lose paths prose); quantitative-only output is invalid
+- [2026-09-06 23:53] (ai) Update 2026-09-06: master-evaluation mandate softened by user to standard-flow-not-enforced; position discipline added (Duan: enter only if -50% drawdown tolerable); Duan's principle — data is only ever a reason NOT to buy, the buy reason must be future cash flows from business model + culture
