@@ -720,6 +720,65 @@ def fetch_hk_lot(code5: str) -> int | None:
 
 
 # ---------------------------------------------------------------------------
+# HK F10 cashflow statement (annual row) — CNY amounts
+# ---------------------------------------------------------------------------
+HK_CASHFLOW_ITEMS = {
+    "003999": "ocf",          # 经营业务现金净额
+    "005005": "capex_a",      # 购建固定资产
+    "005007": "capex_b",      # 购建无形资产及其他资产
+    "007004": "div_paid",     # 已付股息(融资活动)
+    "007999": "net_fin_cf",   # 融资业务现金净额
+}
+
+
+def fetch_hk_cashflow(code5: str) -> pd.DataFrame | None:
+    """Latest ANNUAL row of the HK F10 cashflow statement (CNY amounts).
+
+    Long table: one row per (REPORT_DATE, STD_ITEM_CODE). Annual
+    periods are identified by a START_DATE..REPORT_DATE span of
+    330-400 days — HK fiscal year-ends are not uniform (Mar/Jun/Sep/
+    Dec), so the span, not the month, marks the annual report.
+    Returns a one-row DataFrame or None.
+    """
+    d = DC.get_json(config.DC_SEC_URL, params={
+        "reportName": "RPT_HKF10_FN_CASHFLOW_PC",
+        "columns": "ALL",
+        "filter": f'(SECUCODE="{code5}.HK")',
+        "pageNumber": 1,
+        "pageSize": 120,
+        "sortTypes": "-1,1",
+        "sortColumns": "REPORT_DATE,STD_ITEM_CODE",
+        "source": "F10",
+        "client": "PC",
+    })
+    rows = ((d or {}).get("result") or {}).get("data") or []
+    if not rows:
+        return None
+    df = pd.DataFrame(rows)
+    for c in ("REPORT_DATE", "START_DATE"):
+        if c in df.columns:
+            df[c] = pd.to_datetime(df[c], errors="coerce")
+    if "START_DATE" not in df.columns:
+        return None
+    span = (df["REPORT_DATE"] - df["START_DATE"]).dt.days
+    ann = df[(span >= 330) & (span <= 400)]
+    if ann.empty:
+        return None
+    latest = ann["REPORT_DATE"].max()
+    ann = ann[ann["REPORT_DATE"] == latest]
+    rec = {"code": code5, "report_date": latest.date().isoformat()}
+    for _, r in ann.iterrows():
+        key = HK_CASHFLOW_ITEMS.get(str(r.get("STD_ITEM_CODE")))
+        val = num(r.get("AMOUNT"))
+        if key in ("capex_a", "capex_b"):
+            if val is not None:
+                rec["capex"] = rec.get("capex", 0.0) + val
+        elif key and val is not None:
+            rec[key] = val
+    return pd.DataFrame([rec])
+
+
+# ---------------------------------------------------------------------------
 # FX
 # ---------------------------------------------------------------------------
 def fetch_fx_hkdcny() -> float:

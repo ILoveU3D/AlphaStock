@@ -395,3 +395,54 @@ class TestFetchADividends:
         monkeypatch.setattr(f, "_fetch_dividend_page",
                             lambda year, pn: {"result": {"count": 0}})
         assert f.fetch_a_dividends(["2025"], quiet=True).empty
+
+
+def _hk_row(rd, sd, item, amt):
+    return {"REPORT_DATE": rd, "START_DATE": sd, "STD_ITEM_CODE": item,
+            "STD_ITEM_NAME": "x", "AMOUNT": amt}
+
+
+class TestHkCashflow:
+    def test_annual_row_selected_and_mapped(self, monkeypatch):
+        # interim (H1) rows must lose to the FY2025 annual group
+        data = [
+            _hk_row("2026-06-30", "2026-01-01", "003999", "500"),
+            _hk_row("2026-06-30", "2026-01-01", "005005", "100"),
+            _hk_row("2025-12-31", "2025-01-01", "003999", "1000"),
+            _hk_row("2025-12-31", "2025-01-01", "005005", "200"),
+            _hk_row("2025-12-31", "2025-01-01", "005007", "50"),
+            _hk_row("2025-12-31", "2025-01-01", "007004", "300"),
+            _hk_row("2025-12-31", "2025-01-01", "007999", "80"),
+        ]
+        monkeypatch.setattr(
+            f.DC, "get_json", lambda *a, **k: {"result": {"data": data}})
+        df = f.fetch_hk_cashflow("06831")
+        r = df.iloc[0]
+        assert r["code"] == "06831"
+        assert r["report_date"] == "2025-12-31"
+        assert r["ocf"] == 1000.0
+        assert r["capex"] == 250.0
+        assert r["div_paid"] == 300.0
+        assert r["net_fin_cf"] == 80.0
+
+    def test_march_year_end_is_annual(self, monkeypatch):
+        # HK fiscal years end in Mar/Jun/Sep/Dec — span, not month,
+        # marks the annual report
+        data = [_hk_row("2026-03-31", "2025-04-01", "003999", "900")]
+        monkeypatch.setattr(
+            f.DC, "get_json", lambda *a, **k: {"result": {"data": data}})
+        df = f.fetch_hk_cashflow("00005")
+        assert df.iloc[0]["ocf"] == 900.0
+
+    def test_no_annual_period_returns_none(self, monkeypatch):
+        data = [_hk_row("2026-06-30", "2026-01-01", "003999", "500")]
+        monkeypatch.setattr(
+            f.DC, "get_json", lambda *a, **k: {"result": {"data": data}})
+        assert f.fetch_hk_cashflow("06831") is None
+
+    def test_missing_item_stays_absent(self, monkeypatch):
+        data = [_hk_row("2025-12-31", "2025-01-01", "003999", "1000")]
+        monkeypatch.setattr(
+            f.DC, "get_json", lambda *a, **k: {"result": {"data": data}})
+        r = f.fetch_hk_cashflow("06831").iloc[0]
+        assert pd.isna(r.get("div_paid"))
