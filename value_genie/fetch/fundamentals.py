@@ -133,6 +133,8 @@ A_CASHFLOW_MAP = {
     "SECURITY_CODE": "code",
     "REPORT_DATE": "report_date",
     "NETCASH_OPERATE": "ocf",
+    "CONSTRUCT_LONG_ASSET": "capex",
+    "NETCASH_FINANCE": "net_fin_cf",
 }
 
 
@@ -159,8 +161,9 @@ def _parse_cashflow(d: dict) -> pd.DataFrame:
     df = pd.DataFrame(rows)
     keep = [c for c in A_CASHFLOW_MAP if c in df.columns]
     df = df[keep].rename(columns=A_CASHFLOW_MAP)
-    if "ocf" in df.columns:
-        df["ocf"] = df["ocf"].map(num)
+    for c in ("ocf", "capex", "net_fin_cf"):
+        if c in df.columns:
+            df[c] = df[c].map(num)
     df["report_date"] = (df["report_date"].astype(str).str.slice(0, 10)
                          if "report_date" in df.columns else "")
     return df.drop_duplicates(subset="code", keep="first")
@@ -207,6 +210,62 @@ def fetch_a_cashflow(quiet: bool = False) -> pd.DataFrame:
             break
     if chosen is None and not quiet:
         print("    [A] WARN: no cashflow period found with enough rows")
+    return out
+
+
+def annual_report_dates(today: date | None = None, lookback: int = 2) -> list:
+    """Recent 12-31 report dates, newest first (annual-reporting basis)."""
+    today = today or date.today()
+    y = today.year
+    ends = [date(yy, 12, 31) for yy in (y - 1, y - 2, y - 3)]
+    return sorted((d for d in ends if d < today), reverse=True)[:lookback]
+
+
+def fetch_a_cashflow_annual(quiet: bool = False) -> pd.DataFrame:
+    """Full-market A-share ANNUAL cash flow (12-31 report dates).
+
+    Annual basis is the denominator contract for fcf_yield /
+    borrowed_dividend: interim (6-month) figures understate the
+    run-rate ~2x mid-season. Latest annual period with mass filings,
+    previous annual as late-filer backfill.
+    """
+    dates = annual_report_dates()
+    out = pd.DataFrame(columns=list(A_CASHFLOW_MAP.values()))
+    chosen = None
+    for i, rd in enumerate(dates):
+        d = _fetch_cashflow_page(rd.isoformat(), 1)
+        total = ((d.get("result") or {}).get("count")) or 0
+        if not quiet:
+            print(f"    [A] annual cashflow {rd}: {total} rows")
+        if total >= config.A_MIN_REPORT_ROWS:
+            chosen = rd
+            latest = pd.DataFrame()
+            for pn in range(1, total // config.A_PAGE_SIZE + 2):
+                page_df = _parse_cashflow(
+                    _fetch_cashflow_page(rd.isoformat(), pn))
+                if not page_df.empty:
+                    latest = pd.concat([latest, page_df], ignore_index=True)
+                time.sleep(0.4)
+            prev = pd.DataFrame()
+            if i + 1 < len(dates):
+                prd = dates[i + 1]
+                d2 = _fetch_cashflow_page(prd.isoformat(), 1)
+                t2 = ((d2.get("result") or {}).get("count")) or 0
+                if t2:
+                    for pn in range(1, t2 // config.A_PAGE_SIZE + 2):
+                        page_df = _parse_cashflow(
+                            _fetch_cashflow_page(prd.isoformat(), pn))
+                        if not page_df.empty:
+                            prev = pd.concat([prev, page_df],
+                                             ignore_index=True)
+                        time.sleep(0.4)
+            out = merge_a_periods(latest, prev)
+            if not quiet:
+                print(f"    [A] annual cashflow: {len(out)} stocks "
+                      f"(period {chosen})")
+            break
+    if chosen is None and not quiet:
+        print("    [A] WARN: no annual cashflow period found")
     return out
 
 

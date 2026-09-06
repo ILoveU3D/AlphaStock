@@ -309,3 +309,59 @@ class TestFetchAFinancialsOne:
             get_json=lambda url, params=None, **kw: {}))
         df = f.fetch_a_financials_one("588060")    # ETF: no report rows
         assert df.empty
+
+
+class TestAnnualReportDates:
+    def test_newest_first(self):
+        out = f.annual_report_dates(date(2026, 9, 5))
+        assert out == [date(2025, 12, 31), date(2024, 12, 31)]
+
+
+class TestParseCashflow:
+    def test_keeps_capex_and_financing(self):
+        d = {"result": {"data": [{
+            "SECURITY_CODE": "600519",
+            "REPORT_DATE": "2025-12-31 00:00:00",
+            "NETCASH_OPERATE": "1000", "CONSTRUCT_LONG_ASSET": "200",
+            "NETCASH_FINANCE": "-50"}]}}
+        df = f._parse_cashflow(d)
+        assert df.iloc[0]["ocf"] == 1000.0
+        assert df.iloc[0]["capex"] == 200.0
+        assert df.iloc[0]["net_fin_cf"] == -50.0
+
+
+class TestFetchACashflowAnnual:
+    def test_picks_latest_annual_period(self, monkeypatch):
+        pages = {
+            ("2025-12-31", 1): {"result": {"count": 1200, "data": [
+                {"SECURITY_CODE": "600519", "REPORT_DATE": "2025-12-31",
+                 "NETCASH_OPERATE": "100", "CONSTRUCT_LONG_ASSET": "10",
+                 "NETCASH_FINANCE": "1"}]}},
+            ("2024-12-31", 1): {"result": {"count": 1000, "data": []}},
+        }
+
+        def fake_page(rd, pn):
+            return pages.get((rd, pn), {"result": {"count": 0}})
+
+        monkeypatch.setattr(f, "_fetch_cashflow_page", fake_page)
+        out = f.fetch_a_cashflow_annual(quiet=True)
+        assert len(out) == 1
+        assert out.iloc[0]["ocf"] == 100.0
+        assert out.iloc[0]["capex"] == 10.0
+
+    def test_falls_back_when_latest_missing(self, monkeypatch):
+        pages = {
+            ("2025-12-31", 1): {"result": {"count": 3, "data": []}},
+            ("2024-12-31", 1): {"result": {"count": 1200, "data": [
+                {"SECURITY_CODE": "000001", "REPORT_DATE": "2024-12-31",
+                 "NETCASH_OPERATE": "7", "CONSTRUCT_LONG_ASSET": "2",
+                 "NETCASH_FINANCE": "-1"}]}},
+        }
+
+        def fake_page(rd, pn):
+            return pages.get((rd, pn), {"result": {"count": 0}})
+
+        monkeypatch.setattr(f, "_fetch_cashflow_page", fake_page)
+        out = f.fetch_a_cashflow_annual(quiet=True)
+        assert len(out) == 1
+        assert out.iloc[0]["code"] == "000001"
