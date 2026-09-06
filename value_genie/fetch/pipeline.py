@@ -20,9 +20,11 @@ import pandas as pd
 from .. import config
 from ..strategy.composite import apply_composite
 from ..strategy.factors import PILLARS, add_pillar_scores, kline_metrics
-from .fundamentals import (fetch_a_cashflow, fetch_a_financials,
+from .fundamentals import (fetch_a_cashflow, fetch_a_cashflow_annual,
+                           fetch_a_dividends, fetch_a_financials,
                            fetch_a_financials_one, fetch_fx_hkdcny,
-                           fetch_hk_f10, fetch_us_financials,
+                           fetch_hk_cashflow, fetch_hk_f10,
+                           fetch_us_financials,
                            fetch_us_financials_one, frames_year_context)
 from .kline import (fetch_kline_any, kline_cache_path, kline_is_fresh,
                     load_kline, save_kline)
@@ -34,6 +36,7 @@ MASTER_COLUMNS = [
     "pe_ttm", "pb", "ps", "dividend_yield", "rev_yoy", "profit_yoy",
     "rev_q_yoy", "roe", "gross_margin", "net_margin", "debt_ratio",
     "ocf_yield", "cash_conversion",
+    "fcf_yield", "borrowed_dividend", "capex_to_ocf",
     "pos_52w", "drawdown_52w", "ret_250d", "ret_60d", "volatility",
     "ret_5d", "ret_20d", "vol_20d",
     "report_date", "value_score", "growth_score", "quality_score",
@@ -108,7 +111,8 @@ def merge_us_financials(quotes: pd.DataFrame,
         return out
     join_cols = ["ticker", "rev", "rev_yoy", "profit_yoy", "rev_q_yoy",
                  "roe", "gross_margin", "net_margin", "debt_ratio"]
-    for extra in ("cash_conversion", "ocf"):
+    for extra in ("cash_conversion", "ocf", "capex", "div_paid",
+                  "net_fin_cf"):
         if extra in fins.columns:
             join_cols.append(extra)
     f = fins.drop_duplicates(subset="ticker")[join_cols]
@@ -217,6 +221,165 @@ def fetch_hk_deep(codes, snap_dir: Path, reuse_dirs: list,
     return df
 
 
+def fetch_hk_cashflow_deep(codes, snap_dir: Path, reuse_dirs: list,
+                           stats: dict) -> pd.DataFrame:
+    """Annual HK cashflow rows for candidates + watch symbols, reusing
+    rows saved in a recent snapshot (same chain as fetch_hk_deep)."""
+    have = {}
+    for prev_dir in reuse_dirs:
+        rp = prev_dir / "hk_cashflow.csv"
+        if not rp.exists():
+            continue
+        try:
+            prev = pd.read_csv(rp, dtype={"code": str})
+            for _, r in prev.iterrows():
+                have.setdefault(str(r["code"]), dict(r))
+        except (OSError, pd.errors.ParserError, ValueError):
+            continue
+    rows = []
+    for code in codes:
+        code = str(code)
+        if code in have:
+            rows.append(have[code])
+            stats["reused"] += 1
+            continue
+        cf = fetch_hk_cashflow(code)
+        if cf is not None and not cf.empty:
+            rows.append(cf.iloc[0].to_dict())
+            stats["fetched"] += 1
+        else:
+            stats["failed"] += 1
+        time.sleep(0.3)
+    df = pd.DataFrame(rows)
+    if not df.empty:
+        df.to_csv(snap_dir / "hk_cashflow.csv", index=False)
+    return df
+
+
+def load_annual_cashflows(snap_dir: Path) -> pd.DataFrame:
+    """Annual-basis cash flows for the DCF-first factors, all markets.
+
+    - A: a_cashflow_annual.csv (ocf/capex/net_fin_cf) + a_dividends.csv
+      (FY cash dividends declared, matched by report year)
+    - HK: hk_cashflow.csv (annual row per code, CNY amounts)
+    - US: us_financials.csv extra columns (SEC cy frames)
+    Missing files/columns degrade to NaN per row; empty when absent.
+    """
+    cols = ["market", "code", "ocf", "capex", "div_paid", "net_fin_cf"]
+    parts = []
+
+    def _read(name, key):
+        p = snap_dir / name
+        if not p.exists():
+            return pd.DataFrame()
+        try:
+            return pd.read_csv(p, dtype={key: str})
+        except (OSError, pd.errors.ParserError, ValueError):
+            return pd.DataFrame()
+
+    a = _read("a_cashflow_annual.csv", "code")
+    if not a.empty:
+        d = pd.DataFrame({"market": "A", "code": a["code"].astype(str)})
+        for c in ("ocf", "capex", "net_fin_cf"):
+            d[c] = (pd.to_numeric(a[c], errors="coerce")
+                    if c in a.columns else float("nan"))
+        d["div_paid"] = float("nan")
+        d["fy"] = (a["report_date"].astype(str).str.slice(0, 4)
+                   if "report_date" in a.columns else "")
+        div = _read("a_dividends.csv", "code")
+        if not div.empty and {"code", "fy", "div_paid"} <= set(div.columns):
+            div = div.drop_duplicates(subset=["code", "fy"])
+            # CSV round-trip re-types fy as int64; d["fy"] is str
+            div = div.assign(fy=div["fy"].astype(str))[
+                ["code", "fy", "div_paid"]]
+            d = d.merge(div, on=["code", "fy"], how="left",
+                        suffixes=("", "_d"))
+            d["div_paid"] = d["div_paid_d"]
+            d = d.drop(columns=["div_paid_d"])
+        parts.append(d.drop(columns=["fy"]))
+    hk = _read("hk_cashflow.csv", "code")
+    if not hk.empty:
+        d = pd.DataFrame({"market": "HK",
+                          "code": hk["code"].astype(str).str.zfill(5)})
+        for c in ("ocf", "capex", "div_paid", "net_fin_cf"):
+            d[c] = (pd.to_numeric(hk[c], errors="coerce")
+                    if c in hk.columns else float("nan"))
+        parts.append(d)
+    us = _read("us_financials.csv", "ticker")
+    if not us.empty and "capex" in us.columns:
+        d = pd.DataFrame({"market": "US", "code": us["ticker"].astype(str)})
+        d["ocf"] = pd.to_numeric(us.get("ocf"), errors="coerce")
+        for c in ("capex", "div_paid", "net_fin_cf"):
+            d[c] = pd.to_numeric(us.get(c), errors="coerce")
+        parts.append(d)
+    if not parts:
+        return pd.DataFrame(columns=cols)
+    return pd.concat(parts, ignore_index=True)
+
+
+def add_cashflow_factors(df: pd.DataFrame, fx: float | None,
+                         annual: pd.DataFrame) -> pd.DataFrame:
+    """Join annual cash flows and derive the DCF-first factor set.
+
+    - fcf_yield: (ocf - capex) / market cap, annual basis — the
+      first-order DCF anchor (owner-earnings yield)
+    - borrowed_dividend: 1 when FY dividends exceed FCF, exceed half
+      of OCF, and financing is a net inflow — dividend kept alive to
+      preserve refinancing eligibility (A-share mechanism) rather
+      than to reward shareholders; 0 = pass (innocent until proven)
+    - capex_to_ocf: reinvestment intensity (display-only)
+
+    ocf_yield is re-based onto the annual figure where available:
+    the interim-basis value built from half-year reports understates
+    the run-rate ~2x mid-season and distorts Buffett's >=5 gate; rows
+    without annual data keep the interim value as fallback.
+    HK F10 amounts are CNY while market cap is HKD — converted via fx.
+    """
+    out = df
+    if annual.empty:
+        out = df.copy()
+        out["fcf_yield"] = float("nan")
+        out["capex_to_ocf"] = float("nan")
+        out["borrowed_dividend"] = 0
+        return out
+    # master rows can already carry an interim ocf (A merge / HK F10 /
+    # US frames) — merging annual alongside would suffix them into
+    # ocf_x/ocf_y and trip the guard below; annual is authoritative
+    dup = [c for c in ("ocf", "capex", "div_paid", "net_fin_cf")
+           if c in df.columns]
+    base = df.drop(columns=dup) if dup else df
+    out = base.merge(annual, on=["market", "code"], how="left")
+    if "ocf" not in out.columns:
+        out["fcf_yield"] = float("nan")
+        out["capex_to_ocf"] = float("nan")
+        out["borrowed_dividend"] = 0
+        return out
+    ocf = pd.to_numeric(out.get("ocf"), errors="coerce")
+    capex = pd.to_numeric(out.get("capex"), errors="coerce")
+    fin = pd.to_numeric(out.get("net_fin_cf"), errors="coerce")
+    div = pd.to_numeric(out.get("div_paid"), errors="coerce")
+    mcap = pd.to_numeric(out.get("market_cap"), errors="coerce")
+    conv = pd.Series(1.0, index=out.index)
+    if fx and fx > 0:
+        conv[out["market"] == "HK"] = 1.0 / fx  # CNY amount -> HKD
+
+    fcf = ocf - capex
+    out["fcf_yield"] = (fcf * conv / mcap.where(mcap > 0) * 100.0).where(
+        fcf.notna() & mcap.notna())
+    out["capex_to_ocf"] = (capex / ocf.where(ocf != 0)).where(
+        capex.notna() & ocf.notna())
+    flagged = (div > fcf) & (div > ocf * 0.5) & (fin > 0)
+    out["borrowed_dividend"] = flagged.fillna(False).astype(int)
+
+    yld = (ocf * conv / mcap.where(mcap > 0) * 100.0).where(
+        ocf.notna() & mcap.notna())
+    if "ocf_yield" in out.columns:
+        out["ocf_yield"] = yld.fillna(out["ocf_yield"])
+    else:
+        out["ocf_yield"] = yld
+    return out
+
+
 def kline_features(snap_dir: Path, market: str, code: str) -> dict:
     return kline_metrics(load_kline(kline_cache_path(snap_dir, market,
                                                      str(code))))
@@ -311,6 +474,8 @@ def build_master(cands_by_market: dict, snap_dir: Path,
     if not frames:
         return pd.DataFrame(columns=MASTER_COLUMNS)
     master = pd.concat(frames, ignore_index=True)
+
+    master = add_cashflow_factors(master, fx, load_annual_cashflows(snap_dir))
 
     # final gate: profitable growth where the data exists
     if "profit_yoy" in master.columns:
@@ -555,6 +720,9 @@ def build_watchlist(snap_dir: Path, reuse_dirs: list,
 
     watch_df = pd.concat(frames, ignore_index=True)
 
+    watch_df = add_cashflow_factors(watch_df, fx,
+                                    load_annual_cashflows(snap_dir))
+
     # score against master peers + watch peers (percentiles by market)
     score_frame = pd.concat(
         [master, watch_df], ignore_index=True, sort=False)
@@ -663,6 +831,17 @@ def run_fetch(markets=None, data_dir=None, refresh: bool = False,
         a_cf = _load_or_fetch(snap_dir / "a_cashflow.csv",
                               lambda: fetch_a_cashflow(quiet=quiet),
                               "code", "A cashflow")
+        a_cf_ann = _load_or_fetch(
+            snap_dir / "a_cashflow_annual.csv",
+            lambda: fetch_a_cashflow_annual(quiet=quiet),
+            "code", "A annual cf")
+        if a_cf_ann is not None and not a_cf_ann.empty \
+                and "report_date" in a_cf_ann.columns:
+            years = sorted({str(d)[:4] for d in a_cf_ann["report_date"]})
+            _load_or_fetch(
+                snap_dir / "a_dividends.csv",
+                lambda: fetch_a_dividends(years, quiet=quiet),
+                "code", "A dividends")
     us_fin = None
     if "US" in markets:
         us_fin = _load_or_fetch(snap_dir / "us_financials.csv",
@@ -734,6 +913,10 @@ def run_fetch(markets=None, data_dir=None, refresh: bool = False,
         hk_f10 = fetch_hk_deep(hk_codes, snap_dir, f10_reuse, hk_stats)
         manifest["datasets"]["hk_f10"] = dict(hk_stats)
         log(f"    [HK] f10 {hk_stats}")
+        hk_cf_stats = {"fetched": 0, "reused": 0, "failed": 0}
+        fetch_hk_cashflow_deep(hk_codes, snap_dir, f10_reuse, hk_cf_stats)
+        manifest["datasets"]["hk_cashflow"] = dict(hk_cf_stats)
+        log(f"    [HK] cashflow {hk_cf_stats}")
 
     master = build_master(cands_by_market, snap_dir, hk_f10, fx)
     master.to_csv(snap_dir / "master.csv", index=False)

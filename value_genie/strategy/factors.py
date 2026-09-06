@@ -22,7 +22,8 @@ PILLAR_FACTORS = {
                 ("debt_ratio", -1)],
     "safety": [("pos_52w", -1), ("volatility", -1), ("drawdown_52w", 1)],
     "momentum": [("ret_60d", 1), ("ret_250d", 1)],
-    "cashflow": [("ocf_yield", 1), ("cash_conversion", 1)],
+    "cashflow": [("ocf_yield", 1), ("cash_conversion", 1),
+                 ("fcf_yield", 1)],
 }
 
 # Valuation ratios are only meaningful when positive (negative PE/PB/PS
