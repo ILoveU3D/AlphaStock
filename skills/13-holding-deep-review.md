@@ -11,8 +11,8 @@ triggers:
 commands:
   - ask --evidence
   - screen --strategy <master>
-version: 7
-updated_at: 2026-09-06T23:53:59
+version: 9
+updated_at: 2026-09-07T12:00:07
 ---
 
 # Playbook
@@ -85,3 +85,5 @@ master-grade depth on fundamentals.
 - [2026-09-06 23:17] (ai) 四问测试 + DCF 三问（未来现金流从哪来/多少/什么折现率）+ borrowed_dividend 检查（年报分红超 FCF 且筹资净流入 = 借钱分红，一票否决）
 - [2026-09-06 23:50] (ai) MANDATE 2026-09-06: every holding analysis must show per-holding master evaluation (gates + business model / culture / earn-lose paths prose); quantitative-only output is invalid
 - [2026-09-06 23:53] (ai) Update 2026-09-06: master-evaluation mandate softened by user to standard-flow-not-enforced; position discipline added (Duan: enter only if -50% drawdown tolerable); Duan's principle — data is only ever a reason NOT to buy, the buy reason must be future cash flows from business model + culture
+- [2026-09-07 10:47] (ai) master screens only cover the master.csv pool; watchlist holdings (e.g. PDD/NVDA/BRK_B outside the 200-candidate funnel) never appear in screen output - evaluate their gates manually from ask --evidence metrics and label the absence as pool coverage, not a gate rejection
+- [2026-09-07 12:00] (ai) crash-day routine: diff last kline close vs live quote to detect limit moves (519.35 vs 415.48 = -20% STAR limit-down, 2026-09-07 Moore Threads), then web-search same-day news for the catalyst (unlock/earnings/policy) before writing any review prose - the catalyst reframes the whole holding review
