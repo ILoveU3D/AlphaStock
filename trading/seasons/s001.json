@@ -200,7 +200,7 @@
     },
     {
       "date": "2026-09-07",
-      "nav": 2498.43,
+      "nav": 2498.81,
       "cash_total": 1323.47,
       "settling_total": 0,
       "positions": [
@@ -218,18 +218,18 @@
           "code": "002558",
           "name": "巨人网络",
           "qty": 100.0,
-          "price": 27.38,
+          "price": 27.44,
           "currency": "CNY",
-          "value_base": 408.06
+          "value_base": 408.95
         },
         {
           "market": "HK",
           "code": "06831",
           "name": "绿茶集团",
           "qty": 400.0,
-          "price": 5.38,
+          "price": 5.37,
           "currency": "HKD",
-          "value_base": 274.54
+          "value_base": 274.03
         }
       ],
       "fx": {
