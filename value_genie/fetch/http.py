@@ -4,6 +4,7 @@ Shared by all data source modules (Eastmoney, Tencent, SEC EDGAR).
 """
 
 import json
+import sys
 import time
 
 import requests
@@ -85,11 +86,12 @@ class Fetcher:
             if self.consecutive_fail >= cooldown_after and attempt < total_attempts:
                 print(f"    [cooldown] {self.name} failed "
                       f"{self.consecutive_fail}x ({last_err}), "
-                      f"sleeping {cooldown_sec}s...")
+                      f"sleeping {cooldown_sec}s...", file=sys.stderr)
                 time.sleep(cooldown_sec)
             else:
                 time.sleep(2.0 * attempt)
-        print(f"    [warn] {self.name} request failed: {url[:70]} -> {last_err}")
+        print(f"    [warn] {self.name} request failed: {url[:70]} -> "
+              f"{last_err}", file=sys.stderr)
         return None
 
 

@@ -64,11 +64,19 @@ class TestFramesContext:
 
     def test_early_year(self):
         ctx = f.frames_year_context(date(2026, 2, 10))
-        assert ctx["cy"] == 2025
-        assert ctx["cy_prev"] == 2024
+        # 2025 10-Ks are not due until ~Apr 30 2026 -> CY2025 frame is
+        # not complete yet; the latest complete year is 2024
+        assert ctx["cy"] == 2024
+        assert ctx["cy_prev"] == 2023
         # only Q3 2025 is >= 50 days old
         assert ctx["q"] == "2025Q3"
         assert ctx["q_prev"] == "2024Q3"
+
+    def test_april_boundary(self):
+        # 10-K season ends ~Apr 30: before that the previous year's frame
+        # is incomplete; from May on it is the latest complete year
+        assert f.frames_year_context(date(2026, 4, 30))["cy"] == 2024
+        assert f.frames_year_context(date(2026, 5, 1))["cy"] == 2025
 
 
 class TestFrameName:

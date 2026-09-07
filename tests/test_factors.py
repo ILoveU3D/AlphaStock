@@ -139,3 +139,11 @@ class TestAddPillarScores:
         out = f.add_pillar_scores(df)
         # rank(pct) of a single value is 1.0 -> 100
         assert out["value_score"].iloc[0] == 100.0
+
+    def test_sparse_factor_column_no_phantom_rank(self):
+        # roe present on only one of two HK rows: ranking it would compare
+        # that row against itself (phantom 100) — mask it instead
+        df = pd.DataFrame({"market": ["HK", "HK"], "code": ["1", "2"],
+                           "roe": [20.0, None]})
+        out = f.add_pillar_scores(df)
+        assert out["quality_score"].isna().all()

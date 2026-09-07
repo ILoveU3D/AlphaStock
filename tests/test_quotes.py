@@ -117,6 +117,52 @@ class TestFetchMarketQuotes:
         assert df.empty
         assert calls == [1] * (config.QUOTE_PAGE_RETRIES + 1)
 
+    def test_mid_pagination_failure_retries_same_page(self, monkeypatch):
+        """A failed page N>1 must be retried, not silently truncated."""
+        from value_genie.fetch import quotes as q
+
+        pages = {
+            1: [{"data": {"total": 3, "diff": [_row("600001"),
+                                               _row("600002")]}}],
+            2: [None, {"data": {"total": 3, "diff": [_row("600003")]}}],
+        }
+        calls = []
+
+        def fake_get(path, params=None, **kw):
+            pn = params["pn"]
+            calls.append(pn)
+            hist = pages.setdefault(pn, [None])
+            return hist.pop(0) if len(hist) > 1 else hist[0]
+
+        monkeypatch.setattr(q, "em_push2_get", fake_get)
+        monkeypatch.setattr(q.time, "sleep", lambda s: None)
+        df = q.fetch_market_quotes("A")
+        assert len(df) == 3
+        assert calls == [1, 2, 2]  # page 2 failed once, retried, succeeded
+
+    def test_mid_pagination_failure_warns_on_partial(self, monkeypatch,
+                                                     capsys):
+        """Exhausted retries mid-universe must WARN, not break silently."""
+        from value_genie import config
+        from value_genie.fetch import quotes as q
+
+        calls = []
+
+        def fake_get(path, params=None, **kw):
+            pn = params["pn"]
+            calls.append(pn)
+            if pn == 1:
+                return {"data": {"total": 3, "diff": [_row("600001"),
+                                                      _row("600002")]}}
+            return None  # page 2 always fails
+
+        monkeypatch.setattr(q, "em_push2_get", fake_get)
+        monkeypatch.setattr(q.time, "sleep", lambda s: None)
+        df = q.fetch_market_quotes("A")
+        assert len(df) == 2  # partial universe kept
+        assert calls == [1] + [2] * (config.QUOTE_PAGE_RETRIES + 1)
+        assert "WARN" in capsys.readouterr().out
+
 
 # ---------------------------------------------------------------------------
 # Tencent realtime fallback + fetch_quote_any (price redundancy)

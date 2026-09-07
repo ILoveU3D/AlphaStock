@@ -138,8 +138,15 @@ def add_pillar_scores(df: pd.DataFrame) -> pd.DataFrame:
                 s = s.where(s > 0)
             if sign < 0:
                 s = -s
-            # rank within each market -> 0-100 percentile
-            ranked = s.groupby(out["market"]).rank(pct=True) * 100.0
+            # rank within each market -> 0-100 percentile; a factor with
+            # <=1 valid value in a multi-stock pool ranks against itself
+            # (phantom 100) — mask it (a genuine single-stock market
+            # keeps its 100)
+            grp = out["market"]
+            valid = s.notna().groupby(grp).transform("sum")
+            size = s.groupby(grp).transform("size")
+            ranked = s.groupby(grp).rank(pct=True) * 100.0
+            ranked = ranked.where((valid > 1) | (size == 1))
             subs.append(ranked.rename(col))
         if subs:
             out[f"{pillar}_score"] = pd.concat(subs, axis=1).mean(axis=1)
