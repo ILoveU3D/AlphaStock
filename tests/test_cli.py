@@ -209,7 +209,7 @@ class TestAsk:
             lambda q, **k: [Match("A", "600001", "Alpha Co", 100.0, "1")])
         monkeypatch.setattr(
             "value_genie.analyze.analyze_stock",
-            lambda m, snapshot_dir=None: fake_result(m))
+            lambda m, snapshot_dir=None, horizon=None: fake_result(m))
         rc = main(["ask", "Alpha Co"])
         out = capsys.readouterr().out
         assert rc == 0
@@ -226,10 +226,59 @@ class TestAsk:
                             Match("HK", "02555", "茶百道", 50.0, "116")])
         monkeypatch.setattr(
             "value_genie.analyze.analyze_stock",
-            lambda m, snapshot_dir=None: fake_result(m))
+            lambda m, snapshot_dir=None, horizon=None: fake_result(m))
         rc = main(["ask", "alpha"])
+        cap = capsys.readouterr()
         assert rc == 0
-        assert "also matched" in capsys.readouterr().out
+        # resolution hints are diagnostics: stderr, never the data channel
+        assert "also matched" in cap.err
+        assert "also matched" not in cap.out
+
+    def test_ask_json_pure_with_alternatives(self, capsys, monkeypatch):
+        """--json stdout must stay pure JSON even when the resolution
+        hint fires (hint goes to stderr)."""
+        import json
+        monkeypatch.setattr("value_genie.doctor.freshness_gate",
+                            lambda d=None: ("PASS", "ok"))
+        monkeypatch.setattr(
+            "value_genie.resolve.resolve",
+            lambda q, **k: [Match("A", "600001", "Alpha Co", 100.0, "1"),
+                            Match("HK", "02555", "茶百道", 50.0, "116")])
+        monkeypatch.setattr(
+            "value_genie.analyze.analyze_stock",
+            lambda m, snapshot_dir=None, horizon=None: fake_result(m))
+        rc = main(["ask", "alpha", "--json"])
+        cap = capsys.readouterr()
+        assert rc == 0
+        data = json.loads(cap.out)  # raises if stdout is not pure JSON
+        assert data["code"] == "600001"
+        assert "resolved:" in cap.err
+
+    def test_ask_data_dir_selects_snapshot(self, capsys, monkeypatch,
+                                           tmp_path):
+        """--data-dir must reach resolve/analyze, not be silently ignored."""
+        snap = tmp_path / "snapshots" / "20260905"
+        snap.mkdir(parents=True)
+        (snap / "master.csv").write_text(
+            "market,code,name\nA,600001,Alpha Co\n", encoding="utf-8")
+        seen = {}
+        monkeypatch.setattr("value_genie.doctor.freshness_gate",
+                            lambda d=None: ("PASS", "ok"))
+        monkeypatch.setattr(
+            "value_genie.resolve.resolve",
+            lambda q, **k: [Match("A", "600001", "Alpha Co", 100.0, "1")])
+
+        def _fake_analyze(m, snapshot_dir=None, horizon=None):
+            seen["snapshot_dir"] = snapshot_dir
+            return fake_result(m)
+
+        monkeypatch.setattr(
+            "value_genie.analyze.analyze_stock", _fake_analyze)
+        rc = main(["ask", "Alpha Co", "--data-dir", str(tmp_path),
+                   "--json"])
+        assert rc == 0
+        assert seen["snapshot_dir"] is not None
+        assert str(seen["snapshot_dir"]).endswith("20260905")
 
     def test_ask_json(self, capsys, monkeypatch):
         import json
@@ -240,7 +289,7 @@ class TestAsk:
             lambda q, **k: [Match("A", "600001", "Alpha Co", 100.0, "1")])
         monkeypatch.setattr(
             "value_genie.analyze.analyze_stock",
-            lambda m, snapshot_dir=None: fake_result(m))
+            lambda m, snapshot_dir=None, horizon=None: fake_result(m))
         rc = main(["ask", "Alpha Co", "--json"])
         data = json.loads(capsys.readouterr().out)
         assert rc == 0
@@ -252,7 +301,7 @@ class TestAsk:
         monkeypatch.setattr("value_genie.resolve.resolve",
                             lambda q, **k: [])
         assert main(["ask", "nonsense"]) == 2
-        assert "no match" in capsys.readouterr().out
+        assert "no match" in capsys.readouterr().err
 
     def test_compare(self, capsys, monkeypatch):
         monkeypatch.setattr("value_genie.doctor.freshness_gate",
@@ -358,7 +407,7 @@ class TestFreshnessGate:
             lambda q, **k: [Match("A", "600001", "Alpha Co", 100.0, "1")])
         monkeypatch.setattr(
             "value_genie.analyze.analyze_stock",
-            lambda m, snapshot_dir=None: fake_result(m))
+            lambda m, snapshot_dir=None, horizon=None: fake_result(m))
         rc = main(["ask", "Alpha Co"])
         err = capsys.readouterr().err
         assert rc == 0
@@ -374,7 +423,7 @@ class TestFreshnessGate:
             lambda q, **k: [Match("A", "600001", "Alpha Co", 100.0, "1")])
         monkeypatch.setattr(
             "value_genie.analyze.analyze_stock",
-            lambda m, snapshot_dir=None: fake_result(m))
+            lambda m, snapshot_dir=None, horizon=None: fake_result(m))
         rc = main(["ask", "Alpha Co", "--no-check"])
         assert rc == 0
         assert called == []

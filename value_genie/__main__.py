@@ -36,6 +36,7 @@ report. See AGENTS.md for the AI-facing playbook.
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 from . import config, report
@@ -322,7 +323,8 @@ def _resolve_stock_or_exit(query):
     m = matches[0]
     if len(matches) > 1:
         others = ", ".join(x.label() for x in matches[1:4])
-        print(f"resolved: {m.label()} (also matched: {others})")
+        print(f"resolved: {m.label()} (also matched: {others})",
+              file=sys.stderr)
     return m
 
 
@@ -648,7 +650,6 @@ def _check_freshness(args) -> bool:
     from . import doctor as dr
     data_dir = getattr(args, "data_dir", None)
     status, msg = dr.freshness_gate(data_dir)
-    import sys
     if status == "FAIL":
         print(f"[FRESHNESS BLOCKED] {msg}", file=sys.stderr)
         print("run `python -m value_genie doctor` for details, "
@@ -665,18 +666,21 @@ def cmd_ask(args) -> int:
         return 1
     from . import analyze as az
     from .resolve import resolve as resolve_stock
-    matches = resolve_stock(args.query)
+    try:
+        snap = report.resolve_snapshot(args.data_dir)
+    except FileNotFoundError:
+        snap = None
+    matches = resolve_stock(args.query, snapshot_dir=snap)
     if not matches:
-        print(f"no match for {args.query!r}; try a full name or code")
+        print(f"no match for {args.query!r}; try a full name or code",
+              file=sys.stderr)
         return 2
     m = matches[0]
     if len(matches) > 1:
         others = ", ".join(x.label() for x in matches[1:4])
-        print(f"resolved: {m.label()} (also matched: {others})")
-    if args.horizon:
-        result = az.analyze_stock(m, horizon=args.horizon)
-    else:
-        result = az.analyze_stock(m)
+        print(f"resolved: {m.label()} (also matched: {others})",
+              file=sys.stderr)
+    result = az.analyze_stock(m, snapshot_dir=snap, horizon=args.horizon)
     if args.json:
         print(az.to_json(result))
     elif args.evidence:
@@ -691,11 +695,16 @@ def cmd_compare(args) -> int:
         return 1
     from . import analyze as az
     from .resolve import resolve as resolve_stock
+    try:
+        snap = report.resolve_snapshot(args.data_dir)
+    except FileNotFoundError:
+        snap = None
     matches = []
     for q in args.stocks:
-        ms = resolve_stock(q)
+        ms = resolve_stock(q, snapshot_dir=snap)
         if not ms:
-            print(f"no match for {q!r}; try a full name or code")
+            print(f"no match for {q!r}; try a full name or code",
+                  file=sys.stderr)
             return 2
         matches.append(ms[0])
     # drop duplicate resolutions
@@ -704,7 +713,7 @@ def cmd_compare(args) -> int:
         if (m.market, m.code) not in seen:
             seen.add((m.market, m.code))
             uniq.append(m)
-    df = az.compare_stocks(uniq)
+    df = az.compare_stocks(uniq, snapshot_dir=snap)
     if args.json:
         print(json.dumps({"stocks": report.df_records(df)},
                          ensure_ascii=False, indent=2))

@@ -338,9 +338,9 @@ def frames_year_context(today: date | None = None) -> dict:
     q/q_prev: latest quarter with filings in (quarter end + ~50 days).
     """
     today = today or date.today()
-    cy = today.year - 1
-    if today.month > 4:
-        cy = today.year - 1  # last year's 10-Ks are in by Apr 30
+    # last year's 10-Ks are all in by ~Apr 30; before that the latest
+    # complete calendar year is year-2
+    cy = today.year - 1 if today.month > 4 else today.year - 2
     cy_prev = cy - 1
     quarters = []
     for yy in (today.year, today.year - 1):

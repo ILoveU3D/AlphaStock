@@ -540,6 +540,7 @@ def cash_move(sid, action, amount, currency, note="", snap_dir=None,
     season = load_season(sid)
     today = _today(today)
     _require_active(season)
+    settle_due(season, today)
     if action not in ("deposit", "withdraw"):
         raise TradeError(
             f"action must be deposit or withdraw, got {action!r}")
@@ -633,14 +634,29 @@ def mark_nav(sid, snap_dir=None, today=None) -> dict:
     return entry
 
 
-def _prev_nav(season, today):
+def _prev_entry(season, today):
     prev = [e for e in season["nav_history"] if e["date"] < today]
-    return prev[-1]["nav"] if prev else None
+    return prev[-1] if prev else None
+
+
+def _day_pnl(season, entry) -> float:
+    """NAV change since the previous mark, excluding deposit/withdraw
+    transfers — those move money in/out, they are not performance."""
+    prev = _prev_entry(season, entry["date"])
+    if prev is None:
+        return 0.0
+    net_transfers = 0.0
+    for f in season["fills"]:
+        if f.get("action") not in ("deposit", "withdraw"):
+            continue
+        if prev["date"] < f.get("date", "") <= entry["date"]:
+            v = f.get("base_value") or 0.0
+            net_transfers += v if f["action"] == "deposit" else -v
+    return round(entry["nav"] - prev["nav"] - net_transfers, 2)
 
 
 def _summary_from(season, entry) -> dict:
-    prev = _prev_nav(season, entry["date"])
-    day_pnl = round(entry["nav"] - prev, 2) if prev is not None else 0.0
+    day_pnl = _day_pnl(season, entry)
     initial = season["initial_capital"]
     t = season["totals"]
     net_ret = (None if not initial else round(
@@ -679,11 +695,8 @@ def write_journal(sid, text, snap_dir=None, today=None) -> dict:
     carries the day's numbers for review-time attribution."""
     entry = mark_nav(sid, snap_dir=snap_dir, today=today)
     season = load_season(sid)
-    today = entry["date"]
-    prev = _prev_nav(season, today)
-    day_pnl = round(entry["nav"] - prev, 2) if prev is not None else 0.0
-    j = {"date": today, "ts": _now(), "nav": entry["nav"],
-         "day_pnl": day_pnl, "text": text}
+    j = {"date": entry["date"], "ts": _now(), "nav": entry["nav"],
+         "day_pnl": _day_pnl(season, entry), "text": text}
     season["journal"].append(j)
     save_season(season)
     return j

@@ -443,6 +443,24 @@ def test_cash_deposit_withdraw_totals(trade_dir, snap):
                      snap_dir=snap, today="2026-09-04")
 
 
+def test_withdraw_settled_proceeds_without_extra_mark(trade_dir, snap,
+                                                      prices, hk_lot_100):
+    """T+2-matured proceeds must be withdrawable directly — cash_move
+    settles due entries first, like every other money entry point."""
+    from value_genie import trade as tr
+    tr.new_season("s001", base="HKD", capital=50000.0, markets=["HK"])
+    tr.buy("s001", _match("HK", "00700", "Tencent"), qty=100,
+           snap_dir=snap, today="2026-09-04")
+    tr.sell("s001", _match("HK", "00700", "Tencent"), qty=100,
+            snap_dir=snap, today="2026-09-04")
+    s = tr.load_season("s001")
+    assert s["cash"]["HKD"] < 30000.0   # sale proceeds still settling
+    fill = tr.cash_move("s001", "withdraw", 30000.0, "HKD",
+                        snap_dir=snap, today="2026-09-08")  # fx_date matures
+    assert fill["action"] == "withdraw"
+    assert fill["base_value"] == 30000.0
+
+
 # ---------------------------------------------------------------------------
 # NAV / status / journal
 # ---------------------------------------------------------------------------
@@ -494,6 +512,26 @@ def test_journal_day_pnl(trade_dir, snap, prices):
     assert len(s["journal"]) == 2
     assert [e["date"] for e in s["nav_history"]] == [
         "2026-09-04", "2026-09-07"]
+
+
+def test_day_pnl_excludes_cash_movements(trade_dir, snap, prices):
+    """Deposits/withdrawals are cash transfers, not P&L — day_pnl must
+    exclude them or the review journal misattributes performance."""
+    from value_genie import trade as tr
+    tr.new_season("s001", base="USD", capital=2000.0, markets=["US"])
+    tr.mark_nav("s001", snap_dir=snap, today="2026-09-04")
+    tr.cash_move("s001", "deposit", 500.0, "USD",
+                 snap_dir=snap, today="2026-09-07")
+    sm = tr.status_all(snap_dir=snap, today="2026-09-07")[0]
+    assert sm["nav"] == 2500.0
+    assert sm["day_pnl"] == 0.0       # a deposit is not a profit
+    tr.cash_move("s001", "withdraw", 200.0, "USD",
+                 snap_dir=snap, today="2026-09-08")
+    sm = tr.status_all(snap_dir=snap, today="2026-09-08")[0]
+    assert sm["nav"] == 2300.0
+    assert sm["day_pnl"] == 0.0       # a withdrawal is not a loss
+    j = tr.write_journal("s001", "flat", snap_dir=snap, today="2026-09-08")
+    assert j["day_pnl"] == 0.0
 
 
 # ---------------------------------------------------------------------------

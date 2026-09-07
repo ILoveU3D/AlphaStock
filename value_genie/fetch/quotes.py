@@ -46,6 +46,7 @@ def fetch_market_quotes(market: str) -> pd.DataFrame:
     """
     all_rows, pn = [], 1
     page_fails = 0
+    total = 0
     while True:
         d = em_push2_get("/api/qt/clist/get", params={
             "pn": pn, "pz": PAGE_SIZE, "po": 0, "np": 1, "fltt": 2,
@@ -54,9 +55,12 @@ def fetch_market_quotes(market: str) -> pd.DataFrame:
         })
         data = (d or {}).get("data") or {}
         rows = data.get("diff") or []
-        total = data.get("total", 0)
+        if d is not None:
+            # only a successful response may advance the total; a failed
+            # page leaves it at the last known value
+            total = data.get("total") or total
         if not rows:
-            if all_rows and len(all_rows) >= total:
+            if d is not None and all_rows and len(all_rows) >= total:
                 break  # last page already complete
             page_fails += 1
             if page_fails > config.QUOTE_PAGE_RETRIES:

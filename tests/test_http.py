@@ -61,6 +61,17 @@ class TestFetcher:
         f, _ = next(gen)
         assert f.get_json("http://x", retries=1) is None
 
+    def test_warn_goes_to_stderr_not_stdout(self, capsys):
+        """Diagnostics must not pollute stdout — every --json command
+        routes live fetches through this client."""
+        gen = self._fetcher_with(500)
+        f, _ = next(gen)
+        with patch.object(http.time, "sleep", lambda s: None):
+            assert f.get_json("http://x", retries=1) is None
+        cap = capsys.readouterr()
+        assert cap.out == ""
+        assert "[warn]" in cap.err
+
     def test_exception_path(self):
         gen = self._fetcher_with(200, exc=requests.ConnectionError("boom"))
         f, _ = next(gen)

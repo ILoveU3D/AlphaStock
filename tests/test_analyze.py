@@ -22,6 +22,11 @@ class TestPercentile:
     def test_nan_value_returns_none(self):
         assert az.percentile(float("nan"), pd.Series([1, 2])) is None
 
+    def test_single_value_series_returns_none(self):
+        # one value = the target alone; a percentile against itself is
+        # meaningless (phantom 50)
+        assert az.percentile(5, pd.Series([5])) is None
+
 
 class TestVerdictBand:
     def test_bands(self):
@@ -239,3 +244,61 @@ class TestBorrowedDividendFlag:
                   "cashflow_factors": {"borrowed_dividend": 0}}
         assert not any("borrowed dividend" in fl
                        for fl in az.risk_flags(result))
+
+
+# ---------------------------------------------------------------------------
+# HK peer universe (hk_f10 merge)
+# ---------------------------------------------------------------------------
+def make_hk_snapshot(tmp_path: Path) -> Path:
+    snap = tmp_path / "20260901"
+    snap.mkdir(exist_ok=True)
+    codes = ["00001", "00002", "00003"]
+    pd.DataFrame({
+        "market": "HK", "code": codes,
+        "name": ["HK Alpha", "HK Beta", "HK Gamma"],
+        "market_id": "116", "industry": "food",
+        "price": [100.0, 200.0, 300.0],
+        "pe_ttm": [10.0, 20.0, 30.0], "pb": [1.0, 2.0, 3.0],
+        "market_cap": [5e10, 6e10, 7e10],
+        "amount": [1e8, 1e8, 1e8],
+    }).to_csv(snap / "hk_quotes.csv", index=False)
+    pd.DataFrame({
+        "code": codes,
+        "report_date": ["2026-06-30"] * 3,
+        "revenue": [1e10, 2e10, 3e10],
+        "rev_yoy": [10.0, 20.0, 5.0],
+        "profit_yoy": [15.0, 25.0, -5.0],
+        "roe": [10.0, 20.0, 30.0],
+        "gross_margin": [30.0, 40.0, 50.0],
+        "net_margin": [5.0, 10.0, 15.0],
+        "debt_ratio": [50.0, 40.0, 30.0],
+        "dividend_yield": [1.0, 2.0, 3.0],
+    }).to_csv(snap / "hk_f10.csv", index=False)
+    return snap
+
+
+class TestHKPeerSet:
+    def test_merges_hk_f10_into_peers(self, tmp_path):
+        snap = make_hk_snapshot(tmp_path)
+        peers = az.build_peer_set(snap, "HK")
+        assert set(peers["roe"]) == {10.0, 20.0, 30.0}
+        assert set(peers["gross_margin"]) == {30.0, 40.0, 50.0}
+        assert peers["debt_ratio"].notna().all()
+
+    def test_hk_target_quality_not_phantom_100(self, tmp_path, monkeypatch):
+        """Without the f10 merge, HK peers carry no fundamentals and the
+        target's quality/growth pillars degenerate to a phantom 100."""
+        snap = make_hk_snapshot(tmp_path)
+        monkeypatch.setattr(
+            az, "fetch_quotes_by_secids",
+            lambda secids: pd.DataFrame([{
+                "market": "HK", "code": "00001", "name": "HK Alpha",
+                "market_id": "116", "price": 101.0, "pct_chg": 0.5,
+                "pe_ttm": 10.0, "pb": 1.0, "market_cap": 5e10}]))
+        monkeypatch.setattr(az, "fetch_kline_any", lambda *a, **k: None)
+        # target 00001 is worst-in-class on every quality factor
+        r = az.analyze_stock(Match("HK", "00001", "HK Alpha", 100.0, "116"),
+                             snapshot_dir=snap)
+        assert r["scores"]["quality"] is not None
+        assert r["scores"]["quality"] < 50.0
+        assert r["percentiles"]["roe"] < 50.0

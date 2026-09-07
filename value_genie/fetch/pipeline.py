@@ -103,6 +103,30 @@ def merge_a_financials(quotes: pd.DataFrame, fins: pd.DataFrame | None,
     return out
 
 
+def merge_hk_f10(quotes: pd.DataFrame,
+                 f10: pd.DataFrame | None) -> pd.DataFrame:
+    """Left-join HK F10 fundamentals for the ask-time peer universe.
+
+    Only the ratio/growth columns are merged — ps / ocf_yield derivations
+    need FX and stay with build_master / add_cashflow_factors. Without
+    this merge HK peers carry no fundamentals and a target's quality /
+    growth pillar ranks degenerate to a phantom 100 (ranking against
+    itself).
+    """
+    out = quotes.copy()
+    if f10 is None or f10.empty:
+        return out
+    cols = ["code", "report_date", "revenue", "rev_yoy", "profit_yoy",
+            "roe", "gross_margin", "net_margin", "debt_ratio",
+            "dividend_yield"]
+    cols = [c for c in cols if c in f10.columns
+            and (c == "code" or c not in out.columns)]
+    f = f10.copy()
+    f["code"] = f["code"].astype(str).str.zfill(5)
+    f = f.drop_duplicates(subset="code")[cols]
+    return out.merge(f, on="code", how="left")
+
+
 def merge_us_financials(quotes: pd.DataFrame,
                         fins: pd.DataFrame | None) -> pd.DataFrame:
     """Left-join SEC frame metrics and derive ps / report_date."""

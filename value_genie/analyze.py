@@ -18,7 +18,7 @@ from .fetch.kline import (fetch_kline_any, kline_cache_path,
                           kline_is_fresh, load_kline)
 from .fetch.pipeline import add_cashflow_factors, apply_gates, \
     backfill_kline_factors, load_annual_cashflows, \
-    merge_a_financials, merge_us_financials
+    merge_a_financials, merge_hk_f10, merge_us_financials
 from .fetch.quotes import fetch_quotes_by_secids
 from .report import resolve_snapshot
 from .resolve import Match
@@ -64,7 +64,8 @@ VERDICTS = [
 def percentile(value, series, lower_is_better: bool = False):
     """Oriented percentile of value in series (0-100, higher=better)."""
     s = pd.to_numeric(pd.Series(series), errors="coerce").dropna()
-    if s.empty or value is None or pd.isna(value):
+    if len(s) <= 1 or value is None or pd.isna(value):
+        # len(s) <= 1: the target would rank only against itself
         return None
     frac = (float((s < value).mean())
             + 0.5 * float((s == value).mean())) * 100.0
@@ -178,7 +179,10 @@ def build_peer_set(snapshot_dir, market: str) -> pd.DataFrame:
                               dtype={"ticker": str})
         df = merge_us_financials(quotes, fin)
     else:
-        df = quotes
+        f10 = None
+        if (snap / "hk_f10.csv").exists():
+            f10 = pd.read_csv(snap / "hk_f10.csv", dtype={"code": str})
+        df = merge_hk_f10(quotes, f10)
     gated = apply_gates(df, market)
     annual = load_annual_cashflows(snap)
     if not annual.empty:
