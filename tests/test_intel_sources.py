@@ -102,3 +102,95 @@ class TestDcReport:
         df = pd.DataFrame({"d": ["2026-09-12 00:00:00"], "x": [1]})
         out = _dc.norm_dates(df, "d")
         assert out["d"].iloc[0] == "2026-09-12"
+
+
+# ---------------------------------------------------------------------------
+# A-share announcement fetchers (解禁/增减持/回购/定增)
+# ---------------------------------------------------------------------------
+from value_genie.intel import announcements as ann
+
+
+class TestFetchAUnlocks:
+    def test_normalizes_rows(self, monkeypatch):
+        monkeypatch.setattr(_dc.DC, "get_json", lambda url, params=None, **kw:
+            _dc_json([{
+                "SECURITY_CODE": "688795", "SECURITY_NAME_ABBR": "摩尔线程-U",
+                "FREE_DATE": "2026-09-12 00:00:00",
+                "TOTAL_RATIO": 0.12, "FREE_SHARES": 12345.6,
+                "LIFT_MARKET_CAP": 50000.0, "NEW": 40.55}]))
+        df = ann.fetch_a_unlocks("2026-09-08", "2026-12-07")
+        assert df.iloc[0]["code"] == "688795"
+        assert df.iloc[0]["name"] == "摩尔线程-U"
+        assert df.iloc[0]["unlock_pct"] == pytest.approx(12.0)  # decimal -> %
+        assert df.iloc[0]["free_date"] == "2026-09-12"
+        assert df.iloc[0]["lift_cap_wan"] == 50000.0
+
+    def test_filter_double_quotes(self, monkeypatch):
+        seen = {}
+
+        def fake(url, params=None, **kw):
+            seen.update(params)
+            return _dc_json([])
+
+        monkeypatch.setattr(_dc.DC, "get_json", fake)
+        ann.fetch_a_unlocks("2026-09-08", "2026-12-07")
+        assert seen["filter"] == ('(FREE_DATE>="2026-09-08")'
+                                  '(FREE_DATE<="2026-12-07")')
+
+    def test_source_failure_none(self, monkeypatch):
+        monkeypatch.setattr(_dc.DC, "get_json",
+                            lambda url, params=None, **kw: None)
+        assert ann.fetch_a_unlocks("2026-09-08", "2026-12-07") is None
+
+
+class TestFetchAHolderChanges:
+    def test_normalizes_rows(self, monkeypatch):
+        monkeypatch.setattr(_dc.DC, "get_json", lambda url, params=None, **kw:
+            _dc_json([{
+                "SECURITY_CODE": "600519", "SECURITY_NAME_ABBR": "贵州茅台",
+                "DIRECTION": "减持", "CHANGE_NUM": 100.5,
+                "NOTICE_DATE": "2026-08-01 00:00:00",
+                "END_DATE": "2026-11-01 00:00:00",
+                "HOLDER_NAME": "某国资"}]))
+        df = ann.fetch_a_holder_changes("2026-08-01")
+        assert df.iloc[0]["direction"] == "减持"
+        assert df.iloc[0]["change_num_wan"] == 100.5
+        assert df.iloc[0]["notice_date"] == "2026-08-01"
+        assert df.iloc[0]["end_date"] == "2026-11-01"
+        assert df.iloc[0]["holder_name"] == "某国资"
+
+
+class TestFetchABuybacks:
+    def test_uses_scode_and_no_sort(self, monkeypatch):
+        seen = {}
+
+        def fake(url, params=None, **kw):
+            seen.update(params)
+            return _dc_json([{
+                "SCODE": "000858", "SNAME": "五粮液",
+                "HGJE": 5.0e8, "HGSL": 2.0e7,
+                "GGRQ": "2026-09-01 00:00:00",
+                "TDATE": "2026-09-01 00:00:00"}])
+
+        monkeypatch.setattr(_dc.DC, "get_json", fake)
+        df = ann.fetch_a_buybacks("2026-08-01")
+        assert "sortColumns" not in seen        # probe rule 2
+        assert seen["filter"] == '(GGRQ>="2026-08-01")'
+        assert df.iloc[0]["code"] == "000858"   # SCODE -> code
+        assert df.iloc[0]["amount_yuan"] == 5.0e8
+        assert df.iloc[0]["shares"] == 2.0e7
+        assert df.iloc[0]["announce_date"] == "2026-09-01"
+
+
+class TestFetchAPlacements:
+    def test_dilution_pct(self, monkeypatch):
+        monkeypatch.setattr(_dc.DC, "get_json", lambda url, params=None, **kw:
+            _dc_json([{
+                "SECURITY_CODE": "600519", "SECURITY_NAME_ABBR": "贵州茅台",
+                "ISSUE_DATE": "2026-08-15 00:00:00", "ISSUE_NUM": 1.0e7,
+                "ISSUE_SHARE_BEFORE": 1.0e9, "ISSUE_SHARE_AFTER": 1.01e9,
+                "NET_RAISE_FUNDS": 2.0e9, "SEO_TYPE": "定向增发"}]))
+        df = ann.fetch_a_placements("2026-08-01")
+        assert df.iloc[0]["dilution_pct"] == pytest.approx(1.0)
+        assert df.iloc[0]["issue_date"] == "2026-08-15"
+        assert df.iloc[0]["net_raise"] == 2.0e9
