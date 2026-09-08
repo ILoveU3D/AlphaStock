@@ -352,9 +352,78 @@ class TestFetchStockNews:
         assert nws.fetch_stock_news("1", "688795") is None
 
     def test_empty_list_is_empty_not_none(self, monkeypatch):
-        monkeypatch.setattr(nws.EM_WEB, "get_json",
-                            lambda url, params=None, **kw: _news_json([]))
+        monkeypatch.setattr(
+            nws.EM_WEB, "get_json",
+            lambda url, params=None, **kw: _news_json([]))
         assert nws.fetch_stock_news("1", "688795") == []
+
+
+class TestFetchStockNewsMultiMarket:
+    def test_hk_market_tag(self, monkeypatch):
+        calls = []
+
+        def fake(url, params=None, **kw):
+            calls.append(params["mTypeAndCode"])
+            return _news_json([{"Art_ShowTime": f"{date.today().isoformat()} 10:00:00",
+                                "Art_Title": "腾讯新闻",
+                                "Art_MediaName": "证券日报",
+                                "Art_Url": "http://x/1.html"}])
+
+        monkeypatch.setattr(nws.EM_WEB, "get_json", fake)
+        items = nws.fetch_stock_news("116", "00700", "腾讯控股", market="HK")
+        assert calls == ["116.00700"]
+        assert items[0].market == "HK"
+        assert items[0].code == "00700"
+
+    def test_us_market_tag(self, monkeypatch):
+        monkeypatch.setattr(
+            nws.EM_WEB, "get_json",
+            lambda url, params=None, **kw: _news_json([
+                {"Art_ShowTime": f"{date.today().isoformat()} 10:00:00",
+                 "Art_Title": "Apple news", "Art_MediaName": "证券时报",
+                 "Art_Url": "http://x/1.html"}]))
+        items = nws.fetch_stock_news("105", "AAPL", "Apple", market="US")
+        assert items[0].market == "US"
+        assert items[0].code == "AAPL"
+
+    def test_us_blank_prefix_falls_back(self, monkeypatch):
+        tried = []
+
+        def fake(url, params=None, **kw):
+            tried.append(params["mTypeAndCode"])
+            if params["mTypeAndCode"].startswith("105."):
+                return {"code": 1, "data": {}}   # wrong exchange: empty
+            return _news_json([{
+                "Art_ShowTime": f"{date.today().isoformat()} 10:00:00",
+                "Art_Title": "NYSE story", "Art_MediaName": "证券日报",
+                "Art_Url": "http://x/2.html"}])
+
+        monkeypatch.setattr(nws.EM_WEB, "get_json", fake)
+        items = nws.fetch_stock_news("", "IBM", "IBM", market="US")
+        assert tried == ["105.IBM", "106.IBM"]
+        assert items and items[0].title == "NYSE story"
+
+    def test_us_all_prefixes_empty_returns_empty_list(self, monkeypatch):
+        monkeypatch.setattr(
+            nws.EM_WEB, "get_json",
+            lambda url, params=None, **kw: {"code": 1, "data": {}})
+        assert nws.fetch_stock_news("", "XYZ", "XYZ", market="US") == []
+
+    def test_us_all_sources_failed_returns_none(self, monkeypatch):
+        monkeypatch.setattr(nws.EM_WEB, "get_json",
+                            lambda url, params=None, **kw: None)
+        assert nws.fetch_stock_news("", "XYZ", "XYZ", market="US") is None
+
+    def test_hk_blank_prefix_defaults_116(self, monkeypatch):
+        calls = []
+
+        def fake(url, params=None, **kw):
+            calls.append(params["mTypeAndCode"])
+            return _news_json([])
+
+        monkeypatch.setattr(nws.EM_WEB, "get_json", fake)
+        nws.fetch_stock_news("", "00700", market="HK")
+        assert calls == ["116.00700"]
 
 
 # ---------------------------------------------------------------------------
