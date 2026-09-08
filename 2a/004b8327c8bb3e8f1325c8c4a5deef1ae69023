@@ -1,0 +1,35 @@
+skills/13-holding-deep-review.md
+  s_8f2d2307c36778::t_34c639cc37122b 14-15,90
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.2",
+  "base_commit_sha": "2a004b8327c8bb3e8f1325c8c4a5deef1ae69023",
+  "prompts": {},
+  "humans": {
+    "h_e5e258ab51542c": {
+      "author": "yukang.wang <yukang.wang@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_8f2d2307c36778": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa02725a14192e21389b028",
+        "model": "glm-5.3__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "tool_use_id": "6aa0307ea14192e21389b252",
+        "runtime_client": "trae-tob-git-ai",
+        "source_scene": "agent",
+        "tool_name": "RunCommand",
+        "edit_kind": "bash",
+        "client_type": "ide",
+        "session_id": "6aa02725a14192e21389b028",
+        "operation_id": "6aa0307ea14192e21389b252",
+        "external_session_id": "6aa02725a14192e21389b028"
+      }
+    }
+  }
+}
