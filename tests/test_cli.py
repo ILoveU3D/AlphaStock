@@ -587,3 +587,64 @@ class TestParserSurface:
             assert p.parse_args(argv + ["--json"]).json, argv
         assert p.parse_args(
             ["holding", "list", "me", "--json"]).json
+
+
+class TestIntelCmd:
+    def _patch(self, monkeypatch, report_result):
+        monkeypatch.setattr("value_genie.doctor.freshness_gate",
+                            lambda d=None: ("PASS", "ok"))
+        monkeypatch.setattr(
+            "value_genie.resolve.resolve",
+            lambda q, **k: [Match("A", "688795", "摩尔线程-U", 100.0, "1")])
+        monkeypatch.setattr(
+            "value_genie.intel.report.build_intel_report",
+            lambda m, snapshot_dir=None, asof=None: report_result)
+
+    def _result(self):
+        return {"match": Match("A", "688795", "摩尔线程-U", 100.0, "1"),
+                "snapshot": "20260909", "asof": "2026-09-09",
+                "radar": {"unlock_pct_30d": 12.0, "intel_red": 1.0},
+                "events": [], "eq": [],
+                "notices": [], "ratings": [], "news": []}
+
+    def test_renders_report(self, capsys, monkeypatch):
+        self._patch(monkeypatch, self._result())
+        rc = main(["intel", "摩尔线程"])
+        out = capsys.readouterr().out
+        assert rc == 0
+        assert "舆情情报: 摩尔线程-U (A/688795)" in out
+        assert "[事件雷达]" in out
+
+    def test_json_pure_stdout(self, capsys, monkeypatch):
+        self._patch(monkeypatch, self._result())
+        rc = main(["intel", "摩尔线程", "--json"])
+        out = capsys.readouterr().out
+        assert rc == 0
+        payload = json.loads(out)
+        assert payload["match"]["code"] == "688795"
+
+    def test_no_match_returns_2(self, capsys, monkeypatch):
+        monkeypatch.setattr("value_genie.doctor.freshness_gate",
+                            lambda d=None: ("PASS", "ok"))
+        monkeypatch.setattr("value_genie.resolve.resolve",
+                            lambda q, **k: [])
+        rc = main(["intel", "不存在股"])
+        assert rc == 2
+
+    def test_freshness_fail_blocks(self, capsys, monkeypatch):
+        monkeypatch.setattr("value_genie.doctor.freshness_gate",
+                            lambda d=None: ("FAIL", "no snapshot"))
+        rc = main(["intel", "摩尔线程"])
+        captured = capsys.readouterr()
+        assert rc == 1
+        assert "[FRESHNESS BLOCKED]" in captured.err
+
+    def test_no_check_skips_gate(self, capsys, monkeypatch):
+        called = []
+        monkeypatch.setattr(
+            "value_genie.doctor.freshness_gate",
+            lambda d=None: called.append(1) or ("FAIL", "x"))
+        self._patch(monkeypatch, self._result())
+        rc = main(["intel", "摩尔线程", "--no-check"])
+        assert rc == 0
+        assert called == []
