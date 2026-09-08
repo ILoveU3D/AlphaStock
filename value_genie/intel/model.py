@@ -76,3 +76,56 @@ def row_to_item(row) -> IntelItem:
         source=d.get("source", ""),
         payload=json.loads(d.get("payload") or "{}"),
     )
+
+
+def earnings_quality(rec: dict) -> list:
+    """Earnings-quality red flags for one stock (design §5).
+
+    ``rec`` keys (all optional, NaN-safe): rev_yoy, rece_yoy (应收
+    YoY %), inv_yoy (存货 YoY %), ocf, profit, deduct_eps, basic_eps.
+    Returns triggered signal ids:
+
+      eq_receivables   应收同比 > 营收同比 + EQ_GROWTH_PAD
+      eq_inventory     存货同比 > 营收同比 + EQ_GROWTH_PAD
+      eq_ocf_gap       OCF/净利润 < EQ_OCF_RATIO_MIN (profit>0 only —
+                       a loss-maker's ratio is meaningless)
+      eq_nonrecurring  扣非每股/基本每股 < EQ_NONRECURRING_MIN (A股专属)
+
+    eq_goodwill deferred: RPT_DMSK_FN_BALANCE has no goodwill field
+    (design §5); revisit with a per-stock fallback in P3.
+    Missing inputs never trigger a flag — a flag needs both sides of
+    its comparison. Signals are observations, not verdicts.
+    """
+    from .. import config
+
+    def _num(key):
+        try:
+            v = rec.get(key)
+            if v is None or v != v:          # None or NaN
+                return None
+            return float(v)
+        except (TypeError, ValueError):
+            return None
+
+    rev = _num("rev_yoy")
+    rece = _num("rece_yoy")
+    inv = _num("inv_yoy")
+    ocf = _num("ocf")
+    profit = _num("profit")
+    deduct = _num("deduct_eps")
+    basic = _num("basic_eps")
+
+    flags = []
+    if rev is not None and rece is not None \
+            and rece > rev + config.EQ_GROWTH_PAD:
+        flags.append("eq_receivables")
+    if rev is not None and inv is not None \
+            and inv > rev + config.EQ_GROWTH_PAD:
+        flags.append("eq_inventory")
+    if ocf is not None and profit is not None and profit > 0 \
+            and ocf / profit < config.EQ_OCF_RATIO_MIN:
+        flags.append("eq_ocf_gap")
+    if deduct is not None and basic is not None and basic > 0 \
+            and deduct / basic < config.EQ_NONRECURRING_MIN:
+        flags.append("eq_nonrecurring")
+    return flags
