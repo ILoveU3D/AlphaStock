@@ -9,8 +9,8 @@ triggers:
 commands:
   - doctor
   - fetch
-version: 16
-updated_at: 2026-09-09T00:51:05
+version: 17
+updated_at: 2026-09-09T02:11:04
 ---
 
 # Playbook
@@ -55,3 +55,4 @@ known snapshot is older than one trading day:
 - [2026-09-08 12:12] (ai) fetch stdout 全缓冲：后台运行全程零输出直到 exit 才 flush（09-08 上午误判卡死而杀掉）；进度探针 = data/snapshots/<date>/ 文件清单增长（quotes→financials→kline→master→manifest）；重启 fetch 会 reuse 当日已完成文件，上午被杀的部分下午续跑 678s 成功。修正 09-08 早间 single-stock-analysis 的'fetch 卡死'判断
 - [2026-09-08 22:13] (ai) Eastmoney datacenter 铁律: 字符串过滤值须双引号如 (SECURITY_CODE=688795), 单引号部分报表触发 ANTLR 错误; RPTA_WEB_GPHG 回购报表不能带 sortColumns; 不可过滤字段会让整个 filter 被静默忽略返回全表, 须校验返回行数; 已验证事件报表: 解禁=RPT_LIFT_STAGE(TOTAL_RATIO 小数占比), 减持=RPT_SHARE_HOLDER_INCREASE, 回购=RPTA_WEB_GPHG, 定增=RPT_SEO_DETAIL, 预告=RPT_PUBLIC_OP_NEWPREDICT, 披露预约=RPT_PUBLIC_BS_APPOIN
 - [2026-09-09 00:51] (ai) intel radar P1 live check (2026-09-09): 655 events / 202 A stocks, zero source failures; DC filter quirk — dates MUST be single-quoted (double quotes -> 'filter字段中日期参数格式错误'), strings/booleans double-quoted (IS_LATEST='T' -> ANTLR InputMismatchException); success=false + code 9201 '返回数据为空' = valid empty window (e.g. appointment forward windows stay empty until late Sept), not a source failure
+- [2026-09-09 02:11] (ai) intel P2 live check (2026-09-09): intel X verified on 688795 (Moore Threads - the stock that motivated the system: 12-07 unlock 39.6% of shares flagged 3 months ahead), 000001 (snapshot-outside stock: batch tables are full-market so events/eq still computed, radar row correctly declared missing), and ask red-flag path on 603162 (68.1% 30d unlock -> verdict suffix [intel red flag]); np-listapi success envelope is code==1 (not 0); reportapi ratingChange 3=maintain observed with rating==last_rating, 1=downgrade 2=upgrade per EM convention; indvAimPriceT/L target price usually EMPTY for A-shares - render dash, never fabricate; mTypeAndCode prefix == Match.market_id (1=SH, 0=SZ+BJ); SB smartbox JSONDecodeError seen once (rate limit?) - harmless when snapshot resolves first
