@@ -14,8 +14,8 @@ triggers:
 commands:
   - intel X
   - intel X --json
-version: 1
-updated_at: 2026-09-09T09:40:00
+version: 2
+updated_at: 2026-09-09T07:56:29
 ---
 
 # Playbook
@@ -47,3 +47,4 @@ intel X 输出五个板块（事件雷达 / 公告或披露文件时间线 / 财
   107=AMEX 返回空 data——快照外美股自动按 105→106 试。
 - (2026-09-09) EDGAR submissions.filings.recent 覆盖近千条提交（新→
   旧），90 天窗口无需分页；144（拟议内部人出售）是噪音已过滤。
+- [2026-09-09 07:56] (ai) 快照无雷达行 ≠ bug：雷达行只在 master/watchlist 里查（漏斗 ~200 只 + 持仓兜底），漏斗外大盘股（如 00700、600519）正常显示无雷达行；A 股事件明细仍从全市场批表按 code 过滤可用。
