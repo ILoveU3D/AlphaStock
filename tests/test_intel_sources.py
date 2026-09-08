@@ -427,3 +427,113 @@ class TestFetchStockRatings:
             rtg.EM_WEB, "get_json",
             lambda url, params=None, **kw: {"hits": 0, "data": []})
         assert rtg.fetch_stock_ratings("688795") == []
+
+
+# ---------------------------------------------------------------------------
+# Per-stock notice list (np-anotice-stock) + batch fetcher code filters
+# ---------------------------------------------------------------------------
+from value_genie.intel import announcements as ann2  # ann already imported
+
+
+def _notice_json(rows):
+    return {"data": {"list": rows}}
+
+
+class TestFetchStockNotices:
+    def test_normalizes_items_with_category_and_url(self, monkeypatch):
+        rows = [{
+            "art_code": "AN202608281828639681",
+            "title": "摩尔线程:关于限售股份上市流通的提示性公告",
+            "notice_date": "2026-08-28 00:00:00",
+            "columns": [{"column_code": "001002002003",
+                         "column_name": "限售股份上市流通"}],
+        }]
+        seen = {}
+
+        def fake(url, params=None, **kw):
+            seen.update({"url": url, "params": params})
+            return _notice_json(rows)
+
+        monkeypatch.setattr(ann2.EM_WEB, "get_json", fake)
+        items = ann2.fetch_stock_notices("688795", name="摩尔线程-U")
+        assert seen["params"]["stock_list"] == "688795"
+        assert len(items) == 1
+        it = items[0]
+        assert it.subsystem == "announcements" and it.kind == "notice"
+        assert it.event_date.isoformat() == "2026-08-28"
+        assert it.payload["category"] == "限售股份上市流通"
+        assert it.url == ("https://data.eastmoney.com/notices/detail/"
+                          "688795/AN202608281828639681.html")
+        assert it.impact == "neutral"
+
+    def test_window_filters_old_notices(self, monkeypatch):
+        from datetime import date as _d, timedelta as _td
+        old = (_d.today() - _td(days=120)).isoformat()
+        rows = [{"art_code": "X", "title": "旧公告",
+                 "notice_date": f"{old} 00:00:00", "columns": []}]
+        monkeypatch.setattr(ann2.EM_WEB, "get_json",
+                            lambda url, params=None, **kw: _notice_json(rows))
+        assert ann2.fetch_stock_notices("688795") == []
+
+    def test_source_failure_none(self, monkeypatch):
+        monkeypatch.setattr(ann2.EM_WEB, "get_json",
+                            lambda url, params=None, **kw: None)
+        assert ann2.fetch_stock_notices("688795") is None
+
+
+class TestBatchFetcherCodeFilter:
+    def test_unlocks_single_stock_filter(self, monkeypatch):
+        seen = {}
+
+        def fake(url, params=None, **kw):
+            seen.update(params)
+            return _dc_json([])
+
+        monkeypatch.setattr(_dc.DC, "get_json", fake)
+        ann.fetch_a_unlocks("2026-09-08", "2026-12-07", code="688795")
+        assert '(SECURITY_CODE="688795")' in seen["filter"]
+
+    def test_buybacks_single_stock_uses_scode(self, monkeypatch):
+        seen = {}
+
+        def fake(url, params=None, **kw):
+            seen.update(params)
+            return _dc_json([])
+
+        monkeypatch.setattr(_dc.DC, "get_json", fake)
+        ann.fetch_a_buybacks("2026-08-01", code="688795")
+        assert '(SCODE="688795")' in seen["filter"]
+        assert "sortColumns" not in seen
+
+    def test_holder_changes_single_stock_filter(self, monkeypatch):
+        seen = {}
+
+        def fake(url, params=None, **kw):
+            seen.update(params)
+            return _dc_json([])
+
+        monkeypatch.setattr(_dc.DC, "get_json", fake)
+        ann.fetch_a_holder_changes("2026-08-01", code="688795")
+        assert '(SECURITY_CODE="688795")' in seen["filter"]
+
+    def test_balance_single_stock_filter(self, monkeypatch):
+        seen = {}
+
+        def fake(url, params=None, **kw):
+            seen.update(params)
+            return _dc_json([])
+
+        monkeypatch.setattr(_dc.DC, "get_json", fake)
+        ear.fetch_a_balance("2026-06-30", code="688795")
+        assert '(SECURITY_CODE="688795")' in seen["filter"]
+
+    def test_no_code_keeps_batch_behavior(self, monkeypatch):
+        seen = {}
+
+        def fake(url, params=None, **kw):
+            seen.update(params)
+            return _dc_json([])
+
+        monkeypatch.setattr(_dc.DC, "get_json", fake)
+        ann.fetch_a_unlocks("2026-09-08", "2026-12-07")
+        assert "SECURITY_CODE=" not in seen["filter"]

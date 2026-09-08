@@ -7,16 +7,19 @@ from .. import config
 from ._dc import code_col, dc_report, name_col, norm_dates
 
 
-def fetch_a_forecasts(since: str,
+def fetch_a_forecasts(since: str, code: str | None = None,
                       quiet: bool = True) -> pd.DataFrame | None:
     """业绩预告 RPT_PUBLIC_OP_NEWPREDICT，最新公告 (IS_LATEST=T) 且
     NOTICE_DATE >= since。
 
+    code 非 None 时追加 (SECURITY_CODE="...") 单股过滤（P2 单股兜底）。
     Columns: code, name, predict_type (预增/预减/首亏/扭亏…),
     change_pct (INCREASE_JZ 幅度), notice_date (ISO).
     """
-    df = dc_report(config.A_FORECAST_REPORT_NAME,
-                   [f"(NOTICE_DATE>='{since}')", '(IS_LATEST="T")'],
+    filters = [f"(NOTICE_DATE>='{since}')", '(IS_LATEST="T")']
+    if code:
+        filters.append(f'(SECURITY_CODE="{code}")')
+    df = dc_report(config.A_FORECAST_REPORT_NAME, filters,
                    quiet=quiet, label="A forecasts")
     if df is None:
         return None
@@ -32,17 +35,20 @@ def fetch_a_forecasts(since: str,
     return norm_dates(out, "notice_date")
 
 
-def fetch_a_appointments(start: str, end: str,
+def fetch_a_appointments(start: str, end: str, code: str | None = None,
                          quiet: bool = True) -> pd.DataFrame | None:
     """披露预约 RPT_PUBLIC_BS_APPOIN，预约日窗口 [start, end]。
 
+    code 非 None 时追加 (SECURITY_CODE="...") 单股过滤（P2 单股兜底）。
     空窗口是正常时序（三季报预约 9 月末才挂出），不是接口失败。
     Columns: code, name, appoint_date (ISO), is_published ("0"=未披露),
     report_type.
     """
-    df = dc_report(config.A_APPOINT_REPORT_NAME,
-                   [f"(APPOINT_PUBLISH_DATE>='{start}')",
-                    f"(APPOINT_PUBLISH_DATE<='{end}')"],
+    filters = [f"(APPOINT_PUBLISH_DATE>='{start}')",
+               f"(APPOINT_PUBLISH_DATE<='{end}')"]
+    if code:
+        filters.append(f'(SECURITY_CODE="{code}")')
+    df = dc_report(config.A_APPOINT_REPORT_NAME, filters,
                    quiet=quiet, label="A appointments")
     if df is None:
         return None
@@ -60,18 +66,21 @@ def fetch_a_appointments(start: str, end: str,
     return norm_dates(out, "appoint_date")
 
 
-def fetch_a_balance(report_date: str,
+def fetch_a_balance(report_date: str, code: str | None = None,
                     quiet: bool = True) -> pd.DataFrame | None:
     """资产负债表批表 RPT_DMSK_FN_BALANCE（全市场约 5.6k 行）。
 
+    code 非 None 时追加 (SECURITY_CODE="...") 单股过滤（P2 单股兜底）。
     ACCOUNTS_RECE_RATIO / INVENTORY_RATIO = 应收/存货 YoY 增速 %
     （TCL/长安/比亚迪三股交叉验证，非占比）；该表无商誉字段
     （eq_goodwill 推迟，设计 §5）。
     Columns: code, rece_yoy, inv_yoy, receivable, inventory,
     report_date.
     """
-    df = dc_report(config.A_BALANCE_REPORT_NAME,
-                   [f"(REPORT_DATE='{report_date}')"],
+    filters = [f"(REPORT_DATE='{report_date}')"]
+    if code:
+        filters.append(f'(SECURITY_CODE="{code}")')
+    df = dc_report(config.A_BALANCE_REPORT_NAME, filters,
                    quiet=quiet, label="A balance")
     if df is None:
         return None
