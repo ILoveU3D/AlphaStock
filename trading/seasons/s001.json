@@ -271,7 +271,7 @@
     },
     {
       "date": "2026-09-08",
-      "nav": 2487.23,
+      "nav": 2486.21,
       "cash_total": 896.93,
       "settling_total": 0,
       "positions": [
@@ -280,9 +280,9 @@
           "code": "TCOM",
           "name": "携程",
           "qty": 12.0,
-          "price": 40.875,
+          "price": 40.785,
           "currency": "USD",
-          "value_base": 490.5
+          "value_base": 489.42
         },
         {
           "market": "A",
@@ -307,9 +307,9 @@
           "code": "CARG",
           "name": "CarGurus Inc-A",
           "qty": 13.0,
-          "price": 32.65,
+          "price": 32.655,
           "currency": "USD",
-          "value_base": 424.45
+          "value_base": 424.51
         }
       ],
       "fx": {
