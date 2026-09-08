@@ -132,19 +132,128 @@ class TestBuildIntelReport:
         assert result["news"] == {"missing": "news source failed"}
         assert result["radar"] == {}
 
-    def test_non_a_market_degrades(self, tmp_path, monkeypatch):
+    def test_hk_market_degrades(self, tmp_path, monkeypatch):
         snap = _snap(tmp_path, {})
         monkeypatch.setattr(ir, "fetch_stock_notices",
-                            lambda c, name="": None)
-        monkeypatch.setattr(ir, "fetch_stock_ratings",
-                            lambda c, name="": None)
+                            lambda c, name="", **kw: None)
         monkeypatch.setattr(ir, "fetch_stock_news",
-                            lambda mid, c, name="": None)
+                            lambda mid, c, name="", **kw: None)
         result = ir.build_intel_report(
             Match("HK", "00700", "腾讯", 100.0, "116"),
             snapshot_dir=snap, asof=date(2026, 9, 9))
-        assert result["events"] == {"missing": "P3: HK/US 未覆盖"}
-        assert result["eq"] == {"missing": "P3: HK/US 未覆盖"}
+        assert result["events"] == {
+            "missing": "雷达批表当前仅覆盖 A 股（HK/US 批量事件属后续阶段）"}
+        assert result["eq"] == {
+            "missing": "粉饰信号输入（应收/存货/OCF/扣非）为 A 股快照专属"}
+        assert result["ratings"]["missing"].startswith("港股研报源缺失")
+        assert result["notices"] == {"missing": "notice source failed"}
+        assert result["news"] == {"missing": "news source failed"}
+
+
+class TestBuildIntelReportHKUS:
+    def _hk_match(self):
+        return Match("HK", "00700", "腾讯控股", 100.0, "116")
+
+    def _us_match(self):
+        return Match("US", "AAPL", "Apple", 100.0, "105")
+
+    def test_hk_assembly(self, tmp_path, monkeypatch):
+        _kill_dc(monkeypatch)
+        snap = _snap(tmp_path, {"master.csv": pd.DataFrame(
+            [{"market": "HK", "code": "00700", "name": "腾讯控股",
+              "intel_red": 0.0}])})
+        notice = IntelItem(market="HK", code="00700", name="腾讯控股",
+                           subsystem="announcements", kind="notice",
+                           event_date=date(2026, 9, 8), title="翌日披露报表",
+                           source="eastmoney", impact="neutral", payload={})
+        news = IntelItem(market="HK", code="00700", name="腾讯控股",
+                         subsystem="news", kind="news",
+                         event_date=date(2026, 9, 8), title="腾讯新闻",
+                         source="eastmoney", impact="neutral", payload={})
+        monkeypatch.setattr(ir, "fetch_stock_notices",
+                            lambda code, name="", **kw: [notice])
+        monkeypatch.setattr(ir, "fetch_stock_news",
+                            lambda mid, code, name="", **kw: [news])
+        res = ir.build_intel_report(self._hk_match(), snapshot_dir=snap)
+        assert res["notices"] == [notice]
+        assert res["news"] == [news]
+        assert isinstance(res["ratings"], dict) and "missing" in res["ratings"]
+        assert "missing" in res["events"] and "missing" in res["eq"]
+        assert res["radar"]["intel_red"] == 0.0
+
+    def test_us_assembly(self, tmp_path, monkeypatch):
+        _kill_dc(monkeypatch)
+        snap = _snap(tmp_path, {"master.csv": pd.DataFrame(
+            [{"market": "US", "code": "AAPL", "name": "Apple",
+              "intel_red": 0.0}])})
+        filing = IntelItem(market="US", code="AAPL", name="Apple",
+                           subsystem="announcements", kind="filing",
+                           event_date=date(2026, 9, 8), title="8-K filing",
+                           source="sec_edgar", impact="neutral",
+                           payload={"form": "8-K"})
+        cons = IntelItem(market="US", code="AAPL", name="Apple",
+                         subsystem="ratings", kind="consensus",
+                         event_date=date(2026, 9, 9), title="一致评级 Buy",
+                         source="stockanalysis", impact="neutral", payload={})
+        rating = IntelItem(market="US", code="AAPL", name="Apple",
+                           subsystem="ratings", kind="rating",
+                           event_date=date(2026, 9, 8), title="HSBC Buy",
+                           source="stockanalysis", impact="neutral",
+                           payload={"org": "HSBC", "rating": "Buy"})
+        news = IntelItem(market="US", code="AAPL", name="Apple",
+                         subsystem="news", kind="news",
+                         event_date=date(2026, 9, 8), title="Apple news",
+                         source="eastmoney", impact="neutral", payload={})
+        monkeypatch.setattr(ir, "fetch_us_filings",
+                            lambda code, name="": [filing])
+        monkeypatch.setattr(ir, "fetch_us_consensus",
+                            lambda code, name="": [cons, rating])
+        monkeypatch.setattr(ir, "fetch_stock_news",
+                            lambda mid, code, name="", **kw: [news])
+        res = ir.build_intel_report(self._us_match(), snapshot_dir=snap)
+        assert res["notices"] == [filing]
+        assert res["ratings"] == [cons, rating]
+        assert res["news"] == [news]
+        assert "missing" in res["events"] and "missing" in res["eq"]
+
+    def test_us_render_labels(self):
+        res = {"match": self._us_match(), "snapshot": "20260909",
+               "asof": "2026-09-09", "radar": {},
+               "events": {"missing": "雷达批表当前仅覆盖 A 股"},
+               "eq": {"missing": "A 股快照专属"},
+               "notices": [], "ratings": [], "news": []}
+        out = ir.render_intel(res)
+        assert "披露文件时间线" in out
+        assert "US/AAPL" in out
+
+    def test_hk_render_keeps_notice_label(self):
+        res = {"match": self._hk_match(), "snapshot": "20260909",
+               "asof": "2026-09-09", "radar": {},
+               "events": {"missing": "x"}, "eq": {"missing": "x"},
+               "notices": [], "ratings": {"missing": "y"}, "news": []}
+        out = ir.render_intel(res)
+        assert "公告时间线" in out
+
+    def test_us_consensus_render(self):
+        cons = IntelItem(market="US", code="AAPL", name="Apple",
+                         subsystem="ratings", kind="consensus",
+                         event_date=date(2026, 9, 9),
+                         title="一致评级 Buy · 44家覆盖 · 目标价 $324.53",
+                         source="stockanalysis", impact="neutral",
+                         payload={"consensus": "Buy", "count": 44})
+        rate = IntelItem(market="US", code="AAPL", name="Apple",
+                         subsystem="ratings", kind="rating",
+                         event_date=date(2026, 9, 8), title="HSBC Buy",
+                         source="stockanalysis", impact="neutral",
+                         payload={"org": "HSBC", "rating": "Buy",
+                                  "target_price": 366.0})
+        res = {"match": self._us_match(), "snapshot": "20260909",
+               "asof": "2026-09-09", "radar": {},
+               "events": [], "eq": [], "notices": [],
+               "ratings": [cons, rate], "news": []}
+        out = ir.render_intel(res)
+        assert "一致评级 Buy · 44家覆盖" in out
+        assert "HSBC Buy" in out
 
 
 # ---------------------------------------------------------------------------
