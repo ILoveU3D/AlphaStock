@@ -1,0 +1,30 @@
+skills/15-trading.md
+  s_187d08e05fb746::t_52445729364de9 17-18,78
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.2",
+  "base_commit_sha": "867877c12fb88a59e8cdb2fd6d6e5896a70be645",
+  "prompts": {},
+  "sessions": {
+    "s_187d08e05fb746": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa02159a14192e21389af73",
+        "model": "glm-5.3__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "source_scene": "agent",
+        "external_session_id": "6aa02159a14192e21389af73",
+        "client_type": "ide",
+        "session_id": "6aa02159a14192e21389af73",
+        "edit_kind": "bash",
+        "runtime_client": "trae-tob-git-ai",
+        "tool_name": "RunCommand",
+        "operation_id": "6aa02489a14192e21389aff7",
+        "tool_use_id": "6aa02489a14192e21389aff7"
+      }
+    }
+  }
+}
