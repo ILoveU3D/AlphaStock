@@ -1,0 +1,33 @@
+docs/superpowers/specs/2026-09-08-intel-sentiment-system-design.md
+  s_0303b390208446::t_5dfe2ef244e965 226-244
+  s_0303b390208446::t_0140c3e61776ba 1-225
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.2",
+  "base_commit_sha": "1f844dbbf91575b66aef32c1a24a96ac76d12d16",
+  "prompts": {},
+  "sessions": {
+    "s_0303b390208446": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa000d1a14192e21389ad13",
+        "model": "glm-5.3__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "dedupe_key": "6aa000d1a14192e21389ad13:6aa014eba14192e21389aeb4:afterEdit:00742ee4",
+        "runtime_client": "trae-tob-git-ai",
+        "session_id": "6aa000d1a14192e21389ad13",
+        "client_type": "ide",
+        "external_session_id": "6aa000d1a14192e21389ad13",
+        "tool_use_id": "6aa014eba14192e21389aeb4",
+        "operation_id": "6aa014eba14192e21389aeb4",
+        "edit_kind": "file_edit",
+        "source_scene": "unknown",
+        "tool_id": "Edit",
+        "tool_type": "agent"
+      }
+    }
+  }
+}
