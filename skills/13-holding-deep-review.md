@@ -11,8 +11,8 @@ triggers:
 commands:
   - ask --evidence
   - screen --strategy <master>
-version: 9
-updated_at: 2026-09-07T12:00:07
+version: 10
+updated_at: 2026-09-08T23:58:18
 ---
 
 # Playbook
@@ -87,3 +87,4 @@ master-grade depth on fundamentals.
 - [2026-09-06 23:53] (ai) Update 2026-09-06: master-evaluation mandate softened by user to standard-flow-not-enforced; position discipline added (Duan: enter only if -50% drawdown tolerable); Duan's principle — data is only ever a reason NOT to buy, the buy reason must be future cash flows from business model + culture
 - [2026-09-07 10:47] (ai) master screens only cover the master.csv pool; watchlist holdings (e.g. PDD/NVDA/BRK_B outside the 200-candidate funnel) never appear in screen output - evaluate their gates manually from ask --evidence metrics and label the absence as pool coverage, not a gate rejection
 - [2026-09-07 12:00] (ai) crash-day routine: diff last kline close vs live quote to detect limit moves (519.35 vs 415.48 = -20% STAR limit-down, 2026-09-07 Moore Threads), then web-search same-day news for the catalyst (unlock/earnings/policy) before writing any review prose - the catalyst reframes the whole holding review
+- [2026-09-08 23:58] (ai) ETF holdings (e.g. 588060 科创50ETF): web-resolve tracking index + top-10 weights before writing review prose - hidden overlap with single-stock holdings and index-inclusion unlock traps (2026-09-08: 科创50 top-10 all semis; Dec Moore Threads 39.55% unlock doubles float -> index inclusion forces passive buying)
