@@ -230,3 +230,23 @@ US_PLATFORM_CAP = 0.015
 
 # HK F10 organization profile (board lot / TRADE_UNIT lookup).
 HK_ORGPROFILE_REPORT = "RPT_HKF10_INFO_ORGPROFILE"
+
+# ---------------------------------------------------------------------------
+# Intel event radar (P1: A-share batch event tables, design 2026-09-08)
+# ---------------------------------------------------------------------------
+A_UNLOCK_REPORT_NAME = "RPT_LIFT_STAGE"             # 解禁时间表
+A_HOLDER_REPORT_NAME = "RPT_SHARE_HOLDER_INCREASE"  # 股东增减持
+A_BUYBACK_REPORT_NAME = "RPTA_WEB_GPHG"             # 回购（不可带 sortColumns）
+A_PLACEMENT_REPORT_NAME = "RPT_SEO_DETAIL"          # 定增
+A_FORECAST_REPORT_NAME = "RPT_PUBLIC_OP_NEWPREDICT" # 业绩预告
+A_APPOINT_REPORT_NAME = "RPT_PUBLIC_BS_APPOIN"      # 披露预约
+A_BALANCE_REPORT_NAME = "RPT_DMSK_FN_BALANCE"       # 资产负债表（eq 信号用）
+
+INTEL_LOOKBACK_DAYS = 90    # 公告/预告回看窗口（天）
+INTEL_FORECAST_DAYS = 90    # 解禁/披露预约前看窗口（天）
+UNLOCK_RED_PCT = 5.0        # unlock_pct_30d 红旗阈值（%）
+EQ_FLAG_RED = 3             # eq_flags 触发 intel_red 的计数
+REPORT_DUE_WARN = 14        # report_due_days 预警阈值（P2 渲染用）
+EQ_GROWTH_PAD = 10.0        # 应收/存货同比超过营收同比的幅度（pct）
+EQ_OCF_RATIO_MIN = 0.5      # OCF/净利润 下限
+EQ_NONRECURRING_MIN = 0.6   # 扣非每股/基本每股 下限（A股专属）
