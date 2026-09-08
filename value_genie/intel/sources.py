@@ -16,11 +16,15 @@ def _register_intel_sources():
     """
     for ds in list_sources():
         if ds.id == "eastmoney":
-            for cap in ("events:A", "announce:A"):
+            for cap in ("events:A", "announce:A", "notice:A",
+                        "news:A", "ratings:A"):
                 if cap not in ds.capabilities:
                     ds.capabilities.append(cap)
     set_source_order("events", "A", ["eastmoney"])
     set_source_order("announce", "A", ["eastmoney"])
+    set_source_order("notice", "A", ["eastmoney"])
+    set_source_order("news", "A", ["eastmoney"])
+    set_source_order("ratings", "A", ["eastmoney"])
 
 
 _register_intel_sources()
