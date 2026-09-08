@@ -117,6 +117,30 @@ def _snapshot_factors(snap, market: str, code: str) -> dict:
     return {}
 
 
+def _intel_factors(snap, market: str, code: str) -> dict:
+    """Intel radar row from master/watchlist (P1 radar columns)."""
+    if snap is None:
+        return {}
+    from .intel.radar import RADAR_COLUMNS
+    for fname in ("master.csv", "watchlist.csv"):
+        p = snap / fname
+        if not p.exists():
+            continue
+        try:
+            df = pd.read_csv(p, dtype={"code": str})
+        except (OSError, pd.errors.ParserError, ValueError):
+            continue
+        if "market" not in df.columns or "code" not in df.columns:
+            continue
+        hit = df[(df["market"] == market)
+                 & (df["code"].astype(str) == str(code))]
+        if not hit.empty:
+            r = hit.iloc[0]
+            return {c: (None if pd.isna(r.get(c)) else r.get(c))
+                    for c in RADAR_COLUMNS if c in df.columns}
+    return {}
+
+
 def _manifest_fx(snap) -> float | None:
     """HKD/CNY rate recorded by the fetch run, if any."""
     try:
@@ -153,6 +177,34 @@ def risk_flags(result: dict) -> list:
     if (v := _num("borrowed_dividend")) is not None and v > 0:
         flags.append("borrowed dividend: 年报分红超过自由现金流且筹资净流入"
                      "（A 股语境：保再融资资格的借钱分红，危险信号）")
+
+    intel = result.get("intel") or {}
+
+    def _inum(col):
+        v = intel.get(col)
+        try:
+            f = float(v)
+            return None if f != f else f
+        except (TypeError, ValueError):
+            return None
+
+    if _inum("intel_red") == 1:
+        triggers = []
+        v = _inum("unlock_pct_30d")
+        if v is not None and v >= config.UNLOCK_RED_PCT:
+            triggers.append(f"30天解禁 {v:.1f}%")
+        if _inum("holder_cut_flag") == 1:
+            triggers.append("减持计划进行中")
+        if _inum("dilution_flag") == 1:
+            triggers.append("增发摊薄")
+        v = _inum("eq_flags")
+        if v is not None and v >= config.EQ_FLAG_RED:
+            triggers.append(f"财报粉饰信号 {int(v)} 项")
+        if triggers:
+            flags.append("intel red: " + "；".join(triggers))
+        else:
+            flags.append("intel red: 红旗汇总触发")
+
     if result.get("warnings"):
         flags.append("incomplete data: " + "; ".join(result["warnings"]))
     return flags
@@ -313,6 +365,7 @@ def analyze_stock(match: Match, snapshot_dir=None, live: bool = True,
     result["fundamentals"] = fins
     result["cashflow_factors"] = _snapshot_factors(snap, match.market,
                                                    match.code)
+    result["intel"] = _intel_factors(snap, match.market, match.code)
 
     klm = target_kline_metrics(match, snap)
     result["kline"] = klm
@@ -386,6 +439,8 @@ def _as_of(result: dict) -> str:
     ld = (result.get("kline") or {}).get("_last_date")
     if ld:
         parts.append(f"kline: {ld}")
+    if result.get("intel") is not None and result.get("snapshot"):
+        parts.append(f"intel: snapshot {result['snapshot']}")
     return "; ".join(parts) or "unknown"
 
 
@@ -423,7 +478,10 @@ def render_brief(result: dict) -> str:
         chg_s = f" ({chg:+.2f}% today)" if chg is not None else ""
         lines.append(f"price: {q['price']:,.2f} "
                      f"{config.MARKET_CURRENCIES[m.market]}{chg_s}")
-    lines.append(f"verdict: {result['verdict']}")
+    verdict = str(result.get("verdict") or "")
+    if (result.get("intel") or {}).get("intel_red") == 1:
+        verdict += " [intel red flag]"
+    lines.append(f"verdict: {verdict}")
     if result.get("composite_percentile") is not None:
         lines.append(f"blended rank: {result['composite_percentile']:.0f}th "
                      f"percentile of the {m.market} gated universe")

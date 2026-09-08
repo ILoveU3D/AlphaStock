@@ -648,3 +648,55 @@ class TestIntelCmd:
         rc = main(["intel", "摩尔线程", "--no-check"])
         assert rc == 0
         assert called == []
+
+
+# ---------------------------------------------------------------------------
+# ask intel integration (P2 Task 8)
+# ---------------------------------------------------------------------------
+from value_genie.analyze import risk_flags
+
+
+class TestAskIntelIntegration:
+    def _fake_result(self, intel=None):
+        base = fake_result(Match("A", "688795", "摩尔线程-U", 100.0, "1"))
+        base["intel"] = intel or {}
+        # fake_result stubs risk_flags as a static list; re-run the real
+        # function so the intel key is evaluated
+        base["risk_flags"] = risk_flags(base)
+        return base
+
+    def test_risk_flag_when_intel_red(self, capsys, monkeypatch):
+        monkeypatch.setattr("value_genie.doctor.freshness_gate",
+                            lambda d=None: ("PASS", "ok"))
+        monkeypatch.setattr(
+            "value_genie.resolve.resolve",
+            lambda q, **k: [Match("A", "688795", "摩尔线程-U", 100.0, "1")])
+        result = self._fake_result(intel={
+            "unlock_pct_30d": 12.0, "unlock_pct_90d": 12.0,
+            "holder_cut_flag": 1.0, "dilution_flag": 0.0,
+            "eq_flags": 2.0, "intel_red": 1.0})
+        monkeypatch.setattr(
+            "value_genie.analyze.analyze_stock",
+            lambda m, snapshot_dir=None, horizon=None: result)
+        rc = main(["ask", "摩尔线程"])
+        out = capsys.readouterr().out
+        assert rc == 0
+        assert "intel red" in out
+        assert "解禁" in out and "减持" in out
+
+    def test_no_flag_when_clean(self, capsys, monkeypatch):
+        monkeypatch.setattr("value_genie.doctor.freshness_gate",
+                            lambda d=None: ("PASS", "ok"))
+        monkeypatch.setattr(
+            "value_genie.resolve.resolve",
+            lambda q, **k: [Match("A", "688795", "摩尔线程-U", 100.0, "1")])
+        result = self._fake_result(intel={
+            "unlock_pct_30d": 0.0, "holder_cut_flag": 0.0,
+            "dilution_flag": 0.0, "eq_flags": 0.0, "intel_red": 0.0})
+        monkeypatch.setattr(
+            "value_genie.analyze.analyze_stock",
+            lambda m, snapshot_dir=None, horizon=None: result)
+        rc = main(["ask", "摩尔线程"])
+        out = capsys.readouterr().out
+        assert rc == 0
+        assert "intel red" not in out
