@@ -70,19 +70,19 @@
     },
     {
       "market": "US",
-      "code": "PDD",
-      "name": "拼多多",
-      "qty": 24.0,
-      "cost": 83.8,
+      "code": "BRK_B",
+      "name": "伯克希尔哈撒韦-B",
+      "qty": 6.0,
+      "cost": 502.03,
       "currency": "USD",
       "opened": ""
     },
     {
       "market": "US",
-      "code": "BRK_B",
-      "name": "伯克希尔哈撒韦-B",
-      "qty": 6.0,
-      "cost": 502.03,
+      "code": "KO",
+      "name": "可口可乐",
+      "qty": 22.0,
+      "cost": 88.22,
       "currency": "USD",
       "opened": ""
     }
