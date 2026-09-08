@@ -1,0 +1,37 @@
+value_genie/intel/ratings.py
+  s_0303b390208446::t_6f08703fe34d2f 80-185
+  s_0303b390208446::t_3713f5f9241351 1-2,4,6-10,13-14,18
+tests/test_intel_sources.py
+  s_0303b390208446::t_11c076567627c9 506-507
+  s_0303b390208446::t_15a7f8ef506481 501
+  s_0303b390208446::t_dbd1f8eb1f0a1e 502-505,508-574
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.2",
+  "base_commit_sha": "2cbabf2ba480655ac980ff224582b82144dfb18e",
+  "prompts": {},
+  "sessions": {
+    "s_0303b390208446": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa000d1a14192e21389ad13",
+        "model": "glm-5.3__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "tool_id": "Edit",
+        "external_session_id": "6aa000d1a14192e21389ad13",
+        "tool_type": "agent",
+        "source_scene": "unknown",
+        "dedupe_key": "6aa000d1a14192e21389ad13:6aa09ddba14192e21389b8b3:afterEdit:1b3767c9",
+        "runtime_client": "trae-tob-git-ai",
+        "tool_use_id": "6aa09ddba14192e21389b8b3",
+        "session_id": "6aa000d1a14192e21389ad13",
+        "operation_id": "6aa09ddba14192e21389b8b3",
+        "client_type": "ide",
+        "edit_kind": "file_edit"
+      }
+    }
+  }
+}
