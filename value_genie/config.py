@@ -250,3 +250,13 @@ REPORT_DUE_WARN = 14        # report_due_days 预警阈值（P2 渲染用）
 EQ_GROWTH_PAD = 10.0        # 应收/存货同比超过营收同比的幅度（pct）
 EQ_OCF_RATIO_MIN = 0.5      # OCF/净利润 下限
 EQ_NONRECURRING_MIN = 0.6   # 扣非每股/基本每股 下限（A股专属）
+
+# Intel per-stock report (P2: A-share) — eastmoney web endpoints ------
+EM_NOTICE_URL = ("https://np-anotice-stock.eastmoney.com"
+                 "/api/security/ann")          # 个股公告列表
+EM_NEWS_URL = ("https://np-listapi.eastmoney.com"
+               "/comm/wap/getListInfo")        # 个股新闻时间线
+EM_REPORT_URL = "https://reportapi.eastmoney.com/report/list"  # 研报评级
+INTEL_NOTICE_DAYS = 90    # 公告时间线回看窗口（天）
+INTEL_NEWS_DAYS = 30      # 新闻时间线回看窗口（天）
+INTEL_RATING_DAYS = 365   # 研报评级回看窗口（天）

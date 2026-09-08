@@ -100,6 +100,7 @@ EM = Fetcher({"User-Agent": config.EM_UA}, "EM")        # push2 quotes/klines
 DC = Fetcher({"User-Agent": config.EM_UA}, "DC")        # datacenter reports
 SEC = Fetcher(config.SEC_HEADERS, "SEC")                # SEC EDGAR frames
 TX = Fetcher(config.TX_UA, "TX")                        # Tencent fallback
+EM_WEB = Fetcher({"User-Agent": config.EM_UA}, "EM_WEB")  # np-anotice / np-listapi / reportapi
 
 # push2 mirror rotation with failure avoidance: a host that just failed is
 # skipped for EM_HOST_COOLDOWN seconds, so a blocked mirror costs one quick

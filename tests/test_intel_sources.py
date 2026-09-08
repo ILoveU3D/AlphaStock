@@ -267,3 +267,29 @@ class TestFetchABalance:
         assert df.iloc[0]["inv_yoy"] == 12.0
         assert df.iloc[0]["receivable"] == 1.0e9
         assert df.iloc[0]["report_date"] == "2026-06-30"
+
+
+# ---------------------------------------------------------------------------
+# P2: per-stock intel capabilities + EM_WEB singleton / URL constants
+# ---------------------------------------------------------------------------
+def test_import_intel_extends_news_ratings_capabilities():
+    import value_genie.intel  # noqa: F401
+    ds = {s.id: s for s in list_sources()}["eastmoney"]
+    assert "news:A" in ds.capabilities
+    assert "ratings:A" in ds.capabilities
+    assert "notice:A" in ds.capabilities
+    assert [s.id for s in get_sources("news", "A")] == ["eastmoney"]
+    assert [s.id for s in get_sources("ratings", "A")] == ["eastmoney"]
+    assert [s.id for s in get_sources("notice", "A")] == ["eastmoney"]
+
+
+def test_em_web_singleton_and_urls():
+    from value_genie.fetch.http import EM_WEB
+    from value_genie import config
+    assert EM_WEB.name == "EM_WEB"
+    assert config.EM_NOTICE_URL.startswith("https://np-anotice-stock")
+    assert config.EM_NEWS_URL.startswith("https://np-listapi")
+    assert config.EM_REPORT_URL.startswith("https://reportapi")
+    assert config.INTEL_NOTICE_DAYS == 90
+    assert config.INTEL_NEWS_DAYS == 30
+    assert config.INTEL_RATING_DAYS == 365
