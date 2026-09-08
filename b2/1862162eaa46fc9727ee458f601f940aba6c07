@@ -1,0 +1,37 @@
+docs/superpowers/specs/2026-09-08-intel-sentiment-system-design.md
+  s_0303b390208446::t_7a7cb45a6c3394 93,95,97-101
+  s_0303b390208446::t_95f19c07487cc9 239
+docs/superpowers/plans/2026-09-08-intel-radar-p1.md
+  s_0303b390208446::t_e4bb17893474df 1-2336
+skills/04-data-ops.md
+  s_0303b390208446::t_e2d1c654931c51 12-13,56
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.2",
+  "base_commit_sha": "b21862162eaa46fc9727ee458f601f940aba6c07",
+  "prompts": {},
+  "sessions": {
+    "s_0303b390208446": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa000d1a14192e21389ad13",
+        "model": "glm-5.3__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "tool_id": "Write",
+        "dedupe_key": "6aa000d1a14192e21389ad13:6aa027bfa14192e21389b042:afterEdit:e0ba90dc",
+        "tool_type": "agent",
+        "operation_id": "6aa027bfa14192e21389b042",
+        "session_id": "6aa000d1a14192e21389ad13",
+        "source_scene": "unknown",
+        "edit_kind": "file_edit",
+        "client_type": "ide",
+        "external_session_id": "6aa000d1a14192e21389ad13",
+        "tool_use_id": "6aa027bfa14192e21389b042",
+        "runtime_client": "trae-tob-git-ai"
+      }
+    }
+  }
+}
