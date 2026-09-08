@@ -34,6 +34,35 @@ def _quotes(rows):
     return df
 
 
+def stub_intel_fetchers(monkeypatch):
+    """Patch value_genie.intel.radar's fetchers: 600519 unlock 8% in
+    10d (red flag), 000858 active buyback, 600519 balance row (no eq
+    trigger: rece 20 < 15+10)."""
+    from value_genie.intel import radar as _radar
+    _d10 = (date.today() + timedelta(days=10)).isoformat()
+    monkeypatch.setattr(_radar, "fetch_a_unlocks", lambda s, e: pd.DataFrame([
+        {"code": "600519", "name": "Kweichow Moutai", "free_date": _d10,
+         "unlock_pct": 8.0, "lift_cap_wan": 1.0e6}]))
+    monkeypatch.setattr(_radar, "fetch_a_holder_changes",
+                        lambda s: pd.DataFrame())
+    monkeypatch.setattr(_radar, "fetch_a_buybacks",
+                        lambda s: pd.DataFrame([
+                            {"code": "000858", "name": "Wuliangye",
+                             "amount_yuan": 5.0e8, "shares": 2.0e7,
+                             "announce_date": date.today().isoformat()}]))
+    monkeypatch.setattr(_radar, "fetch_a_placements",
+                        lambda s: pd.DataFrame())
+    monkeypatch.setattr(_radar, "fetch_a_forecasts",
+                        lambda s: pd.DataFrame())
+    monkeypatch.setattr(_radar, "fetch_a_appointments",
+                        lambda s, e: pd.DataFrame())
+    monkeypatch.setattr(_radar, "fetch_a_balance",
+                        lambda rd: pd.DataFrame([
+                            {"code": "600519", "rece_yoy": 20.0,
+                             "inv_yoy": 5.0, "receivable": 1.0e9,
+                             "inventory": 2.0e9, "report_date": rd}]))
+
+
 def a_quotes():
     return _quotes([
         {"market": "A", "code": "600519", "name": "Kweichow Moutai",
@@ -173,6 +202,7 @@ def patched_fetchers(monkeypatch, counters):
     monkeypatch.setattr(pl, "fetch_kline_any", fake_kline)
     # keep run_fetch hermetic: real user holdings would hit the network
     monkeypatch.setattr(pl, "collect_watch_symbols", lambda *a, **k: [])
+    stub_intel_fetchers(monkeypatch)
     return counters
 
 
@@ -187,7 +217,8 @@ def test_run_fetch_full_flow(patched_fetchers, tmp_path):
                  "hk_quotes.csv", "us_quotes.csv", "a_financials.csv",
                  "us_financials.csv", "hk_f10.csv",
                  "kline/A_600519.csv", "kline/HK_00700.csv",
-                 "kline/US_AAPL.csv"):
+                 "kline/US_AAPL.csv", "event_radar.csv", "a_unlocks.csv",
+                 "a_buybacks.csv", "a_balance.csv"):
         assert (snap / name).exists(), name
     assert json.loads((tmp_path / "latest.json").read_text())[
         "snapshot"] == snap.name
@@ -218,13 +249,28 @@ def test_run_fetch_full_flow(patched_fetchers, tmp_path):
     assert us["currency"] == "USD"
     assert us["ps"] == pytest.approx(3.3e12 / 3.9e11)
 
+    # intel radar columns: A covered (0.0 = no event), HK/US NaN (P1)
+    manifest = json.loads((snap / "manifest.json").read_text())
+    a519 = master[master["code"] == "600519"].iloc[0]
+    assert a519["unlock_pct_30d"] == 8.0
+    assert a519["unlock_pct_90d"] == 8.0
+    assert a519["intel_red"] == 1.0
+    a858 = master[master["code"] == "000858"].iloc[0]
+    assert a858["buyback_active"] == 1.0
+    assert a858["intel_red"] == 0.0
+    hk700 = master[master["code"] == "00700"].iloc[0]
+    assert pd.isna(hk700["unlock_pct_30d"])
+    detail = pd.read_csv(snap / "event_radar.csv", dtype={"code": str})
+    assert "unlock" in set(detail["kind"])
+    assert "buyback" in set(detail["kind"])
+    assert manifest["datasets"]["event_radar"] == 2
+
     for col in ("value_score", "growth_score", "quality_score",
                 "safety_score"):
         s = master[col].dropna()
         assert len(s) > 0
         assert s.between(0, 100).all(), col
 
-    manifest = json.loads((snap / "manifest.json").read_text())
     assert manifest["markets"] == ["A", "HK", "US"]
     assert manifest["datasets"]["master"] == len(master)
     assert manifest["fx_hkdcny"] == 0.92
@@ -328,6 +374,7 @@ def test_run_fetch_skips_us_without_sec_financials(monkeypatch, tmp_path):
     monkeypatch.setattr(pl, "fetch_kline_any",
                         lambda market, code, mid="", lmt=300: _kline_df(300))
     monkeypatch.setattr(pl, "collect_watch_symbols", lambda *a, **k: [])
+    stub_intel_fetchers(monkeypatch)
     snap = pl.run_fetch(markets=["A", "US"], data_dir=tmp_path, quiet=True)
     master = pd.read_csv(snap / "master.csv", dtype={"code": str})
     assert (master["market"] == "US").sum() == 0
