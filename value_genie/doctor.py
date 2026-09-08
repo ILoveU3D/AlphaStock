@@ -113,6 +113,20 @@ def run_checks(data_dir=None) -> list:
             out.append(("PASS", "-", f"watchlist rows: {n}"))
         except (OSError, pd.errors.ParserError, ValueError):
             out.append(("WARN", "-", "watchlist.csv unreadable"))
+    # intel radar: missing -> WARN (舆情缺失允许降级运行, design §8),
+    # never FAIL — the screener stays usable, only intel-gated screens
+    # degrade (their gates skip with a WARN, see evaluate_gates).
+    er = snap / "event_radar.csv"
+    if not er.exists():
+        out.append(("WARN", "-",
+                    "event_radar.csv missing (old snapshot or intel "
+                    "fetch failed)"))
+    else:
+        try:
+            n = len(pd.read_csv(er, dtype={"code": str}))
+            out.append(("PASS", "-", f"event_radar rows: {n}"))
+        except (OSError, pd.errors.ParserError, ValueError):
+            out.append(("WARN", "-", "event_radar.csv unreadable"))
     mp = snap / "manifest.json"
     if mp.exists():
         try:
