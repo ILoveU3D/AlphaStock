@@ -788,3 +788,32 @@ class TestBatchFetcherCodeFilter:
         monkeypatch.setattr(_dc.DC, "get_json", fake)
         ann.fetch_a_unlocks("2026-09-08", "2026-12-07")
         assert "SECURITY_CODE=" not in seen["filter"]
+
+
+# ---------------------------------------------------------------------------
+# P3: HK/US capability registration
+# ---------------------------------------------------------------------------
+class TestP3SourceRegistration:
+    def test_eastmoney_caps(self):
+        import value_genie.intel  # noqa: F401 — registration side effect
+        caps = [s for s in list_sources() if s.id == "eastmoney"][0]
+        for cap in ("notice:HK", "news:HK", "news:US"):
+            assert cap in caps.capabilities
+
+    def test_sec_edgar_notice_us(self):
+        import value_genie.intel  # noqa: F401
+        caps = [s for s in list_sources() if s.id == "sec_edgar"][0]
+        assert "notice:US" in caps.capabilities
+
+    def test_stockanalysis_registered(self):
+        import value_genie.intel  # noqa: F401
+        caps = [s for s in list_sources() if s.id == "stockanalysis"]
+        assert caps and "ratings:US" in caps[0].capabilities
+
+    def test_source_orders(self):
+        import value_genie.intel  # noqa: F401
+        assert [s.id for s in get_sources("notice", "HK")] == ["eastmoney"]
+        assert [s.id for s in get_sources("notice", "US")] == ["sec_edgar"]
+        assert [s.id for s in get_sources("news", "US")] == ["eastmoney"]
+        assert [s.id for s in get_sources("ratings", "US")] == [
+            "stockanalysis"]
