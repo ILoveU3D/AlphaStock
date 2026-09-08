@@ -35,6 +35,10 @@ class TestIntelItem:
         assert model.IMPACT_BY_KIND["buyback"] == "positive"
         assert model.IMPACT_BY_KIND["holder_add"] == "positive"
 
+    def test_impact_filing_and_consensus(self):
+        assert model.IMPACT_BY_KIND["filing"] == "neutral"
+        assert model.IMPACT_BY_KIND["consensus"] == "neutral"
+
     def test_forecast_direction(self):
         assert model.FORECAST_DIRECTION["预增"] == 1
         assert model.FORECAST_DIRECTION["扭亏"] == 1

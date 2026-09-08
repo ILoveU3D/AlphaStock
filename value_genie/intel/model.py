@@ -41,6 +41,8 @@ IMPACT_BY_KIND = {
     "news": "neutral",
     "rating": "neutral",      # per-item: upgrade/downgrade overrides
     "notice": "neutral",
+    "filing": "neutral",      # US EDGAR disclosure (AI reads form type)
+    "consensus": "neutral",   # US analyst consensus snapshot
 }
 
 # A股业绩预告 PREDICT_TYPE -> 方向 (-1/0/1)
