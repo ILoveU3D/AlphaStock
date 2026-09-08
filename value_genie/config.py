@@ -260,3 +260,12 @@ EM_REPORT_URL = "https://reportapi.eastmoney.com/report/list"  # 研报评级
 INTEL_NOTICE_DAYS = 90    # 公告时间线回看窗口（天）
 INTEL_NEWS_DAYS = 30      # 新闻时间线回看窗口（天）
 INTEL_RATING_DAYS = 365   # 研报评级回看窗口（天）
+
+# Intel P3: HK/US coverage — probe-validated 2026-09-09 ---------------
+SEC_SUBMISSIONS_URL_TMPL = ("https://data.sec.gov/submissions/"
+                            "CIK{cik:010d}.json")   # US 披露文件时间线
+EDGAR_DOC_URL_TMPL = ("https://www.sec.gov/Archives/edgar/data/"
+                      "{cik}/{acc}/{doc}")          # EDGAR 原文链接
+SA_RATINGS_URL_TMPL = "https://stockanalysis.com/stocks/{slug}/ratings/"
+INTEL_FILING_DAYS = 90      # US EDGAR 披露文件回看窗口（天）
+US_NEWS_PREFIXES = ("105", "106")   # np-listapi 美股前缀（NASDAQ/NYSE）

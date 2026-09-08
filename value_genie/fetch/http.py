@@ -94,6 +94,50 @@ class Fetcher:
               f"{last_err}", file=sys.stderr)
         return None
 
+    def get_text(self, url, params=None, timeout=20, retries=2,
+                 cooldown_after=5, cooldown_sec=75, total_timeout=None):
+        """GET a URL and return the body as text (for HTML pages).
+        None on persistent failure; 404 counts as no data."""
+        total_timeout = total_timeout or max(45, timeout * 3)
+        last_err = None
+        attempt = 0
+        total_attempts = retries + 1
+        while attempt < total_attempts:
+            attempt += 1
+            try:
+                deadline = time.monotonic() + total_timeout
+                with self.session.get(url, params=params, timeout=timeout,
+                                      stream=True) as r:
+                    chunks = []
+                    for chunk in r.iter_content(chunk_size=65536):
+                        chunks.append(chunk)
+                        if time.monotonic() > deadline:
+                            raise requests.Timeout(
+                                f"download exceeded {total_timeout}s")
+                    body = b"".join(chunks)
+                    status = r.status_code
+                    enc = r.encoding if isinstance(r.encoding, str) else None
+                if status == 200:
+                    self.consecutive_fail = 0
+                    return body.decode(enc or "utf-8", errors="replace")
+                if status == 404:
+                    self.consecutive_fail = 0
+                    return None
+                last_err = f"HTTP {status}"
+            except Exception as e:  # noqa: BLE001
+                last_err = f"{type(e).__name__}: {str(e)[:120]}"
+            self.consecutive_fail += 1
+            if self.consecutive_fail >= cooldown_after and attempt < total_attempts:
+                print(f"    [cooldown] {self.name} failed "
+                      f"{self.consecutive_fail}x ({last_err}), "
+                      f"sleeping {cooldown_sec}s...", file=sys.stderr)
+                time.sleep(cooldown_sec)
+            else:
+                time.sleep(2.0 * attempt)
+        print(f"    [warn] {self.name} request failed: {url[:70]} -> "
+              f"{last_err}", file=sys.stderr)
+        return None
+
 
 # Shared client instances (one per data source).
 EM = Fetcher({"User-Agent": config.EM_UA}, "EM")        # push2 quotes/klines
@@ -101,6 +145,7 @@ DC = Fetcher({"User-Agent": config.EM_UA}, "DC")        # datacenter reports
 SEC = Fetcher(config.SEC_HEADERS, "SEC")                # SEC EDGAR frames
 TX = Fetcher(config.TX_UA, "TX")                        # Tencent fallback
 EM_WEB = Fetcher({"User-Agent": config.EM_UA}, "EM_WEB")  # np-anotice / np-listapi / reportapi
+SA = Fetcher({"User-Agent": config.EM_UA}, "SA")        # stockanalysis.com HTML
 
 # push2 mirror rotation with failure avoidance: a host that just failed is
 # skipped for EM_HOST_COOLDOWN seconds, so a blocked mirror costs one quick
