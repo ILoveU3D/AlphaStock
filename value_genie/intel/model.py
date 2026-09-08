@@ -38,6 +38,9 @@ IMPACT_BY_KIND = {
     "forecast_flat": "neutral",
     "report_date": "neutral",
     "eq_flag": "negative",
+    "news": "neutral",
+    "rating": "neutral",      # per-item: upgrade/downgrade overrides
+    "notice": "neutral",
 }
 
 # A股业绩预告 PREDICT_TYPE -> 方向 (-1/0/1)

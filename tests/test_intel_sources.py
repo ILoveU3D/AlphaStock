@@ -355,3 +355,75 @@ class TestFetchStockNews:
         monkeypatch.setattr(nws.EM_WEB, "get_json",
                             lambda url, params=None, **kw: _news_json([]))
         assert nws.fetch_stock_news("1", "688795") == []
+
+
+# ---------------------------------------------------------------------------
+# Per-stock analyst ratings (reportapi)
+# ---------------------------------------------------------------------------
+from value_genie.intel import ratings as rtg
+
+
+def _rating_row(**over):
+    row = {
+        "orgSName": "国金证券", "publishDate": "2026-08-22 00:00:00.000",
+        "emRatingName": "买入", "lastEmRatingName": "增持",
+        "ratingChange": 2, "predictThisYearEps": "3.544",
+        "predictNextYearEps": "1.262", "indvAimPriceT": "",
+        "indvAimPriceL": "", "infoCode": "AP202608221828313285",
+        "title": "全功能GPU领军", "researcher": "刘高畅",
+    }
+    row.update(over)
+    return row
+
+
+class TestFetchStockRatings:
+    def test_normalizes_items(self, monkeypatch):
+        seen = {}
+
+        def fake(url, params=None, **kw):
+            seen.update({"url": url, "params": params})
+            return {"hits": 1, "size": 1, "data": [_rating_row()]}
+
+        monkeypatch.setattr(rtg.EM_WEB, "get_json", fake)
+        items = rtg.fetch_stock_ratings("688795", name="摩尔线程-U")
+        assert seen["params"]["code"] == "688795"
+        assert len(items) == 1
+        it = items[0]
+        assert it.subsystem == "ratings" and it.kind == "rating"
+        assert it.event_date.isoformat() == "2026-08-22"
+        assert it.title == "国金证券 买入"
+        assert it.url == ("https://data.eastmoney.com/report/info/"
+                          "AP202608221828313285.html")
+        assert it.impact == "positive"          # ratingChange 2 = upgrade
+        assert it.payload["rating"] == "买入"
+        assert it.payload["last_rating"] == "增持"
+        assert it.payload["target_price"] is None   # blank stays None
+
+    def test_downgrade_is_negative(self, monkeypatch):
+        monkeypatch.setattr(
+            rtg.EM_WEB, "get_json",
+            lambda url, params=None, **kw: {"hits": 1, "size": 1,
+                                            "data": [_rating_row(
+                                                ratingChange=1)]})
+        items = rtg.fetch_stock_ratings("688795")
+        assert items[0].impact == "negative"
+
+    def test_maintain_is_neutral(self, monkeypatch):
+        monkeypatch.setattr(
+            rtg.EM_WEB, "get_json",
+            lambda url, params=None, **kw: {"hits": 1, "size": 1,
+                                            "data": [_rating_row(
+                                                ratingChange=3)]})
+        items = rtg.fetch_stock_ratings("688795")
+        assert items[0].impact == "neutral"
+
+    def test_source_failure_none(self, monkeypatch):
+        monkeypatch.setattr(rtg.EM_WEB, "get_json",
+                            lambda url, params=None, **kw: None)
+        assert rtg.fetch_stock_ratings("688795") is None
+
+    def test_empty_data_is_empty_list(self, monkeypatch):
+        monkeypatch.setattr(
+            rtg.EM_WEB, "get_json",
+            lambda url, params=None, **kw: {"hits": 0, "data": []})
+        assert rtg.fetch_stock_ratings("688795") == []
