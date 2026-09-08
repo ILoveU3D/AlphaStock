@@ -293,3 +293,65 @@ def test_em_web_singleton_and_urls():
     assert config.INTEL_NOTICE_DAYS == 90
     assert config.INTEL_NEWS_DAYS == 30
     assert config.INTEL_RATING_DAYS == 365
+
+
+# ---------------------------------------------------------------------------
+# Per-stock news timeline (np-listapi)
+# ---------------------------------------------------------------------------
+from datetime import date, timedelta
+
+from value_genie.intel import news as nws
+
+
+def _news_json(rows):
+    return {"code": 1, "message": "success",
+            "data": {"page_index": 1, "list": rows}}
+
+
+class TestFetchStockNews:
+    def test_normalizes_items_and_window(self, monkeypatch):
+        today = date.today()
+        recent = (today - timedelta(days=2)).isoformat()
+        stale = (today - timedelta(days=60)).isoformat()
+        rows = [
+            {"Art_ShowTime": f"{recent} 20:55:07",
+             "Art_Title": "摩尔线程解禁", "Art_MediaName": "每日经济新闻",
+             "Art_Url": "http://finance.eastmoney.com/a/1.html"},
+            {"Art_ShowTime": f"{stale} 09:00:00",
+             "Art_Title": "旧闻（窗口外，应被过滤）",
+             "Art_MediaName": "x", "Art_Url": "http://x/2.html"},
+        ]
+        seen = {}
+
+        def fake(url, params=None, **kw):
+            seen.update({"url": url, "params": params})
+            return _news_json(rows)
+
+        monkeypatch.setattr(nws.EM_WEB, "get_json", fake)
+        items = nws.fetch_stock_news("1", "688795", name="摩尔线程-U")
+        assert seen["params"]["mTypeAndCode"] == "1.688795"
+        assert len(items) == 1                     # stale row filtered
+        it = items[0]
+        assert it.subsystem == "news" and it.kind == "news"
+        assert it.event_date.isoformat() == recent
+        assert it.title == "摩尔线程解禁"
+        assert it.url == "http://finance.eastmoney.com/a/1.html"
+        assert it.payload["media"] == "每日经济新闻"
+        assert it.impact == "neutral"
+
+    def test_source_failure_none(self, monkeypatch):
+        monkeypatch.setattr(nws.EM_WEB, "get_json",
+                            lambda url, params=None, **kw: None)
+        assert nws.fetch_stock_news("1", "688795") is None
+
+    def test_envelope_code_not_success_none(self, monkeypatch):
+        # np-listapi success envelope is code==1; anything else is failure
+        monkeypatch.setattr(
+            nws.EM_WEB, "get_json",
+            lambda url, params=None, **kw: {"code": 0, "data": None})
+        assert nws.fetch_stock_news("1", "688795") is None
+
+    def test_empty_list_is_empty_not_none(self, monkeypatch):
+        monkeypatch.setattr(nws.EM_WEB, "get_json",
+                            lambda url, params=None, **kw: _news_json([]))
+        assert nws.fetch_stock_news("1", "688795") == []
