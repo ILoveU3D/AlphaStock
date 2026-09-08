@@ -90,15 +90,15 @@ class IntelItem:
 
 ## 5. 财报粉饰信号（model.py 中的 earnings-quality 计算）
 
-由快照内已有财务数据计算，零额外网络请求，全市场免费覆盖：
+由快照内已有财务数据 + 一张新增资产负债表批表计算（每股扣非来自既有业绩报表原始字段，零新增报表）：
 
-| 信号 | 判定（示意，阈值进 config.py） | 数据来源 |
+| 信号 | 判定（示意，阈值进 config.py） | 数据来源（已探针验证 2026-09-09） |
 |---|---|---|
-| eq_receivables | 应收增速 > 营收增速 + 10pct | a_financials / us_financials(XBRL) |
-| eq_inventory | 存货增速 > 营收增速 + 10pct | 同上（可得时） |
-| eq_goodwill | 商誉/净资产 > 30% | 同上（可得时） |
-| eq_ocf_gap | OCF/净利润 < 0.5（连续两期） | 同上 + a_cashflow |
-| eq_nonrecurring | 扣非净利/净利 < 60%（A股专属） | a_financials 扣非列 |
+| eq_receivables | 应收同比 > 营收同比 + 10pct | 新增批表 `RPT_DMSK_FN_BALANCE`（`ACCOUNTS_RECE_RATIO` = 应收 YoY%，已三股交叉验证） |
+| eq_inventory | 存货同比 > 营收同比 + 10pct | 同上（`INVENTORY_RATIO` = 存货 YoY%） |
+| eq_goodwill | 商誉/净资产 > 30% | **推迟**：`RPT_DMSK_FN_BALANCE` 无商誉字段，待找到带商誉的批表或 P3 单股兜底时补 |
+| eq_ocf_gap | OCF/净利润 < 0.5 | 已有 a_cashflow（ocf）+ a_financials（profit） |
+| eq_nonrecurring | 扣非每股/基本每股 < 60%（A股专属） | 已有业绩报表 `RPT_LICO_FN_CPD` 原始字段 `DEDUCT_BASIC_EPS`/`BASIC_EPS`（A_FIELD_MAP 扩两列） |
 
 输出：`eq_flags`（计数）+ 明细列表（供 intel X 呈现与 AI 解读）。HK 无扣非概念，仅算可得项。
 信号=观察项不是定罪：进入 `risk_flags` 原样呈现，不软化（AGENTS.md 答题规则）。
@@ -236,6 +236,7 @@ python -m value_genie intel X [--json]        # X 走标准 resolve 链
 | 定增 | `RPT_SEO_DETAIL` | `(ISSUE_DATE>='{d}')` | `ISSUE_NUM` 发行股数；`ISSUE_SHARE_BEFORE/AFTER` 前后总股本（稀释率=(after-before)/before）；`NET_RAISE_FUNDS` 净募资（元）；`SEO_TYPE`；`ISSUE_DATE` |
 | 业绩预告 | `RPT_PUBLIC_OP_NEWPREDICT` | `(NOTICE_DATE>='{d}')(IS_LATEST='T')` | `PREDICT_TYPE`（预增/预减/首亏/扭亏…）；`INCREASE_JZ` 幅度；`NOTICE_DATE` |
 | 披露预约 | `RPT_PUBLIC_BS_APPOIN` | `(APPOINT_PUBLISH_DATE>='{d1}')(APPOINT_PUBLISH_DATE<='{d2}')` | `APPOINT_PUBLISH_DATE` 预约日；`IS_PUBLISH`（'0' 未披露）；`REPORT_TYPE_NAME`。三季报预约在 9 月末才挂出，查未来窗口为空是正常时序，不是接口失败 |
+| 资产负债表（eq 信号用） | `RPT_DMSK_FN_BALANCE` | `(REPORT_DATE='{d}')`，全市场分页（~5569 行） | `ACCOUNTS_RECE_RATIO`/`INVENTORY_RATIO` = 应收/存货 **YoY 增速 %**（非占比，TCL/长安/比亚迪三股 year-ago 行交叉验证吻合）；`ACCOUNTS_RECE`/`INVENTORY` 绝对额（元）；无商誉字段 |
 
 **东财 datacenter 探针铁律（写入实施代码注释与 Field Notes）**
 1. 字符串过滤值必须用**双引号**：`(SECURITY_CODE="688795")` 可行，单引号在部分报表触发 ANTLR `InputMismatchException`。
