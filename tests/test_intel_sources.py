@@ -550,6 +550,114 @@ class TestFetchStockNotices:
         assert ann2.fetch_stock_notices("688795") is None
 
 
+class TestFetchStockNoticesHK:
+    def test_hk_ann_type_h_and_market_tag(self, monkeypatch):
+        calls = []
+        rows = [{
+            "art_code": "AN202609081829135004",
+            "title": "翌日披露报表 - 已发行股份变动及股份购回",
+            "notice_date": f"{date.today().isoformat()} 00:00:00",
+            "columns": [{"column_code": "011005001",
+                         "column_name": "股份購回"}],
+        }]
+
+        def fake(url, params=None, **kw):
+            calls.append(params["ann_type"])
+            return _notice_json(rows)
+
+        monkeypatch.setattr(ann2.EM_WEB, "get_json", fake)
+        items = ann2.fetch_stock_notices("00700", "腾讯控股", market="HK")
+        assert calls == ["H"]
+        assert items[0].market == "HK"
+        assert items[0].code == "00700"
+        assert items[0].payload["category"] == "股份購回"
+        assert "AN202609081829135004" in items[0].url
+
+    def test_a_share_default_ann_type_a(self, monkeypatch):
+        calls = []
+
+        def fake(url, params=None, **kw):
+            calls.append(params["ann_type"])
+            return _notice_json([])
+
+        monkeypatch.setattr(ann2.EM_WEB, "get_json", fake)
+        ann2.fetch_stock_notices("688795")
+        assert calls == ["A"]
+
+
+class TestFetchUsFilings:
+    def _submissions(self):
+        return {
+            "cik": "0000320193",
+            "filings": {"recent": {
+                "accessionNumber": ["0000320193-26-000018",
+                                    "0000320193-26-000017",
+                                    "0000320193-26-000016"],
+                "filingDate": [f"{date.today().isoformat()}",
+                               f"{date.today().isoformat()}",
+                               f"{date.today().isoformat()}"],
+                "form": ["8-K", "144", "10-Q"],
+                "primaryDocument": ["a1.htm", "x144.htm", "a10q.htm"],
+                "items": ["Item 2.02", "", "item 2"],
+                "reportDate": [f"{date.today().isoformat()}", "", ""],
+            }}}
+
+    def test_filters_material_forms_and_marks_market(self, monkeypatch):
+        monkeypatch.setattr(ann, "_load_cik_map",
+                            lambda: {"AAPL": 320193})
+        monkeypatch.setattr(ann.SEC, "get_json",
+                            lambda url, params=None, **kw:
+                            self._submissions())
+        items = ann.fetch_us_filings("AAPL", "Apple")
+        assert [i.payload["form"] for i in items] == ["8-K", "10-Q"]
+        assert all(i.market == "US" for i in items)
+        assert all(i.kind == "filing" for i in items)
+        assert all(i.subsystem == "announcements" for i in items)
+        assert items[0].url.startswith(
+            "https://www.sec.gov/Archives/edgar/data/320193/"
+            "000032019326000018/")
+        assert items[0].payload["items"] == "Item 2.02"
+
+    def test_days_window(self, monkeypatch):
+        old = (date.today() - timedelta(days=80)).isoformat()
+        sub = self._submissions()
+        sub["filings"]["recent"]["filingDate"] = [
+            f"{date.today().isoformat()}", old, old]
+        monkeypatch.setattr(ann, "_load_cik_map",
+                            lambda: {"AAPL": 320193})
+        monkeypatch.setattr(ann.SEC, "get_json",
+                            lambda url, params=None, **kw: sub)
+        items = ann.fetch_us_filings("AAPL", "Apple", days=30)
+        assert [i.payload["form"] for i in items] == ["8-K"]
+
+    def test_unknown_ticker_returns_none(self, monkeypatch):
+        monkeypatch.setattr(ann, "_load_cik_map", lambda: {})
+        assert ann.fetch_us_filings("NOPE") is None
+
+    def test_cik_map_failure_returns_none(self, monkeypatch):
+        monkeypatch.setattr(ann, "_load_cik_map", lambda: {})
+        assert ann.fetch_us_filings("AAPL") is None
+
+    def test_edgar_failure_returns_none(self, monkeypatch):
+        monkeypatch.setattr(ann, "_load_cik_map",
+                            lambda: {"AAPL": 320193})
+        monkeypatch.setattr(ann.SEC, "get_json",
+                            lambda url, params=None, **kw: None)
+        assert ann.fetch_us_filings("AAPL") is None
+
+    def test_material_form_matcher(self):
+        assert ann._is_material_form("4")
+        assert ann._is_material_form("4/A")
+        assert ann._is_material_form("8-K")
+        assert ann._is_material_form("8-K/A")
+        assert ann._is_material_form("10-Q")
+        assert ann._is_material_form("SC 13G/A")
+        assert ann._is_material_form("424B5")
+        assert ann._is_material_form("DEF 14A")
+        assert not ann._is_material_form("144")
+        assert not ann._is_material_form("CERTNYS")   # boilerplate cert
+
+
 class TestBatchFetcherCodeFilter:
     def test_unlocks_single_stock_filter(self, monkeypatch):
         seen = {}
