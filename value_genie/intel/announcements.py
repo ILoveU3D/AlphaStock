@@ -20,7 +20,7 @@ def fetch_a_unlocks(start: str, end: str,
     TOTAL_RATIO 是小数，×100), lift_cap_wan (解禁市值，万元).
     """
     df = dc_report(config.A_UNLOCK_REPORT_NAME,
-                   [f'(FREE_DATE>="{start}")', f'(FREE_DATE<="{end}")'],
+                   [f"(FREE_DATE>='{start}')", f"(FREE_DATE<='{end}')"],
                    quiet=quiet, label="A unlocks")
     if df is None:
         return None
@@ -47,7 +47,7 @@ def fetch_a_holder_changes(since: str,
     holder_name.
     """
     df = dc_report(config.A_HOLDER_REPORT_NAME,
-                   [f'(NOTICE_DATE>="{since}")'],
+                   [f"(NOTICE_DATE>='{since}')"],
                    quiet=quiet, label="A holder changes")
     if df is None:
         return None
@@ -76,7 +76,7 @@ def fetch_a_buybacks(since: str,
     announce_date (GGRQ, ISO).
     """
     df = dc_report(config.A_BUYBACK_REPORT_NAME,
-                   [f'(GGRQ>="{since}")'],
+                   [f"(GGRQ>='{since}')"],
                    sort_columns=None,     # probe rule: GPHG 无该排序列
                    quiet=quiet, label="A buybacks")
     if df is None:
@@ -104,7 +104,7 @@ def fetch_a_placements(since: str,
     dilution_pct ((after-before)/before %), seo_type.
     """
     df = dc_report(config.A_PLACEMENT_REPORT_NAME,
-                   [f'(ISSUE_DATE>="{since}")'],
+                   [f"(ISSUE_DATE>='{since}')"],
                    quiet=quiet, label="A placements")
     if df is None:
         return None

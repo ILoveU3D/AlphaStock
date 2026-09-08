@@ -16,7 +16,7 @@ def fetch_a_forecasts(since: str,
     change_pct (INCREASE_JZ 幅度), notice_date (ISO).
     """
     df = dc_report(config.A_FORECAST_REPORT_NAME,
-                   [f'(NOTICE_DATE>="{since}")', '(IS_LATEST="T")'],
+                   [f"(NOTICE_DATE>='{since}')", '(IS_LATEST="T")'],
                    quiet=quiet, label="A forecasts")
     if df is None:
         return None
@@ -41,8 +41,8 @@ def fetch_a_appointments(start: str, end: str,
     report_type.
     """
     df = dc_report(config.A_APPOINT_REPORT_NAME,
-                   [f'(APPOINT_PUBLISH_DATE>="{start}")',
-                    f'(APPOINT_PUBLISH_DATE<="{end}")'],
+                   [f"(APPOINT_PUBLISH_DATE>='{start}')",
+                    f"(APPOINT_PUBLISH_DATE<='{end}')"],
                    quiet=quiet, label="A appointments")
     if df is None:
         return None
@@ -71,7 +71,7 @@ def fetch_a_balance(report_date: str,
     report_date.
     """
     df = dc_report(config.A_BALANCE_REPORT_NAME,
-                   [f'(REPORT_DATE="{report_date}")'],
+                   [f"(REPORT_DATE='{report_date}')"],
                    quiet=quiet, label="A balance")
     if df is None:
         return None
