@@ -54,6 +54,10 @@ def make_snap(tmp_path: Path, stale_kline: bool = False) -> Path:
                  ).to_csv(snap / "hk_f10.csv", index=False)
     pd.DataFrame({"market": ["A"], "code": ["688795"]}
                  ).to_csv(snap / "watchlist.csv", index=False)
+    pd.DataFrame(columns=["market", "code", "name", "subsystem", "kind",
+                          "event_date", "impact", "title", "url",
+                          "source", "payload"]).to_csv(
+        snap / "event_radar.csv", index=False)
     kdir = snap / "kline"
     kdir.mkdir(exist_ok=True)
     end = (pd.Timestamp.today() - (pd.Timedelta(days=30)
@@ -116,6 +120,16 @@ class TestDoctor:
         checks = dr.run_checks(data_dir=tmp_path)
         wl = [c for c in checks if "watchlist" in c[2]]
         assert wl and wl[0][0] == "WARN" and "missing" in wl[0][2]
+
+    def test_event_radar_check(self, tmp_path):
+        snap = make_snap(tmp_path)
+        checks = dr.run_checks(data_dir=tmp_path)
+        er = [c for c in checks if "event_radar" in c[2]]
+        assert er and er[0][0] == "PASS"       # 0 rows is valid (P1)
+        (snap / "event_radar.csv").unlink()
+        checks = dr.run_checks(data_dir=tmp_path)
+        er = [c for c in checks if "event_radar" in c[2]]
+        assert er and er[0][0] == "WARN" and "missing" in er[0][2]
 
     def test_stale_kline_warns(self, tmp_path):
         make_snap(tmp_path, stale_kline=True)
