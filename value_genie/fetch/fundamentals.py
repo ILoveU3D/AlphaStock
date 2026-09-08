@@ -28,6 +28,8 @@ A_FIELD_MAP = {
     "WEIGHTAVG_ROE": "roe",
     "XSMLL": "gross_margin",
     "BPS": "bps",
+    "DEDUCT_BASIC_EPS": "deduct_eps",   # 扣非每股（eq_nonrecurring 用）
+    "BASIC_EPS": "basic_eps",           # 基本每股
 }
 
 
@@ -65,7 +67,7 @@ def _parse_lico(d: dict) -> pd.DataFrame:
     keep = [c for c in A_FIELD_MAP if c in df.columns]
     df = df[keep].rename(columns=A_FIELD_MAP)
     for col in ("revenue", "rev_yoy", "profit", "profit_yoy", "roe",
-                "gross_margin", "bps"):
+                "gross_margin", "bps", "deduct_eps", "basic_eps"):
         if col in df.columns:
             df[col] = df[col].map(num)
     df["report_date"] = df["report_date"].astype(str).str.slice(0, 10)
