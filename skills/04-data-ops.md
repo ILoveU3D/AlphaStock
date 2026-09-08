@@ -9,8 +9,8 @@ triggers:
 commands:
   - doctor
   - fetch
-version: 13
-updated_at: 2026-09-07T00:02:48
+version: 14
+updated_at: 2026-09-08T12:12:46
 ---
 
 # Playbook
@@ -52,3 +52,4 @@ known snapshot is older than one trading day:
 - [2026-09-04 18:37] (ai) PDD-style gross_margin gap: SEC GrossProfit tag discontinued after CY2022; derive from (Revenue - CostOfRevenue) in derive_us_metrics, and companyconcept per-stock fallback fills NaN derived columns in batch rows without overwriting
 - [2026-09-04 18:37] (ai) Watchlist pipeline: user holdings excluded by funnel gates (e.g. loss-makers fail pe>0) or outside EM_FS universe (ETFs like 588060, 5-prefix = Shanghai funds) still get quotes+kline+financials via watchlist.csv; quote fallback is Tencent, US financials fallback is SEC companyconcept
 - [2026-09-07 00:02] (ai) git workflow lesson 2026-09-06: NEVER push origin main directly — repo has PR-required branch protection and the stored credential silently bypasses it; always create a feature branch and push ONLY the branch; gh CLI is not installed; the human opens/merges PRs on GitHub themselves
+- [2026-09-08 12:12] (ai) fetch stdout 全缓冲：后台运行全程零输出直到 exit 才 flush（09-08 上午误判卡死而杀掉）；进度探针 = data/snapshots/<date>/ 文件清单增长（quotes→financials→kline→master→manifest）；重启 fetch 会 reuse 当日已完成文件，上午被杀的部分下午续跑 678s 成功。修正 09-08 早间 single-stock-analysis 的'fetch 卡死'判断

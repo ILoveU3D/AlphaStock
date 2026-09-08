@@ -14,8 +14,8 @@ commands:
   - trade sell
   - trade nav
   - trade journal
-version: 9
-updated_at: 2026-09-07T14:10:19
+version: 11
+updated_at: 2026-09-08T12:12:40
 ---
 
 # Playbook
@@ -73,3 +73,5 @@ for. Cite the nav-as-of date. Never soften risk observations.
 - [2026-09-06 23:50] (ai) MANDATE 2026-09-06: every trade buy/sell decision note and journal entry must cite the master-evaluation layer (gates passed/failed + business model / culture / earn-lose paths); a note containing only factor numbers is invalid
 - [2026-09-06 23:54] (ai) Update 2026-09-06: master-evaluation mandate softened by user to standard-flow-not-enforced; position discipline added (Duan: enter only if -50% drawdown tolerable, size accordingly); Duan's principle — data is only ever a reason NOT to buy, the buy reason must be future cash flows from business model + culture
 - [2026-09-07 14:10] (ai) HK lot pre-check rule (2026-09-07): before running master evaluation on an HK candidate, verify board_lot x price <= 20% NAV (~3.9k HKD on s001's 2.5k USD book). 中国宏桥 01378 lot=500 (11,590 HKD per hand = 47% of NAV) passed every gate (my style #1 valid HK candidate, graham PE×PB=10.8, FCF yield 14.2%) then the buy order was rejected at lot validation — same miss class as 六福(1000股/手) and A股存储股(一手>4800USD). Gate the lot first, evaluate second
+- [2026-09-08 12:12] (ai) 康臣药业01681 lot=1000 → 13,200 HKD/手 = NAV68%：第4只手数封杀（宏桥500/六福1000/中铝2000/康臣1000）。lot×price≤20%NAV 前置硬筛已生效——本次在深研阶段拦截而非下单被拒，流程较09-07进化
+- [2026-09-08 12:12] (ai) 非经营性暴利红旗机械化（2026-09-08）：净利>毛利 ⇒ 直接排除。炜冈科技001256 H1净利1.61亿>毛利1.04亿（营收3.09亿×毛利33.6%）=投资收益/非经常项主导，与梧桐国际 net margin 959% 同源。错杀筛遇 +100% 以上利润增速先做这道除法

@@ -9,8 +9,8 @@ triggers:
   - Is X a buy
 commands:
   - ask
-version: 14
-updated_at: 2026-09-07T21:11:26
+version: 15
+updated_at: 2026-09-08T11:06:06
 ---
 
 # Playbook
@@ -73,3 +73,4 @@ Answer "what do you think of X" with a verdict first, evidence later.
 - [2026-09-06 23:50] (ai) MANDATE 2026-09-06: every recommendation verdict must include the master-evaluation layer — run screen --strategy for the four fundamental masters AND write the qualitative layer (business model, culture, moat, earn/lose paths) per playbook; factor tables alone are an invalid answer
 - [2026-09-06 23:53] (ai) Update 2026-09-06: master-evaluation mandate softened by user to standard-flow-not-enforced; position discipline added (Duan: enter only if -50% drawdown tolerable, size accordingly); Duan's principle — data is only ever a reason NOT to buy, the buy reason must be future cash flows from business model + culture
 - [2026-09-07 21:11] (ai) HK peer universe now merges hk_f10 fundamentals; sparse pools yield absent percentile/score (None) instead of phantom 50/100 — treat missing percentiles as low-coverage, not mid-pack
+- [2026-09-08 11:06] (ai) fetch 卡住无输出疑似网络/源端阻塞，doctor 仍显示旧快照；21h<24h 按 WARN 推进可用，klines 滞后 4-5 天需在短线结论中标注
