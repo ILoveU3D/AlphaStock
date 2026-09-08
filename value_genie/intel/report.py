@@ -15,7 +15,7 @@ import pandas as pd
 
 from .. import config
 from .announcements import fetch_stock_notices
-from .model import earnings_quality
+from .model import earnings_quality, item_to_row
 from .news import fetch_stock_news
 from .radar import (_appointment_items, _buyback_items, _eq_records,
                     _forecast_items, _holder_items, _placement_items,
@@ -164,3 +164,130 @@ def build_intel_report(match, snapshot_dir=None,
     result["news"] = ({"missing": "news source failed"}
                       if news is None else news)
     return result
+
+
+# ---------------------------------------------------------------------------
+# Rendering
+# ---------------------------------------------------------------------------
+def _items_block(items, limit=3) -> str:
+    if not items:
+        return "0 条"
+    head = " · ".join(f"{i.event_date.strftime('%m-%d')} {i.title}"
+                      for i in items[:limit])
+    more = f" …(+{len(items) - limit})" if len(items) > limit else ""
+    return f"{len(items)} 条（最近: {head}{more}）"
+
+
+def _radar_line(radar: dict) -> str:
+    if not radar:
+        return "快照无雷达行（快照外股票或旧快照）"
+
+    def _n(key, fmt="{:.1f}", default="无"):
+        v = radar.get(key)
+        if v is None:
+            return default
+        try:
+            return fmt.format(float(v))
+        except (TypeError, ValueError):
+            return default
+
+    due = radar.get("report_due_days")
+    due_s = ("无预约" if due is None or float(due) >= 999
+             else f"{int(float(due))}天")
+    return (f"解禁30天 {_n('unlock_pct_30d')}% | "
+            f"90天 {_n('unlock_pct_90d')}% | "
+            f"减持计划 {'有' if _n('holder_cut_flag', '{:.0f}') == '1' else '无'} | "
+            f"增发 {'有' if _n('dilution_flag', '{:.0f}') == '1' else '无'} | "
+            f"回购 {'有' if _n('buyback_active', '{:.0f}') == '1' else '无'} | "
+            f"财报预约 {due_s} | "
+            f"预告方向 {_n('forecast_flag', '{:.0f}')} | "
+            f"粉饰信号 {_n('eq_flags', '{:.0f}')} | "
+            f"intel_red={_n('intel_red', '{:.0f}')}")
+
+
+def render_intel(result: dict) -> str:
+    m = result["match"]
+    lines = [f"== 舆情情报: {m.name} ({m.market}/{m.code}) =="]
+    lines.append(f"[事件雷达] {_radar_line(result.get('radar') or {})}")
+    events = result.get("events")
+    if isinstance(events, dict):
+        lines.append(f"[事件明细] 数据缺失: {events.get('missing', '')}")
+    else:
+        lines.append(f"[事件明细] {_items_block(events)}")
+
+    eq = result.get("eq")
+    if isinstance(eq, dict):
+        lines.append(f"[财报信号] 数据缺失: {eq.get('missing', '')}")
+    elif eq:
+        lines.append("[财报信号] 粉饰信号 "
+                     f"{len(eq)} 项: " + "; ".join(eq))
+    else:
+        lines.append("[财报信号] 无粉饰信号")
+
+    notices = result.get("notices")
+    if isinstance(notices, dict):
+        lines.append(f"[公告时间线] 数据缺失: {notices.get('missing', '')}")
+    else:
+        lines.append(f"[公告时间线] 近{config.INTEL_NOTICE_DAYS}天 "
+                     f"{_items_block(notices)}")
+
+    ratings = result.get("ratings")
+    if isinstance(ratings, dict):
+        lines.append(f"[投行评级] 数据缺失: {ratings.get('missing', '')}")
+    else:
+        latest = (f"最近: {ratings[0].event_date.strftime('%m-%d')} "
+                  f"{ratings[0].title}"
+                  + (f" ←{ratings[0].payload.get('last_rating')}"
+                     if ratings[0].payload.get("last_rating") else "")
+                  ) if ratings else "无研报"
+        lines.append(f"[投行评级] 近{config.INTEL_RATING_DAYS}天 "
+                     f"{len(ratings)} 份（{latest}）")
+
+    news = result.get("news")
+    if isinstance(news, dict):
+        lines.append(f"[新闻时间线] 数据缺失: {news.get('missing', '')}")
+    else:
+        media = (f" · {news[0].payload.get('media', '')}"
+                 if news and news[0].payload.get("media") else "")
+        head = (f"最近: {news[0].event_date.strftime('%m-%d')} "
+                f"{news[0].title}{media}") if news else "无新闻"
+        lines.append(f"[新闻时间线] 近{config.INTEL_NEWS_DAYS}天 "
+                     f"{len(news)} 条（{head}）"
+                     "——热度供 AI 结合语境解读，不自动打分")
+
+    snap = result.get("snapshot")
+    lines.append(f"data as of: radar/events/eq: snapshot {snap or '无'}; "
+                 f"notices/ratings/news: live {result['asof']}")
+    return "\n".join(lines)
+
+
+def to_json(result: dict) -> str:
+    """Pure-JSON contract: sections missing → null, items → item dicts."""
+    import json
+
+    def _items(sec):
+        v = result.get(sec)
+        if isinstance(v, dict) or v is None:
+            return None
+        rows = []
+        for i in v:
+            row = item_to_row(i)
+            row["payload"] = i.payload     # nested object, not CSV string
+            rows.append(row)
+        return rows
+
+    payload = {
+        "match": {"market": result["match"].market,
+                  "code": result["match"].code,
+                  "name": result["match"].name},
+        "snapshot": result.get("snapshot"),
+        "asof": result.get("asof"),
+        "radar": result.get("radar") or None,
+        "events": _items("events"),
+        "eq": (None if isinstance(result.get("eq"), dict)
+               else result.get("eq")),
+        "notices": _items("notices"),
+        "ratings": _items("ratings"),
+        "news": _items("news"),
+    }
+    return json.dumps(payload, ensure_ascii=False, indent=2, default=str)
