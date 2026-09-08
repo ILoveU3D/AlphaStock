@@ -690,6 +690,33 @@ def cmd_ask(args) -> int:
     return 0
 
 
+def cmd_intel(args) -> int:
+    if not _check_freshness(args):
+        return 1
+    from . import resolve as rs
+    from .intel import report as intel_report
+    try:
+        snap = report.resolve_snapshot(args.data_dir)
+    except FileNotFoundError:
+        snap = None
+    matches = rs.resolve(args.query, snapshot_dir=snap)
+    if not matches:
+        print(f"no match for {args.query!r}; try a full name or code",
+              file=sys.stderr)
+        return 2
+    m = matches[0]
+    if len(matches) > 1:
+        others = ", ".join(x.label() for x in matches[1:4])
+        print(f"resolved: {m.label()} (also matched: {others})",
+              file=sys.stderr)
+    result = intel_report.build_intel_report(m, snapshot_dir=snap)
+    if args.json:
+        print(intel_report.to_json(result))
+    else:
+        print(intel_report.render_intel(result))
+    return 0
+
+
 def cmd_compare(args) -> int:
     if not _check_freshness(args):
         return 1
@@ -1065,6 +1092,15 @@ def build_parser() -> argparse.ArgumentParser:
     pa.add_argument("--no-check", action="store_true",
                     help="skip freshness gate (for automated pipelines)")
     pa.set_defaults(func=cmd_ask)
+
+    pi = sub.add_parser("intel", help="per-stock intelligence report (舆情)")
+    pi.add_argument("query", help="stock name, code or ticker (Chinese ok)")
+    pi.add_argument("--json", action="store_true",
+                    help="machine-readable JSON output")
+    pi.add_argument("--data-dir", default=None, help="data directory")
+    pi.add_argument("--no-check", action="store_true",
+                    help="skip freshness gate (for automated pipelines)")
+    pi.set_defaults(func=cmd_intel)
 
     pc = sub.add_parser("compare", help="compare 2+ stocks side by side")
     pc.add_argument("stocks", nargs="+", help="names/codes to compare")
