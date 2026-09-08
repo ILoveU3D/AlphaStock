@@ -1,9 +1,13 @@
-# AlphaStock
+# 找到你人生的北极星
+
+**AlphaStock**
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Markets](https://img.shields.io/badge/Markets-A%E8%82%A1%20%7C%20%E6%B8%AF%E8%82%A1%20%7C%20%E7%BE%8E%E8%82%A1-orange)
 ![Tests](https://img.shields.io/badge/Tests-434-brightgreen)
+
+> **DCF 是衡量大多数事物的法则**：任何事物的价值 = 未来收益流 × 久期 × 确定性。投资的本质是一次终值交换——把十年归零的人力资本，换成永续复利的股权资本。AlphaStock 的北极星：**成为用户的伯克希尔·哈撒韦**——不问单次对错，问判断力是否随时间复利增长。犹豫时的试金石：这个决定是加宽还是收窄复利？
 
 全市场价值投资研究工具库，覆盖 A 股 / 港股 / 美股。**AI 是唯一的交互界面**：人类同 AI 对话，AI 读取 [`AGENTS.md`](AGENTS.md) 后通过 CLI 驱动本工具完成研究。本 README 只描述系统本身（架构 / 方法论 / 数据源）——命令语法、路由规则、运行契约全部由 [`AGENTS.md`](AGENTS.md) 向 AI 声明，这里不教任何人怎么跑命令。
 
