@@ -499,6 +499,80 @@ class TestFetchStockRatings:
 
 
 # ---------------------------------------------------------------------------
+# US consensus + rating history (stockanalysis.com, P3)
+# ---------------------------------------------------------------------------
+_SA_HTML = (
+    '<!doctype html><html><body>'
+    + 'x' * 50
+    + 'widget:{all:{count:44,consensus:"Buy",price_target:324.53,'
+    'currency:"USD"}},'
+    'ratings:[{action_rt:"Maintains",pt_now:366,pt_old:null,firm:"HSBC",'
+    'analyst:"Nicolas Cote Colisson",date:"2026-09-08",'
+    'rating_new:"Buy",rating_old:"",time:"11:15:07",'
+    'scores:{score:44.2,stars:.6,total:43},curr:"USD"},'
+    '{action_rt:"Upgrades",pt_now:300,pt_old:270,firm:"Needham",'
+    'analyst:"Laura Martin",date:"2026-09-07",rating_new:"Buy",'
+    'rating_old:"Hold",time:"10:55:34",curr:"USD"}]}'
+    'rest-of-page</body></html>'
+)
+
+
+class TestFetchUsConsensus:
+    def test_parses_widget_and_ratings(self, monkeypatch):
+        monkeypatch.setattr(rtg.SA, "get_text",
+                            lambda url, **kw: _SA_HTML)
+        items = rtg.fetch_us_consensus("AAPL", "Apple")
+        assert items[0].kind == "consensus"
+        assert items[0].market == "US"
+        assert items[0].payload["consensus"] == "Buy"
+        assert items[0].payload["count"] == 44
+        assert items[0].payload["price_target"] == 324.53
+        assert "44家覆盖" in items[0].title
+        assert items[1].kind == "rating"
+        assert items[1].subsystem == "ratings"
+        assert items[1].payload["org"] == "HSBC"
+        assert items[1].payload["target_price"] == 366
+        assert items[1].payload["prev_target"] is None   # pt_old null
+        assert items[1].impact == "neutral"              # Maintains
+        assert items[2].payload["org"] == "Needham"
+        assert items[2].impact == "positive"             # Upgrades
+        assert items[2].payload["last_rating"] == "Hold"
+
+    def test_slug_mapping_for_class_shares(self, monkeypatch):
+        urls = []
+        monkeypatch.setattr(rtg.SA, "get_text",
+                            lambda url, **kw: urls.append(url)
+                            or _SA_HTML)
+        rtg.fetch_us_consensus("BRK_B")
+        assert urls == ["https://stockanalysis.com/stocks/"
+                        "brk-b/ratings/"]
+
+    def test_source_failure_returns_none(self, monkeypatch):
+        monkeypatch.setattr(rtg.SA, "get_text",
+                            lambda url, **kw: None)
+        assert rtg.fetch_us_consensus("AAPL") is None
+
+    def test_blob_missing_returns_none(self, monkeypatch):
+        monkeypatch.setattr(rtg.SA, "get_text",
+                            lambda url, **kw: "<html>no data</html>")
+        assert rtg.fetch_us_consensus("AAPL") is None
+
+    def test_downgrade_is_negative(self, monkeypatch):
+        html = _SA_HTML.replace('action_rt:"Upgrades"',
+                                'action_rt:"Downgrades"')
+        monkeypatch.setattr(rtg.SA, "get_text",
+                            lambda url, **kw: html)
+        items = rtg.fetch_us_consensus("AAPL")
+        assert items[2].impact == "negative"
+
+    def test_widget_missing_returns_none(self, monkeypatch):
+        html = _SA_HTML.replace("widget:{all:{", "broken:{all:{")
+        monkeypatch.setattr(rtg.SA, "get_text",
+                            lambda url, **kw: html)
+        assert rtg.fetch_us_consensus("AAPL") is None
+
+
+# ---------------------------------------------------------------------------
 # Per-stock notice list (np-anotice-stock) + batch fetcher code filters
 # ---------------------------------------------------------------------------
 from value_genie.intel import announcements as ann2  # ann already imported
