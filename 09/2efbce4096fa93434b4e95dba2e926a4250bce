@@ -1,0 +1,32 @@
+docs/superpowers/plans/2026-09-09-intel-hk-us-p3.md
+  s_0303b390208446::t_76775aefd7e3b4 1-1264
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.2",
+  "base_commit_sha": "092efbce4096fa93434b4e95dba2e926a4250bce",
+  "prompts": {},
+  "sessions": {
+    "s_0303b390208446": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa000d1a14192e21389ad13",
+        "model": "glm-5.3__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "runtime_client": "trae-tob-git-ai",
+        "tool_use_id": "6aa0a015a14192e21389b93e",
+        "edit_kind": "file_edit",
+        "source_scene": "unknown",
+        "operation_id": "6aa0a015a14192e21389b93e",
+        "external_session_id": "6aa000d1a14192e21389ad13",
+        "client_type": "ide",
+        "tool_type": "agent",
+        "dedupe_key": "6aa000d1a14192e21389ad13:6aa0a015a14192e21389b93e:afterEdit:fd56281f",
+        "tool_id": "Edit",
+        "session_id": "6aa000d1a14192e21389ad13"
+      }
+    }
+  }
+}
