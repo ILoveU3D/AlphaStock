@@ -194,3 +194,63 @@ class TestFetchAPlacements:
         assert df.iloc[0]["dilution_pct"] == pytest.approx(1.0)
         assert df.iloc[0]["issue_date"] == "2026-08-15"
         assert df.iloc[0]["net_raise"] == 2.0e9
+
+
+# ---------------------------------------------------------------------------
+# A-share earnings fetchers (业绩预告/披露预约/资产负债表)
+# ---------------------------------------------------------------------------
+from value_genie.intel import earnings as ear
+
+
+class TestFetchAForecasts:
+    def test_normalizes_rows_and_filter(self, monkeypatch):
+        seen = {}
+
+        def fake(url, params=None, **kw):
+            seen.update(params)
+            return _dc_json([{
+                "SECURITY_CODE": "600519", "SECURITY_NAME_ABBR": "贵州茅台",
+                "PREDICT_TYPE": "首亏", "INCREASE_JZ": -120.0,
+                "NOTICE_DATE": "2026-08-30 00:00:00"}])
+
+        monkeypatch.setattr(_dc.DC, "get_json", fake)
+        df = ear.fetch_a_forecasts("2026-08-01")
+        assert seen["filter"] == ('(NOTICE_DATE>="2026-08-01")'
+                                  '(IS_LATEST="T")')
+        assert df.iloc[0]["predict_type"] == "首亏"
+        assert df.iloc[0]["change_pct"] == -120.0
+        assert df.iloc[0]["notice_date"] == "2026-08-30"
+
+
+class TestFetchAAppointments:
+    def test_normalizes_rows(self, monkeypatch):
+        monkeypatch.setattr(_dc.DC, "get_json", lambda url, params=None, **kw:
+            _dc_json([{
+                "SECURITY_CODE": "600519", "SECURITY_NAME_ABBR": "贵州茅台",
+                "APPOINT_PUBLISH_DATE": "2026-10-28 00:00:00",
+                "IS_PUBLISH": "0", "REPORT_TYPE_NAME": "三季报"}]))
+        df = ear.fetch_a_appointments("2026-09-08", "2026-12-07")
+        assert df.iloc[0]["appoint_date"] == "2026-10-28"
+        assert df.iloc[0]["is_published"] == "0"
+        assert df.iloc[0]["report_type"] == "三季报"
+
+    def test_empty_window_is_valid(self, monkeypatch):
+        # 三季报预约 9 月末才挂出：未来窗口为空是正常时序，不是失败
+        monkeypatch.setattr(_dc.DC, "get_json",
+                            lambda url, params=None, **kw: _dc_json([]))
+        assert ear.fetch_a_appointments("2026-09-08",
+                                        "2026-12-07").empty
+
+
+class TestFetchABalance:
+    def test_normalizes_yoy_columns(self, monkeypatch):
+        monkeypatch.setattr(_dc.DC, "get_json", lambda url, params=None, **kw:
+            _dc_json([{
+                "SECURITY_CODE": "600519",
+                "ACCOUNTS_RECE_RATIO": 58.0, "INVENTORY_RATIO": 12.0,
+                "ACCOUNTS_RECE": 1.0e9, "INVENTORY": 2.0e9}]))
+        df = ear.fetch_a_balance("2026-06-30")
+        assert df.iloc[0]["rece_yoy"] == 58.0   # YoY %, 非占比（已探针验证）
+        assert df.iloc[0]["inv_yoy"] == 12.0
+        assert df.iloc[0]["receivable"] == 1.0e9
+        assert df.iloc[0]["report_date"] == "2026-06-30"

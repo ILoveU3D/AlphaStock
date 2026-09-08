@@ -485,3 +485,16 @@ class TestUsCashflowFrames:
         assert rec["capex"] == 200.0
         assert rec["div_paid"] == 50.0
         assert rec["net_fin_cf"] == 80.0
+
+
+class TestParseLicoDeductEPS:
+    def test_maps_deduct_and_basic_eps(self):
+        d = {"result": {"data": [{
+            "SECURITY_CODE": "600519", "REPORTDATE": "2026-06-30 00:00:00",
+            "TOTAL_OPERATE_INCOME": 1e10, "YSTZ": 15.0,
+            "PARENT_NETPROFIT": 1.5e9, "SJLTZ": 18.0,
+            "WEIGHTAVG_ROE": 15.0, "XSMLL": 50.0, "BPS": 30.0,
+            "DEDUCT_BASIC_EPS": 2.1, "BASIC_EPS": 3.0}]}}
+        df = f._parse_lico(d)
+        assert df.iloc[0]["deduct_eps"] == 2.1
+        assert df.iloc[0]["basic_eps"] == 3.0
