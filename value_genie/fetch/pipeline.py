@@ -30,6 +30,7 @@ from .kline import (fetch_kline_any, kline_cache_path, kline_is_fresh,
                     load_kline, save_kline)
 from .quotes import (exclude_non_operating_names, exclude_risk_names,
                      fetch_market_quotes, fetch_quote_any)
+from ..intel.radar import RADAR_COLUMNS, build_event_radar, merge_radar
 
 MASTER_COLUMNS = [
     "market", "code", "name", "industry", "currency", "price", "market_cap",
@@ -41,7 +42,7 @@ MASTER_COLUMNS = [
     "ret_5d", "ret_20d", "vol_20d",
     "report_date", "value_score", "growth_score", "quality_score",
     "safety_score", "momentum_score", "cashflow_score", "data_completeness",
-]
+] + list(RADAR_COLUMNS)
 
 KLINE_FEATURES = ("pos_52w", "drawdown_52w", "ret_250d", "ret_60d",
                   "volatility", "ret_5d", "ret_20d", "vol_20d")
@@ -947,8 +948,19 @@ def run_fetch(markets=None, data_dir=None, refresh: bool = False,
     manifest["datasets"]["master"] = len(master)
 
     # deep data for holdings the funnel excluded (watchlist.csv)
-    build_watchlist(snap_dir, kline_reuse, master, hk_f10, fx, manifest,
-                    quiet=quiet)
+    watch = build_watchlist(snap_dir, kline_reuse, master, hk_f10, fx,
+                            manifest, quiet=quiet)
+
+    # intel radar: A-share event risk columns into master + watchlist
+    # (design 2026-09-08 §6; P1 = A-share batch tables, fail-closed)
+    radar_df = build_event_radar(snap_dir, master, watch, manifest,
+                                 refresh=refresh, quiet=quiet)
+    if radar_df is not None and not radar_df.empty:
+        master = merge_radar(master, radar_df)
+        master.to_csv(snap_dir / "master.csv", index=False)
+        if watch is not None and not watch.empty:
+            watch = merge_radar(watch, radar_df)
+            watch.to_csv(snap_dir / "watchlist.csv", index=False)
 
     manifest["elapsed_sec"] = round(time.time() - t0, 1)
     (snap_dir / "manifest.json").write_text(
