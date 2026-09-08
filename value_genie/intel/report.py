@@ -4,8 +4,11 @@ Section assembly for ``intel X``: radar row + event details from the
 snapshot's full-market batch tables (zero network for snapshot stocks),
 live per-stock notices / ratings / news, earnings-quality detail.
 Fail-closed per section: a failed section becomes {"missing": reason},
-never fabricated data. P2 covers A-shares; HK/US degrade with an
-explicit P3 note.
+never fabricated data. A: full five sections. HK: notices + news
+(Eastmoney mirror); research ratings have no source — explicit missing
+note. US: filings (EDGAR) + news + consensus (stockanalysis). Radar
+batch tables and earnings-quality inputs are A-share-only; HK/US
+sections degrade with explicit notes.
 """
 
 from datetime import date, timedelta
@@ -14,13 +17,13 @@ from pathlib import Path
 import pandas as pd
 
 from .. import config
-from .announcements import fetch_stock_notices
+from .announcements import fetch_stock_notices, fetch_us_filings
 from .model import earnings_quality, item_to_row
 from .news import fetch_stock_news
 from .radar import (_appointment_items, _buyback_items, _eq_records,
                     _forecast_items, _holder_items, _placement_items,
                     _read_csv, _unlock_items, RADAR_COLUMNS)
-from .ratings import fetch_stock_ratings
+from .ratings import fetch_stock_ratings, fetch_us_consensus
 
 
 def _radar_row(snap: Path | None, market: str, code: str) -> dict | None:
@@ -131,36 +134,67 @@ def _eq_detail(snap: Path, code: str) -> list[str] | None:
 
 def build_intel_report(match, snapshot_dir=None,
                        asof: date | None = None) -> dict:
-    """单股舆情情报 result dict（五个板块 + 雷达行，fail-closed）。"""
+    """单股舆情情报 result dict（五个板块 + 雷达行，fail-closed）。
+
+    A: 全五板块。HK: 公告+新闻（东财镜像），研报无源（显式降级）。
+    US: 披露文件（EDGAR）+ 新闻 + 一致评级（stockanalysis）。
+    雷达批表与粉饰信号输入为 A 股专属——HK/US 相应板块显式标注。
+    """
     snap = Path(snapshot_dir) if snapshot_dir else None
     asof = asof or date.today()
+    market = match.market
     result = {"match": match, "snapshot": snap.name if snap else None,
               "asof": asof.isoformat()}
 
-    if match.market != "A":
-        result.update({"radar": {},
-                       "events": {"missing": "P3: HK/US 未覆盖"},
-                       "eq": {"missing": "P3: HK/US 未覆盖"},
-                       "notices": {"missing": "P3: HK/US 未覆盖"},
-                       "ratings": {"missing": "P3: HK/US 未覆盖"},
-                       "news": {"missing": "P3: HK/US 未覆盖"}})
-        return result
+    result["radar"] = _radar_row(snap, market, match.code) or {}
 
-    result["radar"] = _radar_row(snap, "A", match.code) or {}
-    result["events"] = (_stock_events(snap, match.code, asof)
-                        if snap else [])
+    if market == "A":
+        result["events"] = (_stock_events(snap, match.code, asof)
+                            if snap else [])
+        eq = _eq_detail(snap, match.code) if snap else None
+        result["eq"] = ({"missing": "财报输入表缺失"} if eq is None else eq)
+    else:
+        result["events"] = {
+            "missing": "雷达批表当前仅覆盖 A 股（HK/US 批量事件属后续阶段）"}
+        result["eq"] = {
+            "missing": "粉饰信号输入（应收/存货/OCF/扣非）为 A 股快照专属"}
 
-    eq = _eq_detail(snap, match.code) if snap else None
-    result["eq"] = ({"missing": "财报输入表缺失"} if eq is None else eq)
+    if market == "US":
+        notices = fetch_us_filings(match.code, name=match.name)
+        result["notices"] = ({"missing": "EDGAR source failed"}
+                             if notices is None else notices)
+    elif market == "HK":
+        notices = fetch_stock_notices(match.code, name=match.name,
+                                      market="HK")
+        result["notices"] = ({"missing": "notice source failed"}
+                             if notices is None else notices)
+    else:
+        notices = fetch_stock_notices(match.code, name=match.name)
+        result["notices"] = ({"missing": "notice source failed"}
+                             if notices is None else notices)
 
-    notices = fetch_stock_notices(match.code, name=match.name)
-    result["notices"] = ({"missing": "notice source failed"}
-                         if notices is None else notices)
-    ratings = fetch_stock_ratings(match.code, name=match.name)
-    result["ratings"] = ({"missing": "ratings source failed"}
-                         if ratings is None else ratings)
-    news = fetch_stock_news(match.market_id or "0", match.code,
-                            name=match.name)
+    if market == "HK":
+        result["ratings"] = {
+            "missing": "港股研报源缺失（东财 reportapi 不含港股）；"
+                       "评级动向请看新闻时间线"}
+    elif market == "US":
+        ratings = fetch_us_consensus(match.code, name=match.name)
+        result["ratings"] = ({"missing": "ratings source failed"}
+                             if ratings is None else ratings)
+    else:
+        ratings = fetch_stock_ratings(match.code, name=match.name)
+        result["ratings"] = ({"missing": "ratings source failed"}
+                             if ratings is None else ratings)
+
+    if market == "US":
+        news = fetch_stock_news(match.market_id or "", match.code,
+                                name=match.name, market="US")
+    elif market == "HK":
+        news = fetch_stock_news(match.market_id or "116", match.code,
+                                name=match.name, market="HK")
+    else:
+        news = fetch_stock_news(match.market_id or "0", match.code,
+                                name=match.name)
     result["news"] = ({"missing": "news source failed"}
                       if news is None else news)
     return result
@@ -227,6 +261,9 @@ def render_intel(result: dict) -> str:
     notices = result.get("notices")
     if isinstance(notices, dict):
         lines.append(f"[公告时间线] 数据缺失: {notices.get('missing', '')}")
+    elif result["match"].market == "US":
+        lines.append(f"[披露文件时间线] 近{config.INTEL_FILING_DAYS}天 "
+                     f"{_items_block(notices)}")
     else:
         lines.append(f"[公告时间线] 近{config.INTEL_NOTICE_DAYS}天 "
                      f"{_items_block(notices)}")
@@ -234,6 +271,15 @@ def render_intel(result: dict) -> str:
     ratings = result.get("ratings")
     if isinstance(ratings, dict):
         lines.append(f"[投行评级] 数据缺失: {ratings.get('missing', '')}")
+    elif ratings and ratings[0].kind == "consensus":
+        rest = ratings[1:]
+        latest = (f"最近: {rest[0].event_date.strftime('%m-%d')} "
+                  f"{rest[0].title}"
+                  + (f" 目标价 ${rest[0].payload.get('target_price')}"
+                     if rest[0].payload.get("target_price") else "")
+                  ) if rest else "无个体评级明细"
+        lines.append(f"[投行评级] {ratings[0].title}；近期个体评级 "
+                     f"{len(rest)} 份（{latest}）")
     else:
         latest = (f"最近: {ratings[0].event_date.strftime('%m-%d')} "
                   f"{ratings[0].title}"
