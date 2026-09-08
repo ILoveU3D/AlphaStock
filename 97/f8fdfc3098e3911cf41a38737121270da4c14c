@@ -1,0 +1,32 @@
+value_genie/intel/announcements.py
+  s_0303b390208446::t_b485a7b34840da 251
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.2",
+  "base_commit_sha": "97f8fdfc3098e3911cf41a38737121270da4c14c",
+  "prompts": {},
+  "sessions": {
+    "s_0303b390208446": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa000d1a14192e21389ad13",
+        "model": "glm-5.3__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "session_id": "6aa000d1a14192e21389ad13",
+        "source_scene": "unknown",
+        "tool_type": "agent",
+        "operation_id": "6aa0a015a14192e21389b93e",
+        "external_session_id": "6aa000d1a14192e21389ad13",
+        "runtime_client": "trae-tob-git-ai",
+        "tool_use_id": "6aa0a015a14192e21389b93e",
+        "client_type": "ide",
+        "tool_id": "Edit",
+        "edit_kind": "file_edit",
+        "dedupe_key": "6aa000d1a14192e21389ad13:6aa0a015a14192e21389b93e:afterEdit:fd56281f"
+      }
+    }
+  }
+}
