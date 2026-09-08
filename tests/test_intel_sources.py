@@ -76,6 +76,16 @@ class TestDcReport:
                                             "result": None})
         assert _dc.dc_report("RPT_TEST", []) is None
 
+    def test_9201_empty_window_returns_empty_df(self, monkeypatch):
+        # probe rule 4: valid empty window answers success:false +
+        # code 9201 "返回数据为空" — that is empty data, not a failure
+        monkeypatch.setattr(
+            _dc.DC, "get_json",
+            lambda url, params=None, **kw: {"success": False, "code": 9201,
+                                            "message": "返回数据为空",
+                                            "result": None})
+        assert _dc.dc_report("RPT_TEST", []).empty
+
     def test_sort_columns_omitted_when_none(self, monkeypatch):
         seen = {}
 
@@ -125,7 +135,7 @@ class TestFetchAUnlocks:
         assert df.iloc[0]["free_date"] == "2026-09-12"
         assert df.iloc[0]["lift_cap_wan"] == 50000.0
 
-    def test_filter_double_quotes(self, monkeypatch):
+    def test_filter_date_single_quotes(self, monkeypatch):
         seen = {}
 
         def fake(url, params=None, **kw):
@@ -134,8 +144,10 @@ class TestFetchAUnlocks:
 
         monkeypatch.setattr(_dc.DC, "get_json", fake)
         ann.fetch_a_unlocks("2026-09-08", "2026-12-07")
-        assert seen["filter"] == ('(FREE_DATE>="2026-09-08")'
-                                  '(FREE_DATE<="2026-12-07")')
+        # probe rule 1: dates single-quoted (double quotes trip
+        # "filter字段中日期参数格式错误")
+        assert seen["filter"] == ("(FREE_DATE>='2026-09-08')"
+                                  "(FREE_DATE<='2026-12-07')")
 
     def test_source_failure_none(self, monkeypatch):
         monkeypatch.setattr(_dc.DC, "get_json",
@@ -175,7 +187,7 @@ class TestFetchABuybacks:
         monkeypatch.setattr(_dc.DC, "get_json", fake)
         df = ann.fetch_a_buybacks("2026-08-01")
         assert "sortColumns" not in seen        # probe rule 2
-        assert seen["filter"] == '(GGRQ>="2026-08-01")'
+        assert seen["filter"] == "(GGRQ>='2026-08-01')"
         assert df.iloc[0]["code"] == "000858"   # SCODE -> code
         assert df.iloc[0]["amount_yuan"] == 5.0e8
         assert df.iloc[0]["shares"] == 2.0e7
@@ -215,7 +227,8 @@ class TestFetchAForecasts:
 
         monkeypatch.setattr(_dc.DC, "get_json", fake)
         df = ear.fetch_a_forecasts("2026-08-01")
-        assert seen["filter"] == ('(NOTICE_DATE>="2026-08-01")'
+        # probe rule 1: date single-quoted, string/boolean double-quoted
+        assert seen["filter"] == ("(NOTICE_DATE>='2026-08-01')"
                                   '(IS_LATEST="T")')
         assert df.iloc[0]["predict_type"] == "首亏"
         assert df.iloc[0]["change_pct"] == -120.0

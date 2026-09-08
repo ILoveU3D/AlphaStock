@@ -2,13 +2,19 @@
 
 Eastmoney datacenter probe rules (verified 2026-09-09, design
 appendix A):
-1. String filter values MUST be double-quoted — single quotes trip an
-   ANTLR InputMismatchException on some reports.
+1. Date filter values use SINGLE quotes — double quotes trip
+   "filter字段中日期参数格式错误". String/boolean values use DOUBLE
+   quotes — single quotes trip an ANTLR InputMismatchException on
+   some reports (e.g. IS_LATEST='T').
 2. RPTA_WEB_GPHG must be fetched WITHOUT sortColumns/sortTypes
    ("SECURITY_CODE排序列不存在") — pass sort_columns=None.
 3. A non-filterable field silently voids the whole filter and returns
    the FULL table — callers must re-filter rows in pandas and sanity
    check counts.
+4. A valid empty window answers {"success": false, "code": 9201,
+   "message": "返回数据为空"} on some reports (e.g. RPT_PUBLIC_BS_
+   APPOIN forward windows) — that is an empty DataFrame, not a
+   source failure.
 """
 
 import time
@@ -50,7 +56,14 @@ def dc_report(report_name: str, filters: list, *,
         raw = DC.get_json(config.DC_WEB_URL,
                           params={**params, "pageNumber": page},
                           retries=retries)
-        if raw is None or raw.get("success") is False:
+        if raw is None:
+            return None
+        if raw.get("success") is False:
+            # probe rule 4: 9201 "返回数据为空" = valid empty window
+            if "返回数据为空" in str(raw.get("message") or ""):
+                if frames:          # paged past the end — keep rows so far
+                    break
+                return pd.DataFrame()
             return None
         result = raw.get("result") or {}
         rows = result.get("data") or []
