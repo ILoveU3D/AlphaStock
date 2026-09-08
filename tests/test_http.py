@@ -100,6 +100,25 @@ class TestFetcher:
             assert f.get_json("http://x", retries=0, total_timeout=1) is None
 
 
+class TestGetText:
+    def test_returns_body_on_200(self):
+        f = http.Fetcher({"User-Agent": "test"}, "T")
+        resp = _mock_response(200, b"<html>hi</html>")
+        resp.encoding = "utf-8"
+        with patch.object(f.session, "get", return_value=resp):
+            assert f.get_text("http://x", retries=0) == "<html>hi</html>"
+
+    def test_none_on_404(self):
+        f = http.Fetcher({"User-Agent": "test"}, "T")
+        resp = _mock_response(404, b"nope")
+        with patch.object(f.session, "get", return_value=resp):
+            assert f.get_text("http://x", retries=0) is None
+            assert f.consecutive_fail == 0
+
+    def test_sa_client_exists(self):
+        assert http.SA.name == "SA"
+
+
 def test_em_push2_get_rotates_and_cooldowns():
     """First host success short-circuits; failed hosts are skipped."""
     calls = []
