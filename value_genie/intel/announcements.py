@@ -248,7 +248,7 @@ def fetch_us_filings(ticker: str, name: str = "",
             market="US", code=ticker, name=name,
             subsystem="announcements", kind="filing",
             event_date=date.fromisoformat(fd),
-            title=f"{form} filing",
+            title=f"Form {form} filing",
             url=(config.EDGAR_DOC_URL_TMPL.format(
                 cik=cik, acc=acc.replace("-", ""), doc=doc)
                 if acc and doc else ""),
