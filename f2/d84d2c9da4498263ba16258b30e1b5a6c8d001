@@ -1,0 +1,36 @@
+users/me.json
+  s_54fdc506307001::t_ce6c5862538ad5 73-76
+  s_54fdc506307001::t_b892b711ae0516 82-85
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.2",
+  "base_commit_sha": "f2d84d2c9da4498263ba16258b30e1b5a6c8d001",
+  "prompts": {},
+  "humans": {
+    "h_e5e258ab51542c": {
+      "author": "yukang.wang <yukang.wang@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_54fdc506307001": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa02180a14192e21389af7f",
+        "model": "glm-5.3__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "session_id": "6aa02180a14192e21389af7f",
+        "external_session_id": "6aa02180a14192e21389af7f",
+        "client_type": "ide",
+        "tool_use_id": "6aa0225da14192e21389afba",
+        "operation_id": "6aa0225da14192e21389afba",
+        "edit_kind": "bash",
+        "source_scene": "agent",
+        "tool_name": "RunCommand",
+        "runtime_client": "trae-tob-git-ai"
+      }
+    }
+  }
+}

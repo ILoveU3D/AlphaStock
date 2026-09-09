@@ -17,15 +17,15 @@ trading/seasons/s001.json
       },
       "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
       "custom_attributes": {
-        "source_scene": "agent",
-        "tool_use_id": "6aa0d9c7a14192e21389ba1c",
-        "edit_kind": "bash",
-        "client_type": "ide",
-        "external_session_id": "6aa0c7e2a14192e21389b96e",
-        "tool_name": "RunCommand",
-        "runtime_client": "trae-tob-git-ai",
         "operation_id": "6aa0d9c7a14192e21389ba1c",
-        "session_id": "6aa0c7e2a14192e21389b96e"
+        "edit_kind": "bash",
+        "tool_name": "RunCommand",
+        "tool_use_id": "6aa0d9c7a14192e21389ba1c",
+        "client_type": "ide",
+        "runtime_client": "trae-tob-git-ai",
+        "external_session_id": "6aa0c7e2a14192e21389b96e",
+        "session_id": "6aa0c7e2a14192e21389b96e",
+        "source_scene": "agent"
       }
     }
   }

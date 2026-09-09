@@ -26,14 +26,14 @@ skills/13-holding-deep-review.md
       },
       "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
       "custom_attributes": {
-        "session_id": "6aa10ef9a14192e21389ba8a",
-        "edit_kind": "bash",
-        "client_type": "ide",
         "tool_use_id": "6aa11591a14192e21389bb62",
-        "tool_name": "RunCommand",
-        "operation_id": "6aa11591a14192e21389bb62",
-        "source_scene": "agent",
+        "edit_kind": "bash",
         "runtime_client": "trae-tob-git-ai",
+        "source_scene": "agent",
+        "operation_id": "6aa11591a14192e21389bb62",
+        "tool_name": "RunCommand",
+        "client_type": "ide",
+        "session_id": "6aa10ef9a14192e21389ba8a",
         "external_session_id": "6aa10ef9a14192e21389ba8a"
       }
     }
