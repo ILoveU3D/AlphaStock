@@ -9,8 +9,8 @@ triggers:
   - Is X a buy
 commands:
   - ask
-version: 15
-updated_at: 2026-09-08T11:06:06
+version: 16
+updated_at: 2026-09-09T16:12:34
 ---
 
 # Playbook
@@ -74,3 +74,4 @@ Answer "what do you think of X" with a verdict first, evidence later.
 - [2026-09-06 23:53] (ai) Update 2026-09-06: master-evaluation mandate softened by user to standard-flow-not-enforced; position discipline added (Duan: enter only if -50% drawdown tolerable, size accordingly); Duan's principle — data is only ever a reason NOT to buy, the buy reason must be future cash flows from business model + culture
 - [2026-09-07 21:11] (ai) HK peer universe now merges hk_f10 fundamentals; sparse pools yield absent percentile/score (None) instead of phantom 50/100 — treat missing percentiles as low-coverage, not mid-pack
 - [2026-09-08 11:06] (ai) fetch 卡住无输出疑似网络/源端阻塞，doctor 仍显示旧快照；21h<24h 按 WARN 推进可用，klines 滞后 4-5 天需在短线结论中标注
+- [2026-09-09 16:12] (ai) 舆情强制参与铁律(2026-09-09用户确立): ask X --evidence 只给量化基线，必须同时跑 intel X 获取舆情(解禁/减持/粉饰/评级/新闻)；舆情红旗作为否决信号，尤其大股东减持+业绩高增的背离是经典卖出信号
