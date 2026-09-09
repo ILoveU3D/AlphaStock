@@ -11,8 +11,8 @@ triggers:
 commands:
   - ask --evidence
   - screen --strategy <master>
-version: 10
-updated_at: 2026-09-08T23:58:18
+version: 11
+updated_at: 2026-09-09T16:12:31
 ---
 
 # Playbook
@@ -88,3 +88,4 @@ master-grade depth on fundamentals.
 - [2026-09-07 10:47] (ai) master screens only cover the master.csv pool; watchlist holdings (e.g. PDD/NVDA/BRK_B outside the 200-candidate funnel) never appear in screen output - evaluate their gates manually from ask --evidence metrics and label the absence as pool coverage, not a gate rejection
 - [2026-09-07 12:00] (ai) crash-day routine: diff last kline close vs live quote to detect limit moves (519.35 vs 415.48 = -20% STAR limit-down, 2026-09-07 Moore Threads), then web-search same-day news for the catalyst (unlock/earnings/policy) before writing any review prose - the catalyst reframes the whole holding review
 - [2026-09-08 23:58] (ai) ETF holdings (e.g. 588060 科创50ETF): web-resolve tracking index + top-10 weights before writing review prose - hidden overlap with single-stock holdings and index-inclusion unlock traps (2026-09-08: 科创50 top-10 all semis; Dec Moore Threads 39.55% unlock doubles float -> index inclusion forces passive buying)
+- [2026-09-09 16:12] (ai) 舆情强制参与铁律(2026-09-09用户确立): 持仓复盘/单股分析必须跑 intel X 获取舆情情报(解禁/减持/财报粉饰/公告/评级/新闻)，舆情红旗(如大股东减持)作为否决信号纳入仓位决策；只跑 ask --evidence 不跑 intel 的分析视为不完整，AI 不得遗漏
