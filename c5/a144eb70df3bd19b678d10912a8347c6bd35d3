@@ -1,0 +1,41 @@
+skills/15-trading.md
+  s_0d1d1f61c0e2f3::t_71bc47306ea248 17-18,80
+trading/seasons/s001.json
+  s_0d1d1f61c0e2f3::t_59aa61c366dc76 368,395,397,467-473
+  s_0d1d1f61c0e2f3::t_35c29c76cb00f5 474-480
+  s_0d1d1f61c0e2f3::t_850deab13eede0 386,388,413
+  s_0d1d1f61c0e2f3::t_1540803701966e 369,415,421
+skills/01-single-stock-analysis.md
+  s_0d1d1f61c0e2f3::t_ac5f80409dcd00 12-13,77
+trading/dashboards/s001.md
+  s_0d1d1f61c0e2f3::t_fd18995dbb686f 10-12,14,23-24,26,74
+skills/13-holding-deep-review.md
+  s_0d1d1f61c0e2f3::t_4993950dc3276c 14-15,91
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.2",
+  "base_commit_sha": "c5a144eb70df3bd19b678d10912a8347c6bd35d3",
+  "prompts": {},
+  "sessions": {
+    "s_0d1d1f61c0e2f3": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa10ef9a14192e21389ba8a",
+        "model": "glm-5.2__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "session_id": "6aa10ef9a14192e21389ba8a",
+        "edit_kind": "bash",
+        "client_type": "ide",
+        "tool_use_id": "6aa11591a14192e21389bb62",
+        "tool_name": "RunCommand",
+        "operation_id": "6aa11591a14192e21389bb62",
+        "source_scene": "agent",
+        "runtime_client": "trae-tob-git-ai",
+        "external_session_id": "6aa10ef9a14192e21389ba8a"
+      }
+    }
+  }
+}
