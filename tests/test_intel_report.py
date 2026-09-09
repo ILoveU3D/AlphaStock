@@ -352,3 +352,235 @@ class TestIntelJson:
         payload = json.loads(ir.to_json(result))
         assert payload["notices"] is None      # missing -> null
         assert payload["ratings"] == []
+
+
+# ---------------------------------------------------------------------------
+# Interpretation layer (user mandate 2026-09-09: 财报能看懂 / 公告知
+# 含义 / 新闻时效 / 研报全面权威)
+# ---------------------------------------------------------------------------
+from value_genie.intel import interpret as ip  # noqa: E402
+
+
+class TestNoticeMeaning:
+    def test_category_keyword_hit(self):
+        meaning, hint = ip.notice_meaning("股东减持", "某公告")
+        assert "内部人信心" in meaning
+        assert hint == "negative"
+
+    def test_title_fallback(self):
+        meaning, hint = ip.notice_meaning("公司公告", "关于回购股份的公告")
+        assert "护盘" in meaning
+        assert hint == "positive"
+
+    def test_traditional_hk_variant(self):
+        meaning, hint = ip.notice_meaning("股份購回", "")
+        assert hint == "positive"
+
+    def test_no_hit_is_neutral(self):
+        assert ip.notice_meaning("其他公告", "日常事务") == ("", "neutral")
+
+
+class TestFormMeaning:
+    def test_exact_and_prefix(self):
+        assert "重大事项" in ip.form_meaning("8-K")
+        assert "内部人交易" in ip.form_meaning("4/A")
+        assert ip.form_meaning("999X") == ""
+
+
+class TestEarningsDigest:
+    def test_full_row(self):
+        row = {"report_date": "2026-06-30", "rev_yoy": 22.0,
+               "profit_yoy": 35.0, "roe": 12.0, "gross_margin": 58.0,
+               "net_margin": 21.0}
+        extras = {"revenue": 5e9, "profit": 1e9, "deduct_eps": 0.8,
+                  "basic_eps": 1.0, "ocf": 1.2e9}
+        d = ip.earnings_digest(row, extras)
+        assert d["period"] == "2026中报"
+        assert "双增" in d["growth"]
+        assert "扣非占80%" in d["read"]
+        assert "OCF/净利 1.20" in d["read"]
+        assert "营收 50.0 亿" in d["read"]
+
+    def test_growth_tags(self):
+        base = {"report_date": "2026-03-31"}
+        assert "增收不增利" in ip.earnings_digest(
+            {"report_date": "2026-03-31", "rev_yoy": 10.0,
+             "profit_yoy": -5.0})["growth"]
+        assert "双降" in ip.earnings_digest(
+            {"report_date": "2026-03-31", "rev_yoy": -10.0,
+             "profit_yoy": -5.0})["growth"]
+        assert ip.earnings_digest(base) is None
+        assert ip.earnings_digest({}) is None
+
+    def test_low_cash_quality_flag(self):
+        d = ip.earnings_digest({"report_date": "2026-06-30",
+                                "rev_yoy": 5.0, "profit_yoy": 5.0},
+                               {"profit": 1e9, "ocf": 0.2e9})
+        assert "利润现金含量低" in d["quality"]
+
+    def test_loss_maker_ratios_not_meaningless(self):
+        # 亏损期：扣非占比与 OCF/净利 都是负除负的无意义比值，
+        # 换成绝对值 + "不适用"标注（摩尔线程 2026 中报实跑发现）。
+        d = ip.earnings_digest({"report_date": "2026-06-30",
+                                "rev_yoy": 147.0, "profit_yoy": 95.0},
+                               {"revenue": 1.74e9, "profit": -0.1e8,
+                                "deduct_eps": -0.32, "basic_eps": -0.02,
+                                "ocf": -18.8e8})
+        joined = "；".join(d["quality"])
+        assert "占比不适用" in joined
+        assert "经营现金流 -18.8 亿" in joined
+        assert "1600%" not in joined and "OCF/净利 1" not in joined
+
+
+class TestNewsHeat:
+    def _items(self, *dates, with_time=False):
+        out = []
+        for d in dates:
+            payload = ({"show_time": f"{d} 09:00:00"}
+                       if with_time else {})
+            out.append(IntelItem(
+                market="A", code="688795", name="x", subsystem="news",
+                kind="news", event_date=date.fromisoformat(d),
+                title="t", payload=payload))
+        return out
+
+    def test_counts_and_verdict(self):
+        asof = date(2026, 9, 9)
+        # 4 条落在 7 天窗（09-03 距 asof 6 天，含），前 7 天窗 1 条
+        items = self._items("2026-09-09", "2026-09-08", "2026-09-07",
+                            "2026-09-03", "2026-09-02", "2026-08-20")
+        h = ip.news_heat(items, asof)
+        assert h["today"] == 1
+        assert h["d3"] == 3
+        assert h["d7"] == 4
+        assert h["prior7"] == 1
+        assert h["verdict"] == "升温"
+
+    def test_cooling(self):
+        asof = date(2026, 9, 9)
+        items = self._items("2026-09-09", "2026-09-01", "2026-09-01",
+                           "2026-09-01", "2026-09-01", "2026-09-01")
+        h = ip.news_heat(items, asof)
+        assert h["verdict"] == "降温"
+
+    def test_empty_and_hours(self):
+        assert ip.news_heat([]) is None
+        h = ip.news_heat(
+            self._items("2026-09-09", with_time=True), date(2026, 9, 9))
+        assert h["latest_hours"] is not None
+
+
+class TestRatingsSummary:
+    def _item(self, org, rating, change="", eps=None, tp=None,
+              when="2026-09-01"):
+        return IntelItem(
+            market="A", code="688795", name="x", subsystem="ratings",
+            kind="rating", event_date=date.fromisoformat(when),
+            title=f"{org} {rating}",
+            payload={"org": org, "rating": rating,
+                     "rating_change": change, "eps_this_year": eps,
+                     "target_price": tp})
+
+    def test_aggregates(self):
+        # 列表新→旧：中金的“增持”是被“买入”取代的旧评级——分布只计
+        # 每家机构最新一份，旧评级只进上/下调计数。
+        items = [
+            self._item("中金", "买入", "2", eps=2.0, tp=60.0),
+            self._item("中金", "增持", "3"),
+            self._item("中信", "买入", "4", eps=2.4, tp=55.0),
+            self._item("国金", "中性", "1", eps=2.6, tp=45.0),
+        ]
+        s = ip.ratings_summary(items)
+        assert s["total"] == 4 and s["orgs"] == 3
+        assert s["distribution"] == {"买入": 2, "中性": 1}
+        assert s["upgrades"] == 1 and s["initiations"] == 1
+        assert s["downgrades"] == 1
+        assert s["eps_this_year_avg"] == round((2.0 + 2.4 + 2.6) / 3, 3)
+        assert s["target_price_high"] == 60.0
+        assert s["target_price_low"] == 45.0
+        assert "中金" in s["top_orgs"]
+
+    def test_empty(self):
+        assert ip.ratings_summary([]) is None
+
+
+class TestInterpretInReport:
+    def test_digest_and_heat_assembled(self, tmp_path, monkeypatch):
+        _kill_dc(monkeypatch)
+        files = {
+            "master.csv": pd.DataFrame([{
+                "market": "A", "code": "688795", "name": "摩尔线程-U",
+                "report_date": "2026-06-30", "rev_yoy": 22.0,
+                "profit_yoy": 35.0, "roe": 12.0, "gross_margin": 58.0,
+                "intel_red": 0.0}]),
+            "a_financials.csv": pd.DataFrame([{
+                "code": "688795", "report_date": "2026-06-30",
+                "revenue": 5e9, "profit": 1e9, "deduct_eps": 0.8,
+                "basic_eps": 1.0}]),
+        }
+        snap = _snap(tmp_path, files)
+        news = IntelItem(market="A", code="688795", name="摩尔线程-U",
+                         subsystem="news", kind="news",
+                         event_date=date(2026, 9, 8), title="t",
+                         payload={})
+        monkeypatch.setattr(ir, "fetch_stock_notices", lambda c, name="": [])
+        monkeypatch.setattr(ir, "fetch_stock_ratings", lambda c, name="": [])
+        monkeypatch.setattr(ir, "fetch_stock_news",
+                            lambda mid, c, name="": [news])
+        res = ir.build_intel_report(_match(), snapshot_dir=snap,
+                                    asof=date(2026, 9, 9))
+        assert res["digest"]["period"] == "2026中报"
+        assert res["digest"]["levels"] == ["营收 50.0 亿", "归母净利 10.0 亿"]
+        assert res["news_heat"]["d7"] == 1
+        assert res["ratings_summary"] is None      # 空评级列表
+        text = ir.render_intel(res)
+        assert "[财报速读] 2026中报" in text
+        assert "[新闻热度]" in text
+
+    def test_digest_missing_without_snapshot_row(self, tmp_path,
+                                                 monkeypatch):
+        _kill_dc(monkeypatch)
+        snap = _snap(tmp_path, {"master.csv": pd.DataFrame(
+            [{"market": "A", "code": "600519", "intel_red": 0.0}])})
+        monkeypatch.setattr(ir, "fetch_stock_notices", lambda c, name="": [])
+        monkeypatch.setattr(ir, "fetch_stock_ratings", lambda c, name="": [])
+        monkeypatch.setattr(ir, "fetch_stock_news",
+                            lambda mid, c, name="": [])
+        res = ir.build_intel_report(_match(), snapshot_dir=snap,
+                                    asof=date(2026, 9, 9))
+        assert "missing" in res["digest"]
+        assert "[财报速读] 数据缺失" in ir.render_intel(res)
+
+    def test_notice_meaning_rendered(self, tmp_path, monkeypatch):
+        _kill_dc(monkeypatch)
+        snap = _snap(tmp_path, {})
+        notice = IntelItem(market="A", code="688795", name="摩尔线程-U",
+                           subsystem="announcements", kind="notice",
+                           event_date=date(2026, 9, 7), title="关于回购股份",
+                           impact="positive",
+                           payload={"category": "公司公告",
+                                    "meaning": "公司买入自家股票（护盘或注销）"})
+        monkeypatch.setattr(ir, "fetch_stock_notices",
+                            lambda c, name="": [notice])
+        monkeypatch.setattr(ir, "fetch_stock_ratings", lambda c, name="": [])
+        monkeypatch.setattr(ir, "fetch_stock_news",
+                            lambda mid, c, name="": [])
+        res = ir.build_intel_report(_match(), snapshot_dir=snap,
+                                    asof=date(2026, 9, 9))
+        assert "〔公司买入自家股票（护盘或注销）〕" in ir.render_intel(res)
+
+    def test_us_filing_meaning_rendered(self):
+        filing = IntelItem(market="US", code="AAPL", name="Apple",
+                           subsystem="announcements", kind="filing",
+                           event_date=date(2026, 9, 8),
+                           title="Form 8-K filing",
+                           payload={"form": "8-K",
+                                    "form_meaning": "重大事项临时披露"})
+        res = {"match": Match("US", "AAPL", "Apple", 100.0, "105"),
+               "snapshot": "20260909", "asof": "2026-09-09",
+               "radar": {}, "digest": None,
+               "events": {"missing": "x"}, "eq": {"missing": "x"},
+               "notices": [filing], "ratings": [], "news": [],
+               "news_heat": None, "ratings_summary": None}
+        out = ir.render_intel(res)
+        assert "〔重大事项临时披露〕" in out

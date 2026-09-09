@@ -269,3 +269,8 @@ EDGAR_DOC_URL_TMPL = ("https://www.sec.gov/Archives/edgar/data/"
 SA_RATINGS_URL_TMPL = "https://stockanalysis.com/stocks/{slug}/ratings/"
 INTEL_FILING_DAYS = 90      # US EDGAR 披露文件回看窗口（天）
 US_NEWS_PREFIXES = ("105", "106")   # np-listapi 美股前缀（NASDAQ/NYSE）
+
+# Intel interpretation layer (user mandate 2026-09-09: 财报能看懂 /
+# 公告知含义 / 新闻时效 / 研报全面权威) --------------------------------
+INTEL_NEWS_HEAT_WINDOWS = (1, 3, 7)   # 新闻热度窗口（天）：今日/3天/7天
+INTEL_RATING_PAGE_SIZE = 100          # reportapi 单页研报数（全面性，原 50）

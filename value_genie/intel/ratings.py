@@ -46,7 +46,8 @@ def fetch_stock_ratings(code: str, name: str = "",
     end = date.today()
     begin = end - timedelta(days=days)
     raw = EM_WEB.get_json(config.EM_REPORT_URL, params={
-        "qType": 0, "code": code, "pageNo": 1, "pageSize": 50,
+        "qType": 0, "code": code, "pageNo": 1,
+        "pageSize": config.INTEL_RATING_PAGE_SIZE,
         "beginTime": begin.isoformat(), "endTime": end.isoformat(),
     })
     if raw is None or "data" not in raw:

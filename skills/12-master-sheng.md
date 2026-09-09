@@ -11,8 +11,8 @@ triggers:
 commands:
   - screen --strategy sheng
   - ask --evidence
-version: 3
-updated_at: 2026-09-02T00:30:00
+version: 4
+updated_at: 2026-09-09T22:06:59
 ---
 
 # Playbook
@@ -75,3 +75,4 @@ price follows flow.
 ## Field Notes
 
 - [2026-09-02 00:55] (ai) User mandate 2026-09-01: run screen --strategy sheng yourself, then overlay policy/geopolitics/market/sentiment checks on top names; state which names were cut or downgraded and why.
+- [2026-09-09 22:06] (ai) 用户法则(2026-09-09):舆情对短线是进场领先指标+择时依据,不只是否决闸门——短线决策必看催化剂日历(财报预约/发布会/解禁表/评级新目标价=燃料)与新闻热度边际变化;持仓期每日复查舆情,热度骤升=注意力高潮预警即兑现离场,负面传闻先于价格出现=提前止损
