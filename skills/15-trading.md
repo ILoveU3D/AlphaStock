@@ -14,8 +14,8 @@ commands:
   - trade sell
   - trade nav
   - trade journal
-version: 12
-updated_at: 2026-09-08T23:08:08
+version: 13
+updated_at: 2026-09-09T11:57:33
 ---
 
 # Playbook
@@ -76,3 +76,4 @@ for. Cite the nav-as-of date. Never soften risk observations.
 - [2026-09-08 12:12] (ai) 康臣药业01681 lot=1000 → 13,200 HKD/手 = NAV68%：第4只手数封杀（宏桥500/六福1000/中铝2000/康臣1000）。lot×price≤20%NAV 前置硬筛已生效——本次在深研阶段拦截而非下单被拒，流程较09-07进化
 - [2026-09-08 12:12] (ai) 非经营性暴利红旗机械化（2026-09-08）：净利>毛利 ⇒ 直接排除。炜冈科技001256 H1净利1.61亿>毛利1.04亿（营收3.09亿×毛利33.6%）=投资收益/非经常项主导，与梧桐国际 net margin 959% 同源。错杀筛遇 +100% 以上利润增速先做这道除法
 - [2026-09-08 23:08] (ai) fee-drag math on small book (2026-09-08, s001): 4 days in, friction=-10.26USD (fees 7.29 + FX spread 2.97) vs market P&L -3.82 → 73% of total loss is friction; venue entry costs on a 2.5k USD book: HK min fee 18HKD≈0.97% of a 2k HKD position (worst venue for small orders), US .99 min≈0.4-0.5%, A-share 5CNY≈0.2%; HK adds should be sized >=2k HKD or skipped; minimize FX round-trips (0.3% per leg)
+- [2026-09-09 11:57] (ai) SB suggest(searchapi.eastmoney.com)整日挂返回空HTML时,代码形式传参(002001/06831)仍可正常解析并成交;午休盘外单引擎自动取当日最新价(今晨收盘)成交,标记session=out,无需等13:00开盘
