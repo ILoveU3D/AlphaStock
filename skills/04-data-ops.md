@@ -9,8 +9,8 @@ triggers:
 commands:
   - doctor
   - fetch
-version: 18
-updated_at: 2026-09-09T11:57:30
+version: 19
+updated_at: 2026-09-09T20:03:27
 ---
 
 # Playbook
@@ -57,3 +57,4 @@ known snapshot is older than one trading day:
 - [2026-09-09 00:51] (ai) intel radar P1 live check (2026-09-09): 655 events / 202 A stocks, zero source failures; DC filter quirk — dates MUST be single-quoted (double quotes -> 'filter字段中日期参数格式错误'), strings/booleans double-quoted (IS_LATEST='T' -> ANTLR InputMismatchException); success=false + code 9201 '返回数据为空' = valid empty window (e.g. appointment forward windows stay empty until late Sept), not a source failure
 - [2026-09-09 02:11] (ai) intel P2 live check (2026-09-09): intel X verified on 688795 (Moore Threads - the stock that motivated the system: 12-07 unlock 39.6% of shares flagged 3 months ahead), 000001 (snapshot-outside stock: batch tables are full-market so events/eq still computed, radar row correctly declared missing), and ask red-flag path on 603162 (68.1% 30d unlock -> verdict suffix [intel red flag]); np-listapi success envelope is code==1 (not 0); reportapi ratingChange 3=maintain observed with rating==last_rating, 1=downgrade 2=upgrade per EM convention; indvAimPriceT/L target price usually EMPTY for A-shares - render dash, never fabricate; mTypeAndCode prefix == Match.market_id (1=SH, 0=SZ+BJ); SB smartbox JSONDecodeError seen once (rate limit?) - harmless when snapshot resolves first
 - [2026-09-09 11:57] (ai) A股debt_ratio在master.csv全NaN(a_financials无负债字段,a_balance仅应收存货;HK来自F10/US来自SEC)——任何含debt_ratio闸门的策略对A股结构性失明:官方screen报0只时先怀疑此缺口,降级为手动预筛(roe/rev/动量三闸门+手写debt核验),并在note中标注负债率未验证
+- [2026-09-09 20:03] (ai) 2026-09-09/10: searchapi.eastmoney.com suggest endpoint returned non-JSON (JSONDecodeError) on every A-share name resolution during holding review - non-blocking, fallback resolution succeeded; if name resolution ever fully fails, check SB endpoint health first

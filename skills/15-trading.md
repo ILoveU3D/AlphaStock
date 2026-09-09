@@ -14,8 +14,8 @@ commands:
   - trade sell
   - trade nav
   - trade journal
-version: 14
-updated_at: 2026-09-09T16:15:18
+version: 16
+updated_at: 2026-09-09T22:11:02
 ---
 
 # Playbook
@@ -78,3 +78,5 @@ for. Cite the nav-as-of date. Never soften risk observations.
 - [2026-09-08 23:08] (ai) fee-drag math on small book (2026-09-08, s001): 4 days in, friction=-10.26USD (fees 7.29 + FX spread 2.97) vs market P&L -3.82 → 73% of total loss is friction; venue entry costs on a 2.5k USD book: HK min fee 18HKD≈0.97% of a 2k HKD position (worst venue for small orders), US .99 min≈0.4-0.5%, A-share 5CNY≈0.2%; HK adds should be sized >=2k HKD or skipped; minimize FX round-trips (0.3% per leg)
 - [2026-09-09 11:57] (ai) SB suggest(searchapi.eastmoney.com)整日挂返回空HTML时,代码形式传参(002001/06831)仍可正常解析并成交;午休盘外单引擎自动取当日最新价(今晨收盘)成交,标记session=out,无需等13:00开盘
 - [2026-09-09 16:15] (ai) 舆情强制参与铁律(2026-09-09实战验证): 持仓复盘必须跑intel X，首日即抓到巨人网络大股东减持14亿红旗(营收+182%与内部人减持背离)，判断从持有升级为减仓；只跑ask --evidence不跑intel的复盘=不完整，AI不得遗漏；明日开盘优先处置舆情红旗仓位
+- [2026-09-09 22:07] (ai) s002短线法则(用户2026-09-09):舆情升级为主动信号——开仓前intel查催化剂(事件日历/评级动量),持仓期每日跟踪新闻热度/披露边际变化;解禁/减持日期作为持仓期约束(事件前离场);舆情红旗对短线更是命门:止损位近,一次跳空直接击穿
+- [2026-09-09 22:11] (ai) 元法则(用户2026-09-09,一定要记住):投资操作法则只通过CLI skill note记入skill Field Notes,不写本地memory文件——skills随git仓库走且每个未来agent必读=系统自我提升的唯一渠道,本地记录无法提升自我
