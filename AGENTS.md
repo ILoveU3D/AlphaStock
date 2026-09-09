@@ -101,7 +101,7 @@ excluded when no USD rate, concentration observations verbatim).
 | "设置/修改我的投资风格" | user-profile | `python -m value_genie user set-style me --base buffett --weight value=0.3` |
 | "录入/修改/查看我的持仓" | user-portfolio | `python -m value_genie holding add|update|remove|list` |
 | "审视我的持仓 / 深度分析持仓" | holding-deep-review | `holding list` 先看体检，再 `ask X --evidence` per holding + `screen --strategy <master>` (business model, moat, culture, earn/lose paths, two master frameworks) |
-| "X的舆情/解禁/公告/研报/财报解读" | intel | `python -m value_genie intel X`（A 全板块；HK 公告+新闻，研报无源；US EDGAR 披露+新闻+一致评级） |
+| "X的舆情/解禁/公告/研报/财报解读" | intel | `python -m value_genie intel X`（A 全板块；HK 公告+新闻，研报无源；US EDGAR 披露+新闻+一致评级；含解释层：财报速读/公告含义〔…〕/新闻热度/研报汇总，user mandate 2026-09-09） |
 | "现在港股有什么机会 / what's attractive now" | market-overview | `python -m value_genie overview --markets HK` |
 | "数据新鲜吗 / is the data current" | data-ops | `python -m value_genie doctor` |
 | "巴菲特会怎么看X" | master-buffett | `python -m value_genie screen --strategy buffett` + `ask X --evidence` |

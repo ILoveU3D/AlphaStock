@@ -14,6 +14,7 @@ import pandas as pd
 from .. import config
 from ..fetch.http import EM_WEB, SEC
 from ._dc import code_col, dc_report, name_col, norm_dates
+from .interpret import form_meaning, notice_meaning
 from .model import IntelItem
 
 NOTICE_URL_TMPL = ("https://data.eastmoney.com/notices/detail/"
@@ -26,8 +27,10 @@ def fetch_stock_notices(code: str, name: str = "", days: int = None,
 
     market="A" → ann_type="A"；market="HK" → ann_type="H"（东财港股
     镜像，响应结构与 A 股一致，详情 URL 模板通用——probe 2026-09-09）。
-    返回 IntelItem 列表（subsystem="announcements", kind="notice"，
-    impact=neutral——公告性质由 AI 结合分类语境解读），源失败 None。
+    返回 IntelItem 列表（subsystem="announcements", kind="notice"）。
+    公告含义（用户 2026-09-09 要求）：interpret.notice_meaning 关键词
+    映射 → payload["meaning"] + impact 方向提示；未命中 neutral，事件
+    级解读仍是 AI 的活。源失败 None。
     """
     days = days or config.INTEL_NOTICE_DAYS
     since = (date.today() - timedelta(days=days)).isoformat()
@@ -48,14 +51,17 @@ def fetch_stock_notices(code: str, name: str = "", days: int = None,
         cat = "；".join(str(c.get("column_name") or "")
                        for c in cols if c.get("column_name")) or "公告"
         art = str(r.get("art_code") or "")
+        title = str(r.get("title") or "")
+        meaning, hint = notice_meaning(cat, title)
         items.append(IntelItem(
             market=market, code=code, name=name,
             subsystem="announcements", kind="notice",
             event_date=date.fromisoformat(nd),
-            title=str(r.get("title") or ""),
+            title=title,
             url=NOTICE_URL_TMPL.format(code=code, art=art) if art else "",
-            source="eastmoney", impact="neutral",
-            payload={"category": cat, "art_code": art}))
+            source="eastmoney", impact=hint,
+            payload={"category": cat, "art_code": art,
+                     "meaning": meaning}))
     return items
 
 
@@ -189,9 +195,10 @@ def fetch_a_placements(since: str, code: str | None = None,
 # US: EDGAR submissions timeline (P3)
 # ---------------------------------------------------------------------------
 EDGAR_MATERIAL_EXACT = {"4", "4/A", "3", "3/A", "25", "25-NSE"}
-EDGAR_MATERIAL_PREFIXES = ("8-K", "10-K", "10-Q", "S-1", "S-3", "S-4",
-                           "S-8", "SC 13G", "SC 13D", "DEF 14A",
-                           "DEFA14A", "424B", "FWP", "PX14A6G")
+EDGAR_MATERIAL_PREFIXES = ("8-K", "10-K", "10-Q", "20-F", "6-K",
+                           "S-1", "S-3", "S-4", "S-8", "SC 13G",
+                           "SC 13D", "DEF 14A", "DEFA14A", "424B",
+                           "FWP", "PX14A6G")
 
 
 def _is_material_form(form: str) -> bool:
@@ -214,8 +221,9 @@ def fetch_us_filings(ticker: str, name: str = "",
                      days: int = None) -> list | None:
     """近 days 天 EDGAR 披露文件时间线（submissions API, P3）。
 
-    kind="filing", impact=neutral——文件性质（8-K 重大事项 / 10-Q 季报
-    / Form 4 内部人交易）由 AI 读 payload["form"] 解读。
+    kind="filing", impact=neutral；文件含义（用户 2026-09-09 要求）
+    由 interpret.form_meaning 写入 payload["form_meaning"]（8-K 重大
+    事项 / 10-Q 季报 / Form 4 内部人交易等），事件级解读仍是 AI 的活。
     filings.recent 覆盖近千条提交（新→旧），90 天窗口无需分页。
     无匹配 CIK 或源失败 → None（fail-closed），无匹配文件 → []。
     """
@@ -253,7 +261,9 @@ def fetch_us_filings(ticker: str, name: str = "",
                 cik=cik, acc=acc.replace("-", ""), doc=doc)
                 if acc and doc else ""),
             source="sec_edgar", impact="neutral",
-            payload={"form": str(form), "accession": acc,
+            payload={"form": str(form),
+                     "form_meaning": form_meaning(str(form)),
+                     "accession": acc,
                      "items": col("items", i),
                      "report_date": col("reportDate", i)[:10]}))
     return items

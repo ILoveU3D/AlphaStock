@@ -607,7 +607,9 @@ class TestFetchStockNotices:
         assert it.payload["category"] == "限售股份上市流通"
         assert it.url == ("https://data.eastmoney.com/notices/detail/"
                           "688795/AN202608281828639681.html")
-        assert it.impact == "neutral"
+        # interpret 层（用户 2026-09-09）：限售 → 供给冲击含义 + 负面提示
+        assert it.impact == "negative"
+        assert "供给冲击" in it.payload["meaning"]
 
     def test_window_filters_old_notices(self, monkeypatch):
         from datetime import date as _d, timedelta as _td
@@ -728,6 +730,9 @@ class TestFetchUsFilings:
         assert ann._is_material_form("SC 13G/A")
         assert ann._is_material_form("424B5")
         assert ann._is_material_form("DEF 14A")
+        # ADR 中概主披露通道（TCOM 实跑 0 条 filings 发现的缺口）
+        assert ann._is_material_form("6-K")
+        assert ann._is_material_form("20-F")
         assert not ann._is_material_form("144")
         assert not ann._is_material_form("CERTNYS")   # boilerplate cert
 

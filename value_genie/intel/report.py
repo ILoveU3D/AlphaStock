@@ -9,6 +9,11 @@ never fabricated data. A: full five sections. HK: notices + news
 note. US: filings (EDGAR) + news + consensus (stockanalysis). Radar
 batch tables and earnings-quality inputs are A-share-only; HK/US
 sections degrade with explicit notes.
+
+Interpretation layer (user mandate 2026-09-09 — 财报能看懂 / 公告知
+含义 / 新闻时效 / 研报全面权威): digest / notice meanings / news heat
+/ ratings summary come from interpret.py; they are factual aids, the
+event-level judgment stays with the AI agent.
 """
 
 from datetime import date, timedelta
@@ -18,6 +23,7 @@ import pandas as pd
 
 from .. import config
 from .announcements import fetch_stock_notices, fetch_us_filings
+from .interpret import earnings_digest, news_heat, ratings_summary
 from .model import earnings_quality, item_to_row
 from .news import fetch_stock_news
 from .radar import (_appointment_items, _buyback_items, _eq_records,
@@ -26,8 +32,8 @@ from .radar import (_appointment_items, _buyback_items, _eq_records,
 from .ratings import fetch_stock_ratings, fetch_us_consensus
 
 
-def _radar_row(snap: Path | None, market: str, code: str) -> dict | None:
-    """雷达行 from master/watchlist (照 analyze._snapshot_factors 模式)。"""
+def _master_row(snap: Path | None, market: str, code: str) -> dict | None:
+    """master/watchlist 全行（雷达列 + 财务列，NaN→None）。"""
     if snap is None:
         return None
     for fname in ("master.csv", "watchlist.csv"):
@@ -44,9 +50,17 @@ def _radar_row(snap: Path | None, market: str, code: str) -> dict | None:
                  & (df["code"].astype(str) == str(code))]
         if not hit.empty:
             r = hit.iloc[0]
-            return {c: (None if pd.isna(r.get(c)) else r.get(c))
-                    for c in RADAR_COLUMNS}
+            return {c: (None if pd.isna(v) else v)
+                    for c, v in r.items()}
     return None
+
+
+def _radar_row(snap: Path | None, market: str, code: str) -> dict | None:
+    """雷达行 from master/watchlist (照 analyze._snapshot_factors 模式)。"""
+    row = _master_row(snap, market, code)
+    if row is None:
+        return None
+    return {c: row.get(c) for c in RADAR_COLUMNS}
 
 
 def _table(name: str, snap: Path, code: str, fetcher, label: str):
@@ -111,6 +125,35 @@ def _stock_events(snap: Path, code: str, asof: date) -> list:
     return items
 
 
+def _a_fin_extras(snap: Path, code: str) -> dict:
+    """财报速读的 A 股补充：a_financials 最新行 + a_cashflow ocf。"""
+    extras: dict = {}
+
+    def _num(v):
+        try:
+            return None if v is None or pd.isna(v) else float(v)
+        except (TypeError, ValueError):
+            return None
+
+    fin = _read_csv(Path(snap) / "a_financials.csv")
+    if fin is not None and "code" in fin.columns:
+        hit = fin[fin["code"].astype(str) == str(code)]
+        if not hit.empty:
+            if "report_date" in hit.columns:
+                hit = hit.sort_values("report_date")
+            r = hit.iloc[-1]
+            for k in ("revenue", "profit", "deduct_eps", "basic_eps"):
+                if k in hit.columns:
+                    extras[k] = _num(r.get(k))
+    cf = _read_csv(Path(snap) / "a_cashflow.csv")
+    if (cf is not None and "code" in cf.columns
+            and "ocf" in cf.columns):
+        hit = cf[cf["code"].astype(str) == str(code)]
+        if not hit.empty:
+            extras["ocf"] = _num(hit.iloc[0].get("ocf"))
+    return extras
+
+
 def _eq_detail(snap: Path, code: str) -> list[str] | None:
     """粉饰信号明细（中文描述列表）；输入表缺失返回 None。"""
     fin = _read_csv(Path(snap) / "a_financials.csv")
@@ -146,7 +189,17 @@ def build_intel_report(match, snapshot_dir=None,
     result = {"match": match, "snapshot": snap.name if snap else None,
               "asof": asof.isoformat()}
 
-    result["radar"] = _radar_row(snap, market, match.code) or {}
+    mrow = _master_row(snap, market, match.code)
+    result["radar"] = ({c: mrow.get(c) for c in RADAR_COLUMNS}
+                       if mrow else {})
+
+    # 财报速读（用户 2026-09-09：财报一定要能看懂）——master 行 +
+    # A 股 a_financials/a_cashflow 补充；无快照财务行显式报缺失。
+    extras = (_a_fin_extras(snap, match.code)
+              if market == "A" and snap else {})
+    dig = earnings_digest(mrow or {}, extras)
+    result["digest"] = dig if dig else {
+        "missing": "无快照财务行（快照外股票或旧快照）"}
 
     if market == "A":
         result["events"] = (_stock_events(snap, match.code, asof)
@@ -197,6 +250,18 @@ def build_intel_report(match, snapshot_dir=None,
                                 name=match.name)
     result["news"] = ({"missing": "news source failed"}
                       if news is None else news)
+
+    # 新闻热度（用户 2026-09-09：新闻一定要有时效性）
+    result["news_heat"] = (news_heat(news, asof)
+                           if isinstance(news, list) else None)
+
+    # 研报汇总（用户 2026-09-09：投研报告一定要全面且权威有参考性）
+    # —— A 股聚合分布/上调下调/一致 EPS/目标价；US 由 consensus 项
+    # 覆盖；HK 无源。
+    rl = result.get("ratings")
+    result["ratings_summary"] = (ratings_summary(rl)
+                                 if market == "A"
+                                 and isinstance(rl, list) else None)
     return result
 
 
@@ -208,6 +273,21 @@ def _items_block(items, limit=3) -> str:
         return "0 条"
     head = " · ".join(f"{i.event_date.strftime('%m-%d')} {i.title}"
                       for i in items[:limit])
+    more = f" …(+{len(items) - limit})" if len(items) > limit else ""
+    return f"{len(items)} 条（最近: {head}{more}）"
+
+
+def _notice_block(items, limit=3) -> str:
+    """公告/披露文件时间线：附 interpret 层含义标签〔…〕。"""
+    if not items:
+        return "0 条"
+
+    def _one(i):
+        m = i.payload.get("meaning") or i.payload.get("form_meaning") or ""
+        return (f"{i.event_date.strftime('%m-%d')} {i.title}"
+                + (f"〔{m}〕" if m else ""))
+
+    head = " · ".join(_one(i) for i in items[:limit])
     more = f" …(+{len(items) - limit})" if len(items) > limit else ""
     return f"{len(items)} 条（最近: {head}{more}）"
 
@@ -258,15 +338,22 @@ def render_intel(result: dict) -> str:
     else:
         lines.append("[财报信号] 无粉饰信号")
 
+    dig = result.get("digest")
+    if isinstance(dig, dict):
+        if "missing" in dig:
+            lines.append(f"[财报速读] 数据缺失: {dig['missing']}")
+        else:
+            lines.append(f"[财报速读] {dig.get('read', '')}")
+
     notices = result.get("notices")
     if isinstance(notices, dict):
         lines.append(f"[公告时间线] 数据缺失: {notices.get('missing', '')}")
     elif result["match"].market == "US":
         lines.append(f"[披露文件时间线] 近{config.INTEL_FILING_DAYS}天 "
-                     f"{_items_block(notices)}")
+                     f"{_notice_block(notices)}")
     else:
         lines.append(f"[公告时间线] 近{config.INTEL_NOTICE_DAYS}天 "
-                     f"{_items_block(notices)}")
+                     f"{_notice_block(notices)}")
 
     ratings = result.get("ratings")
     if isinstance(ratings, dict):
@@ -288,6 +375,36 @@ def render_intel(result: dict) -> str:
                   ) if ratings else "无研报"
         lines.append(f"[投行评级] 近{config.INTEL_RATING_DAYS}天 "
                      f"{len(ratings)} 份（{latest}）")
+
+    summ = result.get("ratings_summary")
+    if summ:
+        bits = [f"{summ['total']} 份 · {summ['orgs']} 家机构"]
+        if summ["distribution"]:
+            dist = "/".join(f"{k} {v}" for k, v
+                            in summ["distribution"].items())
+            bits.append(f"分布 {dist}")
+        bits.append(f"上调 {summ['upgrades']} / 下调 "
+                    f"{summ['downgrades']} / 首次 {summ['initiations']}")
+        if summ.get("eps_this_year_avg") is not None:
+            bits.append(f"今年EPS一致 {summ['eps_this_year_avg']}"
+                        + (f" → 明年 {summ['eps_next_year_avg']}"
+                           if summ.get("eps_next_year_avg") is not None
+                           else ""))
+        if summ.get("target_price_high") is not None:
+            bits.append(f"目标价区间 {summ['target_price_low']:.1f}"
+                        f"-{summ['target_price_high']:.1f}")
+        if summ.get("top_orgs"):
+            bits.append("主力覆盖 " + "/".join(summ["top_orgs"]))
+        lines.append("[研报汇总] " + "；".join(bits))
+
+    heat = result.get("news_heat")
+    if heat:
+        latest_h = (f"；最新 {heat['latest_hours']:.0f} 小时前"
+                    if heat.get("latest_hours") is not None else "")
+        lines.append(f"[新闻热度] 今日 {heat['today']} 条 · "
+                     f"近3天 {heat['d3']} 条 · 近7天 {heat['d7']} 条"
+                     f"（前7天 {heat['prior7']} 条 → "
+                     f"{heat['verdict']}）{latest_h}")
 
     news = result.get("news")
     if isinstance(news, dict):
@@ -329,11 +446,14 @@ def to_json(result: dict) -> str:
         "snapshot": result.get("snapshot"),
         "asof": result.get("asof"),
         "radar": result.get("radar") or None,
+        "digest": result.get("digest"),
         "events": _items("events"),
         "eq": (None if isinstance(result.get("eq"), dict)
                else result.get("eq")),
         "notices": _items("notices"),
         "ratings": _items("ratings"),
+        "ratings_summary": result.get("ratings_summary"),
         "news": _items("news"),
+        "news_heat": result.get("news_heat"),
     }
     return json.dumps(payload, ensure_ascii=False, indent=2, default=str)
