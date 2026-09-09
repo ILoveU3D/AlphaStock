@@ -1,0 +1,32 @@
+trading/dashboards/s001.md
+  s_bf3064ba818420::t_5f221b94860daa 10-12,14,24,74
+trading/seasons/s001.json
+  s_bf3064ba818420::t_30bef161945972 368,395,397
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.2",
+  "base_commit_sha": "fc151fca37edb4bdacc33a1989bf64d9d14d7aa3",
+  "prompts": {},
+  "sessions": {
+    "s_bf3064ba818420": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa0c7e2a14192e21389b96e",
+        "model": "glm-5.3__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "source_scene": "agent",
+        "tool_use_id": "6aa0d9c7a14192e21389ba1c",
+        "edit_kind": "bash",
+        "client_type": "ide",
+        "external_session_id": "6aa0c7e2a14192e21389b96e",
+        "tool_name": "RunCommand",
+        "runtime_client": "trae-tob-git-ai",
+        "operation_id": "6aa0d9c7a14192e21389ba1c",
+        "session_id": "6aa0c7e2a14192e21389b96e"
+      }
+    }
+  }
+}
