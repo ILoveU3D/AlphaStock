@@ -365,7 +365,7 @@
     },
     {
       "date": "2026-09-09",
-      "nav": 2456.02,
+      "nav": 2455.0,
       "cash_total": 494.32,
       "settling_total": 0,
       "positions": [
@@ -392,9 +392,9 @@
           "code": "06831",
           "name": "绿茶集团",
           "qty": 400.0,
-          "price": 5.08,
+          "price": 5.06,
           "currency": "HKD",
-          "value_base": 259.11
+          "value_base": 258.09
         },
         {
           "market": "US",
