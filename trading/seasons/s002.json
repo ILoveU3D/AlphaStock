@@ -1,0 +1,134 @@
+{
+  "id": "s002",
+  "name": "第二期-短线擒龙",
+  "status": "active",
+  "created_at": "2026-09-09T21:55:15",
+  "base_currency": "USD",
+  "initial_capital": 2500.0,
+  "rules": {
+    "markets": [
+      "A",
+      "HK",
+      "US"
+    ],
+    "fx_spread": 0.003
+  },
+  "cash": {
+    "CNY": 0.0,
+    "HKD": 0.0,
+    "USD": 1645.17
+  },
+  "settling": [],
+  "positions": [
+    {
+      "market": "US",
+      "code": "DAVE",
+      "name": "Dave Inc-A",
+      "qty": 1.0,
+      "avg_cost": 369.61,
+      "currency": "USD",
+      "last_buy_date": "2026-09-09",
+      "lot": 1
+    },
+    {
+      "market": "US",
+      "code": "CDE",
+      "name": "科尔黛伦矿业",
+      "qty": 23.0,
+      "avg_cost": 21.0965,
+      "currency": "USD",
+      "last_buy_date": "2026-09-09",
+      "lot": 1
+    }
+  ],
+  "fills": [
+    {
+      "ts": "2026-09-09T22:00:46",
+      "date": "2026-09-09",
+      "action": "buy",
+      "market": "US",
+      "code": "DAVE",
+      "name": "Dave Inc-A",
+      "qty": 1.0,
+      "price": 367.62,
+      "gross": 367.62,
+      "fees": {
+        "platform": 1.99
+      },
+      "fees_total": 1.99,
+      "cash_delta": -369.61,
+      "currency": "USD",
+      "session": "in",
+      "note": "擒龙注(ultrashort,1-10交易日):注意力=neo-bank盈利兑现叙事(rev+60%/profit+238%/ROE73=真燃料非空故事),Loop Capital 09-08刚提目标500美元(13家Buy一致437);动量=ret_5d+4.6/20d+21.8/60d+31.8,pos_52w 76.8=利弗莫尔突破区确认;注意力周期=building(分析师通道为主,大众媒体未泛滥=边际买家未耗尽)。退出纪律(事前声明):-10%机械止损(334)或趋势破位(ret_5d转负);加速赶顶(5日+15%以上或目标价轰炸)即兑现离场;永不摊平,只加盈利仓。仓位14.8%(单价371限制1股)",
+      "settle_amount": 0.0,
+      "seq": 1
+    },
+    {
+      "ts": "2026-09-09T22:01:09",
+      "date": "2026-09-09",
+      "action": "buy",
+      "market": "US",
+      "code": "CDE",
+      "name": "科尔黛伦矿业",
+      "qty": 23.0,
+      "price": 21.01,
+      "gross": 483.23,
+      "fees": {
+        "platform": 1.99
+      },
+      "fees_total": 1.99,
+      "cash_delta": -485.22,
+      "currency": "USD",
+      "session": "in",
+      "note": "波段注(short,10日-3月):注意力=贵金属牛市叙事(09-02美股贵金属普涨新闻,白银量价齐升);燃料=rev+96%/profit+828%(银价x产量经营杠杆,真燃料非空故事);动量=ret_20d+15/60d+27.3趋势中段,今晚+1.67%趋势在线;11家Buy目标23.32(+11%)。退出纪律(事前声明):-10%机械止损(18.9)或ret_20d转负趋势破位;银价叙事见顶(矿商股集体加速赶顶)兑现离场;永不摊平。仓位19.3%(23股)。短炒警示:年化波动70%,止损线不例外",
+      "settle_amount": 0.0,
+      "seq": 2
+    }
+  ],
+  "nav_history": [
+    {
+      "date": "2026-09-09",
+      "nav": 2500.03,
+      "cash_total": 1645.17,
+      "settling_total": 0,
+      "positions": [
+        {
+          "market": "US",
+          "code": "DAVE",
+          "name": "Dave Inc-A",
+          "qty": 1.0,
+          "price": 368.3,
+          "currency": "USD",
+          "value_base": 368.3
+        },
+        {
+          "market": "US",
+          "code": "CDE",
+          "name": "科尔黛伦矿业",
+          "qty": 23.0,
+          "price": 21.155,
+          "currency": "USD",
+          "value_base": 486.57
+        }
+      ],
+      "fx": {
+        "CNY": 1.0,
+        "HKD": 0.8549,
+        "USD": 6.704
+      }
+    }
+  ],
+  "journal": [
+    {
+      "date": "2026-09-09",
+      "ts": "2026-09-09T22:01:36",
+      "nav": 2496.48,
+      "day_pnl": 0.0,
+      "text": "第二期开仓+战法定型(09-09夜,US盘中,用户授权开启s002,定位=锻炼短线能力:孙宇晨注意力+短线擒龙+波段,与第一期左侧价值互补)。战法三件套:(1)注意力筛选=screen --strategy sheng(ret_60d>0+波动率前40%+动量0.55)找叙事在吹的票,定性层判注意力周期building/peaking/fading;(2)擒龙=sheng+ultrashort窗口(ret_5d+ret_20d),持1-10交易日只打最强动量;(3)波段=sheng+short窗口(ret_20d+ret_60d),持10日-3月吃趋势中段。风控纪律(利弗莫尔):单注<=20%NAV,-10%机械止损无例外,永不摊平只加盈利仓,退出纪律事前写入开仓note;舆情红旗仍一票否决(短线更怕黑天鹅:止损位近,一次跳空即打穿)。短炒警示:此为练技巧与纪律的练手仓,高摩擦+高错误率是学费,不是复利主引擎——第一期才是主引擎。首晚部署34%:DAVE 1股@367.62=14.8%仓位(擒龙注:ultrashort分位99.8,neo-bank盈利兑现叙事building段,pos_52w76.8利弗莫尔突破区,止损334);CDE 23股@21.01=19.3%仓位(波段注:short分位99.0,白银牛市叙事,ret_60d+27.3趋势中段,止损18.9)。落选记录:FUTU(波段备选,60d+24.5但5d-2.7回踩中,留作后续备选);SSRM(与CDE同贵金属叙事,不重复下注);TGTX(医疗叙事超出能力圈判据);SLDE(保险硬市场动量强但注意力叙事弱)。明日计划:A/HK窗口擒龙部署,现金1645USD(65.8%)留弹药。流程闭环:sheng双窗口筛->实时ask->intel否决检查->playbook纪律->下单,全程无缺口。"
+    }
+  ],
+  "totals": {
+    "deposited": 0.0,
+    "withdrawn": 0.0
+  }
+}

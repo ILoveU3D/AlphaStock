@@ -11,8 +11,8 @@ triggers:
 commands:
   - ask --evidence
   - screen --strategy <master>
-version: 11
-updated_at: 2026-09-09T16:12:31
+version: 13
+updated_at: 2026-09-09T20:26:40
 ---
 
 # Playbook
@@ -89,3 +89,5 @@ master-grade depth on fundamentals.
 - [2026-09-07 12:00] (ai) crash-day routine: diff last kline close vs live quote to detect limit moves (519.35 vs 415.48 = -20% STAR limit-down, 2026-09-07 Moore Threads), then web-search same-day news for the catalyst (unlock/earnings/policy) before writing any review prose - the catalyst reframes the whole holding review
 - [2026-09-08 23:58] (ai) ETF holdings (e.g. 588060 科创50ETF): web-resolve tracking index + top-10 weights before writing review prose - hidden overlap with single-stock holdings and index-inclusion unlock traps (2026-09-08: 科创50 top-10 all semis; Dec Moore Threads 39.55% unlock doubles float -> index inclusion forces passive buying)
 - [2026-09-09 16:12] (ai) 舆情强制参与铁律(2026-09-09用户确立): 持仓复盘/单股分析必须跑 intel X 获取舆情情报(解禁/减持/财报粉饰/公告/评级/新闻)，舆情红旗(如大股东减持)作为否决信号纳入仓位决策；只跑 ask --evidence 不跑 intel 的分析视为不完整，AI 不得遗漏
+- [2026-09-09 20:13] (ai) 钥匙孔原则(2026-09-09用户原话确立): 炒股与投资分层——炒股可几天一换,投资一生仅20个钥匙孔(芒格打孔卡);摩尔线程=用户人生第1孔,钥匙孔仓位的价格级事件(解禁/回撤/波动/动量,即使-50%~-70%)一律不构成减仓理由,唯一卖出触发=生意级证伪(产品竞争力、存货/应收质量、企业文化、商业模式逻辑破);对钥匙孔仓位输出价格型减仓建议=分析层级错误(2026-09-10 AI曾犯此错);解禁事件仅作信息提示,不作操作建议;监控重心=ask+intel生意证据链
+- [2026-09-09 20:26] (ai) 摩尔线程钥匙孔论点细化(2026-09-10用户产业判断): intel粉饰信号'存货增速远超营收'经用户改判=存储涨价周期战略性囤货,非渠道压货——未来agent报告该信号必须双假设呈现并标注用户产业判断为主假设,监控变量=存货周转×存储价格轨迹×年报减值,不作为单一红旗;差异化=全功能GPU平台vs寒武纪/昇腾纯加速器,赌下一个时代(物理AI/仿真)的平台期权;文化=NV系创始团队(张建中前NV中国区总经理);剩余证伪集仅3项:MUSA生态采用度/现金跑道vs增发稀释/存储周期反转减值
