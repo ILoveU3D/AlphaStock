@@ -11,11 +11,13 @@ triggers:
   - 终值
   - 人力资本
   - 伯克希尔
+  - 永续需求
+  - 一万年
 commands:
   - [
   - ]
-version: 11
-updated_at: 2026-09-08T19:00:30
+version: 12
+updated_at: 2026-09-10T22:46:00
 ---
 
 # Playbook
@@ -65,6 +67,35 @@ this toolkit must be consistent with them.
    record earning autonomy, mid/long as default horizon, rational
    allocation with the AI holding final decision rights. When in
    doubt, ask: does this decision widen or narrow the compounding?
+
+## Folk-master layers (user-introduced 2026-09-10, absorbed with limits)
+
+**散户乙 — "earn shares, not profit"** (full playbook:
+skills/17-master-sanhuyi.md, `screen --strategy sanhuyi`). The
+goal is a growing pile of fully-paid-for claims on future cash
+flows; cost recovery via appreciation (sell a slice —
+non-keyhole positions only) or via dividends (the keyhole-
+compatible path). Layer it as HOLDING discipline: cost basis is
+your history, never the business's — the exit trigger stays
+business-level falsification. "Free" shares are emotionally free,
+not opportunity-cost free.
+
+**寒武纪的鳄鱼 — the 10,000-year demand test.** Before any
+long/keyhole holding, ask: will people still need what this
+business sells in ten thousand years (food, water, energy,
+medicine, shelter — and arguably compute)? Demand persistence
+anchors terminal-value reliability in the DCF. Two mandatory
+corrections, never omit them: (a) a persistent need does not mean
+THIS company captures it — people needed transport forever, cars
+still killed the horse economy; pair the test with moat and
+vehicle-substitution analysis; (b) an eternal need is not an
+eternal price — KO went sideways 1998-2011 at the wrong entry;
+valuation gates stay mandatory.
+
+Both folk views are half-laws by design: sanhuyi governs HOW to
+hold, the crocodile test governs WHAT survives the longest
+horizons; neither selects price, neither replaces business-model
+and culture analysis.
 
 ## Phrasing rules
 

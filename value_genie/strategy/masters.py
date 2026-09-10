@@ -20,6 +20,9 @@ Built-in masters (calibrated to their *lifetime* style, not caricatures):
              (position sizing happens before entry), hold 10 years
 - sheng     (Justin Sun): attention is the scarcest asset; narrative
              is the leading indicator of flow; exit at attention climax
+- sanhuyi   (散户乙, folk master added 2026-09-10): earn shares, not
+            profit — accumulate fully-paid-for claims on future cash
+            flows via dividend compounding and cost recovery
 """
 
 from .registry import Strategy, register_strategy
@@ -151,6 +154,34 @@ def _register_masters():
         triggers=["孙宇晨", "sheng", "热点", "风口", "注意力经济"],
         order=6,
         horizon="ultrashort",  # sheng: "快进快出……never a hold"
+    ))
+
+    # --- 散户乙: free shares via dividends + cost recovery (order 7) ---
+    # User-introduced folk master (2026-09-10).  The engine is real
+    # cash return: dividends funded by operations, never borrowed
+    # (借钱分红 = fake free shares — principal disguised as cash flow).
+    # dividend_yield is deliberately NOT a gate: the column is only
+    # populated for HK (106/123) — A/US rows are null in master.csv,
+    # a hard gate would silently kill those markets.  The dividend
+    # check stays qualitative (ask --evidence / intel) per the skill.
+    register_strategy(Strategy(
+        id="sanhuyi",
+        name="散户乙 (free shares: dividend compounding + cost recovery)",
+        weights={
+            "value": 0.20, "growth": 0.10, "quality": 0.30,
+            "safety": 0.05, "momentum": 0, "cashflow": 0.35,
+        },
+        gates=[
+            ("roe", ">=", 15.0),
+            ("debt_ratio", "<=", 60.0),
+            ("ocf_yield", ">=", 4.0),
+            ("borrowed_dividend", "<=", 0.0),
+        ],
+        kind="master",
+        skill_file="17-master-sanhuyi.md",
+        triggers=["散户乙", "免费股票", "成本收回", "赚股票", "股息复利"],
+        order=7,
+        horizon="long",       # sanhuyi: free shares compound over decades
     ))
 
 
