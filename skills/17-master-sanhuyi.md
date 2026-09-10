@@ -12,8 +12,8 @@ commands:
   - screen --strategy sanhuyi
   - ask --evidence
   - intel X
-version: 1
-updated_at: 2026-09-10T22:45:00
+version: 3
+updated_at: 2026-09-10T23:40:31
 ---
 
 # Playbook
@@ -43,9 +43,12 @@ claims on future cash flows** — "股票的目的不是赚利润，而是赚取
      terminal-value exposure the whole system exists to build.
 
 3. **The engine is REAL cash return**. Gates: ROE ≥15 (dividends
-   can grow), OCF yield ≥4 (funded by operations), 负债率 ≤60, and
-   the borrowed-dividend veto — 借钱分红 = fake free shares, the
-   "dividend" is principal being returned, not cash flow.
+   can grow), OCF yield ≥4 (funded by operations), 股息率 ≥2.5
+   (the payout exists and is meaningful — pipeline computes it for
+   A/HK/US from annual div_paid ÷ market cap since 2026-09-10),
+   负债率 ≤60, and the borrowed-dividend veto — 借钱分红 = fake
+   free shares, the "dividend" is principal being returned, not
+   cash flow.
 
 4. **Holding psychology is the product**. Once cost is recovered,
    drawdowns stop being threats — the shares are free — and a
@@ -86,10 +89,11 @@ claims on future cash flows** — "股票的目的不是赚利润，而是赚取
 2. For survivors ask the dividend question: will this business pay
    OUT (not borrow) a growing dividend in year 10? Run
    `python -m value_genie ask X --evidence` plus `intel X`.
-   NOTE: dividend_yield is null for A/US rows in master.csv (only
-   HK ~106/123 populated) — read the A dividend trail from intel
-   公告层分红方案, US from 8-K/dividend history; do not improvise
-   a yield number the toolkit did not print.
+   dividend_yield comes from the pipeline for all markets (A: 东财
+   分红事件表 aggregated per declaration year; HK: F10 DIVIDEND_RATE
+   with div_paid fallback; US: SEC frames) — annual-basis, so a
+   company that recently initiated/cut its payout shows the OLD
+   yield; cross-check intel 公告层分红方案 for fresh changes.
 3. State which path fits this position (sell-recovery /
    dividend-recovery / neither — no real payout) and the years-to-
    recovery arithmetic under path 5.
@@ -97,8 +101,9 @@ claims on future cash flows** — "股票的目的不是赚利润，而是赚取
 ## Answer Template
 
 > [Verdict]. Free-share engine: ROE X%, OCF yield Y%, dividend
-> [growing/stale/none — data gap stated if A/US], borrowed-dividend
-> [clean/veto]. Path: [sell-recovery / dividend-recovery / neither].
+> yield Z%, dividend [growing/stale/none — annual basis, check intel
+> for fresh payout changes], borrowed-dividend [clean/veto]. Path:
+> [sell-recovery / dividend-recovery / neither].
 > Years to free shares: [N at current yield; M if dividends grow at
 > g]. The business this rests on: [one sentence on 10-year dividend
 > durability]. [Risk flags verbatim]. Data as of [snapshot date].
@@ -106,3 +111,4 @@ claims on future cash flows** — "股票的目的不是赚利润，而是赚取
 ## Field Notes
 - [2026-09-10 22:45] (ai) sanhuyi registered as master #7 (user-introduced folk master). dividend_yield deliberately NOT a gate: master.csv populates it for HK only (106/123; A 0/200, US 0/181) — a hard gate would silently kill A/US. Future: merge A dividend_yield from a_dividends.csv (div_paid ÷ market cap per code) into the pipeline, then add ("dividend_yield", ">=", 2.5).
 - [2026-09-10 22:45] (ai) Keyhole compatibility (user 钥匙孔原则): the dividend-recovery path is the only free-share path allowed on keyhole positions; sell-to-recover-cost is for non-keyhole positions only and NEVER overrides the business-falsification exit trigger.
+- [2026-09-10 23:40] (ai) A-share dividend gap closed 2026-09-10: add_cashflow_factors now derives dividend_yield = annual div_paid / market_cap for ALL markets (A: 东财分红事件表 aggregated per declaration year; HK: F10 DIVIDEND_RATE wins, div_paid fallback; US: SEC frames). sanhuyi gate dividend_yield>=2.5 is live. Snapshots built before this fix show A dividend_yield null — refetch before screening sanhuyi; the yield is annual-basis, so fresh payout changes need the intel 公告层 cross-check.

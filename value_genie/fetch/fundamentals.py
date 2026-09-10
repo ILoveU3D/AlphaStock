@@ -540,7 +540,14 @@ def fetch_us_financials(quiet: bool = False) -> pd.DataFrame:
     ocf = frames.get(("NetCashProvidedByUsedInOperatingActivities", "cy")) or {}
     capex = frames.get(("PaymentsToAcquirePropertyPlantAndEquipment",
                         "cy")) or {}
-    div_paid = frames.get(("PaymentsOfDividendsCommonStock", "cy")) or {}
+    # dividend tag chain: CommonStock (excludes preferred) >
+    # ...AndDividendEquivalents (AAPL) > PaymentsOfDividends (KO) —
+    # the specific tag wins wherever the filer uses it
+    div_paid = pref(
+        frames.get(("PaymentsOfDividendsCommonStock", "cy")) or {},
+        pref(frames.get(("PaymentsOfDividendsAndDividendEquivalents",
+                         "cy")) or {},
+             frames.get(("PaymentsOfDividends", "cy")) or {}))
     net_fin = frames.get(
         ("NetCashProvidedByUsedInFinancingActivities", "cy")) or {}
 
@@ -651,8 +658,15 @@ def fetch_us_financials_one(ticker: str, quiet: bool = False) -> dict | None:
                            f"CY{cy}", s, e),
         "capex": concept_val(
             "PaymentsToAcquirePropertyPlantAndEquipment", f"CY{cy}", s, e),
-        "div_paid": concept_val(
-            "PaymentsOfDividendsCommonStock", f"CY{cy}", s, e),
+        # dividend tag chain, mirroring the frames batch logic above
+        "div_paid": next(
+            (v for v in (
+                concept_val("PaymentsOfDividendsCommonStock",
+                            f"CY{cy}", s, e),
+                concept_val("PaymentsOfDividendsAndDividendEquivalents",
+                            f"CY{cy}", s, e),
+                concept_val("PaymentsOfDividends", f"CY{cy}", s, e),
+            ) if v is not None), None),
         "net_fin_cf": concept_val(
             "NetCashProvidedByUsedInFinancingActivities", f"CY{cy}", s, e),
     }

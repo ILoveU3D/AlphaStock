@@ -353,6 +353,11 @@ def add_cashflow_factors(df: pd.DataFrame, fx: float | None,
       preserve refinancing eligibility (A-share mechanism) rather
       than to reward shareholders; 0 = pass (innocent until proven)
     - capex_to_ocf: reinvestment intensity (display-only)
+    - dividend_yield: annual div_paid / market cap — fills the rows
+      the HK F10 DIVIDEND_RATE merge leaves NaN (A: dividend-events
+      table aggregated per declaration year; US: SEC frames). The
+      F10 value wins where both exist; HK amounts are CNY → converted
+      via fx like ocf_yield.
 
     ocf_yield is re-based onto the annual figure where available:
     the interim-basis value built from half-year reports understates
@@ -374,6 +379,14 @@ def add_cashflow_factors(df: pd.DataFrame, fx: float | None,
            if c in df.columns]
     base = df.drop(columns=dup) if dup else df
     out = base.merge(annual, on=["market", "code"], how="left")
+    if dup and len(out) == len(df):
+        # annual wins wherever it has a row; the pre-merge values
+        # survive only where annual is silent (watchlist holdings
+        # outside the funnel: US companyconcept / A per-stock
+        # fallbacks) — keeps their dividend_yield computable
+        for c in dup:
+            out[c] = out[c].fillna(
+                pd.Series(df[c].to_numpy(), index=out.index))
     if "ocf" not in out.columns:
         out["fcf_yield"] = float("nan")
         out["capex_to_ocf"] = float("nan")
@@ -402,6 +415,12 @@ def add_cashflow_factors(df: pd.DataFrame, fx: float | None,
         out["ocf_yield"] = yld.fillna(out["ocf_yield"])
     else:
         out["ocf_yield"] = yld
+    dy = (div * conv / mcap.where(mcap > 0) * 100.0).where(
+        div.notna() & mcap.notna())
+    if "dividend_yield" in out.columns:
+        out["dividend_yield"] = out["dividend_yield"].fillna(dy)
+    else:
+        out["dividend_yield"] = dy
     return out
 
 
