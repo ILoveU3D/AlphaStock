@@ -110,6 +110,7 @@ excluded when no USD rate, concentration observations verbatim).
 | "利弗莫尔会怎么看X / 趋势" | master-livermore | `python -m value_genie screen --strategy livermore` + `ask X --evidence` |
 | "段永平会怎么选X" | master-duan | `python -m value_genie screen --strategy duan` + `ask X --evidence` |
 | "孙宇晨会怎么看X / 热点股" | master-sheng | `python -m value_genie screen --strategy sheng` + `ask X --evidence` |
+| "散户乙会怎么看X / 免费股票/成本收回" | master-sanhuyi | `python -m value_genie screen --strategy sanhuyi` + `ask X --evidence` |
 | Macro / gold / geopolitics | macro-themes | framework + `overview` / `ask --evidence` |
 | "你的虚拟盘怎么样 / 你的资产情况" | trading | `python -m value_genie trade status` |
 | "虚拟盘买入/卖出 X" | trading | `python -m value_genie trade buy/sell <season> X --qty N --note 理由` |
@@ -124,7 +125,8 @@ excluded when no USD rate, concentration observations verbatim).
 
 Six built-in master strategies, ordered by fame (this ordering is
 code-enforced via the strategy registry's `order` field and mirrored
-by the skill filenames 07-12):
+by the skill filenames 07-12), plus one user-introduced folk master
+(散户乙, skill 17, user mandate 2026-09-10):
 
 | # | Master | id | Core focus | Key gates |
 |---|---|---|---|---|
@@ -134,6 +136,7 @@ by the skill filenames 07-12):
 | 4 | Livermore | `livermore` | Pivotal points + risk discipline; pure price | ret_60d≥0, 波动率市场内前50%, pos_52w≥60 |
 | 5 | Duan Yongping | `duan` | Business model first, no stop-losses | ROE≥20%, 毛利率≥40%, 波动率市场内后40%（pctl≤60）, 借钱分红否决 |
 | 6 | Justin Sun | `sheng` | Attention economics + narrative momentum | ret_60d≥0, 波动率市场内前40%（pctl≥60） |
+| 7 | 散户乙 (folk, user-added 2026-09-10) | `sanhuyi` | 赚免费股票：股息复利 + 成本收回（持有纪律层） | ROE≥15%, 负债率≤60%, OCF yield≥4%, 借钱分红否决 |
 
 `python -m value_genie strategy list` shows all strategies (presets +
 masters). `screen --strategy <id>` applies the master's gates and
