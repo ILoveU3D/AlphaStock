@@ -1,0 +1,184 @@
+skills/04-data-ops.md
+  s_bf3064ba818420::t_8076b933cc7fec 12-13,59
+  s_0d1d1f61c0e2f3::t_a5aa2fb03a6094 12-13,58-59
+trading/dashboards/s001.md
+  s_bf3064ba818420::t_1ed9d8ec0c87ae 4,22,25,66-67,77
+  s_bf3064ba818420::t_c7de2afa802089 15-16,32-34,36,47-48,64-65
+  s_0d1d1f61c0e2f3::t_a5aa2fb03a6094 4,15-16,22,25,32-34,36,47-48,64-67,77
+  s_0d1d1f61c0e2f3::t_fd18995dbb686f 10-12,14,23-24,26,74
+trading/seasons/s001.json
+  s_bf3064ba818420::t_6f694f7b751f5a 17,62-71,212-233
+  s_bf3064ba818420::t_0b62c16ad07b2d 19,199-211
+  s_bf3064ba818420::t_6101141bc3c173 365-367,370-385,387,389-394,396,398-406,416-419,422
+  s_bf3064ba818420::t_5ff534aaa9afab 407-412,414,420,460-466
+  s_0d1d1f61c0e2f3::t_a5aa2fb03a6094 17,19,62-71,199-233,365-367,370-385,387,389-394,396,398-412,414,416-420,422,460-466
+  s_0d1d1f61c0e2f3::t_59aa61c366dc76 368,395,397,467-473
+  s_0d1d1f61c0e2f3::t_35c29c76cb00f5 474-480
+  s_0d1d1f61c0e2f3::t_850deab13eede0 386,388,413
+  s_0d1d1f61c0e2f3::t_1540803701966e 369,415,421
+skills/15-trading.md
+  s_bf3064ba818420::t_b7a62575f65bc5 79
+  s_0d1d1f61c0e2f3::t_a5aa2fb03a6094 79
+  s_0d1d1f61c0e2f3::t_71bc47306ea248 17-18,80
+skills/01-single-stock-analysis.md
+  s_0d1d1f61c0e2f3::t_ac5f80409dcd00 77
+  s_d87bae53250479::t_d68168ee78d646 12-13,78
+skills/13-holding-deep-review.md
+  s_0d1d1f61c0e2f3::t_4993950dc3276c 14-15,91
+skills/12-master-sheng.md
+  s_d87bae53250479::t_33b27af201d35b 14-15,78
+value_genie/intel/report.py
+  s_d87bae53250479::t_81ff10bf71ecff 26,35-36,53-54,58-63
+  s_d87bae53250479::t_32998626751b2d 341-347,353,356
+  s_d87bae53250479::t_1b17a1f78d7cc7 253-264
+  s_d87bae53250479::t_93f25ccbedf4ed 12-16
+  s_d87bae53250479::t_8f649726589e9e 128-156
+  s_d87bae53250479::t_81fbfa31e59824 192-202
+  s_d87bae53250479::t_14d0a0606a5882 280-294
+  s_d87bae53250479::t_0b9d61520f1cdd 449,455,457
+  s_d87bae53250479::t_949fdaa2354a9c 379-408
+  s_d87bae53250479::t_38b77361a153df 64-65
+value_genie/intel/ratings.py
+  s_d87bae53250479::t_1eb3b26997be1f 49-50
+tests/test_intel_report.py
+  s_d87bae53250479::t_b037c0769fd384 421-433
+  s_d87bae53250479::t_dcfc04f4bb974b 449,451,455
+  s_d87bae53250479::t_6b214aa299b168 355-420,434-448,450,452-454,456-484,487-494,496-497,499-586
+  s_d87bae53250479::t_24d8ca3dc7ab8a 485-486,495,498
+skills/16-intel.md
+  s_d87bae53250479::t_7cf008f80e5fda 17-18,55
+  s_d87bae53250479::t_ac532f02563ae6 52
+  s_d87bae53250479::t_e03708d8d775b2 53-54
+  s_f8054d8364cc98::t_2b9b0cf24c8131 51
+value_genie/intel/interpret.py
+  s_d87bae53250479::t_f01d3f123d3f4d 187-195,202-208
+  s_d87bae53250479::t_24d63294783422 1-86,89-186,196-201,209-310
+  s_d87bae53250479::t_d40aa81ec054d6 87-88
+AGENTS.md
+  s_d87bae53250479::t_972f9d496bcf08 104
+tests/test_intel_sources.py
+  s_d87bae53250479::t_f25cb6ebd94e17 733-735
+  s_d87bae53250479::t_016c5184e786fd 610-612
+value_genie/intel/announcements.py
+  s_d87bae53250479::t_a604e8f9199322 17
+  s_d87bae53250479::t_bd53fec6e691fa 30-33,54-55,60,62-64
+  s_d87bae53250479::t_c0c92cb8af5483 198-201
+  s_d87bae53250479::t_2d89749305a815 224-226
+  s_d87bae53250479::t_39c864d570c0f3 264-266
+README.md
+  s_d87bae53250479::t_20fe5b61f1fa7f 43
+  s_ee2281468c98f0::t_4e01aff8207d79 10-14
+  s_d87bae53250479::t_cfbe5cc3580f2a 89
+  s_d87bae53250479::t_0e1b521e5f2f80 96
+  s_d87bae53250479::t_144ea775677a63 224,239-240
+  s_d87bae53250479::t_2cb6131e2dbe27 187
+value_genie/config.py
+  s_d87bae53250479::t_b5ab786d290f72 272-276
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.2",
+  "base_commit_sha": "262037a3f68cfa22b9b6daa92551420df3b1ea66",
+  "prompts": {},
+  "sessions": {
+    "s_0d1d1f61c0e2f3": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa10ef9a14192e21389ba8a",
+        "model": "glm-5.2__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "tool_name": "RunCommand",
+        "tool_use_id": "6aa126eda14192e21389bba8",
+        "source_scene": "agent",
+        "session_id": "6aa10ef9a14192e21389ba8a",
+        "runtime_client": "trae-tob-git-ai",
+        "operation_id": "6aa126eda14192e21389bba8",
+        "client_type": "ide",
+        "external_session_id": "6aa10ef9a14192e21389ba8a",
+        "edit_kind": "bash"
+      }
+    },
+    "s_bf3064ba818420": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa0c7e2a14192e21389b96e",
+        "model": "glm-5.3__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "tool_name": "RunCommand",
+        "tool_use_id": "6aa0d92ba14192e21389b9fc",
+        "external_session_id": "6aa0c7e2a14192e21389b96e",
+        "session_id": "6aa0c7e2a14192e21389b96e",
+        "runtime_client": "trae-tob-git-ai",
+        "edit_kind": "bash",
+        "operation_id": "6aa0d92ba14192e21389b9fc",
+        "source_scene": "agent",
+        "client_type": "ide"
+      }
+    },
+    "s_d87bae53250479": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa161e6a14192e21389bd8f",
+        "model": "glm-5.3__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "edit_kind": "file_edit",
+        "tool_id": "Write",
+        "runtime_client": "trae-tob-git-ai",
+        "operation_id": "6aa1751ca14192e21389bfeb",
+        "dedupe_key": "6aa161e6a14192e21389bd8f:6aa1751ca14192e21389bfeb:afterEdit:dce040d0",
+        "tool_use_id": "6aa1751ca14192e21389bfeb",
+        "tool_type": "agent",
+        "session_id": "6aa161e6a14192e21389bd8f",
+        "source_scene": "unknown",
+        "external_session_id": "6aa161e6a14192e21389bd8f",
+        "client_type": "ide"
+      }
+    },
+    "s_ee2281468c98f0": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa14cf1a14192e21389bc68",
+        "model": "glm-5.3__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "session_id": "6aa14cf1a14192e21389bc68",
+        "source_scene": "unknown",
+        "edit_kind": "file_edit",
+        "tool_use_id": "6aa14d16a14192e21389bc76",
+        "runtime_client": "trae-tob-git-ai",
+        "client_type": "ide",
+        "dedupe_key": "6aa14cf1a14192e21389bc68:6aa14d16a14192e21389bc76:afterEdit:6bee5149",
+        "tool_type": "agent",
+        "tool_id": "Edit",
+        "operation_id": "6aa14d16a14192e21389bc76",
+        "external_session_id": "6aa14cf1a14192e21389bc68"
+      }
+    },
+    "s_f8054d8364cc98": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa15185a14192e21389bce7",
+        "model": "glm-5.3__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "client_type": "ide",
+        "operation_id": "6aa15685a14192e21389bd53",
+        "external_session_id": "6aa15185a14192e21389bce7",
+        "source_scene": "agent",
+        "runtime_client": "trae-tob-git-ai",
+        "tool_name": "RunCommand",
+        "tool_use_id": "6aa15685a14192e21389bd53",
+        "edit_kind": "bash",
+        "session_id": "6aa15185a14192e21389bce7"
+      }
+    }
+  }
+}

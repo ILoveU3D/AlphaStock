@@ -1,0 +1,90 @@
+skills/15-trading.md
+  s_d87bae53250479::t_93c8fb92bcccb5 17-18,82
+  s_d87bae53250479::t_4a5bfaa1245f49 81
+trading/seasons/s002.json
+  s_d87bae53250479::t_e32018ad48b93f 1-18,20-21,130-134
+  s_d87bae53250479::t_0ea24b91331580 88-90,92-99,101,103-108,110,112-129
+  s_d87bae53250479::t_787bb6c878e96e 19,32-41,65-85
+  s_d87bae53250479::t_700e0e005c6e9b 22-31,42-64,86-87
+  s_d87bae53250479::t_12004451589a00 91,100,102,109,111
+trading/seasons/s001.json
+  s_d87bae53250479::t_c33842aec3c5df 368-369,377,379,404,406,421
+  s_f8054d8364cc98::t_571c3303a88e8b 420
+  s_f8054d8364cc98::t_5dc28d63d159ab 481-487
+  s_d87bae53250479::t_d524bdcd7650d0 488-494
+  s_d87bae53250479::t_f7f867125029a0 388,397,415
+skills/04-data-ops.md
+  s_5f9a2e16a144cf::t_10e255f6f84db2 12-13,60
+trading/dashboards/s002.md
+  s_d87bae53250479::t_12004451589a00 1-50
+skills/13-holding-deep-review.md
+  s_5f9a2e16a144cf::t_85d63aac0f91e2 92
+  s_5f9a2e16a144cf::t_4ba5ad10647819 14-15,93
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.2",
+  "base_commit_sha": "23f8ceeec7bb7e2f41267efc182b2208a68e54f5",
+  "prompts": {},
+  "sessions": {
+    "s_5f9a2e16a144cf": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa147dda14192e21389bbf5",
+        "model": "glm-5.3__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "session_id": "6aa147dda14192e21389bbf5",
+        "runtime_client": "trae-tob-git-ai",
+        "tool_use_id": "6aa1507da14192e21389bcd8",
+        "external_session_id": "6aa147dda14192e21389bbf5",
+        "edit_kind": "bash",
+        "source_scene": "agent",
+        "operation_id": "6aa1507da14192e21389bcd8",
+        "tool_name": "RunCommand",
+        "client_type": "ide"
+      }
+    },
+    "s_d87bae53250479": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa161e6a14192e21389bd8f",
+        "model": "glm-5.3__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "tool_type": "agent",
+        "dedupe_key": "6aa161e6a14192e21389bd8f:6aa17553a14192e21389bff1:afterEdit:42da57d9",
+        "tool_id": "Write",
+        "session_id": "6aa161e6a14192e21389bd8f",
+        "edit_kind": "file_edit",
+        "client_type": "ide",
+        "operation_id": "6aa17553a14192e21389bff1",
+        "external_session_id": "6aa161e6a14192e21389bd8f",
+        "source_scene": "unknown",
+        "tool_use_id": "6aa17553a14192e21389bff1",
+        "runtime_client": "trae-tob-git-ai"
+      }
+    },
+    "s_f8054d8364cc98": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa15185a14192e21389bce7",
+        "model": "glm-5.3__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "source_scene": "agent",
+        "client_type": "ide",
+        "session_id": "6aa15185a14192e21389bce7",
+        "operation_id": "6aa15685a14192e21389bd53",
+        "external_session_id": "6aa15185a14192e21389bce7",
+        "edit_kind": "bash",
+        "tool_use_id": "6aa15685a14192e21389bd53",
+        "tool_name": "RunCommand",
+        "runtime_client": "trae-tob-git-ai"
+      }
+    }
+  }
+}

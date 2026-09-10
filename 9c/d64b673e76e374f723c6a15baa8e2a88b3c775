@@ -1,0 +1,44 @@
+trading/seasons/s002.json
+  s_6b7e4bf98eb388::t_9d765de11fd530 209,236,238
+  s_6b7e4bf98eb388::t_0fa4a0561e1a7c 271-277
+  s_6b7e4bf98eb388::t_653994078cd0b1 19,163-172,281
+  s_6b7e4bf98eb388::t_07a045b6a12326 210,245,247
+trading/dashboards/s001.md
+  s_6b7e4bf98eb388::t_f9685d7fc2e663 10-12,14-16,25-26,33-34,53-55,71-73,82
+trading/seasons/s001.json
+  s_6b7e4bf98eb388::t_8f197dfdcb92a7 19,278-290
+  s_6b7e4bf98eb388::t_9422d892c5e2fa 18,70-79,291-312
+  s_6b7e4bf98eb388::t_116008b834a11b 506,544-549,551
+  s_6b7e4bf98eb388::t_1780e298654ce1 268-277,649
+  s_6b7e4bf98eb388::t_4f5dc8a7147fd2 639-645
+  s_6b7e4bf98eb388::t_f9685d7fc2e663 505,541,543,550,552
+trading/dashboards/s002.md
+  s_6b7e4bf98eb388::t_9d765de11fd530 10-12,14,16,24-25,32,34,43,45,53-55,61
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.2",
+  "base_commit_sha": "9cd64b673e76e374f723c6a15baa8e2a88b3c775",
+  "prompts": {},
+  "sessions": {
+    "s_6b7e4bf98eb388": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa244ffa14192e21389c11c",
+        "model": "glm-5.3__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "session_id": "6aa244ffa14192e21389c11c",
+        "edit_kind": "bash",
+        "tool_use_id": "6aa24f40a14192e21389c211",
+        "source_scene": "agent",
+        "external_session_id": "6aa244ffa14192e21389c11c",
+        "client_type": "ide",
+        "runtime_client": "trae-tob-git-ai",
+        "tool_name": "RunCommand",
+        "operation_id": "6aa24f40a14192e21389c211"
+      }
+    }
+  }
+}
