@@ -160,10 +160,11 @@ def _register_masters():
     # User-introduced folk master (2026-09-10).  The engine is real
     # cash return: dividends funded by operations, never borrowed
     # (借钱分红 = fake free shares — principal disguised as cash flow).
-    # dividend_yield is deliberately NOT a gate: the column is only
-    # populated for HK (106/123) — A/US rows are null in master.csv,
-    # a hard gate would silently kill those markets.  The dividend
-    # check stays qualitative (ask --evidence / intel) per the skill.
+    # dividend_yield gate (>= 2.5) went live 2026-09-10: the pipeline
+    # now derives it for ALL markets from annual div_paid / market cap
+    # (A: 东财分红事件表, HK: F10, US: SEC frames) — the former HK-only
+    # data gap is closed.  No-dividend compounders are excluded by
+    # design: without a payout there is no dividend-recovery path.
     register_strategy(Strategy(
         id="sanhuyi",
         name="散户乙 (free shares: dividend compounding + cost recovery)",
@@ -175,6 +176,7 @@ def _register_masters():
             ("roe", ">=", 15.0),
             ("debt_ratio", "<=", 60.0),
             ("ocf_yield", ">=", 4.0),
+            ("dividend_yield", ">=", 2.5),
             ("borrowed_dividend", "<=", 0.0),
         ],
         kind="master",

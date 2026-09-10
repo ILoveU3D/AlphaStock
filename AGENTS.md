@@ -136,7 +136,7 @@ by the skill filenames 07-12), plus one user-introduced folk master
 | 4 | Livermore | `livermore` | Pivotal points + risk discipline; pure price | ret_60d≥0, 波动率市场内前50%, pos_52w≥60 |
 | 5 | Duan Yongping | `duan` | Business model first, no stop-losses | ROE≥20%, 毛利率≥40%, 波动率市场内后40%（pctl≤60）, 借钱分红否决 |
 | 6 | Justin Sun | `sheng` | Attention economics + narrative momentum | ret_60d≥0, 波动率市场内前40%（pctl≥60） |
-| 7 | 散户乙 (folk, user-added 2026-09-10) | `sanhuyi` | 赚免费股票：股息复利 + 成本收回（持有纪律层） | ROE≥15%, 负债率≤60%, OCF yield≥4%, 借钱分红否决 |
+| 7 | 散户乙 (folk, user-added 2026-09-10) | `sanhuyi` | 赚免费股票：股息复利 + 成本收回（持有纪律层） | ROE≥15%, 负债率≤60%, OCF yield≥4%, 股息率≥2.5%, 借钱分红否决 |
 
 `python -m value_genie strategy list` shows all strategies (presets +
 masters). `screen --strategy <id>` applies the master's gates and

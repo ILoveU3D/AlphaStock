@@ -9,8 +9,8 @@ triggers:
 commands:
   - doctor
   - fetch
-version: 20
-updated_at: 2026-09-10T23:26:52
+version: 21
+updated_at: 2026-09-11T00:06:10
 ---
 
 # Playbook
@@ -59,3 +59,4 @@ known snapshot is older than one trading day:
 - [2026-09-09 11:57] (ai) A股debt_ratio在master.csv全NaN(a_financials无负债字段,a_balance仅应收存货;HK来自F10/US来自SEC)——任何含debt_ratio闸门的策略对A股结构性失明:官方screen报0只时先怀疑此缺口,降级为手动预筛(roe/rev/动量三闸门+手写debt核验),并在note中标注负债率未验证
 - [2026-09-09 20:03] (ai) 2026-09-09/10: searchapi.eastmoney.com suggest endpoint returned non-JSON (JSONDecodeError) on every A-share name resolution during holding review - non-blocking, fallback resolution succeeded; if name resolution ever fully fails, check SB endpoint health first
 - [2026-09-10 23:26] (ai) agent 工具教训(2026-09-10):绝不在同一消息里对同一文件发多个并行 Edit 调用——各编辑基于各自快照写入会互相覆盖(本次 AGENTS.md 三处并行编辑丢失两处、哲学技能版本号被覆盖回退);同一文件的多处修改必须严格串行,改完用 Grep 验证全部标记
+- [2026-09-11 00:06] (ai) US dividend tags disagree across filers (2026-09-10): KO files PaymentsOfDividends, MSFT PaymentsOfDividendsCommonStock, AAPL-style ...AndDividendEquivalents — fetch_us_financials now merges all three (CommonStock primary); non-calendar filers (AAPL/NVDA FY ending Sep/Jan) still miss the CY frame, their div_paid stays null or comes from a fiscal-mismatched frame — treat NVDA-class sub-0.1% yields as noise. A-share dividend_yield = a_dividends.csv div_paid ÷ market_cap computed in add_cashflow_factors (declaration-year basis, ~8-20mo lag by design); watchlist rows outside the funnel keep their own cash-flow values via the annual-silent coalesce in add_cashflow_factors

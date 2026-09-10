@@ -115,6 +115,11 @@ US_FRAMES_SPEC = [
     # cashflow-first factors: capex / dividends paid / net financing
     ("PaymentsToAcquirePropertyPlantAndEquipment", "duration", ["cy"]),
     ("PaymentsOfDividendsCommonStock", "duration", ["cy"]),
+    # dividend-tag fallbacks: filers disagree on the tag (KO files
+    # PaymentsOfDividends; AAPL files ...AndDividendEquivalents) —
+    # merged with CommonStock as the primary in fetch_us_financials
+    ("PaymentsOfDividends", "duration", ["cy"]),
+    ("PaymentsOfDividendsAndDividendEquivalents", "duration", ["cy"]),
     ("NetCashProvidedByUsedInFinancingActivities", "duration", ["cy"]),
     # one-off P&L items (must stay in sync with US_ONEOFF_CONCEPTS below)
     ("DisposalGroupNotDiscontinuedOperationGainLossOnDisposal", "duration",
