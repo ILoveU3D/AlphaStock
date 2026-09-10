@@ -552,6 +552,64 @@
     },
     {
       "date": "2026-09-11",
+      "nav": 7329.37,
+      "cash_total": 4369.12,
+      "settling_total": 0,
+      "positions": [
+        {
+          "market": "US",
+          "code": "TCOM",
+          "name": "携程",
+          "qty": 12.0,
+          "price": 38.7,
+          "currency": "USD",
+          "value_base": 464.4
+        },
+        {
+          "market": "HK",
+          "code": "06831",
+          "name": "绿茶集团",
+          "qty": 400.0,
+          "price": 5.055,
+          "currency": "HKD",
+          "value_base": 257.87
+        },
+        {
+          "market": "US",
+          "code": "CARG",
+          "name": "CarGurus Inc-A",
+          "qty": 13.0,
+          "price": 33.3,
+          "currency": "USD",
+          "value_base": 432.9
+        },
+        {
+          "market": "A",
+          "code": "002001",
+          "name": "新 和 成",
+          "qty": 100.0,
+          "price": 26.23,
+          "currency": "CNY",
+          "value_base": 390.75
+        },
+        {
+          "market": "HK",
+          "code": "01378",
+          "name": "中国宏桥",
+          "qty": 500.0,
+          "price": 22.18,
+          "currency": "HKD",
+          "value_base": 1414.34
+        }
+      ],
+      "fx": {
+        "CNY": 1.0,
+        "HKD": 0.8561,
+        "USD": 6.7128
+      }
+    },
+    {
+      "date": "2026-09-11",
       "nav": 7378.34,
       "cash_total": 4369.45,
       "settling_total": 0,
