@@ -206,7 +206,7 @@
     },
     {
       "date": "2026-09-10",
-      "nav": 7486.83,
+      "nav": 7489.22,
       "cash_total": 5848.99,
       "settling_total": 0,
       "positions": [
@@ -233,18 +233,18 @@
           "code": "601872",
           "name": "招商轮船",
           "qty": 100.0,
-          "price": 20.44,
+          "price": 20.58,
           "currency": "CNY",
-          "value_base": 304.78
+          "value_base": 306.87
         },
         {
           "market": "A",
           "code": "000737",
           "name": "北方铜业",
           "qty": 200.0,
-          "price": 16.37,
+          "price": 16.38,
           "currency": "CNY",
-          "value_base": 488.18
+          "value_base": 488.48
         }
       ],
       "fx": {
