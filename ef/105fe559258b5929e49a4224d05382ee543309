@@ -1,0 +1,47 @@
+value_genie/fetch/fundamentals.py
+  s_56510618e23340::t_9e54dd339f113f 661-669
+  s_56510618e23340::t_8c56786517f3d1 543-550
+value_genie/strategy/masters.py
+  s_56510618e23340::t_ab0a5b80fa4d04 163-167,179
+skills/04-data-ops.md
+  s_56510618e23340::t_bff3b9ff0e8e35 12-13,62
+value_genie/config.py
+  s_56510618e23340::t_a12a45d4d501b6 118-122
+value_genie/fetch/pipeline.py
+  s_56510618e23340::t_904d23898ca321 356-360
+  s_56510618e23340::t_dd1f42a772af59 418-423
+  s_56510618e23340::t_c519725d00e704 382-389
+AGENTS.md
+  s_56510618e23340::t_395559fd8f21cf 139
+skills/17-master-sanhuyi.md
+  s_56510618e23340::t_30d3e08e976309 15-16,46-51,92-96,104-106,114
+skills/06-investment-philosophy.md
+  s_56510618e23340::t_eaadcf2b3925da 19-20,118
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.2",
+  "base_commit_sha": "ef105fe559258b5929e49a4224d05382ee543309",
+  "prompts": {},
+  "sessions": {
+    "s_56510618e23340": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa2ba06a14192e21389c2f4",
+        "model": "glm-5.3__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "tool_use_id": "6aa2d589a14192e21389c522",
+        "session_id": "6aa2ba06a14192e21389c2f4",
+        "source_scene": "agent",
+        "tool_name": "Write",
+        "client_type": "ide",
+        "external_session_id": "6aa2ba06a14192e21389c2f4",
+        "runtime_client": "trae-tob-git-ai",
+        "edit_kind": "file_edit",
+        "operation_id": "6aa2d589a14192e21389c522"
+      }
+    }
+  }
+}
