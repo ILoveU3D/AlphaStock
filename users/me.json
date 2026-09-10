@@ -51,15 +51,6 @@
       "opened": ""
     },
     {
-      "market": "A",
-      "code": "588060",
-      "name": "上证科创ETF",
-      "qty": 62000.0,
-      "cost": 0.975,
-      "currency": "CNY",
-      "opened": ""
-    },
-    {
       "market": "US",
       "code": "NVDA",
       "name": "英伟达",
