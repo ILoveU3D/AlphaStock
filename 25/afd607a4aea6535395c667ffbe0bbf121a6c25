@@ -1,0 +1,47 @@
+skills/04-data-ops.md
+  s_56510618e23340::t_f06c54dc8f6a2b 12-13,61
+skills/17-master-sanhuyi.md
+  s_56510618e23340::t_0f9440c8e459aa 1-108
+skills/06-investment-philosophy.md
+  s_56510618e23340::t_56c7f05d2ecd53 19-20
+  s_56510618e23340::t_58e1b6ada93cb6 14-15
+AGENTS.md
+  s_56510618e23340::t_2c8b95d4726d25 128-129
+  s_56510618e23340::t_963fe8b547d3f3 113
+  s_56510618e23340::t_d603e4580f12f3 139
+value_genie/strategy/masters.py
+  s_56510618e23340::t_0f0b82677127ec 23-25
+  s_56510618e23340::t_336b599dfff2e6 159-186
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.2",
+  "base_commit_sha": "25afd607a4aea6535395c667ffbe0bbf121a6c25",
+  "prompts": {},
+  "humans": {
+    "h_e5e258ab51542c": {
+      "author": "yukang.wang <yukang.wang@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_56510618e23340": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa2ba06a14192e21389c2f4",
+        "model": "glm-5.3__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "external_session_id": "6aa2ba06a14192e21389c2f4",
+        "runtime_client": "trae-tob-git-ai",
+        "tool_name": "RunCommand",
+        "operation_id": "6aa2cc25a14192e21389c417",
+        "tool_use_id": "6aa2cc25a14192e21389c417",
+        "client_type": "ide",
+        "edit_kind": "bash",
+        "session_id": "6aa2ba06a14192e21389c2f4",
+        "source_scene": "agent"
+      }
+    }
+  }
+}
