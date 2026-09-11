@@ -16,8 +16,8 @@ triggers:
 commands:
   - [
   - ]
-version: 14
-updated_at: 2026-09-11T17:36:36
+version: 15
+updated_at: 2026-09-12T00:22:46
 ---
 
 # Playbook
@@ -117,3 +117,4 @@ and culture analysis.
 - [2026-09-08 19:00] (ai) '北极星' adopted as the canonical name for the mission (user 2026-09-08, delighted by the term): README main title changed to 找到你人生的北极星 — public identity is philosophy-first: the toolkit sells the terminal-value swap (convert no-terminal-value human capital into a compounding portfolio), AlphaStock aims to be the user's Berkshire, architecture serves that north star
 - [2026-09-10 23:40] (ai) 钥匙孔实践入哲学(2026-09-10用户确认): 摩尔线程=钥匙孔#1,-31%/-50%/-70%只要生意模式在线、产品给力、文化不错就没有理由减仓——'这就是投资';唯一卖出触发=生意级证伪(MUSA生态采用度/大幅折让增发稀释/存储周期反转致存货减值),价格级事件(解禁/回撤/波动)是噪音。两位民间大师与DCF的结合(2026-09-10):DCF最薄弱处=终值项TV,两位大师各自处理它——散户乙:永不卖出+分红再投,把终值从'市场估计'变成'已实现现金流',退出了对TV定价的依赖(回收成本后剩余持仓=零成本永续索取权);鳄鱼:一万年需求测试给CF永续性最强先验+在周期底部买入(市场把TV定价为零时进场,等均值回归兑现)。三视角合流:巴菲特靠护城河质量保TV,散户乙退出TV实现问题,鳄鱼筛选TV耐久性;摩尔线程钥匙孔=用户自己的TV押注(通用并行计算平台对下一个时代的期权)
 - [2026-09-11 17:36] (ai) Keyhole sizing (2026-09-11, Moore Threads case): position size = REVEALED drawdown tolerance (what you want at -37%), not stated tolerance ('-70% is fine'); pure-TV CF~=0 bets cap at 1-2 keyholes regardless of information edge, 3+ holes requires proven cash flows (Buffett/Duan concentration was always on proven franchises); family transfers pick counterparty by allocation budget, not risk-sink default; litmus for any re-size: would this judgment hold at the old price? Sunk punches stay sunk - correction happens on forward allocation (parents tranche to market), not by selling into a no-falsification drawdown
+- [2026-09-12 00:22] (ai) 个人DCF总资本视角(2026-09-11):集中度必须在家庭总资本(人力资本PV+金融资本+股权)层面度量,而非组合层面——雇主即最大持仓的案例中,薪资PV超过家庭总V0,持仓市值仅占总资本约2%,真正的集中度决策是职业不是股票;基线量化:普通城市白领全生命周期净值(收入+养老金-终身消费)约等于零,这是终值交换论点的数学形式:不转化,一生DCF=0;个人DCF的严谨建模=分阶段增长+按各流风险分别定折现率+大额支出单列+养老金终值+职业中断期望折损,单一折现率的粗估会低估高成长人力资本3倍以上
