@@ -552,7 +552,7 @@
     },
     {
       "date": "2026-09-11",
-      "nav": 7332.01,
+      "nav": 7329.37,
       "cash_total": 4369.12,
       "settling_total": 0,
       "positions": [
@@ -570,9 +570,9 @@
           "code": "06831",
           "name": "绿茶集团",
           "qty": 400.0,
-          "price": 5.07,
+          "price": 5.055,
           "currency": "HKD",
-          "value_base": 258.64
+          "value_base": 257.87
         },
         {
           "market": "US",
@@ -588,18 +588,18 @@
           "code": "002001",
           "name": "新 和 成",
           "qty": 100.0,
-          "price": 26.27,
+          "price": 26.23,
           "currency": "CNY",
-          "value_base": 391.34
+          "value_base": 390.75
         },
         {
           "market": "HK",
           "code": "01378",
           "name": "中国宏桥",
           "qty": 500.0,
-          "price": 22.2,
+          "price": 22.18,
           "currency": "HKD",
-          "value_base": 1415.61
+          "value_base": 1414.34
         }
       ],
       "fx": {
