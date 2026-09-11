@@ -16,8 +16,8 @@ triggers:
 commands:
   - [
   - ]
-version: 16
-updated_at: 2026-09-12T00:57:19
+version: 17
+updated_at: 2026-09-12T01:23:11
 ---
 
 # Playbook
@@ -119,3 +119,4 @@ and culture analysis.
 - [2026-09-11 17:36] (ai) Keyhole sizing (2026-09-11, Moore Threads case): position size = REVEALED drawdown tolerance (what you want at -37%), not stated tolerance ('-70% is fine'); pure-TV CF~=0 bets cap at 1-2 keyholes regardless of information edge, 3+ holes requires proven cash flows (Buffett/Duan concentration was always on proven franchises); family transfers pick counterparty by allocation budget, not risk-sink default; litmus for any re-size: would this judgment hold at the old price? Sunk punches stay sunk - correction happens on forward allocation (parents tranche to market), not by selling into a no-falsification drawdown
 - [2026-09-12 00:22] (ai) 个人DCF总资本视角(2026-09-11):集中度必须在家庭总资本(人力资本PV+金融资本+股权)层面度量,而非组合层面——雇主即最大持仓的案例中,薪资PV超过家庭总V0,持仓市值仅占总资本约2%,真正的集中度决策是职业不是股票;基线量化:普通城市白领全生命周期净值(收入+养老金-终身消费)约等于零,这是终值交换论点的数学形式:不转化,一生DCF=0;个人DCF的严谨建模=分阶段增长+按各流风险分别定折现率+大额支出单列+养老金终值+职业中断期望折损,单一折现率的粗估会低估高成长人力资本3倍以上
 - [2026-09-12 00:57] (ai) 个人DCF修正(2026-09-11用户纠偏,修正v15的乐观偏差):中国工程师薪资曲线必须内嵌35岁危机——期望值法形状=20多岁陡升(12%)→36岁峰值(61万)→41岁平台尾→47岁概率悬崖(0.4在岗+0.3降级+0.3离场=期望腰斩)→55+近零;单边上扬增长曲线会高估薪资PV约40-77%(958万→541万);修正后普通白领全生命周期净值为负(-100万级,靠养老金+消费降级弥合),不是'约等于零';两个反直觉结论:(1)自由本金在28-38岁攒完,危机砍掉的是晚年锦上添花不是自由本金(安全网年龄几乎不动);(2)若危机提前至35岁命中,安全网推迟4-7年——路径内尾部风险;(3)住房按终值资产处理:本金=储蓄转房产权益,只有利息+税费是真成本,否则重复惩罚买房者
+- [2026-09-12 01:23] (ai) 基线比较必须按职业各自曲线建模(2026-09-11用户纠偏):把程序员35岁悬崖套给体制内会得出'-106万买断价=付费上班'的荒谬负值——体制内=无裁员悬崖+养老金替代率80%(企业仅45%),修正后其人生净值+29万(稳但无终值);私营白领-106万(温和衰减);程序员峰值最高悬崖最陡;方法论:对比基线时曲线形状必须跟随职业的实际风险结构,风险曲线错配比参数误差大一个量级
