@@ -16,8 +16,8 @@ triggers:
 commands:
   - [
   - ]
-version: 13
-updated_at: 2026-09-10T23:40:40
+version: 14
+updated_at: 2026-09-11T17:36:36
 ---
 
 # Playbook
@@ -116,3 +116,4 @@ and culture analysis.
 - [2026-09-08 18:56] (ai) North-star mandate (user 2026-09-08): AlphaStock (this toolkit + agent + user-instilled principles) aims to become the user's Berkshire Hathaway — judge the system not by single calls but by whether judgment compounds over time; Berkshire qualities to emulate: append-only Field Notes as widening moat, git-tracked seasons/users as permanent capital structure surviving daily data wipes, reputation/track-record earning autonomy, mid/long as default horizon, rational capital allocation with AI holding final decision rights
 - [2026-09-08 19:00] (ai) '北极星' adopted as the canonical name for the mission (user 2026-09-08, delighted by the term): README main title changed to 找到你人生的北极星 — public identity is philosophy-first: the toolkit sells the terminal-value swap (convert no-terminal-value human capital into a compounding portfolio), AlphaStock aims to be the user's Berkshire, architecture serves that north star
 - [2026-09-10 23:40] (ai) 钥匙孔实践入哲学(2026-09-10用户确认): 摩尔线程=钥匙孔#1,-31%/-50%/-70%只要生意模式在线、产品给力、文化不错就没有理由减仓——'这就是投资';唯一卖出触发=生意级证伪(MUSA生态采用度/大幅折让增发稀释/存储周期反转致存货减值),价格级事件(解禁/回撤/波动)是噪音。两位民间大师与DCF的结合(2026-09-10):DCF最薄弱处=终值项TV,两位大师各自处理它——散户乙:永不卖出+分红再投,把终值从'市场估计'变成'已实现现金流',退出了对TV定价的依赖(回收成本后剩余持仓=零成本永续索取权);鳄鱼:一万年需求测试给CF永续性最强先验+在周期底部买入(市场把TV定价为零时进场,等均值回归兑现)。三视角合流:巴菲特靠护城河质量保TV,散户乙退出TV实现问题,鳄鱼筛选TV耐久性;摩尔线程钥匙孔=用户自己的TV押注(通用并行计算平台对下一个时代的期权)
+- [2026-09-11 17:36] (ai) Keyhole sizing (2026-09-11, Moore Threads case): position size = REVEALED drawdown tolerance (what you want at -37%), not stated tolerance ('-70% is fine'); pure-TV CF~=0 bets cap at 1-2 keyholes regardless of information edge, 3+ holes requires proven cash flows (Buffett/Duan concentration was always on proven franchises); family transfers pick counterparty by allocation budget, not risk-sink default; litmus for any re-size: would this judgment hold at the old price? Sunk punches stay sunk - correction happens on forward allocation (parents tranche to market), not by selling into a no-falsification drawdown
