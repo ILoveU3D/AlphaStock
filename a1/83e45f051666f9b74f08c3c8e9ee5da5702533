@@ -1,0 +1,43 @@
+trading/seasons/s001.json
+  s_8f02864bc440f0::t_df8f68b68a3caf 555,591,593
+  s_8f02864bc440f0::t_5caa3cb87998ef 556,573,575,600,602,607-608,703-709
+  s_8f02864bc440f0::t_76b1c1f150242c 17,21,552-554,557-572,574,576-590,592,594-599,601,603-606,609
+trading/dashboards/s001.md
+  s_8f02864bc440f0::t_df8f68b68a3caf 4,10-12,16,22-26,32,65-68,77,80
+skills/15-trading.md
+  s_8f02864bc440f0::t_fdf83a4c049d57 17-18,86
+trading/dashboards/s002.md
+  s_8f02864bc440f0::t_1361a1269afc75 4,10-12,14-16,22-24,30,33-39,49,51,65-68,74,77
+trading/seasons/s002.json
+  s_8f02864bc440f0::t_24391b728c2689 21-29,171-196
+  s_8f02864bc440f0::t_76b1c1f150242c 279-281,283,285-308,310,312-315,318
+  s_8f02864bc440f0::t_1361a1269afc75 282,309,311
+  s_8f02864bc440f0::t_ed78f892c19715 284,316-317,349-355
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.2",
+  "base_commit_sha": "a183e45f051666f9b74f08c3c8e9ee5da5702533",
+  "prompts": {},
+  "sessions": {
+    "s_8f02864bc440f0": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa365f5a14192e21389c612",
+        "model": "glm-5.3__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "edit_kind": "bash",
+        "session_id": "6aa365f5a14192e21389c612",
+        "operation_id": "6aa3680ca14192e21389c66b",
+        "tool_use_id": "6aa3680ca14192e21389c66b",
+        "runtime_client": "trae-tob-git-ai",
+        "source_scene": "agent",
+        "external_session_id": "6aa365f5a14192e21389c612",
+        "client_type": "ide",
+        "tool_name": "RunCommand"
+      }
+    }
+  }
+}
