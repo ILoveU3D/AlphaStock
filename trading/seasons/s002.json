@@ -279,7 +279,7 @@
     },
     {
       "date": "2026-09-11",
-      "nav": 7426.29,
+      "nav": 7423.35,
       "cash_total": 5848.99,
       "settling_total": 438.56,
       "positions": [
@@ -288,18 +288,18 @@
           "code": "DAVE",
           "name": "Dave Inc-A",
           "qty": 1.0,
-          "price": 365.83,
+          "price": 363.7,
           "currency": "USD",
-          "value_base": 365.83
+          "value_base": 363.7
         },
         {
           "market": "US",
           "code": "CDE",
           "name": "科尔黛伦矿业",
           "qty": 23.0,
-          "price": 20.64,
+          "price": 20.605,
           "currency": "USD",
-          "value_base": 474.72
+          "value_base": 473.92
         },
         {
           "market": "A",
