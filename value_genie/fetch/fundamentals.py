@@ -215,6 +215,98 @@ def fetch_a_cashflow(quiet: bool = False) -> pd.DataFrame:
     return out
 
 
+# ---------------------------------------------------------------------------
+# A-share batch balance sheet (资产负债表 -> debt_ratio)
+# ---------------------------------------------------------------------------
+A_BALANCE_MAP = {
+    "SECURITY_CODE": "code",
+    "REPORT_DATE": "report_date",
+    "DEBT_ASSET_RATIO": "debt_ratio",
+}
+
+
+def _fetch_balance_page(report_date: str, page: int) -> dict:
+    """One page of the A-share balance sheet report for a report date."""
+    return DC.get_json(config.DC_WEB_URL, params={
+        "reportName": config.A_BALANCE_REPORT_NAME,
+        "columns": "ALL",
+        "filter": f"(REPORT_DATE='{report_date}')",
+        "pageNumber": page,
+        "pageSize": config.A_PAGE_SIZE,
+        "sortTypes": "1",
+        "sortColumns": "SECURITY_CODE",
+        "source": "WEB",
+        "client": "WEB",
+    }, retries=3) or {}
+
+
+def _parse_balance(d: dict) -> pd.DataFrame:
+    rows = ((d.get("result") or {}).get("data")) or []
+    cols = list(A_BALANCE_MAP.values())
+    if not rows:
+        return pd.DataFrame(columns=cols)
+    df = pd.DataFrame(rows)
+    keep = [c for c in A_BALANCE_MAP if c in df.columns]
+    df = df[keep].rename(columns=A_BALANCE_MAP)
+    if "debt_ratio" in df.columns:
+        df["debt_ratio"] = pd.to_numeric(df["debt_ratio"],
+                                         errors="coerce")
+    df["report_date"] = (df["report_date"].astype(str).str.slice(0, 10)
+                         if "report_date" in df.columns else "")
+    return df.drop_duplicates(subset="code", keep="first")
+
+
+def fetch_a_balance(quiet: bool = False) -> pd.DataFrame:
+    """Full-market A-share debt_ratio (DEBT_ASSET_RATIO) for the latest
+    report period, with previous-period backfill for late filers.
+
+    Without it every A row in master.csv carries debt_ratio = NaN and the
+    debt gates of the fundamental masters (buffett/munger/graham/duan/
+    sanhuyi) silently exclude the entire A market — NaN comparisons
+    fail every row.  Financials (LICO 业绩报表) carry no balance fields,
+    so this needs its own report (RPT_DMSK_FN_BALANCE).
+    """
+    dates = candidate_report_dates()
+    out = pd.DataFrame(columns=list(A_BALANCE_MAP.values()))
+    chosen = None
+    for i, rd in enumerate(dates):
+        d = _fetch_balance_page(rd.isoformat(), 1)
+        total = ((d.get("result") or {}).get("count")) or 0
+        if not quiet:
+            print(f"    [A] balance {rd}: {total} rows")
+        if total >= config.A_MIN_REPORT_ROWS:
+            chosen = rd
+            latest = pd.DataFrame()
+            for pn in range(1, total // config.A_PAGE_SIZE + 2):
+                page_df = _parse_balance(
+                    _fetch_balance_page(rd.isoformat(), pn))
+                if not page_df.empty:
+                    latest = pd.concat([latest, page_df],
+                                       ignore_index=True)
+                time.sleep(0.4)
+            prev = pd.DataFrame()
+            if i + 1 < len(dates):
+                prd = dates[i + 1]
+                d2 = _fetch_balance_page(prd.isoformat(), 1)
+                t2 = ((d2.get("result") or {}).get("count")) or 0
+                if t2:
+                    for pn in range(1, t2 // config.A_PAGE_SIZE + 2):
+                        page_df = _parse_balance(
+                            _fetch_balance_page(prd.isoformat(), pn))
+                        if not page_df.empty:
+                            prev = pd.concat([prev, page_df],
+                                             ignore_index=True)
+                        time.sleep(0.4)
+            out = merge_a_periods(latest, prev)
+            if not quiet:
+                print(f"    [A] balance: {len(out)} stocks "
+                      f"(period {chosen}, backfill {len(prev)})")
+            break
+    if chosen is None and not quiet:
+        print("    [A] WARN: no balance period found with enough rows")
+    return out
+
+
 def annual_report_dates(today: date | None = None, lookback: int = 2) -> list:
     """Recent 12-31 report dates, newest first (annual-reporting basis)."""
     today = today or date.today()

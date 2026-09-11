@@ -20,10 +20,10 @@ import pandas as pd
 from .. import config
 from ..strategy.composite import apply_composite
 from ..strategy.factors import PILLARS, add_pillar_scores, kline_metrics
-from .fundamentals import (fetch_a_cashflow, fetch_a_cashflow_annual,
-                           fetch_a_dividends, fetch_a_financials,
-                           fetch_a_financials_one, fetch_fx_hkdcny,
-                           fetch_hk_cashflow, fetch_hk_f10,
+from .fundamentals import (fetch_a_balance, fetch_a_cashflow,
+                           fetch_a_cashflow_annual, fetch_a_dividends,
+                           fetch_a_financials, fetch_a_financials_one,
+                           fetch_fx_hkdcny, fetch_hk_cashflow, fetch_hk_f10,
                            fetch_us_financials,
                            fetch_us_financials_one, frames_year_context)
 from .kline import (fetch_kline_any, kline_cache_path, kline_is_fresh,
@@ -74,15 +74,30 @@ def apply_gates(df: pd.DataFrame, market: str) -> pd.DataFrame:
 
 
 def merge_a_financials(quotes: pd.DataFrame, fins: pd.DataFrame | None,
-                       cashflow: pd.DataFrame | None = None) -> pd.DataFrame:
-    """Left-join A-share financials + operating cash flow; derive metrics."""
+                       cashflow: pd.DataFrame | None = None,
+                       balance: pd.DataFrame | None = None) -> pd.DataFrame:
+    """Left-join A-share financials + operating cash flow; derive metrics.
+
+    `balance` (RPT_DMSK_FN_BALANCE) supplies debt_ratio — the LICO
+    income report carries no balance fields, and without the merge A
+    rows keep debt_ratio = NaN, silently failing every debt gate in
+    the strategy registry (NaN comparisons are False).
+    """
     out = quotes.copy()
-    if fins is None or fins.empty:
-        return out
-    f = fins.drop_duplicates(subset="code")[
-        ["code", "report_date", "revenue", "rev_yoy", "profit", "profit_yoy",
-         "roe", "gross_margin"]]
-    out = out.merge(f, on="code", how="left")
+    if balance is not None and not balance.empty \
+            and "debt_ratio" in balance.columns:
+        b = balance.drop_duplicates(subset="code")[["code", "debt_ratio"]]
+        if fins is None or fins.empty:
+            fins = b
+        elif "debt_ratio" not in fins.columns:
+            fins = fins.merge(b, on="code", how="left")
+    if fins is not None and not fins.empty:
+        fin_cols = [c for c in ("code", "report_date", "revenue",
+                                "rev_yoy", "profit", "profit_yoy",
+                                "roe", "gross_margin", "debt_ratio")
+                    if c in fins.columns]
+        f = fins.drop_duplicates(subset="code")[fin_cols]
+        out = out.merge(f, on="code", how="left")
     if cashflow is not None and not cashflow.empty \
             and "ocf" in cashflow.columns:
         cf = cashflow.drop_duplicates(subset="code")[["code", "ocf"]]
@@ -725,6 +740,13 @@ def build_watchlist(snap_dir: Path, reuse_dirs: list,
             a_cf = pd.read_csv(p, dtype={"code": str})
         except (OSError, pd.errors.ParserError, ValueError):
             a_cf = None
+    a_bal = None
+    p = snap_dir / "a_debt.csv"
+    if p.exists():
+        try:
+            a_bal = pd.read_csv(p, dtype={"code": str})
+        except (OSError, pd.errors.ParserError, ValueError):
+            a_bal = None
     for market, rows in by_market.items():
         df = pd.DataFrame(rows)
         # snapshot quote rows already carry a market column
@@ -740,7 +762,7 @@ def build_watchlist(snap_dir: Path, reuse_dirs: list,
         if market == "A":
             fin = _watch_a_financials(list(df["code"].astype(str)),
                                       snap_dir)
-            df = merge_a_financials(df, fin, a_cf)
+            df = merge_a_financials(df, fin, a_cf, a_bal)
         elif market == "US":
             fin = _watch_us_financials(list(df["code"].astype(str)),
                                        snap_dir)
@@ -868,6 +890,7 @@ def run_fetch(markets=None, data_dir=None, refresh: bool = False,
 
     a_fin = None
     a_cf = None
+    a_bal = None
     if "A" in markets:
         a_fin = _load_or_fetch(snap_dir / "a_financials.csv",
                                lambda: fetch_a_financials(quiet=quiet),
@@ -875,6 +898,9 @@ def run_fetch(markets=None, data_dir=None, refresh: bool = False,
         a_cf = _load_or_fetch(snap_dir / "a_cashflow.csv",
                               lambda: fetch_a_cashflow(quiet=quiet),
                               "code", "A cashflow")
+        a_bal = _load_or_fetch(snap_dir / "a_debt.csv",
+                               lambda: fetch_a_balance(quiet=quiet),
+                               "code", "A balance")
         a_cf_ann = _load_or_fetch(
             snap_dir / "a_cashflow_annual.csv",
             lambda: fetch_a_cashflow_annual(quiet=quiet),
@@ -921,7 +947,7 @@ def run_fetch(markets=None, data_dir=None, refresh: bool = False,
             quotes.to_csv(qpath, index=False)
         # join batch financials before gating so the growth gate bites
         if market == "A":
-            df = merge_a_financials(quotes, a_fin, a_cf)
+            df = merge_a_financials(quotes, a_fin, a_cf, a_bal)
         elif market == "US":
             df = merge_us_financials(quotes, us_fin)
         else:
