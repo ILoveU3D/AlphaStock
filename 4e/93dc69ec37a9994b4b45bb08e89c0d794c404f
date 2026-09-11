@@ -1,0 +1,52 @@
+skills/06-investment-philosophy.md
+  s_3c99fe8dfdb128::t_061b4237b752ee 19-20,119
+skills/01-single-stock-analysis.md
+  s_3c99fe8dfdb128::t_e3b4725b47a3ab 79
+  s_335f840b1e51c8::t_7d906e3f4fb23d 12-13,80
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.2",
+  "base_commit_sha": "4e93dc69ec37a9994b4b45bb08e89c0d794c404f",
+  "prompts": {},
+  "sessions": {
+    "s_335f840b1e51c8": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa3f2caa330e28edcd52e85",
+        "model": "glm-5.3__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "runtime_client": "trae-tob-git-ai",
+        "external_session_id": "6aa3f2caa330e28edcd52e85",
+        "client_type": "ide",
+        "tool_name": "RunCommand",
+        "operation_id": "6aa3f435a330e28edcd52eba",
+        "session_id": "6aa3f2caa330e28edcd52e85",
+        "tool_use_id": "6aa3f435a330e28edcd52eba",
+        "source_scene": "agent",
+        "edit_kind": "bash"
+      }
+    },
+    "s_3c99fe8dfdb128": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa3b892a330e28edcd52ce2",
+        "model": "glm-5.3__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "source_scene": "agent",
+        "external_session_id": "6aa3b892a330e28edcd52ce2",
+        "tool_use_id": "6aa3f1bea330e28edcd52e81",
+        "operation_id": "6aa3f1bea330e28edcd52e81",
+        "tool_name": "RunCommand",
+        "client_type": "ide",
+        "session_id": "6aa3b892a330e28edcd52ce2",
+        "runtime_client": "trae-tob-git-ai",
+        "edit_kind": "bash"
+      }
+    }
+  }
+}
