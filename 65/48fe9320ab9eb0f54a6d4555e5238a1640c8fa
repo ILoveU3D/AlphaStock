@@ -1,0 +1,35 @@
+trading/seasons/s002.json
+  s_8f02864bc440f0::t_8c93ae4f59582b 282,309,311,356-362
+skills/15-trading.md
+  s_8f02864bc440f0::t_cb40d4805899b2 17-18,88
+  s_8f02864bc440f0::t_3b47907cd4daaa 87
+trading/seasons/s001.json
+  s_8f02864bc440f0::t_1131b5224fa4ba 555,573,575,591,593,600,602
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.2",
+  "base_commit_sha": "6548fe9320ab9eb0f54a6d4555e5238a1640c8fa",
+  "prompts": {},
+  "sessions": {
+    "s_8f02864bc440f0": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa365f5a14192e21389c612",
+        "model": "glm-5.3__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "session_id": "6aa365f5a14192e21389c612",
+        "tool_name": "RunCommand",
+        "external_session_id": "6aa365f5a14192e21389c612",
+        "source_scene": "agent",
+        "operation_id": "6aa399e6a14192e21389c6a4",
+        "tool_use_id": "6aa399e6a14192e21389c6a4",
+        "edit_kind": "bash",
+        "runtime_client": "trae-tob-git-ai",
+        "client_type": "ide"
+      }
+    }
+  }
+}
