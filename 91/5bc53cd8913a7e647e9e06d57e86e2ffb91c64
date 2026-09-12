@@ -1,0 +1,30 @@
+skills/06-investment-philosophy.md
+  s_3a1486bd2b6be0::t_2e7b380079d442 19-20,153
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.2",
+  "base_commit_sha": "915bc53cd8913a7e647e9e06d57e86e2ffb91c64",
+  "prompts": {},
+  "sessions": {
+    "s_3a1486bd2b6be0": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa41641a330e28edcd52ef7",
+        "model": "glm-5.3__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "runtime_client": "trae-tob-git-ai",
+        "client_type": "ide",
+        "operation_id": "6aa4dd08a330e28edcd5340e",
+        "tool_name": "RunCommand",
+        "edit_kind": "bash",
+        "external_session_id": "6aa41641a330e28edcd52ef7",
+        "source_scene": "agent",
+        "session_id": "6aa41641a330e28edcd52ef7",
+        "tool_use_id": "6aa4dd08a330e28edcd5340e"
+      }
+    }
+  }
+}
