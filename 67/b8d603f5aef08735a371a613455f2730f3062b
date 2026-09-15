@@ -1,0 +1,76 @@
+trading/seasons/s001.json
+  s_661dbd40ecae0b::t_ad5a74b2d1433b 826-832
+  s_661dbd40ecae0b::t_99918c8b7ddfc6 671,689,691,707,709
+  s_3a1486bd2b6be0::t_c557b42c4b1585 668-669,673-679,681,683-688,690,692-697,699,701-706,708,710-715,717,723
+  s_661dbd40ecae0b::t_4dc2d078d9d3e4 670,672,680,682,698,700,716,718,724
+  s_3a1486bd2b6be0::t_1196f6e842d493 719-722,725
+skills/15-trading.md
+  s_661dbd40ecae0b::t_e3bdd3f933e474 17-18,91
+trading/dashboards/s001.md
+  s_661dbd40ecae0b::t_125e08ccacbe36 4,10-12,16,22-26,32-33,65-66,68,77-79,82
+  s_3a1486bd2b6be0::t_1196f6e842d493 67
+trading/dashboards/s002.md
+  s_661dbd40ecae0b::t_8894e2d349b98e 4,10-12,14-16,22-25,31-33,35,46-47,63-64,66,72-74,77
+  s_3a1486bd2b6be0::t_1196f6e842d493 65
+trading/seasons/s002.json
+  s_3a1486bd2b6be0::t_c557b42c4b1585 396-397,402-407,409,411-416,418,420-425,427,442
+  s_661dbd40ecae0b::t_fbf4d547ee921b 496-502
+  s_661dbd40ecae0b::t_7f58c8fb4a3f66 400,429-434,436
+  s_3a1486bd2b6be0::t_1196f6e842d493 438-441,444
+  s_661dbd40ecae0b::t_cc68a5fbc2b4a3 18,52-61,212-233
+  s_661dbd40ecae0b::t_7044ac01da3399 17,21,398,401,408,410,417,419,443
+  s_661dbd40ecae0b::t_c596a3d6a58b50 19,199-211
+  s_661dbd40ecae0b::t_99918c8b7ddfc6 399,426,428,435,437
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.2",
+  "base_commit_sha": "67b8d603f5aef08735a371a613455f2730f3062b",
+  "prompts": {},
+  "sessions": {
+    "s_3a1486bd2b6be0": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa41641a330e28edcd52ef7",
+        "model": "glm-5.2__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "external_session_id": "6aa41641a330e28edcd52ef7",
+        "tool_use_id": "6aa8e216a330e28edcd53617",
+        "operation_id": "6aa8e216a330e28edcd53617",
+        "original_file_count": "9",
+        "client_type": "ide",
+        "edit_kind": "bash",
+        "source_scene": "agent",
+        "tool_name": "RunCommand",
+        "checkpoint_content_bytes": "251329",
+        "runtime_client": "trae-tob-git-ai",
+        "session_id": "6aa41641a330e28edcd52ef7",
+        "included_file_count": "9"
+      }
+    },
+    "s_661dbd40ecae0b": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa8b3d9a330e28edcd534d5",
+        "model": "glm-5.2__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "client_type": "ide",
+        "external_session_id": "6aa8b3d9a330e28edcd534d5",
+        "operation_id": "6aa8edaea330e28edcd53721",
+        "edit_kind": "bash",
+        "runtime_client": "trae-tob-git-ai",
+        "source_scene": "agent",
+        "checkpoint_content_bytes": "93504",
+        "session_id": "6aa8b3d9a330e28edcd534d5",
+        "included_file_count": "5",
+        "tool_use_id": "6aa8edaea330e28edcd53721",
+        "original_file_count": "5",
+        "tool_name": "RunCommand"
+      }
+    }
+  }
+}
