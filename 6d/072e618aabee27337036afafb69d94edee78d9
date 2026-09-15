@@ -1,0 +1,41 @@
+trading/dashboards/s001.md
+  s_56510618e23340::t_2873c731b1f7be 10-12,22-26,71-73,82
+trading/dashboards/s002.md
+  s_56510618e23340::t_2873c731b1f7be 10-12,22-25,31,45,56-58,64
+trading/seasons/s001.json
+  s_56510618e23340::t_d2c7dcff05db11 507,523,525,541,543,550,552,557-558
+  s_56510618e23340::t_ba705e3f9124fe 532,534,646-652
+  s_56510618e23340::t_2873c731b1f7be 505,514,516
+trading/seasons/s002.json
+  s_56510618e23340::t_ab051612b06fa8 218,220
+  s_56510618e23340::t_e5e86c292b1895 278-284
+  s_56510618e23340::t_d2c7dcff05db11 210,238,247,252-253
+  s_56510618e23340::t_2873c731b1f7be 209,227,229
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.2",
+  "base_commit_sha": "6d072e618aabee27337036afafb69d94edee78d9",
+  "prompts": {},
+  "sessions": {
+    "s_56510618e23340": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6aa2ba06a14192e21389c2f4",
+        "model": "glm-5.3__dev"
+      },
+      "human_author": "yukang.wang <yukang.wang@users.noreply.github.com>",
+      "custom_attributes": {
+        "runtime_client": "trae-tob-git-ai",
+        "operation_id": "6aa2bd92a14192e21389c356",
+        "session_id": "6aa2ba06a14192e21389c2f4",
+        "tool_name": "RunCommand",
+        "external_session_id": "6aa2ba06a14192e21389c2f4",
+        "edit_kind": "bash",
+        "source_scene": "agent",
+        "client_type": "ide",
+        "tool_use_id": "6aa2bd92a14192e21389c356"
+      }
+    }
+  }
+}
