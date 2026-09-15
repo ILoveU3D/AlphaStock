@@ -98,6 +98,7 @@ excluded when no USD rate, concentration observations verbatim).
 | "...but why / 证据" | single-stock-analysis | `python -m value_genie ask X --evidence` |
 | "X和Y哪个好 / X vs Y" | compare-stocks | `python -m value_genie compare X Y` |
 | "今天给我推荐股票（按我的风格、结合我的持仓）" | user-recommend | `python -m value_genie recommend --user me` |
+| "推荐/最被低估/量化+大师最优" | fused-quant-master | `python -m value_genie masters-vote` (L1/L2) + 7-master 定性层 (L3) + 融合裁决 (L4)，per skills/18 — user mandate 2026-09-15: 融合，不分情况讨论 |
 | "设置/修改我的投资风格" | user-profile | `python -m value_genie user set-style me --base buffett --weight value=0.3` |
 | "录入/修改/查看我的持仓" | user-portfolio | `python -m value_genie holding add|update|remove|list` |
 | "审视我的持仓 / 深度分析持仓" | holding-deep-review | `holding list` 先看体检，再 `ask X --evidence` per holding + `screen --strategy <master>` (business model, moat, culture, earn/lose paths, two master frameworks) |
@@ -168,16 +169,25 @@ position-sizing discipline.
 4. If resolution, data or coverage failed, say exactly what is missing
    — do not improvise numbers.
 5. Recommendation / holding analysis / trade decisions follow the
-   master-evaluation process (standard flow, not enforced — user
-   mandate 2026-09-06): run the relevant `screen --strategy <master>`
-   gates AND write the qualitative layer (business model, culture,
-   moat, earn/lose paths) per the master playbooks; close with
+   **QMF fused pipeline** (user mandate 2026-09-15: 融合，不分情况
+   讨论 — every recommendation outputs ONE quant+master-optimal pick):
+   **L1** `masters-vote` (7-master gate votes + mean composite, ranked
+   by consensus — never recommend from a single strategy's top rank) →
+   **L2** veto flags (cycle_trap = pe_divergence ≥ 1.5, cycle_warn ≥
+   1.25, profit_spike ≥ +200%, intel red flags: insider selling /
+   解禁减持 / 粉饰 / 借钱分红) → **L3** 7-master qualitative layer
+   (business model, culture, moat, earn/lose paths per the deepened
+   playbooks 07-12, 17) → **L4** AI fused verdict (user style + market
+   conditions; NOT a mechanical gate intersection). Close with
    position discipline per Duan — enter only if a -50% drawdown on the
    fully-understood business is tolerable, and size the position
    accordingly. Raw factor tables alone are not a deliverable. Duan's
    principle governs evidence direction (user quote, 2026-09-06):
    数据只能成为我不买这个股票的理由，不能成为我买的理由；我买
    的理由一定是看未来现金流，而这必须从商业模式和企业文化出发。
+   The GSL case (2026-09-15) is the calibration: quant #1 on two
+   strategies, 6:1 master veto — the fusion must catch that BEFORE
+   recommending (docs/analysis/20260915_undervalued_gsl.md).
 
 ## Self-refinement protocol (leave the toolkit smarter)
 
