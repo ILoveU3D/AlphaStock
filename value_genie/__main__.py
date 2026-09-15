@@ -5,6 +5,7 @@ Usage:
     python -m value_genie screen [--strategy balanced|buffett|garp|...]
                                  [--set value=0.4] [--top 20]
                                  [--markets A,HK] [--snapshot DATE]
+    python -m value_genie masters-vote [--top 15] [--no-live]
     python -m value_genie strategy list
     python -m value_genie source list
     python -m value_genie ask 茶百道 [--evidence] [--json]
@@ -158,6 +159,89 @@ def cmd_screen(args) -> int:
               "stocks": len(top)})
     print(f"\nwrote {csv_path}")
     print(f"wrote {md_path}")
+    return 0
+
+
+def cmd_masters_vote(args) -> int:
+    """QMF L1/L2: quant consensus pool + cycle-trap flags (code half)."""
+    if not _check_freshness(args):
+        return 1
+    markets = _parse_markets(args.markets)
+    try:
+        snap_dir = report.resolve_snapshot(args.data_dir, args.snapshot)
+        master = report.load_master(snap_dir)
+    except FileNotFoundError as exc:
+        raise SystemExit(str(exc)) from None
+
+    from .strategy import consensus as cs
+    from .strategy.registry import list_strategies
+
+    masters = [s.id for s in list_strategies(kind="master")]
+    df = cs.add_snapshot_flags(cs.masters_vote(master, markets=markets))
+    pool = df[df["vote_count"] >= 1]
+    if pool.empty:
+        raise SystemExit("no stocks passed any master's gates")
+    top = cs.rank_consensus(pool, top_n=args.top)
+
+    # L2 live pass: forward-PE divergence (A-shares only — the only
+    # market with a consensus-EPS source; HK/US gaps declared)
+    top["pe_divergence"] = None
+    top["cycle_trap"] = False
+    top["cycle_warn"] = False
+    top["data_gap"] = ""
+    for idx, row in top.iterrows():
+        if args.no_live or str(row.get("market")) != "A":
+            if str(row.get("market")) != "A":
+                top.at[idx, "data_gap"] = "no consensus-EPS source (HK/US)"
+            continue
+        div = cs.forward_pe_divergence(row)
+        if div is None:
+            top.at[idx, "data_gap"] = "consensus EPS unavailable"
+            continue
+        top.at[idx, "pe_divergence"] = round(div, 2)
+        if div >= cs.CYCLE_TRAP_RATIO:
+            top.at[idx, "cycle_trap"] = True
+        elif div >= cs.CYCLE_WARN_RATIO:
+            top.at[idx, "cycle_warn"] = True
+
+    if args.json:
+        meta = {"snapshot": snap_dir.name, "masters": masters,
+                "markets": markets or list(config.MARKETS),
+                "cycle_trap_ratio": cs.CYCLE_TRAP_RATIO,
+                "cycle_warn_ratio": cs.CYCLE_WARN_RATIO,
+                "profit_spike_pct": cs.PROFIT_SPIKE_PCT}
+        print(report.to_json(top, meta))
+        return 0
+
+    print("== Value Genie masters-vote (QMF L1/L2) ==")
+    print(f"snapshot : {snap_dir.name}")
+    print(f"masters  : {', '.join(masters)}")
+    print(f"markets  : {', '.join(markets or config.MARKETS)}")
+    print()
+    print(f"{'rank':>4} {'market':>6} {'code':>8} {'name':<14} "
+          f"{'price':>8} {'votes':>5} {'mean_comp':>9} "
+          f"{'pe_div':>6}  flags")
+    for i, (_, r) in enumerate(top.iterrows(), 1):
+        flags = []
+        if r.get("cycle_trap"):
+            flags.append("CYCLE_TRAP")
+        if r.get("cycle_warn"):
+            flags.append("cycle_warn")
+        if r.get("profit_spike"):
+            flags.append("profit_spike")
+        if r.get("data_gap"):
+            flags.append(f"gap:{r['data_gap']}")
+        div = r.get("pe_divergence")
+        div_s = f"{div:g}" if div is not None else "-"
+        name = str(r.get("name") or "")[:14]
+        print(f"{i:>4} {str(r.get('market')):>6} {str(r.get('code')):>8} "
+              f"{name:<14} {r.get('price', float('nan')):>8g} "
+              f"{int(r['vote_count']):>5} {r['mean_composite']:>9.1f} "
+              f"{div_s:>6}  {', '.join(flags)}")
+        print(f"{'':>4} masters: {r['masters_passed']}")
+    print("\nL1 = master-gate votes (quant); L2 = veto flags above; "
+          "L3/L4 (qualitative + fused verdict) run per "
+          "skills/18-fused-quant-master.md")
     return 0
 
 
@@ -872,6 +956,24 @@ def build_parser() -> argparse.ArgumentParser:
                     help="pure-JSON stdout (full precision, no file "
                          "exports)")
     ps.set_defaults(func=cmd_screen)
+
+    pmv = sub.add_parser(
+        "masters-vote",
+        help="QMF L1/L2: master-gate vote consensus + cycle-trap flags")
+    pmv.add_argument("--snapshot", default=None, metavar="YYYYMMDD",
+                     help="snapshot date (default: latest)")
+    pmv.add_argument("--top", type=int, default=config.DEFAULT_TOP_N,
+                     help=f"result count (default: {config.DEFAULT_TOP_N})")
+    pmv.add_argument("--markets", default=None, metavar="A,HK,US",
+                     help="markets to include (default: all)")
+    pmv.add_argument("--no-live", action="store_true",
+                     help="skip the live consensus-EPS divergence pass")
+    pmv.add_argument("--data-dir", default=None, help="data directory")
+    pmv.add_argument("--no-check", action="store_true",
+                     help="skip the freshness gate (testing only)")
+    pmv.add_argument("--json", action="store_true",
+                     help="pure-JSON stdout (full precision, no banners)")
+    pmv.set_defaults(func=cmd_masters_vote)
 
     psl = sub.add_parser("strategy", help="list registered strategies")
     # accept both bare `strategy` and the documented `strategy list`
