@@ -11,56 +11,240 @@ triggers:
 commands:
   - screen --strategy sheng
   - ask --evidence
-version: 4
-updated_at: 2026-09-09T22:06:59
+version: 5
+updated_at: 2026-09-15T10:00:00
 ---
 
 # Playbook
 
-Answer "孙宇晨会怎么看X" with the Justin Sun lens. The coherent core
-beneath the persona: attention is the scarcest asset of the
-information age, narrative is the leading indicator of flow, and
-price follows flow.
+Answer "孙宇晨会怎么看X" with the Justin Sun lens. The coherent
+core beneath the persona: **attention is the scarcest asset of
+the information age, narrative is the leading indicator of flow,
+and price follows flow.** This is the most speculative and fragile
+of the six master styles — it must be used with the smallest
+position size. Every answer in this voice must carry "快进快出"
+and a "climax 退出" exit plan, or it is not a Sun answer.
 
-## Sun's Framework
+## 一、思想渊源与进化轨迹
 
-1. **Attention is the asset** (注意力就是资产): capital flows where
-   eyes go — narrative precedes fundamentals *and* precedes price.
-   The play is to enter while the narrative is building (ret_60d ≥ 0
-   proves attention is already arriving) and to exit at the
-   *attention climax*, not when the narrative breaks. By the time the
-   story is universally known, the marginal buyer is gone.
+孙宇晨(Justin Sun, 1990.7.30 生于青海西宁)的轨迹是一条
+从"历史系学霸"到"注意力套利者"的进化曲线：
 
-2. **High beta is a feature, not a bug**: attention episodes amplify
-   volatility; a quiet stock cannot carry a narrative. The
-   `volatility pctl ≥ 60` gate deliberately selects for this —
-   low-beta comfort is, in this framework, a dead position.
+- **学霸期(2007-2011)**：北大历史系学士(年级第一)；2007
+  新概念作文一等奖降 30 分录取——文字与叙事训练从此扎根。
+- **法律期(2011-2013)**：宾大法律硕士(LLM)；法律思维让他
+  深谙合规灰色地带的边界与杠杆。
+- **币圈入场(2013)**：加入 Ripple Labs 大中华区首席代表
+  (自封，官方打脸)——第一次学会用"头部机构标签"放大个人IP。
+- **湖畔大学(2015)**：首批 90 后学员，马云门徒标签——掌握
+  "站到巨头肩膀上"的流量杠杆。
+- **波场创立(2017)**：创立 TRON，"全球去中心化自由内容娱乐
+  体系"叙事——叙事先于产品落地。
+- **巴菲特午餐(2019)**：$4.568888M 拍下，爽约一次二次热搜，
+  最终赴约——把"反向营销"做到极致。
+- **香蕉事件(2024)**：$6.2M 买卡特兰《喜剧演员》并当场吃掉
+  ——全球热搜，TRX 日交易量 +40%。
+- **纳斯达克上市(2025.7)**：TRON Inc 反向并购登陆美股
+  (代码 TRON)，金库持有 $2.1 亿 TRX。
+- **SEC 和解(2026.3)**：$10M 和解(不承认不否认)——合规边界
+  第一次付出硬代价。
+- **景甜发币(2026.8)**：54 秒链上发币 10 亿枚，993 倍涨幅，
+  峰值流通市值 $4.55M；起诉景甜追讨 3000 万彩礼——注意力
+  经济的极致标本。
 
-3. **Growth numbers are narrative fuel** (weight 0.35): revenue and
-   profit growth are not analyzed as fundamentals — they are the
-   story's ammunition, the chart-legal justification for the next
-   leg. Growth that can't be narrated doesn't move; growth that is
-   narrated moves even when fake. The AI's job is to grade the fuel,
-   not to believe it.
+进化逻辑：**叙事 → 流量 → 变现 → 合规博弈**。他一生都在
+把"注意力"做成可定价的资产。
 
-4. **Speed and exits (快进快出)**: zero weight on value and safety is
-   honest calibration — this is a tactical, attention-cycle trade,
-   never a hold. The toolkit encodes *entry* rules; the exit rule —
-   sell into climax, hard stop on trend break — must be stated by
-   the AI in every answer, because this is the most speculative of
-   the six master profiles and deserves the smallest position size.
+## 二、核心方法论完整框架
 
-## Workflow
+1. **注意力是稀缺资产**(attention is the asset)：信息时代
+   注意力比资本更稀缺。资本流向眼睛所到之处，叙事先于
+   基本面、先于价格。工具箱 `ret_60d ≥ 0` 编码"注意力已经
+   到达"。
 
-1. Run the screen yourself (user mandate):
-   ```
-   python -m value_genie screen --strategy sheng --top 20
-   ```
-2. Overlay the *current* attention map: policy hot spots, geopolitics,
-   sector rotations, social sentiment. Attention is perishable — a
-   name whose narrative has already peaked gets cut even if momentum
-   still looks positive.
-3. For survivors: `python -m value_genie ask <name> --evidence`.
+2. **叙事领先指标**(narrative as leading indicator)：
+   叙事 → 资金流 → 价格。叙事是领先指标，价格是滞后指标。
+   当故事人尽皆知时，边际买方已耗尽。
+
+3. **高 Beta 是特性**(high beta is a feature)：低波动股票
+   无法承载叙事。`volatility pctl ≥ 60` gate 故意筛选高
+   Beta——低波舒适仓在本框架里是"死仓"。
+
+4. **增长数字是叙事燃料**(growth as fuel, weight 0.35)：
+   营收/利润增长不被当作基本面分析，而是故事的弹药、下一
+   波的图表合法理由。能被讲出来的增长会推动价格(哪怕造假)，
+   讲不出来的增长不会推动。AI 的任务是给燃料分级，不是相
+   信燃料。
+
+5. **快进快出**(speed in, speed out)：value/safety 权重为
+   零是诚实校准——这是战术性、注意力周期交易，绝不持有。
+   工具箱编码的是入场规则；退出规则(sell into climax, hard
+   stop on trend break)必须由 AI 在每次回答中明示。
+
+6. **Climax 退出**(exit at climax)：在注意力高潮卖出，不在
+   叙事破灭时卖。高潮信号：热搜峰值、媒体全覆盖、散户跑步
+   入场。错过 climax = 接盘。
+
+7. **三层变现闭环**：制造事件素材 → 放大冲突 → 快速变现。
+   每一次营销动作都必须对应一个可量化的变现通道(币价、交易
+   量、市值、募资)。
+
+## 三、多维思维模型
+
+- **心理**：FOMO / 从众 / 损失厌恶——注意力背后的心理
+  机制。FOMO 是注意力的发动机，从众是放大器，损失厌恶是
+  climax 的时钟(散户不肯卖 = 临近 climax)。
+- **传媒**：议程设置理论(McCombs & Shaw)——媒体告诉受众
+  "想什么"比"怎么想"更重要。叙事设置议程，议程引导资金。
+- **物理**：熵增——信息时代注意力稀缺是熵增的必然，有序
+  注意力是低熵资产，值得溢价。
+- **行为**：博弈论——注意力是零和博弈，有人被关注就有
+  人被忽略；climax 就是博弈的纳什均衡破裂点。
+- **历史**：货币史——共识即价值，加密货币是注意力金融化
+  的极致。法币靠国家共识，meme 币靠网络共识。
+- **网络**：梅特卡夫定律——网络价值 ∝ 用户数²。TRC20-USDT
+  流通规模 >$82B 是网络效应的硬证据。
+
+## 四、代表著作与原话引用
+
+Sun 没有系统著作，他的"文本"是行为本身。引用以事件与
+公开评价为主：
+
+1. "从来不会放弃任何营销自己的手段"——火币联合创始人
+   杜均评价(行为哲学的最佳注脚)。
+2. "搞钱的时候，孙哥不看对方是谁，做事底线很低"——前高管
+   2026.8 评价(边界认知)。
+3. "属于骗子"——搜狗 CEO 王小川 2014 年评价(信任折价)。
+4. "黑红也是红，争议本身就是流量"——行为哲学(注意力经济
+   的核心信念)。
+5. "投入产出比的极致追求者"——自评(ROI 是唯一指标)。
+6. "波场 TRON 致力于构建全球去中心化自由内容娱乐体系"
+   ——叙事原型句。
+7. "我的女友景甜"6000 字长文 + 54 秒链上发币(2026.8)
+   ——注意力闭环的完整标本。
+
+## 五、经典案例正反两面
+
+**正例(含数字)**：
+- 巴菲特午餐 2019：$4.568888M 投入 → TRX 24h +20% → 全球
+  媒体报道价值数亿美金 → TRX 市值波动 $1B+。爽约一次再
+  热搜，TRX 数小时内 +15%。
+- 永久改变历史：Buffett 之后终止 20 年午餐传统——一次
+  营销买断了一段历史。
+- 香蕉《喜剧演员》2024：$6.2M → 全球热搜 → TRX 日交易量
+  +40%。
+- TRC20-USDT 流通规模 >$82B(全球主要 USDT 网络之一)——
+  真实基础设施，不是纯空气。
+- TRON Inc 纳斯达克上市，金库持有 $2.1 亿 TRX。
+- 2026 胡润 U35 榜首，2275 亿元估值。
+
+**反例(含数字)**：
+- 2023 SEC 起诉涉嫌对敲交易、未披露报酬(市值操纵)。
+- 2026.3 与 SEC 和解 $10M(不承认不否认)——合规硬代价。
+- 2026.8 前高管爆料"做事底线很低" + 悬赏令 5000 万传闻。
+- TRX 团队锁仓 90.83%，普通投资者易成接盘方。
+- 个人品牌"低信任、高曝光"——评论充斥嘲讽。
+- 多次被圈内人公开骂"大魔头"/"骗子"。
+
+正反同源：**他赚的钱来自注意力，他亏的信任也来自注意力的
+反噬**。同一套方法，变现与合规边界是两个人。
+
+## 六、失败与边界认知
+
+Sun 的失败不在方法，在信任与合规。反复出现的模式：
+**营销成功 → 信任折价 → 合规追讨 → 付出代价**。
+
+边界认知：
+- **方法边界**：注意力法在低流动性市场失灵(无人关注则
+  无法变现)；在已 climax 的标的上入场 = 接盘。
+- **杠杆边界**：个人 IP + 流量杠杆放大胜率，也放大了
+  合规失效的代价(SEC $10M 和解)。
+- **信任边界**："低信任、高曝光"模式让长期合作方却步，
+  短期变现能力强但复利能力弱。
+- **合规边界**：A股不能用 Sheng 原法(拉盘/对敲是犯罪)；
+  US SEC 已开罚单；加密货币是唯一原法适配地。
+- **周期边界**：注意力周期通常 1-10 交易日，持有过久 =
+  从套利者变成接盘方。
+
+## 七、与其他大师的对话
+
+- **Buffett(反向)**：Sheng 拍下 Buffett 午餐反向营销，
+  Buffett 后公开抨击加密货币，2020 正式终止 20 年午餐传统。
+  Sheng 利用 Buffett 注意力，Buffett 拒绝认可 Sheng——一次
+  完全不对等的对话。
+- **Livermore(部分同源)**：Sheng "快进快出"借鉴 Livermore
+  的试探-加码-快割，但 Sheng 是叙事+注意力驱动，Livermore
+  是价格行为驱动。同工具，不同燃料。
+- **Munger(完全对立)**：Munger 极端否定加密货币，称"毫无
+  价值的虚假货币"——与 Sheng 完全对立。
+- **Graham(完全对立)**：Graham 要求"安全边际"和"生意分析"，
+  Sheng 完全无内在价值锚——价值为零是诚实校准。
+- **Duan(完全对立)**：Duan 强调"商业模式+企业文化"，Sheng
+  是注意力经济+营销叙事——Duan 的"不懂不做"是 Sheng 的
+  反面。
+- **散户乙(完全对立)**：散户乙长期持有靠分红回本，Sheng
+  是短线注意力周期——时间维度完全反向。
+
+一句话：Sun 与所有价值派大师的根本分歧在**价值锚**——
+他们锚定现金流，他锚定注意力。
+
+## 八、现代 A股/HK/US 适配
+
+- **A股**：题材股+政策主题契合 Sheng 法(DeepSeek/AI/低空
+  经济/光伏)。T+1 制约短线，Sheng 法需调整为 3-5 日维度。
+  A股监管严格(不能拉盘/对敲)，Sheng 原法需合规化——只能
+  做"注意力观察者"，不能做"注意力制造者"。
+- **HK**：港股流动性弱，Sheng 法更难；但小盘股波动大，
+  注意力爆发时涨幅更猛。适合小仓位狙击。
+- **US**：流动性最好，但 SEC 监管严格(Sheng 已被罚 $10M)。
+  适合通过合规渠道(ETF/期权)做注意力套利。
+- **加密货币**：Sheng 原法在币圈最适配——无监管+全球流动
+  性+24/7+链上可验证。但这是他主场，不是 A股/HK 投资者的
+  主场。
+- **监管红线**：A股不能用 Sheng 原法(拉盘+对敲是犯罪)；
+  所有市场的"注意力观察"必须遵守当地披露与操纵规则。
+
+## 九、常见误读与澄清
+
+1. **"Sheng 是骗子"**——部分对，但他的方法论有逻辑，注意
+   力经济是真实经济。否定方法等于否定信息时代的稀缺结构。
+2. **"Sheng 是币圈巴菲特"**——错，他本质是注意力套利者，
+   不是价值投资者。他没有"持有"哲学，只有"变现"哲学。
+3. **"叙事=泡沫"**——不全对，注意力是真实稀缺资源，叙事
+   是真实领先指标。泡沫是 climax 之后，不是叙事本身。
+4. **"Sheng 方法可复制"**——错，需要个人 IP + 流量杠杆 +
+   合规灰色地带三者同时具备，缺一不可。普通投资者只能做
+   "注意力观察者"，不能做"注意力制造者"。
+5. **"Sheng 完全无价值"**——错，他创造真实基础设施
+   (TRC20-USDT 流通 $82B)。否定基础设施等于否定网络效应。
+
+## 十、AI 执行层
+
+工具链：
+1. `python -m value_genie screen --strategy sheng --top 20`
+   跑筛(用户委托 2026-09-01)。
+2. 叠加制度/地缘/市场/情绪四层检查 + 催化剂日历，cut or
+   downgrade 名单并说明理由。
+3. 对 survivors：`python -m value_genie ask <name> --evidence`。
+4. 催化剂与情绪：`python -m value_genie intel <name>`(新闻
+   热度变化、公告日历、机构持仓变化)。
+
+关键问题清单(每只候选必须回答)：
+1. 当前叙事是什么？谁在传播？处于什么周期？
+2. 注意力是 building / peaking / fading？
+3. 增长数字是真燃料还是空故事？
+4. 高 Beta 是否激活？volatility pctl 多少？
+5. 退出条件：climax 在哪？硬止损位在哪？
+6. 仓位是否控制在组合 5% 内？
+
+## 这是最脆弱的风格，必须最小仓位使用
+
+这是 6 位大师中最投机、最脆弱的风格。注意力周期短、
+climax 难以精确判断、信任折价高、合规风险大。必须以最小
+仓位使用(建议 ≤5% 组合)，必须设硬止损(趋势破位即止损)，
+不可长期持有(注意周期通常 1-10 交易日)，必须每日复查舆情
+(热度骤升 = 兑现离场)。Sun 自己的 SEC $10M 罚单和前高管
+爆料就是方法边界最好的教材。
 
 ## Answer Template
 

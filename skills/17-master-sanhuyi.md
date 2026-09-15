@@ -12,101 +12,251 @@ commands:
   - screen --strategy sanhuyi
   - ask --evidence
   - intel X
-version: 3
-updated_at: 2026-09-10T23:40:31
+version: 4
+updated_at: 2026-09-15T10:00:00
 ---
 
 # Playbook
 
-Answer "散户乙会怎么看X" with the free-shares lens: the goal of owning
-stocks is not CNY profit but a growing pile of **fully-paid-for
-claims on future cash flows** — "股票的目的不是赚利润，而是赚取
-免费的股票，通过增值卖出收回成本，或者通过分红，达到获得免费
-股票，然后长期持有"（user-introduced 2026-09-10）.
+Answer "散户乙会怎么看X" with the free-shares lens: 股票的目的
+不是赚利润，而是赚取免费的股票，通过增值卖出收回成本，或者通
+过分红，达到获得免费股票，然后长期持有。这是把 DCF 普适律翻
+译为普通人可执行形式的一套方法论——你拥有的价值 = 未来分红
+流的折现，市场每天的报价只是对你产权的重新估值，企业现金流才
+是事实。
 
-## Sanhuyi's Framework
+## 1. 思想渊源与进化轨迹
 
-1. **计价单位从"元"换成"股"**. Your wealth is shares × per-share
-   cash flow, not the ticker's last print. The market quotes your
-   property daily; only the business's cash generation is fact.
-   This is the retail-executable form of the DCF universal law:
-   the value you own = the future dividend stream, discounted.
+散户乙，雪球 ID"一MAN"，自称"智商平庸的普通人"，三十年投资
+生涯把 2 万本金滚到 5 亿规模（年化约 15%）。不卖课、不接广告、
+财富自由后注销社交账号回归生活。投资生涯四阶段：
 
-2. **Two paths to free shares** (either makes the remaining
-   position psychologically permanent):
-   - **增值卖出收回成本** — after appreciation, sell the fraction
-     equal to cost; what remains cannot lose you money. For
-     good-but-not-keyhole positions only.
-   - **分红收回成本** — let dividends return the cost; shares stay
-     intact and keep compounding. The ONLY path compatible with
-     keyhole positions — selling to recover cost shrinks the
-     terminal-value exposure the whole system exists to build.
+1. **技术分析投机者**：K 线、技术指标——亏损。
+2. **趋势投资者**：判断市场牛熊——亏损。
+3. **价值投资初级**：关注企业业绩和增速，寻找"更好的标的"
+   ——有赚但仍在交易者坐标系。
+4. **股权思维（现阶段）**：投资股票就是投资企业的一部分；看
+   十年比较清楚的企业；以分红作为衡量盈利的坐标。
 
-3. **The engine is REAL cash return**. Gates: ROE ≥15 (dividends
-   can grow), OCF yield ≥4 (funded by operations), 股息率 ≥2.5
-   (the payout exists and is meaningful — pipeline computes it for
-   A/HK/US from annual div_paid ÷ market cap since 2026-09-10),
-   负债率 ≤60, and the borrowed-dividend veto — 借钱分红 = fake
-   free shares, the "dividend" is principal being returned, not
-   cash flow.
+2008–2013 五年空仓期，深度阅读《巴菲特传》——这是股权思维
+的精神源头。2013 重仓泸州老窖，2021 切换中国神华，两次钥匙孔
+级决策。第四阶段是其方法的完整态，前三阶段是路径依赖的反例
+教材。
 
-4. **Holding psychology is the product**. Once cost is recovered,
-   drawdowns stop being threats — the shares are free — and a
-   great compounder can be held through -50% noise. This is the
-   behavioral bridge to Buffett's "our favorite holding period is
-   forever", which retail investors otherwise cannot execute.
+## 2. 核心方法论完整框架
 
-5. **The recovery arithmetic** (say it with numbers):
-   - flat yield y: ~1/y years to recover cost;
-   - yield growing at g: ~ln(1+g/y)/ln(1+g) years
-     (e.g. y=3%, g=8% → ~17 years);
-   - dividend reinvestment (buying more shares on dips) shortens
-     it further — 散户乙's actual practice.
+1. **股权思维为本**：买企业所有权，看长期盈利能力，不看 K 线
+   与情绪。"买企业不是炒股票，看盈利、现金流、分红"。
+2. **计价单位从"元"换成"股"**：wealth = shares × per-share
+   cash flow。市场只是每天给你产权重新报价。
+3. **两条路径获得免费股票**：
+   - **增值卖出收回成本**：股价上涨后卖出等于成本的那部分，
+     剩下的不会让你亏钱——适用于好但非钥匙孔仓位。
+   - **分红收回成本**：让分红把成本拿回来，股份原封不动继续
+     复利——**钥匙孔仓位唯一兼容路径**，卖出收回成本会缩小
+     整套系统存在的终值敞口。
+4. **REAL cash return**（核心硬准则）：
+   - ROE ≥ 15%（分红可增长）
+   - OCF yield ≥ 4%（运营资助，不是借钱发）
+   - 股息率 ≥ 2.5%（payout 存在且有意义）
+   - 负债率 ≤ 60%
+   - **借钱分红 veto**：fake free shares，"分红"是本金返还
+     而非现金流——直接否决。
+5. **树论模型**：股票是树，分红和利润是果实，牛市估值提升是
+   偶尔撞上树的兔子。不指望兔子，专注种树。
+6. **涨跌皆赢逻辑**：三维动态平衡——股价上涨 = 市值增加；
+   股价下跌 = 同样分红买更多股份，成本下降，未来分红基数
+   增加。
+7. **极端情景预判**：买入前评估企业最坏生存能力。
+8. **零杠杆纪律**：坚决不用杠杆。
+9. **集中持仓策略**：仅 2-3 只深度研究的标的，仓位 90%+。
+10. **逆向布局**：市场恐慌期布局，"买入即忘"避免情绪化交易。
+
+## 3. 多维思维模型
+
+- **数学**：复利 + 反推。十年回本 = 年均股息率 10%；分红再投
+  可缩短至 3-4 年（如神华）。
+- **心理**：从交易者→所有者的坐标系转换。"我的投资维度变了，
+  衡量盈亏的坐标也就变了。高卖低买，趋势，牛熊，也就不再是
+  考虑因素"。
+- **物理**：树论（生态稳定模型）——系统稳定性来自根系而非
+  风口的兔子。
+- **哲学**：股权思维即产权思维，所有者 vs 交易者的本体转换。
+- **行为**：买入即忘 + 少看盘，把情绪从执行链路中剔除。
+- **历史**：30 年 A 股穿越，见过四阶段全部错误路径，第四阶段
+  是收敛后的稳态。
+
+## 4. 代表著作与原话引用
+
+无正式出版著作，全部为雪球问答集（百万字）。关键原话：
+
+1. "股票的目的不是赚利润，而是赚取免费的股票，通过增值卖出
+   收回成本，或者通过分红，达到获得免费股票，然后长期持有"
+   （核心定义）。
+2. **"投资十年，靠分红收回投资。投资二十年，一年分红是当初
+   投资额的一半"**（中期+长期目标，量化锚）。
+3. "目前投资我更关心分红。追热点牛股、判断大盘趋势做波段，
+   每年总结一下赚或亏了多少钱，这些事情对我来说已经是过去
+   式了"（2017）。
+4. "现金分红比例大的公司，如果造假，只会有隐瞒利润的动机；
+   不分红的公司，如果造假，就会夸大利润"（分红=诚信试金石）。
+5. "你看，我的投资维度变了，衡量盈亏的坐标也就变了"（坐标
+   系转换）。
+6. 树论：股票是树，分红和利润是果实，牛市估值提升是偶尔撞
+   上树的兔子。
+7. "买得便宜、拿得长久、活得自在"（普通人可借鉴三句）。
+8. "十年回本意味着年均股息率要达到 10%"（量化目标）。
+
+## 5. 经典案例正反两面
+
+### 正例一：泸州老窖 2013–2021
+- 买入均价约 20 元（含不断加仓，最低 15 元）。
+- 起始股息率约 5%（每股分红 0.8–1 元）。
+- 持有 8 年，分红再投后成本降至 3 元多。
+- 2021 年初股价涨至 250 元（10 年 15–30 倍）。
+- 净利润从 15 亿→80 亿，ROE 从 8%→30%+。
+- 单票占比 90%+。
+
+### 正例二：中国神华 2021–至今
+- 买入均价约 17 元（PB≈0.55，初始股息率 12.5%）。
+- 累计分红 6.9 元/股，成本降至 7–10 元。
+- 近年每股分红 >2 元，股息率 28%+（成本视角）。
+- 股价从 16 元→最高 35+ 元。
+- 煤炭+发电一体化抗周期，是钥匙孔级长期仓位。
+
+### 反例
+- 早期技术分析投机阶段：亏损。
+- 早期趋势投资阶段：亏损。
+- 切换老窖→神华后老窖继续涨（短期踏空）。
+- 但长期看：老窖 2021–2024 跌 50%+，散户乙逃顶成功——
+  钥匙孔切换的代价可接受。
+
+## 6. 失败与边界认知
+
+- **假高股息陷阱**：靠变卖资产换一次性高分红，分红收回成本
+  变成"本金返还收回成本"——veto。
+- **借钱分红**：veto，不是现金流是本金返还。
+- **风格风险**：市场修复时主线未必是红利，跑输是常态代价。
+- **极端下行**：31 种红利指数平均下跌 14.97%，最大回撤
+  -19.23%——必须能承受。
+- **价值陷阱**：行业永久衰退，分红不可持续。
+- **持仓过度个股风险**：单票 90%+ 在黑天鹅下风险极高。
+
+## 7. 与其他大师的对话
+
+- **Buffett（精神先辈）**：股权思维源自《巴菲特传》，"我们
+  最喜欢的持有期是永远"被散户乙翻译为"成本收回后可扛 -50%
+  噪音"。
+- **Duan（中国同源）**：Duan 长期持有+企业本质 vs 散户乙长期
+  持有+分红回本——两条路径同一根源。散户乙方法不卖茅台而
+  卖神华是 Duan 级生意判断。
+- **Graham（间接传承）**：安全边际通过低 PB 买入（神华
+  PB≈0.55）。
+- **散户乙 vs Livermore**：完全反向——长期持有 vs 交易，树
+  vs 兔子。
+- **散户乙 vs Munger**：集中持仓（2-3 只）一致，但散户乙的
+  心理工具是分红回本而非 Munger 的"反过来想"。
+- **散户乙 vs Sheng**：散户乙长期持有 vs Sheng 短线注意力
+  周期，互为镜像。
+
+## 8. 现代 A股/HK/US 适配
+
+- **A 股（主战场）**：0% 股息税（持有 >1 年），红利股丰富，
+  银行/煤炭/能源/电力是典型红利股，监管新规鼓励分红。与散
+  户乙长期持有天然契合。
+- **HK**：港股股息率高（神华 H/汇丰/移动），但有 20% 红利
+  税，回本算术需扣除税。
+- **US**：US 高股息股相对少，有 30% 红利税，**不适合散户乙
+  法**——若要用，仅限 MLP/REITs 等特殊结构且税后仍 ≥2.5%。
+- **税务**：A 股持有 >1 年股息税 0%，是散户乙方法的隐形
+  加速器。
+- **监管**：A 股鼓励分红（新规要求分红比例），方法论环境
+  友好。
+
+## 9. 常见误读与澄清
+
+1. **"散户乙=只买高股息"** — 错。要求 ROE ≥15 + OCF yield
+   ≥4 + 股息率 ≥2.5，是综合筛选，单一高股息会撞假高股息
+   陷阱。
+2. **"十年回本=机械 10 年"** — 错。分红再投可缩短至 3-4 年
+   （如神华），10 年是 y=10% 的平价算术基准。
+3. **"成本收回=卖出触发"** — 错。是持仓心理工具，卖出触发
+   仍是生意级证伪（产品/文化/模式逻辑破）。
+4. **"免费股票=经济免费"** — 错。是情绪免费，机会成本仍
+   存在，剩余资本仍被 DCF。
+5. **"散户乙方法=被动持有"** — 错。需要主动逆向布局 + 深度
+   研究，买入即忘不等于买入即懒。
+
+## 10. AI 执行层
+
+### 命令链
+1. `python -m value_genie screen --strategy sanhuyi --top 20`
+   ——跑硬准则筛。
+2. 对幸存者 `python -m value_genie ask X --evidence`——跑
+   证据层（ROE/OCF/分红历史）。
+3. `python -m value_genie intel X`——跑舆情（分红方案变化、
+   管理层诚信、行业景气）。
+   - `dividend_yield` 来自 pipeline（A: 东财分红事件表按宣告
+     年聚合；HK: F10 DIVIDEND_RATE 优先，div_paid fallback；
+     US: SEC frames），是年度基，新近发起/削减的公司显示
+     旧 yield，必须用 intel 公告层交叉验证新鲜分红变化。
+
+### 关键问题清单
+1. 这家企业 10 年后会是什么样？ROE 能否维持 ≥15%？
+2. OCF yield ≥4%？分红是真现金流还是借钱（veto）？
+3. 股息率 ≥2.5%？分红历史连续性？
+4. 这是不是钥匙孔仓位？若是，必须走分红收回路径，卖出收回
+   成本会缩小终值敞口。
+5. 极端情景下企业能否生存？
+6. 10 年回本算术：当前股息率 + 分红再投 → 几年回本？
+
+### 回本算术（say it with numbers）
+- 平价 y：约 1/y 年（y=10% → 10 年）。
+- 分红增长 g：约 ln(1+g/y)/ln(1+g) 年（y=3%, g=8% → ~17
+  年）。
+- 分红再投（下跌时买更多股份）进一步缩短——散户乙的实际
+  做法，神华案例把它压到 3-4 年。
 
 ## Hard limits — state these in EVERY answer
 
-1. **Cost recovery is a position-psychology tool, NEVER a sell
-   trigger.** The exit trigger stays business-level falsification
-   (Duan layer). Waiting to "recover cost before selling" rides a
-   falsified business to zero (康美-style).
-2. **"Free" shares still carry opportunity cost** — the remaining
-   capital still gets DCF'd. Free means emotionally free, not
-   economically free.
-3. **The method selects nothing** — it presupposes a durable
-   compounder was chosen first, via business model + culture
-   analysis. It stacks on top, it never replaces.
-4. **No-dividend compounders cannot walk the dividend path.** For
-   them, sell-to-recover kills the compounding machine (Buffett's
-   own regret); the playbook reduces to hold / add on business
-   strength / never trim for cost recovery.
+1. **成本收回是持仓心理工具，永不作为卖出触发。** 卖出触发
+   仍是生意级证伪（Duan 层）。等"成本收回再卖"会把证伪的
+   生意一路扛到零（康美式）。
+2. **"免费"股票仍带机会成本**——剩余资本仍被 DCF。Free 指
+   情绪免费，不是经济免费。
+3. **方法本身不选股**——它预设先选到耐用复利机器（生意模式+
+   文化分析），方法是叠加层，从不替代。
+4. **无分红复利机走不了分红路径**——对它们，卖出收回成本会
+   杀掉复利机器（Buffett 自己的遗憾）；剧本退化为持有 / 按
+   生意强度加仓 / 永不为成本收回而减仓。
+5. **借钱分红 veto**——"分红"是本金返还，fake free shares，
+   直接否决，无论账面股息率多高。
+6. **钥匙孔兼容性**（用户原则）：分红收回成本是钥匙孔仓位
+   唯一允许的免费股路径；增值卖出收回成本仅用于非钥匙孔
+   仓位，且永不凌驾于生意级证伪卖出触发之上。
 
 ## Workflow
 
-1. Run the screen yourself (user mandate):
+1. 自己跑筛（用户授权）：
    ```
    python -m value_genie screen --strategy sanhuyi --top 20
    ```
-2. For survivors ask the dividend question: will this business pay
-   OUT (not borrow) a growing dividend in year 10? Run
-   `python -m value_genie ask X --evidence` plus `intel X`.
-   dividend_yield comes from the pipeline for all markets (A: 东财
-   分红事件表 aggregated per declaration year; HK: F10 DIVIDEND_RATE
-   with div_paid fallback; US: SEC frames) — annual-basis, so a
-   company that recently initiated/cut its payout shows the OLD
-   yield; cross-check intel 公告层分红方案 for fresh changes.
-3. State which path fits this position (sell-recovery /
-   dividend-recovery / neither — no real payout) and the years-to-
-   recovery arithmetic under path 5.
+2. 对幸存者问分红问题：这家企业第 10 年会真金白银（不是借
+   钱）地分出一条增长的分红吗？跑 `ask X --evidence` 加
+   `intel X`。
+3. 指出该仓位适合哪条路径（卖出收回 / 分红收回 / 都不行——
+   无真实 payout），并按回本算术给出 N 年回本数。
+4. 若是钥匙孔仓位，明确标注"必须走分红收回路径"。
 
 ## Answer Template
 
-> [Verdict]. Free-share engine: ROE X%, OCF yield Y%, dividend
-> yield Z%, dividend [growing/stale/none — annual basis, check intel
-> for fresh payout changes], borrowed-dividend [clean/veto]. Path:
-> [sell-recovery / dividend-recovery / neither].
-> Years to free shares: [N at current yield; M if dividends grow at
-> g]. The business this rests on: [one sentence on 10-year dividend
-> durability]. [Risk flags verbatim]. Data as of [snapshot date].
+> [一句话结论]. 免费股引擎：ROE X%，OCF yield Y%，股息率 Z%，
+> 分红[增长/停滞/无——年度基，查 intel 公告层新鲜变化]，借钱
+> 分红[干净/veto]. 路径：[卖出收回/分红收回/皆不适用]. 钥匙孔
+> 仓位：[是/否]，若是 → 必须分红收回路径. 回本年限：[当前
+> yield 下 N 年；若分红增速 g 则 M 年]. 生意底座：[一句话讲
+> 10 年分红耐用性]. [风险标帜 verbatim]. 数据截至 [snapshot
+> date].
 
 ## Field Notes
 - [2026-09-10 22:45] (ai) sanhuyi registered as master #7 (user-introduced folk master). dividend_yield deliberately NOT a gate: master.csv populates it for HK only (106/123; A 0/200, US 0/181) — a hard gate would silently kill A/US. Future: merge A dividend_yield from a_dividends.csv (div_paid ÷ market cap per code) into the pipeline, then add ("dividend_yield", ">=", 2.5).
