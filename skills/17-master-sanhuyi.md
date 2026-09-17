@@ -12,8 +12,8 @@ commands:
   - screen --strategy sanhuyi
   - ask --evidence
   - intel X
-version: 4
-updated_at: 2026-09-15T10:00:00
+version: 5
+updated_at: 2026-09-17T00:01:14
 ---
 
 # Playbook
@@ -262,3 +262,4 @@ Answer "散户乙会怎么看X" with the free-shares lens: 股票的目的
 - [2026-09-10 22:45] (ai) sanhuyi registered as master #7 (user-introduced folk master). dividend_yield deliberately NOT a gate: master.csv populates it for HK only (106/123; A 0/200, US 0/181) — a hard gate would silently kill A/US. Future: merge A dividend_yield from a_dividends.csv (div_paid ÷ market cap per code) into the pipeline, then add ("dividend_yield", ">=", 2.5).
 - [2026-09-10 22:45] (ai) Keyhole compatibility (user 钥匙孔原则): the dividend-recovery path is the only free-share path allowed on keyhole positions; sell-to-recover-cost is for non-keyhole positions only and NEVER overrides the business-falsification exit trigger.
 - [2026-09-10 23:40] (ai) A-share dividend gap closed 2026-09-10: add_cashflow_factors now derives dividend_yield = annual div_paid / market_cap for ALL markets (A: 东财分红事件表 aggregated per declaration year; HK: F10 DIVIDEND_RATE wins, div_paid fallback; US: SEC frames). sanhuyi gate dividend_yield>=2.5 is live. Snapshots built before this fix show A dividend_yield null — refetch before screening sanhuyi; the yield is annual-basis, so fresh payout changes need the intel 公告层 cross-check.
+- [2026-09-17 00:01] (ai) 散户乙持有人税务与周期免疫框架(2026-09-16用户指正): ①QDII红利ETF派息=基金层面已代扣(H股约10%, 低于港股通个人20%), 基金向个人分红免个税——到手段息率即税后, 我此前'再打八折'是把已含的代扣当成第二层, 错; ②A/H分红资产比较的唯一正确口径=税后到手股息率, 非税率本身——H版能源/银行税后普遍胜A版(513530到手~8.5% vs A股红利ETF 4.75-5.13%免税); ③永不卖出者对价格周期/净值波动/FX三维结构性免疫, 唯一真实敞口=每股派息(DPS)可持续性——分子测试: 周期最差年份实派DPS, 非当期股息率; ④组合层面周期稀释: 513530航运重卡~16%权重, trough砍70%派息仅损失~1.5pp组合股息率(8.5%→7%), 成本收回12年→14年, 系统不破——30只分散本身是周期保险; 神华上轮煤炭谷底(2015-16)仍大额派息是DPS下限的正证据
