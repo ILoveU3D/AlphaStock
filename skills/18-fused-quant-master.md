@@ -16,8 +16,8 @@ commands:
   - ask X --evidence
   - intel X
   - recommend --user me
-version: 4
-updated_at: 2026-09-16T11:06:53
+version: 5
+updated_at: 2026-09-16T23:43:18
 ---
 
 # Playbook
@@ -123,3 +123,4 @@ Output shape (hard rules):
 - [2026-09-15 17:11] (ai) masters-vote L2 live pass only covers A-share (Eastmoney consensus EPS); HK/US rows show gap:no consensus-EPS source instead of a divergence value - state the gap, do not improvise. Calibration 2026-09-15: 海德股份 ranked L1 #1 (4 fundamental-master votes) but carried profit_spike + missing consensus EPS - same shape as the GSL trap; L3/L4 must veto flagged L1 leaders before recommending. HK/US profit_spike rows (Dorian LPG, Gulfport, NUTX, Aurinia) are LLM-cycle/shipping-cycle peaks - treat profit_spike as a hard veto, not a caveat.
 - [2026-09-15 20:55] (ai) TCOM 校准（2026-09-15）：L1 四基本面大师全票+表观 PE 5.47 第一，仍被 L2 叙事核查推翻——2025 净利 332.94亿CNY 含 199亿投资利得（占60%），OCF/净利 0.43，真实经营 PE ~13-14x；反垄断罚没 51.79亿+整改拆除'特牌独家+全网最低价'take rate 壁垒，Q2 收入指引放缓至 3-8%。教训：US/HK 无 A 股扣非/粉饰信号时，L2 必须用 web 叙事核查 + OCF/净利<0.6 双指标替代利润质量闸门；表观 PE 第一 ≠ 最被低估。GSL 案之后第二例融合否决。
 - [2026-09-16 11:06] (ai) 板手数前置检查（2026-09-16 AH案例）：L4 裁决输出前必须先查 HK 标的 board lot（trade buy 会被引擎拒绝并返回手数），计算最小手数仓位%——江南布衣最优（四票+ROE38.3+派息率110%）但500股/手=18.8%NAV突破单名15%上限，纪律否决执行后改次优波司登（2000股/手=14.9%恰在限内）。教训：基本面最优 ≠ 可执行最优；手数不可分割时'首笔5%分批建仓'失效，须在裁决层就选择手数合规的次优标的，而非成交后才发现超限。A 股 100 股/US 1 股无此问题。
+- [2026-09-16 23:43] (ai) 错杀闸门规格修正(2026-09-16 CATL案例, 用户指正): 错杀判定中的'基本面没坏'曾被错误操作化为'无负面数据点'——这会把周期股的毛利率-1pp/存货上升/税费传导等周期噪音当作结构恶化, 结构性错过所有周期性深值机会。正确规格: 基本面没坏 = 生意级证伪集未触发(份额/护城河/文化/模式), 错杀 = 价格跌幅远大于生意受损幅度。平台型生意的'客户去X化'叙事(二供分流/自研替代)≠生意死亡, 类比: 去英伟达化多年但利润池份额未失——判据是技术代际节奏是否领先, 非客户是否尝试多元化。周期噪音 vs 结构恶化的分层必须在 L4 裁决中显式声明。

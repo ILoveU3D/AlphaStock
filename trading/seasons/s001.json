@@ -114,6 +114,37 @@
         "HKD": 0.8549,
         "USD": 6.7066
       }
+    },
+    {
+      "date": "2026-09-17",
+      "nav": 7174.6,
+      "cash_total": 6544.52,
+      "settling_total": 0,
+      "positions": [
+        {
+          "market": "US",
+          "code": "ZM",
+          "name": "Zoom通讯",
+          "qty": 4.0,
+          "price": 91.94,
+          "currency": "USD",
+          "value_base": 367.76
+        },
+        {
+          "market": "US",
+          "code": "PTC",
+          "name": "PTC Inc",
+          "qty": 2.0,
+          "price": 131.16,
+          "currency": "USD",
+          "value_base": 262.32
+        }
+      ],
+      "fx": {
+        "CNY": 1.0,
+        "HKD": 0.8553,
+        "USD": 6.7102
+      }
     }
   ],
   "journal": [
