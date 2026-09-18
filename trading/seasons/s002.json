@@ -232,7 +232,7 @@
     },
     {
       "date": "2026-09-18",
-      "nav": 49952.76,
+      "nav": 49932.76,
       "cash_total": 14652.76,
       "settling_total": 0,
       "positions": [
@@ -241,9 +241,9 @@
           "code": "03306",
           "name": "江南布衣",
           "qty": 500.0,
-          "price": 21.68,
+          "price": 21.7,
           "currency": "HKD",
-          "value_base": 10840.0
+          "value_base": 10850.0
         },
         {
           "market": "HK",
@@ -259,18 +259,18 @@
           "code": "00991",
           "name": "大唐发电",
           "qty": 2000.0,
-          "price": 2.605,
+          "price": 2.61,
           "currency": "HKD",
-          "value_base": 5210.0
+          "value_base": 5220.0
         },
         {
           "market": "HK",
           "code": "01378",
           "name": "中国宏桥",
           "qty": 500.0,
-          "price": 22.18,
+          "price": 22.1,
           "currency": "HKD",
-          "value_base": 11090.0
+          "value_base": 11050.0
         }
       ],
       "fx": {
