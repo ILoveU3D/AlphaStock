@@ -14,6 +14,8 @@ SNAPSHOTS_DIR = DATA_DIR / "snapshots"
 USERS_DIR = BASE_DIR / "users"    # durable state, never inside cleanable data/
 OUTPUT_DIR = BASE_DIR / "output"
 SKILLS_DIR = BASE_DIR / "skills"
+TOWER_DIR = BASE_DIR / "tower"   # cognitive-tower bricks, git-tracked;
+                                 # never inside the cleanable data/ tree
 LATEST_POINTER = DATA_DIR / "latest.json"
 
 # ---------------------------------------------------------------------------
