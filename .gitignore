@@ -15,6 +15,9 @@ output/
 # Skill edit backups (skills.py keeps last 10 versions at runtime)
 skills/.backup/
 
+# Tower brick edit backups (tower.py keeps last 10 versions at runtime)
+tower/.backup/
+
 # Tooling caches
 pipcache/
 wheels/

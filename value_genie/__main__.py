@@ -16,6 +16,7 @@ Usage:
     python -m value_genie holding add|update|remove|list ...
     python -m value_genie doctor
     python -m value_genie skill list|show|note|edit ...
+    python -m value_genie tower list|show|add|note|link|set|search|stats|seed ...
 
 Every data command (ask / screen / compare / overview / recommend /
 holding list / doctor) accepts ``--json``: stdout becomes pure JSON
@@ -905,6 +906,151 @@ def cmd_skill(args) -> int:
     return 0
 
 
+def cmd_tower(args) -> int:
+    """Cognitive tower (认知巴别塔): philosophy bricks.
+
+    Not freshness-gated: the tower never depends on market snapshots.
+    """
+    import sys as _sys
+
+    from . import tower as tw
+
+    d = config.TOWER_DIR
+
+    def _brick_dict(b):
+        return {"id": b.id, "title": b.title, "statement": b.statement,
+                "source": b.source, "status": b.status, "tags": b.tags,
+                "links": b.links, "version": b.version,
+                "created_at": b.created_at, "updated_at": b.updated_at,
+                "notes": len(tw.field_notes(b))}
+
+    def _read_body():
+        if getattr(args, "stdin_body", False):
+            return _sys.stdin.read()
+        return None
+
+    try:
+        if args.tower_cmd == "list":
+            bricks, errors = tw.load_bricks(d)
+            for e in errors:
+                print(f"ERROR {e}", file=_sys.stderr)
+            if args.status:
+                bricks = [b for b in bricks if b.status == args.status]
+            if args.tag:
+                bricks = [b for b in bricks if args.tag in b.tags]
+            if args.kind:
+                bricks = [b for b in bricks
+                          if b.source.split(":", 1)[0] == args.kind]
+            if args.json:
+                print(json.dumps([_brick_dict(b) for b in bricks],
+                                 ensure_ascii=False, indent=2))
+                return 0
+            if not bricks:
+                print(f"no bricks found under {d}")
+                return 1
+            for b in bricks:
+                print(f"{b.id:<36} {b.status:<12} v{b.version:<3} "
+                      f"notes={len(tw.field_notes(b)):<3} {b.title}")
+            return 0
+
+        if args.tower_cmd == "show":
+            b = tw.find_brick(d, args.brick_id)
+            if args.json:
+                out = _brick_dict(b)
+                out["body"] = b.body
+                print(json.dumps(out, ensure_ascii=False, indent=2))
+            else:
+                print(b.path.read_text(encoding="utf-8"))
+            return 0
+
+        if args.tower_cmd == "add":
+            body = _read_body() or "## 论证\n（待论证）\n"
+            b = tw.Brick(id=args.brick_id, title=args.title,
+                         statement=args.statement, source=args.source,
+                         status=args.status, tags=args.tag or [],
+                         links=args.link or [], body=body)
+            tw.add_brick(d, b)
+            if args.json:
+                print(json.dumps(_brick_dict(b), ensure_ascii=False))
+            else:
+                print(f"added {b.id} ({b.status}) v{b.version}")
+            return 0
+
+        if args.tower_cmd == "note":
+            b = tw.append_note(d, args.brick_id, args.text)
+            print(f"noted on {b.id} (v{b.version}): {args.text}")
+            return 0
+
+        if args.tower_cmd == "link":
+            b = tw.add_link(d, args.brick_id, args.link)
+            print(f"linked {b.id}: {args.link} (v{b.version})")
+            return 0
+
+        if args.tower_cmd == "set":
+            b = tw.set_brick(d, args.brick_id, status=args.status,
+                             reason=args.reason, add_tags=args.add_tag,
+                             drop_tags=args.drop_tag, body=_read_body())
+            print(f"updated {b.id} -> {b.status} v{b.version}")
+            return 0
+
+        if args.tower_cmd == "search":
+            bricks = tw.search_bricks(d, args.query)
+            if args.json:
+                print(json.dumps([_brick_dict(b) for b in bricks],
+                                 ensure_ascii=False, indent=2))
+                return 0
+            if not bricks:
+                print(f"no bricks match {args.query!r}")
+                return 1
+            for b in bricks:
+                print(f"{b.id:<36} {b.status:<12} {b.title}")
+                print(f"    {b.statement}")
+            return 0
+
+        if args.tower_cmd == "stats":
+            stats = tw.tower_stats(d)
+            if args.json:
+                print(json.dumps(stats, ensure_ascii=False, indent=2))
+                return 0
+            bs = stats["by_status"]
+            print("== 认知巴别塔 (cognitive tower) ==")
+            print(f"核心     axiom x{bs.get('axiom', 0)}: "
+                  f"{', '.join(stats['axiom']) or 'MISSING'}")
+            print(f"使命     mission x{bs.get('mission', 0)}: "
+                  f"{'; '.join(stats['mission_titles'])}")
+            print(f"定律     law x{bs.get('law', 0)} (经对话/生活验证)")
+            print(f"吸收     principle x{bs.get('principle', 0)} "
+                  f"(藏书+大师, 借来未验证)")
+            print(f"待验     hypothesis x{bs.get('hypothesis', 0)} / "
+                  f"observation x{bs.get('observation', 0)}")
+            print(f"伤疤     refuted x{bs.get('refuted', 0)} (永久保留)")
+            print(f"张力     tension links x{stats['tension_links']}")
+            print(f"生长     近30天 +{stats['recent_bricks_30d']} 砖 "
+                  f"+{stats['recent_notes_30d']} notes; "
+                  f"塔龄 {stats['tower_age_days']} 天")
+            print(f"总计     {stats['total_bricks']} 砖 / "
+                  f"{stats['total_notes']} notes"
+                  + (f" / {stats['load_errors']} load errors"
+                     if stats["load_errors"] else ""))
+            return 0
+
+        if args.tower_cmd == "seed":
+            from . import tower_seed as tseed
+            result = tseed.seed_tower(d, dry_run=args.dry_run)
+            if args.json:
+                print(json.dumps(result, ensure_ascii=False, indent=2))
+                return 0
+            verb = "would add" if args.dry_run else "added"
+            print(f"{verb} {result['added']} bricks, "
+                  f"skipped {result['skipped']} existing; "
+                  f"tower now has {result['total']} bricks")
+            return 0
+    except tw.TowerFormatError as exc:
+        print(exc, file=_sys.stderr)
+        return 1
+    return 0
+
+
 # ---------------------------------------------------------------------------
 # Parser
 # ---------------------------------------------------------------------------
@@ -1247,6 +1393,74 @@ def build_parser() -> argparse.ArgumentParser:
     p_edit.add_argument("--remove-trigger", action="append", default=None,
                         metavar="T", help="trigger to remove (repeatable)")
     psk.set_defaults(func=cmd_skill)
+
+    ptw = sub.add_parser(
+        "tower", help="cognitive tower (认知巴别塔): philosophy bricks")
+    ptw_sub = ptw.add_subparsers(dest="tower_cmd", required=True)
+    from . import tower as _tw
+    ptw_list = ptw_sub.add_parser("list", help="list bricks")
+    ptw_list.add_argument("--status", default=None, choices=_tw.STATUSES,
+                          help="filter by cognitive status")
+    ptw_list.add_argument("--tag", default=None,
+                          help="filter by tag (exact match)")
+    ptw_list.add_argument("--kind", default=None,
+                          choices=["book", "master", "conversation", "ai"],
+                          help="filter by source prefix")
+    ptw_list.add_argument("--json", action="store_true",
+                          help="pure-JSON stdout")
+    ptw_show = ptw_sub.add_parser("show", help="print one brick file")
+    ptw_show.add_argument("brick_id")
+    ptw_show.add_argument("--json", action="store_true")
+    ptw_add = ptw_sub.add_parser("add", help="add a new brick")
+    ptw_add.add_argument("brick_id")
+    ptw_add.add_argument("--title", required=True)
+    ptw_add.add_argument("--statement", required=True,
+                         help="one-sentence distillation")
+    ptw_add.add_argument("--status", default="observation",
+                         choices=_tw.STATUSES,
+                         help="cognitive status (default: observation)")
+    ptw_add.add_argument("--source", required=True,
+                         help="book:书名 | master:名 | conversation:YYYY-MM-DD | ai")
+    ptw_add.add_argument("--tag", action="append", default=None,
+                         metavar="T", help="tag to add (repeatable)")
+    ptw_add.add_argument("--link", action="append", default=None,
+                         metavar="TYPE:ID",
+                         help="link as type:target-id (repeatable)")
+    ptw_add.add_argument("--stdin-body", action="store_true",
+                         help="read the brick body from stdin")
+    ptw_add.add_argument("--json", action="store_true")
+    ptw_note = ptw_sub.add_parser("note", help="append a field note")
+    ptw_note.add_argument("brick_id")
+    ptw_note.add_argument("text", help="one concrete insight line")
+    ptw_link = ptw_sub.add_parser("link", help="add a link to a brick")
+    ptw_link.add_argument("brick_id")
+    ptw_link.add_argument("link", metavar="TYPE:ID",
+                          help="derives-from|refines|contradicts|"
+                               "applies-to|tension :target-id")
+    ptw_set = ptw_sub.add_parser("set", help="status migration / edits")
+    ptw_set.add_argument("brick_id")
+    ptw_set.add_argument("--status", default=None, choices=_tw.STATUSES,
+                         help="new status (requires --reason)")
+    ptw_set.add_argument("--reason", default=None,
+                         help="promotion rationale / refutation evidence")
+    ptw_set.add_argument("--add-tag", action="append", default=None,
+                         metavar="T", help="tag to add (repeatable)")
+    ptw_set.add_argument("--drop-tag", action="append", default=None,
+                         metavar="T", help="tag to drop (repeatable)")
+    ptw_set.add_argument("--stdin-body", action="store_true",
+                         help="replace the body from stdin")
+    ptw_set.add_argument("--json", action="store_true")
+    ptw_search = ptw_sub.add_parser("search", help="substring search")
+    ptw_search.add_argument("query")
+    ptw_search.add_argument("--json", action="store_true")
+    ptw_stats = ptw_sub.add_parser("stats",
+                                   help="cognitive altitude report")
+    ptw_stats.add_argument("--json", action="store_true")
+    ptw_seed = ptw_sub.add_parser("seed", help="seed the tower (idempotent)")
+    ptw_seed.add_argument("--dry-run", action="store_true",
+                          help="preview without writing")
+    ptw_seed.add_argument("--json", action="store_true")
+    ptw.set_defaults(func=cmd_tower)
     return parser
 
 
