@@ -22,6 +22,11 @@ you found it.
   spread, daily NAV marking, withdrawal tracking and a review journal.
   Seasons live in git-tracked `trading/seasons/`; lessons accumulate in
   the `trading` skill Field Notes.
+- `python -m value_genie tower ...` manages the **cognitive tower**
+  (认知巴别塔): philosophy bricks distilled from conversations,
+  masters and 105+ books, with DCF as the single axiom. Bricks live
+  in the git-tracked `tower/` dir — see the Cognitive tower section
+  for the mandatory lookup/absorb loop.
 - Analysis commands read the latest snapshot (and live quotes where
   noted) — no LLM runs inside the toolkit; you write the prose.
 - There is **no human UI**: the CLI is the only entry point and AI
@@ -57,7 +62,8 @@ you found it.
 ## Machine-readable output (`--json`)
 
 - Every data command accepts `--json`: `ask`, `screen`, `compare`,
-  `overview`, `recommend`, `holding list`, `doctor`.
+  `overview`, `recommend`, `holding list`, `doctor`, and every
+  `tower` subcommand.
 - With `--json`, stdout is **pure JSON** — full float precision,
   NaN→null, no banner lines, no `wrote ...` chatter. `screen --json`
   also skips the CSV/Markdown side-effect files. Exit codes and the
@@ -120,7 +126,48 @@ excluded when no USD rate, concentration observations verbatim).
 | "短期内最推荐/最被低估的股票" | horizon-framework | `python -m value_genie screen --horizon short` |
 | "超短线/短线有什么机会" | horizon-framework | `python -m value_genie screen --horizon ultrashort`（必须附短炒警示） |
 | "X适合中长期持有吗" | horizon-framework | `python -m value_genie ask X`（四周期剖面）+ 14 号 playbook 质性层 |
-| Philosophy / how to value | investment-philosophy | house voice for every answer |
+| Philosophy / 处世 / 人生问题 / how to value | cognitive-tower | `python -m value_genie tower search <query>` 查塔作答（见 Cognitive tower 节家规） |
+
+## Cognitive tower (认知巴别塔)
+
+The tower is the canonical home for philosophy — every idea worth
+keeping becomes a **brick**: one `tower/<id>.md` file (git-tracked
+top-level dir, never inside the cleanable `data/`) with a one-line
+`statement`, a `source` (`book:` / `master:` / `conversation:` /
+`ai`), a cognitive `status` and typed links (`derives-from` /
+`refines` / `contradicts` / `applies-to` / `tension`). The single
+axiom is `dcf-universal-law` — everything else traces to it,
+tensions included (marked, never resolved by deletion). Statuses:
+`axiom > mission > law > principle > hypothesis > observation >
+refuted`; migrations require a reason and are archived as Field
+Notes; `refuted` bricks are never deleted (errors are assets).
+
+- Commands: `python -m value_genie tower list|show|add|note|link|
+  set|search|stats|seed` — all `--json`-capable. Tower commands do
+  **not** run the freshness gate: the tower depends on no market
+  snapshot.
+- `tower stats` prints the honest cognitive-altitude report (laws
+  verified by conversation vs principles borrowed from books,
+  growth rate, scar count).
+- The tower is **not a skill**: skills are behavior manuals (how to
+  answer), the tower is the knowledge store (what we know). The
+  former 06-investment-philosophy skill was dissolved into it
+  (2026-09-18) — its universal laws live on as tower bricks.
+
+**House rules — 双向强制循环 (user-mandated 2026-09-18):**
+
+1. **查塔义务** — before answering any decision-grade question
+   (value trade-offs, career/life choices, investment philosophy),
+   `tower search` the relevant bricks first; verdicts must reconcile
+   with axiom first, laws second, principles third. Cite the bricks
+   you leaned on.
+2. **入塔义务** — any conversation insight worth keeping becomes a
+   brick (`tower add`, then `tower note` for refinements); books are
+   absorbed as `principle` bricks and promoted to `law` only after
+   our own verification (`tower set --status law --reason "..."`).
+3. Answers stay non-evasive: brick × current reality = concrete
+   judgment; a conditional verdict must state its conditions, not
+   hedge.
 
 ## Investment masters
 
