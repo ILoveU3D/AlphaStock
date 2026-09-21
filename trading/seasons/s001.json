@@ -14,7 +14,7 @@
   "cash": {
     "CNY": 0.0,
     "HKD": 0.0,
-    "USD": 6544.52
+    "USD": 4303.55
   },
   "settling": [],
   "positions": [
@@ -22,20 +22,30 @@
       "market": "US",
       "code": "ZM",
       "name": "Zoom通讯",
-      "qty": 4.0,
-      "avg_cost": 92.9175,
+      "qty": 12.0,
+      "avg_cost": 90.3183,
       "currency": "USD",
-      "last_buy_date": "2026-09-16",
+      "last_buy_date": "2026-09-21",
       "lot": 1
     },
     {
       "market": "US",
       "code": "PTC",
       "name": "PTC Inc",
-      "qty": 2.0,
-      "avg_cost": 131.905,
+      "qty": 8.0,
+      "avg_cost": 135.1425,
       "currency": "USD",
-      "last_buy_date": "2026-09-16",
+      "last_buy_date": "2026-09-21",
+      "lot": 1
+    },
+    {
+      "market": "US",
+      "code": "DUOL",
+      "name": "多邻国",
+      "qty": 5.0,
+      "avg_cost": 142.298,
+      "currency": "USD",
+      "last_buy_date": "2026-09-21",
       "lot": 1
     }
   ],
@@ -81,6 +91,69 @@
       "note": "QMF四层裁决买入(2026-09-16夜盘): L1三票(buffett/munger/duan)零旗标次选; PE 11.6(TTM, live 130.82) 84.6分位便宜, 营收+19.2%/净利+95%/OCF净利1.18/ROE 20.8%/毛利率83.8%(93分位); L2 intel零红旗(近90天仅4条披露, 无诉讼无解禁); L3 工业CAD/PLM订阅软件-Onshape/Creo/Windchill切换成本深, 制造业数字化长周期, 52周回撤-35.6%属增长股杀估值(pos52=21.8)非生意恶化; L4 mid 78.9/long 90.6分位, 投行20家Buy目标.35(+32%); 卖出触发=论点破坏(ARR增速持续放缓至个位数/收入负增两季/SBC稀释失控)",
       "settle_amount": 0.0,
       "seq": 2
+    },
+    {
+      "ts": "2026-09-21T16:57:14",
+      "date": "2026-09-21",
+      "action": "buy",
+      "market": "US",
+      "code": "ZM",
+      "name": "Zoom通讯",
+      "qty": 8.0,
+      "price": 88.77,
+      "gross": 710.16,
+      "fees": {
+        "platform": 1.99
+      },
+      "fees_total": 1.99,
+      "cash_delta": -712.15,
+      "currency": "USD",
+      "session": "out",
+      "note": "QMF四层裁决加仓(20260921盘外, 用户特批盘外执行): L1四票(buffett/munger/graham/sheng)US榜首mean51.1; L2 intel零红旗(0916已查Form4 SBC行权观察项); L3 企业通信捆绑平台切换成本+Eric Yuan文化+AI Companion付费用户+184%, OCF yield7.68%/FCF yield7.43%; L4 mid85.7/long97.6分位, PE7.96(TTM), ret20-16.5%深跌错杀(用户风格匹配), dd52-20.7%; 加仓至15%NAV(0918规训:加仓现有标的论点仍成立时无需新论点); -50%测试:净现金占市值28%+平台切换成本深+企业通信刚需, 可承受; 卖出触发=论点破坏(净扩张率<95%/FCF指引转负/收入连续两季负增)",
+      "settle_amount": 0.0,
+      "seq": 3
+    },
+    {
+      "ts": "2026-09-21T16:57:44",
+      "date": "2026-09-21",
+      "action": "buy",
+      "market": "US",
+      "code": "PTC",
+      "name": "PTC Inc",
+      "qty": 6.0,
+      "price": 135.89,
+      "gross": 815.34,
+      "fees": {
+        "platform": 1.99
+      },
+      "fees_total": 1.99,
+      "cash_delta": -817.33,
+      "currency": "USD",
+      "session": "out",
+      "note": "QMF四层裁决加仓(20260921盘外, 用户特批盘外执行): L1 0916三票(buffett/munger/duan)今日cashflow数据缺口掉票, ask单股验证论点完好(ROE20.8/rev+19.2%/GM83.8%全好, cashflow缺口非基本面恶化); L2 intel零红旗(0916已查近90天仅4条披露无诉讼无解禁); L3 工业CAD/PLM订阅软件Onshape/Creo/Windchill切换成本深, 制造业数字化长周期, dd52-34%属增长股杀估值非生意恶化; L4 mid89.3/long98.0分位, PE TTM约11.6(0916口径), 加仓至15%NAV(0918规训); -50%测试:制造业数字化长周期+订阅SaaS高切换成本, 可承受; 卖出触发=论点破坏(ARR增速持续放缓至个位数/收入负增两季/SBC稀释失控)",
+      "settle_amount": 0.0,
+      "seq": 4
+    },
+    {
+      "ts": "2026-09-21T16:58:26",
+      "date": "2026-09-21",
+      "action": "buy",
+      "market": "US",
+      "code": "DUOL",
+      "name": "多邻国",
+      "qty": 5.0,
+      "price": 141.9,
+      "gross": 709.5,
+      "fees": {
+        "platform": 1.99
+      },
+      "fees_total": 1.99,
+      "cash_delta": -711.49,
+      "currency": "USD",
+      "session": "out",
+      "note": "QMF四层裁决新开仓(20260921盘外, 用户特批盘外执行): L1三票(buffett/munger/sheng)US新标的; L2 spike=True但低基数扭亏型(多邻国2024才盈利, profit_yoy+369%从低基数非粉饰), OCF/净利0.94利润质量极好(与TCOM 0.43否决形成对比), intel零红旗(摩根大通上调目标价); L3 语言学习订阅app+gamification网络效应+Luis von Ahn(reCAPTCHA创始人)文化, 商业模式可懂, dd52-59%深回撤属高增长股杀估值非生意恶化, rev+38.7%健康增长; L4 mid99/long99分位, ROE38.1%/GM72.2%/OCF yield5.84%/FCF yield5.57%, 新开10%NAV; -50%测试:dd52-59%已接近, 习惯粘性强(学习app日活粘性), 可承受; 卖出触发=论点破坏(DAU增长持续放缓/AI替代语言学习需求/SBC稀释失控)",
+      "settle_amount": 0.0,
+      "seq": 5
     }
   ],
   "nav_history": [
@@ -210,33 +283,42 @@
     },
     {
       "date": "2026-09-21",
-      "nav": 7171.38,
-      "cash_total": 6544.52,
+      "nav": 7165.41,
+      "cash_total": 4303.55,
       "settling_total": 0,
       "positions": [
         {
           "market": "US",
           "code": "ZM",
           "name": "Zoom通讯",
-          "qty": 4.0,
+          "qty": 12.0,
           "price": 88.77,
           "currency": "USD",
-          "value_base": 355.08
+          "value_base": 1065.24
         },
         {
           "market": "US",
           "code": "PTC",
           "name": "PTC Inc",
-          "qty": 2.0,
+          "qty": 8.0,
           "price": 135.89,
           "currency": "USD",
-          "value_base": 271.78
+          "value_base": 1087.12
+        },
+        {
+          "market": "US",
+          "code": "DUOL",
+          "name": "多邻国",
+          "qty": 5.0,
+          "price": 141.9,
+          "currency": "USD",
+          "value_base": 709.5
         }
       ],
       "fx": {
         "CNY": 1.0,
-        "HKD": 0.8534,
-        "USD": 6.6953
+        "HKD": 0.8533,
+        "USD": 6.6949
       }
     }
   ],
@@ -247,6 +329,13 @@
       "nav": 7176.45,
       "day_pnl": 0.0,
       "text": "2026-09-16夜盘建仓复盘: 纯美股季s001()首两笔——ZM 4股@92.42(.67含费, 5.2%NAV) + PTC 2股@130.91(.81含费, 3.7%NAV), 合计部署8.9%, 剩余现金(91%)。决策链: 盘前L1预筛(快照20260916)四票层5只, Dorian LPG(航运周期+114%峰值盈利GSL画像)/HRMY(仿制药2029悬崖)/CARG(spike+643%)/TCOM(利润质量60%投资利得)维持否决, ZM四票零旗标为首选; 22:57盘中fetch刷新后live报价终裁: ZM 92.32(-0.81%)/PTC 130.82(-1.45%)。PTC为三票次选(buffett/munger/duan): 工业CAD/PLM订阅软件, 52周-35.6%杀估值非杀生意(pos52=21.8), OCF/净利1.18, 投行目标+32%。摩擦成本: 两笔手续费.98占部署资金0.63%(vs旧季节FX来回0.60%+手续费, 单一币种优势显现)。后续计划: 每周QMF复筛加仓机会, 单名上限15%, 现金充裕等待错杀(用户风格: 急跌+基本面没坏)"
+    },
+    {
+      "date": "2026-09-21",
+      "ts": "2026-09-21T17:00:17",
+      "nav": 7165.41,
+      "day_pnl": -5.97,
+      "text": "20260921复盘: 用户特批美股盘外交易窗口(美股未开盘, 按9-18周五收盘价成交), QMF裁决部署3笔=ZM加仓8股@88.77(712.15含费, 总12股=15%NAV) + PTC加仓6股@135.89(817.33含费, 总8股=15%NAV) + DUOL新开5股@141.90(711.49含费, 10%NAV). 部署率从9%(91%现金=用户0918明确不满意)提升至40%(现金60%). QMF否决链: TCOM 4票但OCF/净利0.43利润质量未改善(0916否决原因依旧, 与DUOL 0.94形成对比)→否决; LPG 4票但航运周期顶(ret20+17.1%/dd52-0.3%)→否决维持; HRMY 4票但仿制药2029悬崖→否决维持; GPOR能源spike+地缘脉冲→否决; TGTX ROE102.8%异味+spike→否决; NUTX 3票但价值大师仅1票+动量顶端(dd52-3.9%非错杀)+vol91%超高+小盘→否决; 2票档全否(价值大师票数<2). DUOL新开核心论据: spike+369%是低基数扭亏型(多邻国2024才盈利, 非粉饰), OCF/净利0.94利润质量极好, dd52-59%深回撤+rev+38.7%健康增长=高增长股杀估值非生意恶化, Luis von Ahn(reCAPTCHA创始人)文化+gamification网络效应. 摩擦: 三笔手续费5.97USD占部署0.13%(美股0%资本利得+单一币种优势, vs港股0.29-0.31%). PTC今日cashflow数据缺口掉票(masters-vote不在top60), ask单股验证ROE20.8/rev+19.2%/GM83.8%全好, 数据缺口非基本面恶化, 0918规训'加仓现有标的论点仍成立时无需新论点'=加仓合规. 部署率40%未达0918规训80%目标, 原因=L1池深度不足(4票档5只中2已持有+2否决维持+1利润质量差; 3票档7只中1通过+6否决; 2票档价值大师票数<2全否), 3个合格标的×15%上限=45%ceiling. 从9%→40%是大幅加仓, 每仓过QMF+-50%测试, 不为凑80%买不合格标的(满仓不等于乱买). NAV 7,165.41(day-5.97摩擦, net-0.20%)"
     }
   ],
   "totals": {
