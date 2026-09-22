@@ -410,9 +410,9 @@
           "code": "03306",
           "name": "江南布衣",
           "qty": 500.0,
-          "price": 21.54,
+          "price": 21.52,
           "currency": "HKD",
-          "value_base": 10770.0
+          "value_base": 10760.0
         },
         {
           "market": "HK",
@@ -428,9 +428,9 @@
           "code": "00991",
           "name": "大唐发电",
           "qty": 2000.0,
-          "price": 2.585,
+          "price": 2.59,
           "currency": "HKD",
-          "value_base": 5170.0
+          "value_base": 5180.0
         },
         {
           "market": "HK",
