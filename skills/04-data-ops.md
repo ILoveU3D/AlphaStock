@@ -9,8 +9,8 @@ triggers:
 commands:
   - doctor
   - fetch
-version: 21
-updated_at: 2026-09-11T00:06:10
+version: 22
+updated_at: 2026-09-23T11:47:49
 ---
 
 # Playbook
@@ -60,3 +60,4 @@ known snapshot is older than one trading day:
 - [2026-09-09 20:03] (ai) 2026-09-09/10: searchapi.eastmoney.com suggest endpoint returned non-JSON (JSONDecodeError) on every A-share name resolution during holding review - non-blocking, fallback resolution succeeded; if name resolution ever fully fails, check SB endpoint health first
 - [2026-09-10 23:26] (ai) agent 工具教训(2026-09-10):绝不在同一消息里对同一文件发多个并行 Edit 调用——各编辑基于各自快照写入会互相覆盖(本次 AGENTS.md 三处并行编辑丢失两处、哲学技能版本号被覆盖回退);同一文件的多处修改必须严格串行,改完用 Grep 验证全部标记
 - [2026-09-11 00:06] (ai) US dividend tags disagree across filers (2026-09-10): KO files PaymentsOfDividends, MSFT PaymentsOfDividendsCommonStock, AAPL-style ...AndDividendEquivalents — fetch_us_financials now merges all three (CommonStock primary); non-calendar filers (AAPL/NVDA FY ending Sep/Jan) still miss the CY frame, their div_paid stays null or comes from a fiscal-mismatched frame — treat NVDA-class sub-0.1% yields as noise. A-share dividend_yield = a_dividends.csv div_paid ÷ market_cap computed in add_cashflow_factors (declaration-year basis, ~8-20mo lag by design); watchlist rows outside the funnel keep their own cash-flow values via the annual-silent coalesce in add_cashflow_factors
+- [2026-09-23 11:47] (ai) 东财故障处置手册(20260923实战): ①症状: fetch部分失败exit 1(HK 549行/正常14725, US 0行, A partial page29失败), 三次重试均失败, 复跑时resume机制会把残缺文件当完整复用('reused from today'); ②致命陷阱: 无manifest的残缺快照目录(20260923)会污染latest-snapshot解析——doctor按manifest判最新(读到20260922), 但ask/analyze按目录扫描(读到20260923→us_quotes缺失→FileNotFoundError崩溃); 改名加下划线前缀不够('_broken_20260923'按mtime仍被选中), 必须把残缺目录移出snapshots/父目录(如data/_broken_YYYYMMDD_quarantine); ③回退路径: 腾讯qt.gtimg.cn单股实时价全天可用——HK格式'r_hk03998'(GBK编码), US格式'usZM'(周二收盘价90.95验证一致), 一次GET可批量多码分号分隔; 港股多空手数需查东财F10/同花顺/JPM三源(引擎trade-unit实时查询在EM故障时不可用, F10快照CSV无trade_unit列——这本身是个数据缺口); ④操作顺序: 探针测源→隔离残缺目录→doctor确认回落→ask/intel照常(快照基础数据21h可用WARN内)→腾讯实算live价双口径记录(引擎快照标记+腾讯实时修正), 引擎nav自动回落快照价勿手改seasons文件
