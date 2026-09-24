@@ -52,15 +52,6 @@
     },
     {
       "market": "US",
-      "code": "NVDA",
-      "name": "英伟达",
-      "qty": 10.0,
-      "cost": 218.29,
-      "currency": "USD",
-      "opened": ""
-    },
-    {
-      "market": "US",
       "code": "BRK_B",
       "name": "伯克希尔哈撒韦-B",
       "qty": 6.0,
@@ -74,6 +65,15 @@
       "name": "可口可乐",
       "qty": 22.0,
       "cost": 88.22,
+      "currency": "USD",
+      "opened": ""
+    },
+    {
+      "market": "US",
+      "code": "ZM",
+      "name": "Zoom通讯",
+      "qty": 22.0,
+      "cost": 92.88,
       "currency": "USD",
       "opened": ""
     }

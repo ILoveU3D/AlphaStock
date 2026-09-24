@@ -9,8 +9,8 @@ triggers:
 commands:
   - doctor
   - fetch
-version: 22
-updated_at: 2026-09-23T11:47:49
+version: 24
+updated_at: 2026-09-24T22:03:57
 ---
 
 # Playbook
@@ -61,3 +61,5 @@ known snapshot is older than one trading day:
 - [2026-09-10 23:26] (ai) agent 工具教训(2026-09-10):绝不在同一消息里对同一文件发多个并行 Edit 调用——各编辑基于各自快照写入会互相覆盖(本次 AGENTS.md 三处并行编辑丢失两处、哲学技能版本号被覆盖回退);同一文件的多处修改必须严格串行,改完用 Grep 验证全部标记
 - [2026-09-11 00:06] (ai) US dividend tags disagree across filers (2026-09-10): KO files PaymentsOfDividends, MSFT PaymentsOfDividendsCommonStock, AAPL-style ...AndDividendEquivalents — fetch_us_financials now merges all three (CommonStock primary); non-calendar filers (AAPL/NVDA FY ending Sep/Jan) still miss the CY frame, their div_paid stays null or comes from a fiscal-mismatched frame — treat NVDA-class sub-0.1% yields as noise. A-share dividend_yield = a_dividends.csv div_paid ÷ market_cap computed in add_cashflow_factors (declaration-year basis, ~8-20mo lag by design); watchlist rows outside the funnel keep their own cash-flow values via the annual-silent coalesce in add_cashflow_factors
 - [2026-09-23 11:47] (ai) 东财故障处置手册(20260923实战): ①症状: fetch部分失败exit 1(HK 549行/正常14725, US 0行, A partial page29失败), 三次重试均失败, 复跑时resume机制会把残缺文件当完整复用('reused from today'); ②致命陷阱: 无manifest的残缺快照目录(20260923)会污染latest-snapshot解析——doctor按manifest判最新(读到20260922), 但ask/analyze按目录扫描(读到20260923→us_quotes缺失→FileNotFoundError崩溃); 改名加下划线前缀不够('_broken_20260923'按mtime仍被选中), 必须把残缺目录移出snapshots/父目录(如data/_broken_YYYYMMDD_quarantine); ③回退路径: 腾讯qt.gtimg.cn单股实时价全天可用——HK格式'r_hk03998'(GBK编码), US格式'usZM'(周二收盘价90.95验证一致), 一次GET可批量多码分号分隔; 港股多空手数需查东财F10/同花顺/JPM三源(引擎trade-unit实时查询在EM故障时不可用, F10快照CSV无trade_unit列——这本身是个数据缺口); ④操作顺序: 探针测源→隔离残缺目录→doctor确认回落→ask/intel照常(快照基础数据21h可用WARN内)→腾讯实算live价双口径记录(引擎快照标记+腾讯实时修正), 引擎nav自动回落快照价勿手改seasons文件
+- [2026-09-24 11:27] (ai) 东财故障第三日补充(20260924): ①断供时长实测可达3日+(0922快照成为唯一基础数据源), 每日流程入口固定为'探针测源'再决定fetch或回退; ②混合口径陷阱(engine trade-nav): 部分标的拿到实时价(PTC 140.40周三收)、部分回落快照价(ZM 90.90/DUOL 149.42周一收), 同一次NAV标记内口径不一致; ③day P&L跨口径伪影: 昨日快照价标记 vs 今日实时价标记会制造虚假日盈亏(实测engine报day+310, 腾讯统一口径实算-120, 差430全是口径), 断供期间day字段不可信, 日报以腾讯统一口径为准; ④engine HK批价与腾讯单股价当日一致(22.06/4.00/2.54/20.78 vs 22.08/3.995/2.545/20.76), HK回退可靠, US回退不完整(1/3标的拿到新价, 机制未明)
+- [2026-09-24 22:03] (ai) EM断供期 trade buy 成交价回落快照价而非腾讯实时价: 0924 TCOM 40股 fill@40.65(快照) vs 实时40.03, +1.5%保守溢价=断供期一次性成本; 与v23 NAV混合口径quirk同源, 交易决策时需用腾讯实时价自行核算真实成本
