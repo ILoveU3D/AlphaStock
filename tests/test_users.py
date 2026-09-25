@@ -60,6 +60,68 @@ def test_list_users_skips_corrupt_files(users_dir):
 
 
 # ---------------------------------------------------------------------------
+# Schema drift tolerance (files are git-tracked and outlive code versions)
+# ---------------------------------------------------------------------------
+def _write_user_file(users_dir, uid, data):
+    users_dir.mkdir(parents=True, exist_ok=True)
+    (users_dir / f"{uid}.json").write_text(
+        json.dumps(data, ensure_ascii=False), encoding="utf-8")
+
+
+def _holding(**kw):
+    base = {"market": "A", "code": "600519", "name": "贵州茅台",
+            "qty": 100, "cost": 1500.0, "currency": "CNY",
+            "opened": "2026-01-01"}
+    base.update(kw)
+    return base
+
+
+class TestSchemaDrift:
+    def test_unknown_holding_fields_dropped(self, users_dir, capsys):
+        """Fields a code version no longer knows must not crash load."""
+        _write_user_file(users_dir, "me", {
+            "id": "me", "name": "me", "created_at": "x",
+            "holdings": [_holding(note="retired field", extra=1)]})
+        u = usr.load_user("me")
+        assert len(u.holdings) == 1
+        assert u.holdings[0].code == "600519"
+        assert "unknown holding fields" in capsys.readouterr().err
+
+    def test_missing_required_holding_field_is_valueerror(self, users_dir):
+        h = _holding()
+        del h["qty"]
+        _write_user_file(users_dir, "me", {"id": "me", "holdings": [h]})
+        with pytest.raises(ValueError):
+            usr.load_user("me")
+
+    def test_list_users_survives_schema_drift(self, users_dir):
+        """One undreadable file must not kill CLI startup
+        (register_user_strategies -> list_users)."""
+        usr.create_user("good")
+        h = _holding()
+        del h["qty"]
+        _write_user_file(users_dir, "bad", {"id": "bad", "holdings": [h]})
+        items = usr.list_users()
+        assert [u.id for u in items] == ["good"]
+
+    def test_top_level_must_be_object(self, users_dir):
+        _write_user_file(users_dir, "me", ["not", "a", "dict"])
+        with pytest.raises(ValueError):
+            usr.load_user("me")
+
+    def test_holdings_must_be_list(self, users_dir):
+        _write_user_file(users_dir, "me",
+                         {"id": "me", "holdings": {"600519": {}}})
+        with pytest.raises(ValueError):
+            usr.load_user("me")
+
+    def test_missing_id_is_valueerror(self, users_dir):
+        _write_user_file(users_dir, "me", {"name": "x", "holdings": []})
+        with pytest.raises(ValueError):
+            usr.load_user("me")
+
+
+# ---------------------------------------------------------------------------
 # Style management
 # ---------------------------------------------------------------------------
 def test_parse_gate():

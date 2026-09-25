@@ -482,17 +482,29 @@ def normalize_us_ticker(ticker: str) -> str:
     return str(ticker).upper().replace("-", "_").replace(".", "_")
 
 
+_SEC_CIK_MAP_CACHE: dict | None = None
+
+
 def load_sec_cik_map() -> dict:
     """normalized ticker -> cik from SEC's official ticker file.
 
     Class shares (BRK-A/BRK-B -> one cik) each keep their own entry, so
     every traded class can find its registrant's financials.
+
+    Cached process-wide: the file changes at most daily, and a fetch run
+    resolves every held US ticker against it — re-downloading the full
+    market map per ticker is pure waste. Failures are NOT cached so a
+    transient network error doesn't poison the rest of the run.
     """
-    d = SEC.get_json(config.SEC_TICKERS_URL, timeout=30)
-    if not d:
-        return {}
-    return {normalize_us_ticker(v["ticker"]): int(v["cik_str"])
+    global _SEC_CIK_MAP_CACHE
+    if _SEC_CIK_MAP_CACHE is None:
+        d = SEC.get_json(config.SEC_TICKERS_URL, timeout=30)
+        if not d:
+            return {}
+        _SEC_CIK_MAP_CACHE = {
+            normalize_us_ticker(v["ticker"]): int(v["cik_str"])
             for v in d.values()}
+    return _SEC_CIK_MAP_CACHE
 
 
 def sum_oneoff_frames(frames: dict, key: str, concepts) -> dict:
@@ -718,6 +730,7 @@ def fetch_us_financials_one(ticker: str, quiet: bool = False) -> dict | None:
                     end: str = ""):
         url = config.SEC_CONCEPT_URL.format(cik=cik, concept=concept)
         d = SEC.get_json(url, timeout=30, retries=1)
+        time.sleep(0.15)   # SEC 礼貌节流——单票连发 ~16 请求，对齐批路径
         fact = _pick_fact(_concept_facts(d), frame, start, end)
         return num(fact.get("val")) if fact else None
 

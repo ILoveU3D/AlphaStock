@@ -14,6 +14,7 @@ from pathlib import Path
 import pandas as pd
 
 from .. import config
+from ..atomic import atomic_to_csv
 from . import model
 from .announcements import (fetch_a_buybacks, fetch_a_holder_changes,
                             fetch_a_placements, fetch_a_unlocks)
@@ -336,7 +337,7 @@ def _eq_items(eq_recs, fin_rd, codes) -> list:
 def _write_detail(snap: Path, items) -> None:
     df = pd.DataFrame([model.item_to_row(i) for i in items],
                       columns=model.DETAIL_COLUMNS)
-    df.to_csv(snap / DETAIL_FILE, index=False)
+    atomic_to_csv(df, snap / DETAIL_FILE)
 
 
 # ---------------------------------------------------------------------------
@@ -360,7 +361,7 @@ def _load_or_fetch(path: Path, fetcher, label: str, refresh: bool, log):
               file=sys.stderr)
         df = None
     if df is not None and not df.empty:
-        df.to_csv(path, index=False)
+        atomic_to_csv(df, path)
     return df
 
 

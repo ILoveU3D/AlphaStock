@@ -291,6 +291,49 @@ class TestFetchUsFinancialsOne:
                             SimpleNamespace(get_json=lambda url, **kw: None))
         assert f.fetch_us_financials_one("GHOST", quiet=True) is None
 
+    def test_cik_map_cached_process_wide(self, monkeypatch):
+        """SEC ticker 映射整进程只下载一次——此前每张单票兜底都重下
+        全市场映射文件（held 票越多重复下载越多）。"""
+        downloads = []
+
+        def fake_get_json(url, **kw):
+            downloads.append(url)
+            return {"0": {"ticker": "AAA", "cik_str": "1"},
+                    "1": {"ticker": "BBB", "cik_str": "2"}}
+
+        monkeypatch.setattr(f, "_SEC_CIK_MAP_CACHE", None)   # 进程缓存清零
+        monkeypatch.setattr(f, "SEC",
+                            SimpleNamespace(get_json=fake_get_json))
+        assert f.load_sec_cik_map() == {"AAA": 1, "BBB": 2}
+        assert f.load_sec_cik_map() == {"AAA": 1, "BBB": 2}
+        assert len(downloads) == 1
+
+    def test_cik_map_failure_not_cached(self, monkeypatch):
+        """下载失败不缓存——瞬时网络失败不应令本进程后续兜底全部失效。"""
+        calls = []
+
+        def fake_get_json(url, **kw):
+            calls.append(url)
+            if len(calls) == 1:
+                return None
+            return {"0": {"ticker": "AAA", "cik_str": "1"}}
+
+        monkeypatch.setattr(f, "_SEC_CIK_MAP_CACHE", None)
+        monkeypatch.setattr(f, "SEC",
+                            SimpleNamespace(get_json=fake_get_json))
+        assert f.load_sec_cik_map() == {}
+        assert f.load_sec_cik_map() == {"AAA": 1}
+        assert len(calls) == 2
+
+    def test_companyconcept_requests_throttled(self, mock_sec, monkeypatch):
+        """单票兜底 ~16 个 companyconcept 请求必须带 SEC 礼貌节流
+        （批路径 0.3s/帧，此前单票路径零 sleep 连发）。"""
+        sleeps = []
+        monkeypatch.setattr(f.time, "sleep", sleeps.append)
+        f.fetch_us_financials_one("BRK_B", quiet=True)
+        assert len(sleeps) >= 10
+        assert all(s >= 0.1 for s in sleeps)
+
 
 class TestFetchAFinancialsOne:
     def test_single_stock_filter(self, monkeypatch):

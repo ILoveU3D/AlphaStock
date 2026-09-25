@@ -18,6 +18,7 @@ from pathlib import Path
 import pandas as pd
 
 from .. import config
+from ..atomic import atomic_to_csv, atomic_write_text
 from ..strategy.composite import apply_composite
 from ..strategy.factors import PILLARS, add_pillar_scores, kline_metrics
 from .fundamentals import (fetch_a_balance, fetch_a_cashflow,
@@ -260,7 +261,7 @@ def fetch_hk_deep(codes, snap_dir: Path, reuse_dirs: list,
         time.sleep(0.3)
     df = pd.DataFrame(rows)
     if not df.empty:
-        df.to_csv(snap_dir / "hk_f10.csv", index=False)
+        atomic_to_csv(df, snap_dir / "hk_f10.csv")
     return df
 
 
@@ -295,7 +296,7 @@ def fetch_hk_cashflow_deep(codes, snap_dir: Path, reuse_dirs: list,
         time.sleep(0.3)
     df = pd.DataFrame(rows)
     if not df.empty:
-        df.to_csv(snap_dir / "hk_cashflow.csv", index=False)
+        atomic_to_csv(df, snap_dir / "hk_cashflow.csv")
     return df
 
 
@@ -699,7 +700,7 @@ def build_watchlist(snap_dir: Path, reuse_dirs: list,
     watch = [s for s in collect_watch_symbols()
              if (s[0], s[1]) not in master_keys]
     if not watch:
-        empty.to_csv(snap_dir / "watchlist.csv", index=False)
+        atomic_to_csv(empty, snap_dir / "watchlist.csv")
         manifest["datasets"]["watchlist"] = 0
         return empty
 
@@ -783,7 +784,7 @@ def build_watchlist(snap_dir: Path, reuse_dirs: list,
         frames.append(df)
 
     if not frames:
-        empty.to_csv(snap_dir / "watchlist.csv", index=False)
+        atomic_to_csv(empty, snap_dir / "watchlist.csv")
         manifest["datasets"]["watchlist"] = 0
         return empty
 
@@ -804,7 +805,7 @@ def build_watchlist(snap_dir: Path, reuse_dirs: list,
     scored["data_completeness"] = (
         scored[score_cols].notna().sum(axis=1) / len(PILLARS))
     out = scored.reindex(columns=MASTER_COLUMNS)
-    out.to_csv(snap_dir / "watchlist.csv", index=False)
+    atomic_to_csv(out, snap_dir / "watchlist.csv")
     manifest["datasets"]["watchlist"] = len(out)
     manifest["datasets"]["watchlist_klines"] = dict(wstats)
     log(f"    [watchlist] {len(out)} held symbols "
@@ -888,7 +889,7 @@ def run_fetch(markets=None, data_dir=None, refresh: bool = False,
                 pass
         df = fetcher()
         if df is not None and not df.empty:
-            df.to_csv(path, index=False)
+            atomic_to_csv(df, path)
         return df
 
     a_fin = None
@@ -946,8 +947,16 @@ def run_fetch(markets=None, data_dir=None, refresh: bool = False,
         if quotes.empty or "code" not in quotes.columns:
             manifest["failures"].append(f"{market}: no quotes fetched")
             continue
-        if not reused_quotes:
-            quotes.to_csv(qpath, index=False)
+        if quotes.attrs.get("partial"):
+            # half a universe is used for this run only — persisting it
+            # would make same-day reruns mistake it for a full market
+            manifest["failures"].append(
+                f"{market}: partial quotes ({len(quotes)} rows, "
+                f"not persisted)")
+            log(f"    [{market}] WARN: partial quotes "
+                f"({len(quotes)} rows), not saved for resume")
+        elif not reused_quotes:
+            atomic_to_csv(quotes, qpath)
         # join batch financials before gating so the growth gate bites
         if market == "A":
             df = merge_a_financials(quotes, a_fin, a_cf, a_bal)
@@ -992,7 +1001,7 @@ def run_fetch(markets=None, data_dir=None, refresh: bool = False,
         log(f"    [HK] cashflow {hk_cf_stats}")
 
     master = build_master(cands_by_market, snap_dir, hk_f10, fx)
-    master.to_csv(snap_dir / "master.csv", index=False)
+    atomic_to_csv(master, snap_dir / "master.csv")
     manifest["datasets"]["master"] = len(master)
 
     # deep data for holdings the funnel excluded (watchlist.csv)
@@ -1005,16 +1014,16 @@ def run_fetch(markets=None, data_dir=None, refresh: bool = False,
                                  refresh=refresh, quiet=quiet)
     if radar_df is not None and not radar_df.empty:
         master = merge_radar(master, radar_df)
-        master.to_csv(snap_dir / "master.csv", index=False)
+        atomic_to_csv(master, snap_dir / "master.csv")
         if watch is not None and not watch.empty:
             watch = merge_radar(watch, radar_df)
-            watch.to_csv(snap_dir / "watchlist.csv", index=False)
+            atomic_to_csv(watch, snap_dir / "watchlist.csv")
 
     manifest["elapsed_sec"] = round(time.time() - t0, 1)
-    (snap_dir / "manifest.json").write_text(
-        json.dumps(manifest, indent=2), encoding="utf-8")
-    (data_dir / "latest.json").write_text(
-        json.dumps({"snapshot": snap_dir.name}), encoding="utf-8")
+    atomic_write_text(snap_dir / "manifest.json",
+                      json.dumps(manifest, indent=2))
+    atomic_write_text(data_dir / "latest.json",
+                      json.dumps({"snapshot": snap_dir.name}))
     log(f"    master: {len(master)} stocks "
         f"({manifest['elapsed_sec']}s)")
     return snap_dir

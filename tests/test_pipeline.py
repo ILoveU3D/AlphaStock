@@ -292,6 +292,22 @@ def test_incremental_reuse(patched_fetchers, tmp_path):
     assert patched_fetchers["kline"] > fetched_once
 
 
+def test_partial_quotes_not_persisted(patched_fetchers, tmp_path,
+                                      monkeypatch):
+    """Half-market quotes are used for this run but never saved as if
+    complete (a same-day rerun must refetch, not reuse a half universe)."""
+    def fake_quotes(market):
+        df = a_quotes()
+        df.attrs["partial"] = True
+        return df
+
+    monkeypatch.setattr(pl, "fetch_market_quotes", fake_quotes)
+    snap = pl.run_fetch(markets=["A"], data_dir=tmp_path, quiet=True)
+    assert not (snap / "a_quotes.csv").exists()
+    manifest = json.loads((snap / "manifest.json").read_text())
+    assert any("partial" in f for f in manifest["failures"])
+
+
 def test_reuses_prior_snapshot_klines(patched_fetchers, tmp_path,
                                       monkeypatch):
     today = date.today().strftime("%Y%m%d")

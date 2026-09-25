@@ -12,6 +12,7 @@ from pathlib import Path
 import pandas as pd
 
 from . import config
+from .atomic import atomic_to_csv
 from .strategy.composite import apply_composite, rank_top
 from .strategy.horizons import recompute_momentum_score
 from .strategy.presets import normalize_weights
@@ -163,8 +164,7 @@ def describe_weights(profile: dict) -> str:
 def export_csv(df: pd.DataFrame, path) -> Path:
     """Write the ranked table to CSV."""
     path = Path(path)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    df.reindex(columns=REPORT_COLUMNS).to_csv(path, index=False)
+    atomic_to_csv(df.reindex(columns=REPORT_COLUMNS), path)
     return path
 
 

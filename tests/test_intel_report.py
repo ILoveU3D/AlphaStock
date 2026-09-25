@@ -132,6 +132,27 @@ class TestBuildIntelReport:
         assert result["news"] == {"missing": "news source failed"}
         assert result["radar"] == {}
 
+    def test_fetcher_crash_degrades_to_missing(self, tmp_path, monkeypatch):
+        """live fetcher 抛异常（一条脏日期数据解析崩溃）不杀掉整份报告，
+        对应板块按源失败降级为 missing，其余板块照常组装。"""
+        _kill_dc(monkeypatch)
+        snap = _snap(tmp_path, {})
+
+        def _boom(*a, **kw):
+            raise ValueError("day is out of range for month")  # 脏日期
+
+        monkeypatch.setattr(ir, "fetch_stock_notices", _boom)
+        monkeypatch.setattr(ir, "fetch_stock_ratings", _boom)
+        monkeypatch.setattr(ir, "fetch_stock_news", _boom)
+        result = ir.build_intel_report(_match(), snapshot_dir=snap,
+                                       asof=date(2026, 9, 9))
+        assert result["notices"] == {"missing": "notice source failed"}
+        assert result["ratings"] == {"missing": "ratings source failed"}
+        assert result["news"] == {"missing": "news source failed"}
+        assert result["radar"] == {}
+        assert result["news_heat"] is None
+        assert result["ratings_summary"] is None
+
     def test_hk_market_degrades(self, tmp_path, monkeypatch):
         snap = _snap(tmp_path, {})
         monkeypatch.setattr(ir, "fetch_stock_notices",
@@ -215,6 +236,23 @@ class TestBuildIntelReportHKUS:
         assert res["ratings"] == [cons, rating]
         assert res["news"] == [news]
         assert "missing" in res["events"] and "missing" in res["eq"]
+
+    def test_us_fetcher_crash_degrades_to_missing(self, tmp_path,
+                                                  monkeypatch):
+        _kill_dc(monkeypatch)
+        snap = _snap(tmp_path, {})
+
+        def _boom(*a, **kw):
+            raise ValueError("day is out of range for month")  # 脏日期
+
+        monkeypatch.setattr(ir, "fetch_us_filings", _boom)
+        monkeypatch.setattr(ir, "fetch_us_consensus", _boom)
+        monkeypatch.setattr(ir, "fetch_stock_news",
+                            lambda mid, code, name="", **kw: [])
+        res = ir.build_intel_report(self._us_match(), snapshot_dir=snap)
+        assert res["notices"] == {"missing": "EDGAR source failed"}
+        assert res["ratings"] == {"missing": "ratings source failed"}
+        assert res["news"] == []
 
     def test_us_render_labels(self):
         res = {"match": self._us_match(), "snapshot": "20260909",

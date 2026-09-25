@@ -118,3 +118,48 @@ class TestResolve:
         snap.mkdir()
         out = rs.resolve("茶百道", snapshot_dir=snap, live=True)
         assert out and out[0].code == "02555" and out[0].market_id == "116"
+
+    def _write_snap(self, tmp_path):
+        snap = tmp_path / "20260901"
+        snap.mkdir()
+        for mk, df in frames().items():
+            df.to_csv(snap / f"{mk.lower()}_quotes.csv", index=False)
+        return snap
+
+    def test_english_word_does_not_beat_real_ticker(self, tmp_path,
+                                                    monkeypatch):
+        """'apple' must resolve to AAPL (smartbox/name), never to the
+        phantom ticker US/APPLE."""
+        snap = self._write_snap(tmp_path)
+        d = {"QuotationCodeTable": {"Data": [
+            {"Code": "AAPL", "Name": "Apple Inc", "MktNum": "105"}]}}
+        monkeypatch.setattr(rs.SB, "get_json", lambda *a, **k: d)
+        out = rs.resolve("apple", snapshot_dir=snap, live=True)
+        assert out[0].market == "US" and out[0].code == "AAPL"
+        assert all(m.code != "APPLE" for m in out[:1])
+
+    def test_english_word_does_not_beat_smartbox_hit(self, tmp_path,
+                                                     monkeypatch):
+        """'tencent' must resolve to HK/00700, not US/TENCENT."""
+        snap = tmp_path / "empty"
+        snap.mkdir()
+        d = {"QuotationCodeTable": {"Data": [
+            {"Code": "00700", "Name": "腾讯控股", "MktNum": "116"}]}}
+        monkeypatch.setattr(rs.SB, "get_json", lambda *a, **k: d)
+        out = rs.resolve("tencent", snapshot_dir=snap, live=True)
+        assert out[0].market == "HK" and out[0].code == "00700"
+
+    def test_confirmed_us_ticker_keeps_top_score(self, tmp_path):
+        """A query that IS a listed US ticker stays the 120-score pick."""
+        snap = self._write_snap(tmp_path)
+        out = rs.resolve("aapl", snapshot_dir=snap, live=False)
+        assert out[0].market == "US" and out[0].code == "AAPL"
+        assert out[0].name == "Apple Inc"  # enriched from snapshot
+
+    def test_us_form_survives_as_last_resort_offline(self, tmp_path):
+        """No snapshot + no network: the code form remains as the only
+        candidate (offline CLI must not lose US tickers outright)."""
+        snap = tmp_path / "empty"
+        snap.mkdir()
+        out = rs.resolve("AAPL", snapshot_dir=snap, live=False)
+        assert out and out[0].market == "US" and out[0].code == "AAPL"

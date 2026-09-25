@@ -58,6 +58,15 @@ class TestParse:
         assert b.status == "axiom"
         assert b.tags == ["epistemology", "value"]
         assert b.links == []
+
+    def test_render_roundtrip_preserves_escapes(self):
+        # statements often carry quotes; render -> parse must not
+        # accumulate backslash layers (silent brick corruption)
+        b = tw.parse_brick(SAMPLE)
+        b.statement = '巴菲特说"市场先生"是 \\ 寓言'
+        for _ in range(3):
+            b = tw.parse_brick(tw.render_brick(b))
+        assert b.statement == '巴菲特说"市场先生"是 \\ 寓言'
         assert b.version == 1
         assert b.body.startswith("## 论证")
 

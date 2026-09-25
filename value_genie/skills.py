@@ -65,7 +65,22 @@ class Skill:
 def _parse_scalar(v: str) -> str:
     v = v.strip()
     if len(v) >= 2 and v[0] == v[-1] and v[0] in "\"'":
-        return v[1:-1]
+        inner = v[1:-1]
+        if v[0] == "'":
+            return inner
+        # double-quoted: undo _fmt_scalar's \\ and \" escapes (only
+        # those two sequences are produced; other backslashes stay raw)
+        out = []
+        i = 0
+        while i < len(inner):
+            if inner[i] == "\\" and i + 1 < len(inner) \
+                    and inner[i + 1] in "\\\"":
+                out.append(inner[i + 1])
+                i += 2
+            else:
+                out.append(inner[i])
+                i += 1
+        return "".join(out)
     return v
 
 

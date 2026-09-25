@@ -482,6 +482,53 @@ def test_mark_nav_multi_currency(trade_dir, snap, prices, hk_lot_100):
     assert len(s["nav_history"]) == 1
 
 
+def test_mark_nav_suspended_falls_back_to_last_mark(trade_dir, snap, prices,
+                                                    monkeypatch):
+    """停牌持仓不杀掉整季 NAV：回退到最近一次标记价并标 stale，
+    复牌后回到实价标记。"""
+    from value_genie import trade as tr
+    tr.new_season("s001", base="USD", capital=2000.0, markets=["US"])
+    tr.buy("s001", _match("US", "AAPL", "Apple"), qty=5,
+           snap_dir=snap, today="2026-09-04")
+    e1 = tr.mark_nav("s001", snap_dir=snap, today="2026-09-04")
+    assert e1["positions"][0]["price"] == 230.0
+    # 次日停牌：live 与快照都无价格
+    monkeypatch.setattr(tr, "live_price",
+                        lambda m, c, n, snap_dir=None: (None, ""))
+    e2 = tr.mark_nav("s001", snap_dir=snap, today="2026-09-07")
+    row = e2["positions"][0]
+    assert row["price"] == 230.0            # 上次标记价
+    assert row["stale"] == "last-mark"
+    assert e2["nav"] == e1["nav"]           # NAV 连续
+    # 复牌后回到实价
+    monkeypatch.setattr(tr, "live_price",
+                        lambda m, c, n, snap_dir=None: (240.0, "live"))
+    e3 = tr.mark_nav("s001", snap_dir=snap, today="2026-09-08")
+    assert e3["positions"][0]["price"] == 240.0
+    assert "stale" not in e3["positions"][0]
+
+
+def test_mark_nav_never_priced_falls_back_to_cost(trade_dir, snap,
+                                                  monkeypatch):
+    """从未成功标记过的持仓（买入即停牌）回退到 avg_cost 并标 stale。"""
+    from value_genie import trade as tr
+    tr.new_season("s001", base="USD", capital=2000.0, markets=["US"])
+    s = tr.load_season("s001")
+    s["positions"].append({
+        "market": "US", "code": "AAPL", "name": "Apple",
+        "qty": 5.0, "avg_cost": 230.4, "currency": "USD",
+        "last_buy_date": "2026-09-04", "lot": 1})
+    s["cash"]["USD"] = 848.0
+    tr.save_season(s)
+    monkeypatch.setattr(tr, "live_price",
+                        lambda m, c, n, snap_dir=None: (None, ""))
+    e = tr.mark_nav("s001", snap_dir=snap, today="2026-09-07")
+    row = e["positions"][0]
+    assert row["price"] == 230.4
+    assert row["stale"] == "cost"
+    assert e["nav"] == round(848.0 + 230.4 * 5, 2)
+
+
 def test_status_dual_goal_metrics(trade_dir, snap, prices):
     from value_genie import trade as tr
     tr.new_season("s001", base="USD", capital=2000.0, markets=["US"])
