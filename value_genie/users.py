@@ -16,7 +16,7 @@ same contract as skills persistence.
 import json
 import re
 import sys
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, fields
 from datetime import datetime
 from pathlib import Path
 
@@ -85,7 +85,12 @@ def user_path(user_id: str) -> Path:
 
 
 def load_user(user_id: str) -> UserProfile:
-    """Load one user; FileNotFoundError carries a create hint."""
+    """Load one user; FileNotFoundError carries a create hint.
+
+    Schema-drift tolerant: holding fields this version no longer knows
+    are dropped with a warning; anything structurally broken raises
+    ValueError (never a bare TypeError/KeyError) so ``list_users`` can
+    skip the file without killing CLI startup."""
     path = user_path(user_id)
     if not path.exists():
         raise FileNotFoundError(
@@ -95,7 +100,34 @@ def load_user(user_id: str) -> UserProfile:
         data = json.loads(path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as exc:
         raise ValueError(f"corrupt user file {path}: {exc}") from None
-    holdings = [Holding(**h) for h in data.get("holdings", [])]
+    if not isinstance(data, dict):
+        raise ValueError(
+            f"corrupt user file {path}: top level must be an object")
+    if not data.get("id"):
+        raise ValueError(f"corrupt user file {path}: missing 'id'")
+    raw_holdings = data.get("holdings", [])
+    if not isinstance(raw_holdings, list):
+        raise ValueError(
+            f"corrupt user file {path}: 'holdings' must be a list")
+    known = {f.name for f in fields(Holding)}
+    holdings = []
+    unknown_keys = set()
+    for h in raw_holdings:
+        if not isinstance(h, dict):
+            raise ValueError(
+                f"corrupt user file {path}: holding entries must be "
+                f"objects")
+        unknown_keys |= set(h) - known
+        try:
+            holdings.append(Holding(
+                **{k: v for k, v in h.items() if k in known}))
+        except TypeError as exc:
+            raise ValueError(
+                f"corrupt user file {path}: bad holding entry: {exc}") \
+                from None
+    if unknown_keys:
+        print(f"[WARN] {path}: ignoring unknown holding fields "
+              f"{sorted(unknown_keys)}", file=sys.stderr)
     return UserProfile(
         id=data["id"], name=data.get("name") or data["id"],
         created_at=data.get("created_at") or "",
@@ -111,7 +143,7 @@ def list_users() -> list:
     for p in sorted(d.glob("*.json")):
         try:
             out.append(load_user(p.stem))
-        except ValueError as exc:
+        except (ValueError, OSError) as exc:
             print(f"[WARN] skipping unreadable user file: {exc}",
                   file=sys.stderr)
     return out

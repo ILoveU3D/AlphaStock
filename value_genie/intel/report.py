@@ -18,6 +18,7 @@ event-level judgment stays with the AI agent.
 
 from datetime import date, timedelta
 from pathlib import Path
+import sys
 
 import pandas as pd
 
@@ -30,6 +31,17 @@ from .radar import (_appointment_items, _buyback_items, _eq_records,
                     _forecast_items, _holder_items, _placement_items,
                     _read_csv, _unlock_items, RADAR_COLUMNS)
 from .ratings import fetch_stock_ratings, fetch_us_consensus
+
+
+def _safely(fetcher, label: str, *args, **kw):
+    """Live fetcher 异常兜底：一条脏数据（如畸形日期）令 fetcher 崩溃时
+    按源失败降级（None → {"missing": ...}），不拖垮整份报告。"""
+    try:
+        return fetcher(*args, **kw)
+    except Exception as e:  # noqa: BLE001 — one bad record must not
+        print(f"    [intel {label}] fetch error: {e}",  # kill the report
+              file=sys.stderr)
+        return None
 
 
 def _master_row(snap: Path | None, market: str, code: str) -> dict | None:
@@ -213,16 +225,18 @@ def build_intel_report(match, snapshot_dir=None,
             "missing": "粉饰信号输入（应收/存货/OCF/扣非）为 A 股快照专属"}
 
     if market == "US":
-        notices = fetch_us_filings(match.code, name=match.name)
+        notices = _safely(fetch_us_filings, "filings", match.code,
+                          name=match.name)
         result["notices"] = ({"missing": "EDGAR source failed"}
                              if notices is None else notices)
     elif market == "HK":
-        notices = fetch_stock_notices(match.code, name=match.name,
-                                      market="HK")
+        notices = _safely(fetch_stock_notices, "notices", match.code,
+                          name=match.name, market="HK")
         result["notices"] = ({"missing": "notice source failed"}
                              if notices is None else notices)
     else:
-        notices = fetch_stock_notices(match.code, name=match.name)
+        notices = _safely(fetch_stock_notices, "notices", match.code,
+                          name=match.name)
         result["notices"] = ({"missing": "notice source failed"}
                              if notices is None else notices)
 
@@ -231,23 +245,25 @@ def build_intel_report(match, snapshot_dir=None,
             "missing": "港股研报源缺失（东财 reportapi 不含港股）；"
                        "评级动向请看新闻时间线"}
     elif market == "US":
-        ratings = fetch_us_consensus(match.code, name=match.name)
+        ratings = _safely(fetch_us_consensus, "consensus", match.code,
+                          name=match.name)
         result["ratings"] = ({"missing": "ratings source failed"}
                              if ratings is None else ratings)
     else:
-        ratings = fetch_stock_ratings(match.code, name=match.name)
+        ratings = _safely(fetch_stock_ratings, "ratings", match.code,
+                          name=match.name)
         result["ratings"] = ({"missing": "ratings source failed"}
                              if ratings is None else ratings)
 
     if market == "US":
-        news = fetch_stock_news(match.market_id or "", match.code,
-                                name=match.name, market="US")
+        news = _safely(fetch_stock_news, "news", match.market_id or "",
+                       match.code, name=match.name, market="US")
     elif market == "HK":
-        news = fetch_stock_news(match.market_id or "116", match.code,
-                                name=match.name, market="HK")
+        news = _safely(fetch_stock_news, "news", match.market_id or "116",
+                       match.code, name=match.name, market="HK")
     else:
-        news = fetch_stock_news(match.market_id or "0", match.code,
-                                name=match.name)
+        news = _safely(fetch_stock_news, "news", match.market_id or "0",
+                       match.code, name=match.name)
     result["news"] = ({"missing": "news source failed"}
                       if news is None else news)
 

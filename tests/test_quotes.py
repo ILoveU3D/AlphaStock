@@ -163,6 +163,33 @@ class TestFetchMarketQuotes:
         assert calls == [1] + [2] * (config.QUOTE_PAGE_RETRIES + 1)
         assert "WARN" in capsys.readouterr().out
 
+    def test_partial_universe_is_flagged(self, monkeypatch):
+        """Retry-exhausted mid-universe pages must flag the frame partial
+        so the pipeline never persists half a market as complete."""
+        from value_genie.fetch import quotes as q
+
+        def fake_get(path, params=None, **kw):
+            if params["pn"] == 1:
+                return {"data": {"total": 3, "diff": [_row("600001"),
+                                                      _row("600002")]}}
+            return None  # page 2 always fails
+
+        monkeypatch.setattr(q, "em_push2_get", fake_get)
+        monkeypatch.setattr(q.time, "sleep", lambda s: None)
+        df = q.fetch_market_quotes("A")
+        assert len(df) == 2
+        assert df.attrs.get("partial") is True
+
+    def test_complete_universe_not_flagged(self, monkeypatch):
+        from value_genie.fetch import quotes as q
+
+        monkeypatch.setattr(q, "em_push2_get", lambda *a, **k: {
+            "data": {"total": 1, "diff": [_row()]}})
+        monkeypatch.setattr(q.time, "sleep", lambda s: None)
+        df = q.fetch_market_quotes("A")
+        assert len(df) == 1
+        assert df.attrs.get("partial") in (None, False)
+
 
 # ---------------------------------------------------------------------------
 # Tencent realtime fallback + fetch_quote_any (price redundancy)

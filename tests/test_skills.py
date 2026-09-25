@@ -75,6 +75,26 @@ class TestParse:
         assert again.version == s.version
         assert again.body.strip() == s.body.strip()
 
+    def test_quoted_scalar_unescapes(self):
+        text = SAMPLE.replace("title: Demo Skill",
+                              'title: "He said \\"hi\\" C:\\\\new"')
+        s = sk.parse_skill(text)
+        assert s.title == 'He said "hi" C:\\new'
+
+    def test_scalar_roundtrip(self):
+        for v in ('plain', 'He said "hi"', 'C:\\new', 'both " and \\',
+                  '', 'trailing ', ':colon'):
+            assert sk._parse_scalar(sk._fmt_scalar(v)) == v, v
+
+    def test_render_roundtrip_preserves_escapes(self):
+        # quoted/backslashed values must not accumulate escape layers
+        # across repeated render -> parse cycles (silent corruption)
+        s = sk.parse_skill(SAMPLE)
+        s.title = 'He said "hi" C:\\new'
+        for _ in range(3):
+            s = sk.parse_skill(sk.render_skill(s))
+        assert s.title == 'He said "hi" C:\\new'
+
 
 class TestLoad:
     def test_loads_good_reports_bad(self, tmp_path):

@@ -9,8 +9,8 @@ triggers:
 commands:
   - doctor
   - fetch
-version: 26
-updated_at: 2026-09-25T14:14:21
+version: 27
+updated_at: 2026-09-26T00:27:13
 ---
 
 # Playbook
@@ -65,3 +65,4 @@ known snapshot is older than one trading day:
 - [2026-09-24 22:03] (ai) EM断供期 trade buy 成交价回落快照价而非腾讯实时价: 0924 TCOM 40股 fill@40.65(快照) vs 实时40.03, +1.5%保守溢价=断供期一次性成本; 与v23 NAV混合口径quirk同源, 交易决策时需用腾讯实时价自行核算真实成本
 - [2026-09-25 13:10] (ai) 2026-09-25 EM push2 全系镜像(含33/17/88子域)对本机IP限流封禁>50分钟(fetch突发clist触发), datacenter/腾讯/SEC不受影响。恢复路径: 删除当日残缺a_quotes.csv(防resume复用偏差样本, clist按代码排序导致部分拉取有前段偏差) → 腾讯qt.gtimg.cn批量行情(60符号/请求,GBK,idx3/32/36/37/38/39/44/45/46字段与东财口径逐位校准)重建全宇宙 → run_fetch(markets=['A'])复用财务+K线。工具箱修复: merge_us_financials ps计算加market_cap守卫(美股watch兜底行情无该列时KeyError)。
 - [2026-09-25 14:14] (ai) 2026-09-25 腾讯重建HK/US行情配方(EM封禁延续): HK字段 idx3价/idx32涨跌/idx44流通/idx45总市值(亿)/idx58PB(与EM按价折算偏差<1%), PE腾讯用年报EPS口径与EM TTM差达7%→用0922 EM基准×价格比缩放; US字段 idx3价(昨收,美股闭市)/idx38换手/idx44/45市值(亿), PB无干净字段(AAPL idx41疑似但MSFT对不上)→PE+PB全缩放; US代码含'_'类股(BRK_B)需同时试us{code}与us{code替换'_'为'.'}; 0922 us_quotes含NaN代码行需drop。HK 14725/14725全活, US 12859近乎全活。
+- [2026-09-26 00:27] (ai) tests/conftest.py 有 autouse _no_sleep fixture 全局中和 time.sleep；写节流行为测试时必须在测试内重新 patch time.sleep 为记录函数（见 test_fundamentals.test_companyconcept_requests_throttled）

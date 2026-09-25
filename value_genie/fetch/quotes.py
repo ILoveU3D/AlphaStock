@@ -47,6 +47,7 @@ def fetch_market_quotes(market: str) -> pd.DataFrame:
     all_rows, pn = [], 1
     page_fails = 0
     total = 0
+    partial = False
     while True:
         d = em_push2_get("/api/qt/clist/get", params={
             "pn": pn, "pz": PAGE_SIZE, "po": 0, "np": 1, "fltt": 2,
@@ -66,6 +67,7 @@ def fetch_market_quotes(market: str) -> pd.DataFrame:
             if page_fails > config.QUOTE_PAGE_RETRIES:
                 print(f"    [{market}] WARN: page {pn} failed "
                       f"{page_fails - 1}x, continuing with partial quotes")
+                partial = True
                 break
             time.sleep(4.0 * page_fails)
             continue  # retry the same page
@@ -85,6 +87,9 @@ def fetch_market_quotes(market: str) -> pd.DataFrame:
     # A-share codes arrive zero-padded; normalize HK to 5 digits, drop .SH/.SZ
     if market == "HK":
         df["code"] = df["code"].astype(str).str.zfill(5)
+    if partial:
+        # the pipeline must not persist a half universe as complete
+        df.attrs["partial"] = True
     return df
 
 

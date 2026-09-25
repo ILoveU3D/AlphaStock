@@ -119,12 +119,22 @@ def search_smartbox(query: str, count: int = 8) -> list:
     return out
 
 
+def _us_ticker_confirmed(code: str, frames: dict, matches: list) -> bool:
+    """True when some source confirms the US ticker actually exists —
+    the snapshot US universe or a smartbox/name match with the same
+    code. Guards against arbitrary English words becoming tickers."""
+    df = frames.get("US")
+    if df is not None and not df.empty and "code" in df.columns:
+        if code in set(df["code"].astype(str).str.upper()):
+            return True
+    return any(m.market == "US" and m.code.upper() == code
+               for m in matches)
+
+
 def resolve(query: str, snapshot_dir=None, live: bool = True) -> list:
     """All candidate matches for a query, best first."""
     out = []
     form = parse_code_form(query)
-    if form:
-        out.append(Match(form[0], form[1], query.strip(), 120.0, form[2]))
     try:
         frames = load_snapshot_frames(snapshot_dir)
     except FileNotFoundError:
@@ -134,6 +144,14 @@ def resolve(query: str, snapshot_dir=None, live: bool = True) -> list:
         seen = {(m.market, m.code) for m in out}
         out += [m for m in search_smartbox(query)
                 if (m.market, m.code) not in seen]
+    if form:
+        score = 120.0
+        if form[0] == "US" and not _us_ticker_confirmed(form[1], frames,
+                                                        out):
+            # an arbitrary English word parses as a US code form; keep
+            # it only as a last resort below every confirmed match
+            score = 10.0
+        out.append(Match(form[0], form[1], query.strip(), score, form[2]))
     best = {}
     for m in out:
         key = (m.market, m.code)

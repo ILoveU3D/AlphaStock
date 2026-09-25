@@ -604,19 +604,40 @@ def mark_nav(sid, snap_dir=None, today=None) -> dict:
         _to_base(e["amount"], e["currency"], rates, base)
         for e in season["settling"])
     pos_rows, pos_base = [], 0.0
+    # 停牌/断源回退链：live → 最近一次标记价 → 成本价。一个停牌持仓
+    # 不应杀掉整季 NAV——标记为 stale 继续，复牌后自动回到实价。
+    last_marks = {}
+    for e in reversed(season["nav_history"]):
+        for r in e.get("positions", []):
+            key = (r.get("market"), r.get("code"))
+            if key not in last_marks and r.get("price") is not None:
+                last_marks[key] = r["price"]
     for p in season["positions"]:
         price, _src = live_price(p["market"], p["code"], p["name"],
                                  snap_dir)
+        stale = None
         if price is None:
-            raise TradeError(
-                f"no price for {p['market']}/{p['code']} "
-                f"(live and snapshot both failed)")
+            stale = "last-mark"
+            price = last_marks.get((p["market"], p["code"]))
+            if price is None:
+                stale = "cost"
+                price = p.get("avg_cost")
+            if price is None:
+                raise TradeError(
+                    f"no price for {p['market']}/{p['code']} "
+                    f"(live, last mark and cost all missing)")
+            print(f"    [trade] WARN: {p['market']}/{p['code']} "
+                  f"unpriced, marked stale at {stale} price {price}",
+                  file=sys.stderr)
         vb = _to_base(price * p["qty"], p["currency"], rates, base)
         pos_base += vb
-        pos_rows.append({
+        row = {
             "market": p["market"], "code": p["code"], "name": p["name"],
             "qty": p["qty"], "price": float(price),
-            "currency": p["currency"], "value_base": round(vb, 2)})
+            "currency": p["currency"], "value_base": round(vb, 2)}
+        if stale:
+            row["stale"] = stale
+        pos_rows.append(row)
     nav = round(cash_base + settling_base + pos_base, 2)
     entry = {
         "date": today, "nav": nav,

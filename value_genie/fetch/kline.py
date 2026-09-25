@@ -13,6 +13,7 @@ from pathlib import Path
 import pandas as pd
 
 from .. import config
+from ..atomic import atomic_to_csv
 from .http import TX, em_push2_get, num
 
 KLINE_COLS = ["date", "open", "close", "high", "low", "volume", "amount"]
@@ -126,8 +127,7 @@ def fetch_kline_any(market: str, code: str, market_id: str = "",
 # Cache helpers
 # ---------------------------------------------------------------------------
 def save_kline(df: pd.DataFrame, path: Path) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(path, index=False)
+    atomic_to_csv(df, path)
 
 
 def load_kline(path: Path) -> pd.DataFrame | None:
