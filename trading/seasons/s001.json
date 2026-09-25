@@ -480,6 +480,55 @@
         "HKD": 0.8537,
         "USD": 6.6963
       }
+    },
+    {
+      "date": "2026-09-25",
+      "nav": 7185.03,
+      "cash_total": 2675.56,
+      "settling_total": 0,
+      "positions": [
+        {
+          "market": "US",
+          "code": "ZM",
+          "name": "Zoom通讯",
+          "qty": 12.0,
+          "price": 91.02,
+          "currency": "USD",
+          "value_base": 1092.24
+        },
+        {
+          "market": "US",
+          "code": "PTC",
+          "name": "PTC Inc",
+          "qty": 8.0,
+          "price": 138.52,
+          "currency": "USD",
+          "value_base": 1108.16
+        },
+        {
+          "market": "US",
+          "code": "DUOL",
+          "name": "多邻国",
+          "qty": 5.0,
+          "price": 146.655,
+          "currency": "USD",
+          "value_base": 733.27
+        },
+        {
+          "market": "US",
+          "code": "TCOM",
+          "name": "携程",
+          "qty": 40.0,
+          "price": 39.395,
+          "currency": "USD",
+          "value_base": 1575.8
+        }
+      ],
+      "fx": {
+        "CNY": 1.0,
+        "HKD": 0.92,
+        "USD": 7.2
+      }
     }
   ],
   "journal": [
@@ -503,6 +552,13 @@
       "nav": 7221.7,
       "day_pnl": -1.99,
       "text": "0924美股交易日: 买入TCOM 40股@40.65(引擎快照价成交,腾讯实时40.03,+1.5%口径溢价为EM断供期一次性成本). QMF四票基本面前提+错杀池(-48.5%)+企稳扳机(r5+4.3,前低38.67六日不破)首次完整落地--两层时机结构执行日. 卖出侧无动作: ZM/PTC/DUOL论点完好. LPG周期顶否决连续第3日市场验证(-5.47%/-2.25%后续跌). 日内腾讯口径NAV 7212.84(+0.46% vs期初); 引擎快照口径7221.70, 双口径差9 全为口径非市场."
+    },
+    {
+      "date": "2026-09-25",
+      "ts": "2026-09-25T22:17:17",
+      "nav": 7181.69,
+      "day_pnl": -40.01,
+      "text": "20260925 美股盘中(10:10 ET) abstain: 全候选L2否决链。①TCOM 2nd hand扳机未触发(-1.69%仍下跌,企稳确认不存在,首手40@40.70按兵不动); ②HRMY: 10天内2笔内部人Form4卖出→否决; ③BZ(新面孔,三票buffett/graham/sheng,PE9.9+FCF9.5%+rev+17.3%完美错杀壳): OpenInsider实查=CEO赵鹏9月两笔S卖出合计~1.16亿美元(09-21 1517万股@7.25+09-10 74万股@8.23)+CMO减仓54%+董事-30%——急跌是内部人派发不是错杀→否决; ④LPG: 周期顶否决继续兑现(-1.22%); ⑤GPOR/TGTX/CARG: profit_spike(+264%/+1811%/+643%)→否决,TGTX且OCF为负(纸面利润砖); ⑥ZM/PTC/DUOL论点完好无卖出触发。教训: US事件雷达不覆盖Form4交易代码,XS法4仅显示'内部人交易'中性标签——必须下钻代码级(S=卖出/A=授予/F=税扣),www.sec.gov档案被IP封时用openinsider.com。"
     }
   ],
   "totals": {
