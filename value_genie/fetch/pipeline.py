@@ -157,9 +157,12 @@ def merge_us_financials(quotes: pd.DataFrame,
             join_cols.append(extra)
     f = fins.drop_duplicates(subset="ticker")[join_cols]
     out = out.merge(f, left_on="code", right_on="ticker", how="left")
+    # market_cap may be absent when a watch-symbol quote fell all the way
+    # back to the Tencent realtime source (EM outage, no US snapshot quotes)
     out["ps"] = out.apply(
         lambda r: r["market_cap"] / r["rev"]
-        if r.get("rev") and r["rev"] > 0 else None, axis=1)
+        if r.get("rev") and r["rev"] > 0 and r.get("market_cap")
+        else None, axis=1)
     out["report_date"] = f"{frames_year_context()['cy']}-12-31"
     if "ocf" in out.columns:
         out["ocf_yield"] = out.apply(
