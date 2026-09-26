@@ -9,10 +9,13 @@ links:
   - "derives-from:dcf-universal-law"
   - "refines:proposition-vs-lens"
   - "applies-to:cognition-terminal-value"
-version: 1
+version: 2
 created_at: 2026-09-25T12:18:01
-updated_at: 2026-09-25T12:18:01
+updated_at: 2026-09-26T00:27:40
 ---
 
 ## 论证
 （待论证）
+
+## Field Notes
+- [2026-09-26 00:27] (ai) 三权分置精化：占有/控制/剩余索取可分属不同主体——国家控股企业的公众持股=剩余索取的收租权切片，控制权一寸不转移；持股不改变阶级位置，只增加现金流来源的复合性（2026-09-26对话）
