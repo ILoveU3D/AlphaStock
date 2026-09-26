@@ -31,7 +31,7 @@ def _register_horizons():
     """Register the four built-in horizons (ultrashort -> long)."""
 
     register_horizon(Horizon(
-        id="ultrashort", name="超短线", window="1-10 交易日",
+        id="ultrashort", name="超短线", window="<1 天",
         weights={"value": 0, "growth": 0.25, "quality": 0.05,
                  "safety": 0, "momentum": 0.70, "cashflow": 0},
         momentum_cols=("ret_5d", "ret_20d"),
@@ -40,7 +40,7 @@ def _register_horizons():
     ))
 
     register_horizon(Horizon(
-        id="short", name="短线", window="10日-3月",
+        id="short", name="短线", window="1天-1月",
         weights={"value": 0.20, "growth": 0.20, "quality": 0.10,
                  "safety": 0.15, "momentum": 0.35, "cashflow": 0},
         momentum_cols=("ret_20d", "ret_60d"),
@@ -49,7 +49,7 @@ def _register_horizons():
     ))
 
     register_horizon(Horizon(
-        id="mid", name="中线", window="3月-3年",
+        id="mid", name="中线", window="1月-1年",
         weights={"value": 0.30, "growth": 0.30, "quality": 0.20,
                  "safety": 0.10, "momentum": 0.10, "cashflow": 0},
         momentum_cols=("ret_60d", "ret_250d"),
@@ -58,7 +58,7 @@ def _register_horizons():
     ))
 
     register_horizon(Horizon(
-        id="long", name="长线", window="3年+",
+        id="long", name="长线", window="1年+",
         weights={"value": 0.15, "growth": 0.20, "quality": 0.35,
                  "safety": 0.10, "momentum": 0, "cashflow": 0.20},
         momentum_cols=("ret_60d", "ret_250d"),
