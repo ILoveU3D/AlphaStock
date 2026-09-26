@@ -213,6 +213,10 @@ DEFAULT_TOP_N = 20
 # ---------------------------------------------------------------------------
 TRADING_DIR = BASE_DIR / "trading"   # durable virtual-portfolio state,
 # git-tracked; deliberately NOT under the cleanable data/ tree
+THESES_DIR = BASE_DIR / "theses"     # thesis registry (tower-fed pools):
+# durable, git-tracked; each entry carries brick lineage, the three
+# issuance-window features and a falsification set (design 2026-09-26)
+THESIS_MAX = 40       # total thesis members injectable per masters-vote run
 TRADE_CURRENCIES = ("CNY", "HKD", "USD")
 TRADE_FX_SPREAD = 0.003              # default FX spread per season
 
