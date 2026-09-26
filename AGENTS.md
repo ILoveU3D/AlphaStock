@@ -105,6 +105,7 @@ excluded when no USD rate, concentration observations verbatim).
 | "X和Y哪个好 / X vs Y" | compare-stocks | `python -m value_genie compare X Y` |
 | "今天给我推荐股票（按我的风格、结合我的持仓）" | user-recommend | `python -m value_genie recommend --user me` |
 | "推荐/最被低估/量化+大师最优" | fused-quant-master | `python -m value_genie masters-vote` (L1/L2) + 7-master 定性层 (L3) + 融合裁决 (L4)，per skills/18 — user mandate 2026-09-15: 融合，不分情况讨论 |
+| "把塔砖断言的机器注入候选池 / 管理产业论点" | fused-quant-master | `python -m value_genie masters-vote --thesis <id>` + `thesis list|show|add|amend|retire`（见 Thesis pools 节） |
 | "设置/修改我的投资风格" | user-profile | `python -m value_genie user set-style me --base buffett --weight value=0.3` |
 | "录入/修改/查看我的持仓" | user-portfolio | `python -m value_genie holding add|update|remove|list` |
 | "审视我的持仓 / 深度分析持仓" | holding-deep-review | `holding list` 先看体检，再 `ask X --evidence` per holding + `screen --strategy <master>` (business model, moat, culture, earn/lose paths, two master frameworks) |
@@ -168,6 +169,42 @@ Notes; `refuted` bricks are never deleted (errors are assets).
 3. Answers stay non-evasive: brick × current reality = concrete
    judgment; a conditional verdict must state its conditions, not
    hedge.
+
+## Thesis pools (论点喂池)
+
+Theses are the tower→L1 pipeline: a brick's assertion about a
+money-printing machine (e.g. "memory is being repriced from cyclical
+to compute-input") becomes a named, member-carrying pool that
+`masters-vote --thesis <id>` injects into the L1 candidate universe.
+They live in the git-tracked top-level `theses/` dir (one JSON per
+thesis, CLI-maintained, atomic writes — never inside `data/`).
+
+A thesis carries: `brick` (tower lineage — the falsification trail
+that motivated it), `statement`, `reason`, `features` (the three
+window traits: new/unpriced, needed by a tech/demographic cycle,
+skill-attention arbitrage), `falsification` (explicit kill
+conditions), `members` (market:code list), `industry_hints`
+(discovery aid), and `status` (active/retired).
+
+- Commands: `python -m value_genie thesis list|show|add|amend|retire|
+  remove` — all `--json`-capable; `show --discover` scans the
+  snapshot for industry-hint matches not yet members. Thesis
+  commands do **not** run the freshness gate.
+- `masters-vote --thesis <id>`: pool = funnel ∪ thesis members (the
+  machine competes alongside the whole pool, never in a thesis-only
+  silo). Members missing from master.csv get rebuilt from the gated
+  peer universe with live kline / HK F10 backfill and full pillar
+  scores; members blocked by universe gates are listed as `excluded`
+  with the reason. Retired theses hard-block the vote.
+- **Seat, not a vote**: injection only buys a seat at the L1 table —
+  all 7-master gates, L2 veto flags and L3/L4 judgment apply
+  unchanged. A thesis member with zero master votes is a legitimate
+  outcome (the machine assertion is mine, the gates are theirs).
+- **House rule**: every thesis must name its brick lineage and
+  falsification set at creation; when a falsification condition
+  fires, `thesis retire <id> --reason "..."` immediately — retired
+  theses are never deleted (like `refuted` bricks, they are assets).
+  Cap: `THESIS_MAX = 40` members per pool build.
 
 ## Investment masters
 

@@ -177,8 +177,34 @@ def cmd_masters_vote(args) -> int:
     from .strategy import consensus as cs
     from .strategy.registry import list_strategies
 
+    # --thesis: tower-fed pool injection (thesis buys a seat, never a
+    # vote — L2 flags and the master gates apply unchanged)
+    thesis_infos = []
+    if args.thesis:
+        from . import thesis as th
+        try:
+            theses = [th.load_thesis(tid) for tid in args.thesis]
+        except (ValueError, FileNotFoundError) as exc:
+            raise SystemExit(str(exc)) from None
+        retired = [t.id for t in theses if t.status != "active"]
+        if retired:
+            raise SystemExit(
+                f"thesis {', '.join(retired)} is retired — its "
+                f"falsification fired or the window closed; see "
+                f"`thesis show <id>`")
+        try:
+            master, thesis_infos = th.build_pool(
+                snap_dir, master, theses, live=not args.no_live)
+        except ValueError as exc:
+            raise SystemExit(str(exc)) from None
+
     masters = [s.id for s in list_strategies(kind="master")]
     df = cs.add_snapshot_flags(cs.masters_vote(master, markets=markets))
+    if thesis_infos:
+        tcol = df.get("thesis")
+        for ti in thesis_infos:
+            mask = tcol.astype(str).str.contains(ti["id"], na=False)
+            ti["voted"] = int((df.loc[mask, "vote_count"] >= 1).sum())
     pool = df[df["vote_count"] >= 1]
     if pool.empty:
         raise SystemExit("no stocks passed any master's gates")
@@ -211,6 +237,8 @@ def cmd_masters_vote(args) -> int:
                 "cycle_trap_ratio": cs.CYCLE_TRAP_RATIO,
                 "cycle_warn_ratio": cs.CYCLE_WARN_RATIO,
                 "profit_spike_pct": cs.PROFIT_SPIKE_PCT}
+        if thesis_infos:
+            meta["theses"] = thesis_infos
         print(report.to_json(top, meta))
         return 0
 
@@ -218,12 +246,23 @@ def cmd_masters_vote(args) -> int:
     print(f"snapshot : {snap_dir.name}")
     print(f"masters  : {', '.join(masters)}")
     print(f"markets  : {', '.join(markets or config.MARKETS)}")
+    for ti in thesis_infos:
+        line = (f"thesis   : {ti['id']} — {ti['name']} "
+                f"({ti['members']} members: {ti['funnel']} funnel, "
+                f"{ti['injected']} injected, "
+                f"{ti.get('voted', 0)} passed >=1 gate")
+        if ti["excluded"]:
+            line += ("; excluded: " + "; ".join(
+                f"{lbl} ({why})" for lbl, why in ti["excluded"]))
+        print(line + ")")
     print()
     print(f"{'rank':>4} {'market':>6} {'code':>8} {'name':<14} "
           f"{'price':>8} {'votes':>5} {'mean_comp':>9} "
           f"{'pe_div':>6}  flags")
     for i, (_, r) in enumerate(top.iterrows(), 1):
         flags = []
+        if r.get("thesis"):
+            flags.append(f"thesis:{r['thesis']}")
         if r.get("cycle_trap"):
             flags.append("CYCLE_TRAP")
         if r.get("cycle_warn"):
@@ -1051,6 +1090,152 @@ def cmd_tower(args) -> int:
     return 0
 
 
+def cmd_thesis(args) -> int:
+    """Thesis registry (论点喂池): tower-brick-backed machine theses
+    whose member lists feed the masters-vote L1 pool.
+
+    Registry management is not freshness-gated; `show --discover`
+    reads the snapshot read-only.
+    """
+    import sys as _sys
+    from dataclasses import asdict
+
+    from . import thesis as th
+
+    def _dict(t):
+        d = asdict(t)
+        d["members_n"] = len(t.members)
+        return d
+
+    def _hints(pairs):
+        out = {}
+        for h in (pairs or []):
+            parts = h.split(":", 1)
+            if len(parts) != 2 or parts[0].strip().upper() \
+                    not in config.MARKETS or not parts[1].strip():
+                raise ValueError(
+                    f"bad industry hint {h!r}; expected MARKET:关键词 "
+                    f"(e.g. A:存储器)")
+            out.setdefault(parts[0].strip().upper(), []).append(
+                parts[1].strip())
+        return out
+
+    try:
+        if args.thesis_cmd == "list":
+            ts = th.list_theses(status=args.status)
+            if args.json:
+                print(json.dumps([_dict(t) for t in ts],
+                                 ensure_ascii=False, indent=2))
+                return 0
+            if not ts:
+                print(f"no theses under {th.theses_dir()}")
+                return 1
+            for t in ts:
+                print(f"{t.id:<28} {t.status:<8} "
+                      f"members={len(t.members):<3} "
+                      f"brick={t.brick or '-':<32} {t.name}")
+            return 0
+
+        if args.thesis_cmd == "show":
+            t = th.load_thesis(args.thesis_id)
+            if args.discover:
+                snap = report.resolve_snapshot(args.data_dir,
+                                               args.snapshot)
+                cands = th.discover(snap, t)
+                if args.json:
+                    print(report.to_json(
+                        cands, {"thesis": t.id,
+                                "members": len(t.members)}))
+                    return 0
+                if cands.empty:
+                    print("no undiscovered industry-hint candidates")
+                    return 0
+                print(report.format_console(cands))
+                print("\npromote deliberately: thesis amend "
+                      f"{t.id} --add-member MARKET:CODE:名称")
+                return 0
+            if args.json:
+                print(json.dumps(_dict(t), ensure_ascii=False, indent=2))
+                return 0
+            print(f"id        : {t.id}")
+            print(f"name      : {t.name}")
+            print(f"status    : {t.status}"
+                  + (f" (retired: {t.retired_reason})"
+                     if t.status == "retired" else ""))
+            print(f"brick     : {t.brick or '-'}")
+            print(f"statement : {t.statement}")
+            print(f"reason    : {t.reason}")
+            if t.features:
+                print("features  :")
+                for f_ in t.features:
+                    print(f"  - {f_}")
+            if t.falsification:
+                print("falsification (kill set):")
+                for f_ in t.falsification:
+                    print(f"  - {f_}")
+            if t.industry_hints:
+                print("industry hints: " + "; ".join(
+                    f"{k}: {', '.join(v)}"
+                    for k, v in t.industry_hints.items()))
+            print(f"members ({len(t.members)}):")
+            for m in t.members:
+                note = f" — {m.note}" if m.note else ""
+                print(f"  {m.market:<3} {m.code:<8} {m.name}{note}")
+            print(f"created   : {t.created_at}  "
+                  f"updated: {t.updated_at}")
+            return 0
+
+        if args.thesis_cmd == "add":
+            members = [th.parse_member(x) for x in (args.member or [])]
+            t = th.create_thesis(
+                args.thesis_id, name=args.name or "",
+                brick=args.brick or "", statement=args.statement or "",
+                reason=args.reason or "",
+                features=args.feature or [],
+                falsification=args.falsification or [],
+                members=members,
+                industry_hints=_hints(args.industry))
+            if args.json:
+                print(json.dumps(_dict(t), ensure_ascii=False))
+            else:
+                print(f"added thesis {t.id} "
+                      f"({len(t.members)} members, "
+                      f"brick={t.brick or '-'})")
+            return 0
+
+        if args.thesis_cmd == "amend":
+            t = th.amend_thesis(
+                args.thesis_id,
+                add_members=[th.parse_member(x)
+                             for x in (args.add_member or [])],
+                drop_members=args.drop_member or [],
+                add_features=args.feature or [],
+                add_falsification=args.falsification or [],
+                add_industry_hints=_hints(args.industry),
+                reason=args.reason)
+            if args.json:
+                print(json.dumps(_dict(t), ensure_ascii=False))
+            else:
+                print(f"amended thesis {t.id} "
+                      f"({len(t.members)} members)")
+            return 0
+
+        if args.thesis_cmd == "retire":
+            t = th.retire_thesis(args.thesis_id, args.reason or "")
+            print(f"retired thesis {t.id}: {t.retired_reason}")
+            return 0
+
+        if args.thesis_cmd == "remove":
+            path = th.remove_thesis(args.thesis_id)
+            print(f"removed {path.name} (a falsified thesis belongs to "
+                  f"`thesis retire`, not deletion)")
+            return 0
+    except (ValueError, FileNotFoundError) as exc:
+        print(exc, file=_sys.stderr)
+        return 1
+    return 0
+
+
 # ---------------------------------------------------------------------------
 # Parser
 # ---------------------------------------------------------------------------
@@ -1114,6 +1299,10 @@ def build_parser() -> argparse.ArgumentParser:
                      help="markets to include (default: all)")
     pmv.add_argument("--no-live", action="store_true",
                      help="skip the live consensus-EPS divergence pass")
+    pmv.add_argument("--thesis", action="append", metavar="THESIS_ID",
+                     help="inject a thesis registry pool (repeatable); "
+                          "members are marked thesis:<id>, gates "
+                          "unchanged — see `thesis list`")
     pmv.add_argument("--data-dir", default=None, help="data directory")
     pmv.add_argument("--no-check", action="store_true",
                      help="skip the freshness gate (testing only)")
@@ -1461,6 +1650,76 @@ def build_parser() -> argparse.ArgumentParser:
                           help="preview without writing")
     ptw_seed.add_argument("--json", action="store_true")
     ptw.set_defaults(func=cmd_tower)
+
+    pth = sub.add_parser(
+        "thesis", help="thesis registry (论点喂池): tower-fed machine "
+                       "pools for masters-vote --thesis")
+    pth_sub = pth.add_subparsers(dest="thesis_cmd", required=True)
+    from . import thesis as _th
+    pth_list = pth_sub.add_parser("list", help="list theses")
+    pth_list.add_argument("--status", default=None, choices=_th.STATUSES,
+                          help="filter by status")
+    pth_list.add_argument("--json", action="store_true",
+                          help="pure-JSON stdout")
+    pth_show = pth_sub.add_parser("show", help="show one thesis")
+    pth_show.add_argument("thesis_id")
+    pth_show.add_argument("--discover", action="store_true",
+                          help="list industry-hint candidates not yet "
+                               "members (from the snapshot, read-only)")
+    pth_show.add_argument("--snapshot", default=None, metavar="YYYYMMDD",
+                          help="snapshot date for --discover "
+                               "(default: latest)")
+    pth_show.add_argument("--data-dir", default=None)
+    pth_show.add_argument("--json", action="store_true")
+    pth_add = pth_sub.add_parser("add", help="add a new thesis")
+    pth_add.add_argument("thesis_id")
+    pth_add.add_argument("--name", default=None)
+    pth_add.add_argument("--brick", default=None,
+                         help="lineage: source tower brick id")
+    pth_add.add_argument("--statement", default=None,
+                         help="one-sentence machine assertion")
+    pth_add.add_argument("--reason", default=None,
+                         help="why the machine is in its issuance window")
+    pth_add.add_argument("--feature", action="append", default=None,
+                         metavar="F",
+                         help="issuance-window feature (repeatable)")
+    pth_add.add_argument("--falsification", action="append",
+                         default=None, metavar="F",
+                         help="kill-set item (repeatable)")
+    pth_add.add_argument("--member", action="append", default=None,
+                         metavar="MARKET:CODE[:NAME]",
+                         help="machine component (repeatable)")
+    pth_add.add_argument("--industry", action="append", default=None,
+                         metavar="MARKET:关键词",
+                         help="industry hint for --discover (repeatable)")
+    pth_add.add_argument("--json", action="store_true")
+    pth_amend = pth_sub.add_parser("amend", help="edit members/features")
+    pth_amend.add_argument("thesis_id")
+    pth_amend.add_argument("--add-member", action="append", default=None,
+                           metavar="MARKET:CODE[:NAME]")
+    pth_amend.add_argument("--drop-member", action="append",
+                           default=None, metavar="MARKET:CODE")
+    pth_amend.add_argument("--feature", action="append", default=None,
+                           metavar="F")
+    pth_amend.add_argument("--falsification", action="append",
+                           default=None, metavar="F")
+    pth_amend.add_argument("--industry", action="append", default=None,
+                           metavar="MARKET:关键词")
+    pth_amend.add_argument("--reason", default=None,
+                           help="replace the issuance-window reason")
+    pth_amend.add_argument("--json", action="store_true")
+    pth_retire = pth_sub.add_parser(
+        "retire", help="retire a thesis (falsifier fired / window "
+                       "closed; never deleted)")
+    pth_retire.add_argument("thesis_id")
+    pth_retire.add_argument("--reason", required=True,
+                            help="which falsifier fired, or why the "
+                                 "window closed")
+    pth_rm = pth_sub.add_parser("remove", help="delete a thesis file "
+                                               "(typos only — falsified "
+                                               "theses use `retire`)")
+    pth_rm.add_argument("thesis_id")
+    pth.set_defaults(func=cmd_thesis)
     return parser
 
 
