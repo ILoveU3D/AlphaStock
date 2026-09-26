@@ -9,8 +9,8 @@ triggers:
   - Is X a buy
 commands:
   - ask
-version: 20
-updated_at: 2026-09-15T20:55:12
+version: 21
+updated_at: 2026-09-26T17:38:50
 ---
 
 # Playbook
@@ -79,3 +79,4 @@ Answer "what do you think of X" with a verdict first, evidence later.
 - [2026-09-11 20:20] (ai) Domestic AI compute valuation (2026-09-11, Moore case): use rationed-market logic, not competitive logic. Verified TAM anchors: F&S China AI chip 1425yi(2024)->13368yi(2029) @53.7% CAGR, GPU share 69.9%->77.3%, domestic shipment share 41% (IDC 2025); a second F&S variant circulates (8981yi @29.1% via Changjiang) - cite both, never just one. Moore 12-07 unlock 39.6% of shares at 3x+ gains vs IPO price 114.28 = real supply overhang, not noise. NVIDIA-return policy headlines = upstream macro falsifier for the entire sector.
 - [2026-09-11 20:30] (ai) mREIT口径陷阱(2026-09-11 AGNC case): PE_ttm含互换mark-to-market浮盈(Q2扭亏净利.1亿), factor model 99th pctile是幻觉; mREIT用PB×净利差收入/股覆盖度(AGNC spread ~.5-1.7 vs 股息.44)判断, debt_ratio 89%是生意模式本身(repo+7.4x杠杆), 借钱分红否决对全部mREIT结构性成立
 - [2026-09-15 20:55] (ai) live quote 的 pe_static 字段可失真（TCOM pe_static=0.74 vs pe_ttm=5.47，同日 ZM pe_static=14.64 正常）——引用倍数一律用快照 pe_ttm/pe_dyn 并标注 TTM/LF/forward 口径；SB suggest 接口偶发 JSONDecodeError 不影响解析结果
+- [2026-09-26 17:38] (ai) 20260926 现金流定位问（塔砖 class-map-2026-china 微观版）: ask评价任何公司时在商业模式段回答三问——①收租方还是被收租方（它向谁收租/谁向它收租: 向平台交佣金的=被收租方, 收佣金的=收租方）; ②租金定价权来源（产权/算法定价/生态锁定/牌照/网络效应, 决定租金可持续性）; ③所在机器阶段标注（增发期/收租期/停机期）, 与时间护照维度声明互补——阶段决定生意本身值不值得持有, 维度决定打算持有多久
