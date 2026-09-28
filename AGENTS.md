@@ -8,8 +8,14 @@ you found it.
 ## What this repo is
 
 - `python -m value_genie fetch` builds a dated snapshot: full-market
-  quotes + financials (Eastmoney / SEC EDGAR), funnel to ~200
-  candidates per market, deep klines + HK F10, scored `master.csv`.
+  quotes + financials (Eastmoney / SEC EDGAR), dual-lane funnel to
+  ~200 candidates per market (lane A 错杀: cheap on pe/pb/ps; lane B
+  复利机器: roe/gm/debt quality gates with no cheapness gate, so
+  premium compounders are admitted), deep klines + HK F10, scored
+  `master.csv` carrying the three equal-weight cores
+  (`core_business` / `core_culture` / `core_dcf` → `core_score`,
+  absolute anchors — the ONLY ranking keys; pillar scores are
+  veto/display context).
 - **Watchlist redundancy**: user holdings that the funnel excludes
   (loss-makers, out-of-universe ETFs) still get quotes + klines +
   financials + pillar scores via per-source fallbacks (Tencent quotes,
@@ -104,7 +110,7 @@ excluded when no USD rate, concentration observations verbatim).
 | "...but why / 证据" | single-stock-analysis | `python -m value_genie ask X --evidence` |
 | "X和Y哪个好 / X vs Y" | compare-stocks | `python -m value_genie compare X Y` |
 | "今天给我推荐股票（按我的风格、结合我的持仓）" | user-recommend | `python -m value_genie recommend --user me` |
-| "推荐/最被低估/量化+大师最优" | fused-quant-master | `python -m value_genie masters-vote` (L1/L2) + 7-master 定性层 (L3) + 融合裁决 (L4)，per skills/18 — user mandate 2026-09-15: 融合，不分情况讨论 |
+| "推荐/最被低估/量化+大师最优" | fused-quant-master | `python -m value_genie masters-vote`（L1 否决过滤 + core_score 排序）+ L2 红旗 + L3 三核深评与大师定性 + L4 融合裁决，per skills/18 — user mandate 2026-09-15: 融合，不分情况讨论；2026-09-29: 三核（商业模式/企业文化/DCF）为唯一排序键 |
 | "把塔砖断言的机器注入候选池 / 管理产业论点" | fused-quant-master | `python -m value_genie masters-vote --thesis <id>` + `thesis list|show|add|amend|retire`（见 Thesis pools 节） |
 | "设置/修改我的投资风格" | user-profile | `python -m value_genie user set-style me --base buffett --weight value=0.3` |
 | "录入/修改/查看我的持仓" | user-portfolio | `python -m value_genie holding add|update|remove|list` |
@@ -254,14 +260,25 @@ position-sizing discipline.
    — do not improvise numbers.
 5. Recommendation / holding analysis / trade decisions follow the
    **QMF fused pipeline** (user mandate 2026-09-15: 融合，不分情况
-   讨论 — every recommendation outputs ONE quant+master-optimal pick):
-   **L1** `masters-vote` (7-master gate votes + mean composite, ranked
-   by consensus — never recommend from a single strategy's top rank) →
+   讨论 — every recommendation outputs ONE quant+master-optimal pick).
+   **Three-core mandate (user mandate 2026-09-29)**: 商业模式、企业
+   文化、DCF 估值 are the three equal-weight cores and the ONLY
+   ranking keys (`core_score`, absolute anchors, no percentiles);
+   every other metric — pillar scores, composites, vote_count,
+   mean_composite — can only be a reason NOT to pick (veto/display),
+   never a ranking input:
+   **L1** `masters-vote` (pool = vote_count≥1 & ~veto_hard where
+   veto_hard = intel_red | borrowed_dividend | profit_spike; cycle_trap
+   excluded post-live-pass; ranked by core_score only — never from a
+   single strategy's top rank, never by vote count) →
    **L2** veto flags (cycle_trap = pe_divergence ≥ 1.5, cycle_warn ≥
    1.25, profit_spike ≥ +200%, intel red flags: insider selling /
-   解禁减持 / 粉饰 / 借钱分红) → **L3** 7-master qualitative layer
-   (business model, culture, moat, earn/lose paths per the deepened
-   playbooks 07-12, 17) → **L4** AI fused verdict (user style + market
+   解禁减持 / 粉饰 / 借钱分红) → **L3** AI three-core deep review with
+   written argumentation duty (business model: moat + machine
+   lifecycle; culture: founder + 本分审计, behavior-level evidence
+   only; DCF: reverse-DCF implied expectations as the starting point)
+   + 7-master qualitative vote on top (playbooks 07-12, 17) →
+   **L4** AI fused verdict (user style + market
    conditions; NOT a mechanical gate intersection). Close with
    position discipline per Duan — enter only if a -50% drawdown on the
    fully-understood business is tolerable, and size the position
