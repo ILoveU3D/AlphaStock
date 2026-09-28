@@ -180,7 +180,7 @@ US_EXCLUDE_NAME_PATTERNS = (
 )
 
 # ---------------------------------------------------------------------------
-# Funnel (stage-1 pre-ranking, before deep data)
+# Funnel (stage-1 recall lanes, before deep data)
 # ---------------------------------------------------------------------------
 CANDIDATES_PER_MARKET = 200
 
@@ -190,11 +190,50 @@ CANDIDATES_PER_MARKET = 200
 WATCHLIST_MAX = 60
 
 # Stage-1 blend weights per market over available pillar scores.
+# DEPRECATED (2026-09-29, three-core redesign): blended percentile ranking
+# no longer admits candidates — recall is lane-gated (LANE_A/LANE_B) and all
+# ranking is done by the three cores. Kept only for historical reference;
+# do not wire back into the pipeline.
 FUNNEL_WEIGHTS = {
     "A": {"value": 0.40, "growth": 0.30, "quality": 0.30},
     "US": {"value": 0.40, "growth": 0.30, "quality": 0.30},
     "HK": {"value": 1.00, "growth": 0.00, "quality": 0.00},
 }
+
+# ---------------------------------------------------------------------------
+# Three cores (2026-09-29 user mandate): business model / culture / DCF are
+# the ONLY ranking dimensions, equal-weighted. Every other signal (pillar
+# scores, composites, master votes) is veto/display-only.
+# Anchors map a raw metric linearly onto 0-100: (worst, best); values
+# outside clamp. Absolute economic thresholds, NOT percentiles.
+# ---------------------------------------------------------------------------
+CORE_ANCHORS = {
+    "cash_conversion": (50.0, 150.0),   # OCF / net income %
+    "gross_margin": (20.0, 60.0),       # %
+    "roe": (5.0, 25.0),                 # %
+    "capex_to_ocf": (1.0, 0.1),         # reversed: heavy -> light capital
+    "fcf_yield": (0.0, 8.0),            # FCF / market cap %
+}
+
+# Reverse-DCF anchors: solve the FCF growth rate implied by the current
+# price, then score the implied expectation itself — the market demanding
+# <= -5% growth is handing you the growth for free (100); demanding >= 15%
+# for a decade leaves no margin (0).
+DCF_DISCOUNT = 0.10
+DCF_TERMINAL_G = 0.025
+DCF_FADE_YEARS = 10
+DCF_IMPLIED_G_RANGE = (-0.05, 0.15)
+# Stage-1 lanes lack cash-flow data; approximate FCF ~ 0.7 x earnings.
+DCF_FUNNEL_EARNINGS_HAIRCUT = 0.7
+
+# Funnel recall lanes (admission gates replace the blended cutoff):
+# Lane A (错杀): any cheapness gate fires. Lane B (复利机器): all quality
+# gates pass, NO cheapness gate. Lane B borrows Buffett's existing gates.
+LANE_A_CAP = 120
+LANE_B_CAP = 80
+LANE_A_GATES = {"pe_ttm": 30.0, "pb": 4.0, "ps": 6.0}        # any <=
+LANE_B_GATES = {"roe": 15.0, "gross_margin": 40.0,
+                "debt_ratio": 60.0}                           # roe/gm >=, debt <=
 
 # ---------------------------------------------------------------------------
 # Data freshness rules (incremental mode)

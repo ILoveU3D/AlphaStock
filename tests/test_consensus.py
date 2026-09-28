@@ -77,13 +77,24 @@ class TestMastersVote:
         assert fail["vote_count"] == 0
         assert fail["masters_passed"] == ""
 
-    def test_mean_composite_and_ranking(self):
+    def test_core_score_ranks_not_votes(self):
+        from value_genie.strategy import cores
         df = cs.rank_consensus(
-            cs.masters_vote(_frame()), top_n=3)
-        # ranked by vote_count desc
-        assert df["vote_count"].is_monotonic_decreasing
-        # mean_composite present for pooled rows
+            cores.add_core_scores(cs.masters_vote(_frame())), top_n=3)
+        # core_score is the ONLY ranking key (2026-09-29 redesign)
+        assert df["core_score"].is_monotonic_decreasing
+        # votes do NOT rank: the 3-vote cyclical peak outranks the 5-vote
+        # compounder on core_score — excluding its profit-spike veto is
+        # the CLI pool filter's job, not the ranking key's
+        assert df.iloc[0]["code"] == "000002"
+        assert df.iloc[0]["vote_count"] < df.iloc[1]["vote_count"]
+        # mean_composite survives as display context, never ranks
         assert df["mean_composite"].notna().any()
+
+    def test_legacy_fallback_without_cores(self):
+        # frames lacking core columns keep the legacy vote ordering
+        df = cs.rank_consensus(cs.masters_vote(_frame()), top_n=3)
+        assert df["vote_count"].is_monotonic_decreasing
 
 
 class TestSnapshotFlags:
@@ -92,6 +103,22 @@ class TestSnapshotFlags:
         assert bool(df.loc[df["code"] == "000002", "profit_spike"].iloc[0])
         assert not bool(df.loc[df["code"] == "000001",
                                "profit_spike"].iloc[0])
+
+    def test_veto_hard(self):
+        df = cs.add_snapshot_flags(_frame())
+        # clean compounder is not vetoed
+        assert not bool(df.loc[df["code"] == "000001",
+                               "veto_hard"].iloc[0])
+        # profit spike (250% yoy) vetoes the cyclical peak
+        assert bool(df.loc[df["code"] == "000002", "veto_hard"].iloc[0])
+        # borrowed dividend vetoes the all-fail stock
+        assert bool(df.loc[df["code"] == "000003", "veto_hard"].iloc[0])
+        # intel red flag vetoes even the clean compounder
+        f = _frame()
+        f.loc[f["code"] == "000001", "intel_red"] = 1
+        df2 = cs.add_snapshot_flags(f)
+        assert bool(df2.loc[df2["code"] == "000001",
+                            "veto_hard"].iloc[0])
 
 
 class TestForwardPEDivergence:

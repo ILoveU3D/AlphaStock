@@ -399,12 +399,75 @@ def test_run_fetch_skips_us_without_sec_financials(monkeypatch, tmp_path):
     assert not (snap / "us_quotes.csv").exists()
 
 
-def test_stage1_blend_ranks():
+def test_select_candidates_lanes_on_a_fixture():
     df = pl.merge_a_financials(a_quotes(), a_fins())
     df = pl.apply_gates(df, "A")
-    out = pl.stage1_blend(df, "A")
-    assert out["stage1_score"].notna().all()
-    assert out["stage1_score"].between(0, 100).all()
+    out = pl.select_candidates(df, "A")
+    assert set(out["lane"]) <= {"A", "B"}
+    assert len(out) <= config.CANDIDATES_PER_MARKET
+    # no symbol admitted twice across lanes
+    assert not out.index.duplicated().any()
+
+
+def test_lane_b_admits_premium_compounder():
+    """The NVDA-class case (2026-09-29 redesign): expensive on every
+    multiple, but passes all Lane B quality gates — admitted for the
+    first time; the old blended funnel could never recall it."""
+    df = pd.DataFrame([
+        {"code": "NVDA", "pe_ttm": 55.0, "pb": 45.0, "ps": 25.0,
+         "roe": 90.0, "gross_margin": 70.0, "debt_ratio": 40.0,
+         "rev_yoy": 60.0},
+        {"code": "CHEAP", "pe_ttm": 8.0, "pb": 0.9, "ps": 1.0,
+         "roe": 5.0, "gross_margin": 15.0, "debt_ratio": 70.0,
+         "rev_yoy": 2.0},
+        {"code": "NOPE", "pe_ttm": 55.0, "pb": 9.0, "ps": 9.0,
+         "roe": 5.0, "gross_margin": 15.0, "debt_ratio": 70.0,
+         "rev_yoy": 2.0},
+    ])
+    out = pl.select_candidates(df, "A")
+    lanes = dict(zip(out["code"], out["lane"]))
+    assert lanes["NVDA"] == "B"        # quality lane, no cheapness gate
+    assert lanes["CHEAP"] == "A"       # cheapness lane only
+    assert "NOPE" not in lanes         # neither lane fires
+
+
+def test_lane_caps():
+    a_rows = [{"code": f"A{i:03d}", "pe_ttm": 10.0, "pb": 1.0, "ps": 1.0,
+               "roe": 5.0, "gross_margin": 10.0, "debt_ratio": 50.0,
+               "rev_yoy": 1.0} for i in range(150)]
+    b_rows = [{"code": f"B{i:03d}", "pe_ttm": 60.0, "pb": 10.0, "ps": 10.0,
+               "roe": 30.0, "gross_margin": 60.0, "debt_ratio": 30.0,
+               "rev_yoy": 1.0} for i in range(100)]
+    out = pl.select_candidates(pd.DataFrame(a_rows + b_rows), "A")
+    lanes = out["lane"].value_counts()
+    assert lanes["A"] == config.LANE_A_CAP
+    assert lanes["B"] == config.LANE_B_CAP
+    assert len(out) == config.CANDIDATES_PER_MARKET
+
+
+def test_lane_a_backfills_shortfall():
+    # too few lane-B names: lane A fills up to CANDIDATES_PER_MARKET
+    rows = [{"code": f"A{i:03d}", "pe_ttm": 10.0, "pb": 1.0, "ps": 1.0,
+             "roe": 5.0, "gross_margin": 10.0, "debt_ratio": 50.0,
+             "rev_yoy": 1.0} for i in range(220)]
+    rows += [{"code": "QUAL", "pe_ttm": 60.0, "pb": 10.0, "ps": 10.0,
+              "roe": 30.0, "gross_margin": 60.0, "debt_ratio": 30.0,
+              "rev_yoy": 1.0}]
+    out = pl.select_candidates(pd.DataFrame(rows), "A")
+    lanes = out["lane"].value_counts()
+    assert lanes["B"] == 1
+    assert lanes["A"] == config.CANDIDATES_PER_MARKET - 1
+    assert len(out) == config.CANDIDATES_PER_MARKET
+
+
+def test_hk_lane_b_empty_without_fundamentals():
+    # HK stage-1 quotes carry no fundamentals -> lane_b honestly empty
+    df = pd.DataFrame([
+        {"code": "00700", "pe_ttm": 15.0, "pb": 3.0, "ps": 4.0},
+        {"code": "00941", "pe_ttm": 10.0, "pb": 1.0, "ps": 1.0},
+    ])
+    out = pl.select_candidates(df, "HK")
+    assert set(out["lane"]) == {"A"}
 
 
 # ---------------------------------------------------------------------------
