@@ -33,6 +33,12 @@ you found it.
   masters and 105+ books, with DCF as the single axiom. Bricks live
   in the git-tracked `tower/` dir — see the Cognitive tower section
   for the mandatory lookup/absorb loop.
+- `python -m value_genie profile ...` manages the **company profile
+  registry** (公司档案库): business model / culture / vision source
+  text for every pooled company (A/HK/US), saved locally and
+  incrementally updated — the core reference for the three-core L3.
+  Profiles live in the git-tracked `profiles/` dir — see the Company
+  profiles section for the read→assess loop.
 - Analysis commands read the latest snapshot (and live quotes where
   noted) — no LLM runs inside the toolkit; you write the prose.
 - There is **no human UI**: the CLI is the only entry point and AI
@@ -112,6 +118,7 @@ excluded when no USD rate, concentration observations verbatim).
 | "今天给我推荐股票（按我的风格、结合我的持仓）" | user-recommend | `python -m value_genie recommend --user me` |
 | "推荐/最被低估/量化+大师最优" | fused-quant-master | `python -m value_genie masters-vote`（L1 否决过滤 + core_score 排序）+ L2 红旗 + L3 三核深评与大师定性 + L4 融合裁决，per skills/18 — user mandate 2026-09-15: 融合，不分情况讨论；2026-09-29: 三核（商业模式/企业文化/DCF）为唯一排序键 |
 | "把塔砖断言的机器注入候选池 / 管理产业论点" | fused-quant-master | `python -m value_genie masters-vote --thesis <id>` + `thesis list|show|add|amend|retire`（见 Thesis pools 节） |
+| "X的商业模式/企业文化/未来愿景（档案原文）" | single-stock-analysis | `python -m value_genie profile show X`（L3 读原文入口；深评后 `profile assess X` 回写三核分，见 Company profiles 节） |
 | "设置/修改我的投资风格" | user-profile | `python -m value_genie user set-style me --base buffett --weight value=0.3` |
 | "录入/修改/查看我的持仓" | user-portfolio | `python -m value_genie holding add|update|remove|list` |
 | "审视我的持仓 / 深度分析持仓" | holding-deep-review | `holding list` 先看体检，再 `ask X --evidence` per holding + `screen --strategy <master>` (business model, moat, culture, earn/lose paths, two master frameworks) |
@@ -212,6 +219,54 @@ conditions), `members` (market:code list), `industry_hints`
   theses are never deleted (like `refuted` bricks, they are assets).
   Cap: `THESIS_MAX = 40` members per pool build.
 
+## Company profiles (公司档案库)
+
+The profile registry is the three-core L3's source-text store
+(user mandate 2026-09-29): business model / culture / vision raw
+text for every pooled company, saved locally and incrementally
+updated. Profiles live in the git-tracked top-level `profiles/`
+dir (one JSON per company, CLI-maintained, atomic writes — never
+inside `data/`).
+
+Two strictly separated zones per profile:
+
+- **raw** (fetcher-written only): `summary` (公司简介/business
+  description), `main_business`, `vision`, `meta` (chairman /
+  control holder / founded / employees / concepts), plus a
+  `content_hash`. Sources: A = Eastmoney F10 ORG_BASICINFO (the
+  typo'd `ORG_PROFIE` column carries the long text), HK = Eastmoney
+  HK F10 ORGPROFILE, US = SEC submissions + stockanalysis.com.
+  Reused within `PROFILE_FRESH_DAYS` (90d); refetches with unchanged
+  content only bump `fetched_at`.
+- **assessment** (written ONLY via `profile assess`): AI-distilled
+  0-100 scores for business/culture (+ moat_type, lifecycle,
+  founder_led, 本分 evidence, arguments, verdict). Staleness is
+  hash-keyed: assessment.raw_hash ≠ raw.content_hash → stale.
+
+`fetch` tail-runs `update_profiles(master ∪ watchlist)` every
+snapshot (fail-closed: source hiccups never clobber old files, and
+never block the snapshot). Cores blend `PROFILE_BLEND` (0.5) ×
+quant proxy + 0.5 × AI assessment; quant NaN → assessment stands
+alone; stale assessments are declared in `core_gaps`, never blended.
+
+- Commands: `python -m value_genie profile list|show|fetch|update|
+  assess|status` — all `--json`-capable. Profile commands do **not**
+  run the freshness gate (like tower/thesis: the registry depends on
+  no snapshot; `update`/`status` read the snapshot pool read-only
+  when one exists, else fall back to the on-disk registry).
+- **L3 read→assess loop (house rule)**: `profile show X` prints the
+  raw source text → you write the three-core argumentation (moat +
+  lifecycle; founder + 本分 behavior evidence; reverse-DCF implied
+  path) → `profile assess X --business-score N --culture-score N
+  --business-arg ... --culture-arg ... --dcf-arg ...` writes it
+  back. Assessing from thin air is rejected (raw must be non-empty);
+  score outside 0-100 is rejected. After raw updates, the assessment
+  goes stale — re-assess, and the blend resumes.
+- Coverage target = candidate pool (funnel ~200/market + watchlist +
+  holdings); first full pass is slow (`profile update --force`),
+  daily increments are small. `profile status` reports pool coverage
+  / freshness / assessed / stale.
+
 ## Investment masters
 
 Six built-in master strategies, ordered by fame (this ordering is
@@ -277,6 +332,8 @@ position-sizing discipline.
    written argumentation duty (business model: moat + machine
    lifecycle; culture: founder + 本分审计, behavior-level evidence
    only; DCF: reverse-DCF implied expectations as the starting point)
+   — source text via `profile show X`, write-back via
+   `profile assess X` (Company profiles 节) —
    + 7-master qualitative vote on top (playbooks 07-12, 17) →
    **L4** AI fused verdict (user style + market
    conditions; NOT a mechanical gate intersection). Close with

@@ -85,8 +85,9 @@ AI 是最先进的交互 UI：没有网页、没有仪表盘、没有人类脚�
 | **每日推荐** | 用户风格筛选 + 排除已持有 + 持仓体检（实时盈亏、CNY 折算仓位、集中度观察原样输出） |
 | **AI 虚拟盘** | 多期模拟交易：真实费率/交收/整手规则，多币种现金池，每日净值标记，双目标管理（净值增长 + 提款率） |
 | **认知巴别塔** | 哲学知识库：181 块思想砖（DCF 唯一公理 + 105 本经典 + 大师 + 对话洞见），认知状态机（law 须验证升迁 / refuted 永不删除），`tower stats` 输出认知高度报告 |
+| **公司档案库（profiles）** | A/HK/US 商业模式 / 企业文化 / 愿景原文本地存档 + 增量更新（raw 区抓取器独占，assessment 区仅 `profile assess` 回写）；AI 三核蒸馏分按 0.5 融合进 core_business/core_culture——三核深评（L3）的核心参考 |
 | **策略切换** | 4 预设 + 7 投资大师 + 用户风格 + 自定义权重，换策略不重新拉数据 |
-| **机器可读输出** | ask / screen / compare / overview / recommend / holding list / trade / tower / thesis / doctor 全部支持 `--json`：stdout 纯 JSON（全精度、NaN→null、无横幅噪音），诊断与告警一律走 stderr，供 AI 精确引用与二次解析 |
+| **机器可读输出** | ask / screen / compare / overview / recommend / holding list / trade / tower / thesis / profile / doctor 全部支持 `--json`：stdout 纯 JSON（全精度、NaN→null、无横幅噪音），诊断与告警一律走 stderr，供 AI 精确引用与二次解析 |
 | **技能系统** | 18 个 AI 剧本 + 自我进化（经验遗传，append-only 契约） |
 | **增量更新** | 按日快照落盘，新鲜数据自动复用，二次运行大幅提速 |
 | **数据新鲜度门槛** | 价格敏感命令（ask / compare / overview / recommend / holding list / trade 交易类命令）代码强制检查：快照缺失/过期>7天直接拦截，过期但可用则警告 |
@@ -288,6 +289,7 @@ value_genie/
 skills/              # AI 技能剧本（18 个：5 通用 + 7 大师 + 持仓审视 + 时间维度 + 虚拟盘 + 舆情情报 + 融合推荐）
 tests/               # 645 个单元测试（全离线）
 users/               # 用户画像与持仓（git 持久状态）
+profiles/            # 公司档案库（git 持久状态：raw 原文 + AI 三核蒸馏，hash 键控过期）
 tower/               # 认知巴别塔（181 块思想砖，git 持久状态，DCF 唯一公理）
 theses/              # 产业论点池（git 持久状态：谱系砖 + 三特征 + 证伪集 + 成员名单）
 trading/seasons/     # AI 虚拟盘各期档案（git 持久状态，含成交/净值/复盘历史）

@@ -16,8 +16,8 @@ commands:
   - ask X --evidence
   - intel X
   - recommend --user me
-version: 19
-updated_at: 2026-09-29T02:14:54
+version: 20
+updated_at: 2026-09-29T03:43:41
 ---
 
 # Playbook
@@ -174,3 +174,4 @@ Output shape (hard rules):
 - [2026-09-26 18:14] (ai) thesis 喂池机制已落地(2026-09-26): masters-vote --thesis <id> 把 theses/<id>.json 的成员注入 L1 池(funnel∪members, 池外成员经门控宇宙重建+实时kline/HK F10回填带完整pillar分); seat-not-a-vote——注入只买席位, 七大师gates/L2/L3/L4照旧, 成员0票是合法结果; 每个thesis必须有brick谱系+三特征+证伪集, 证伪触发即 thesis retire --reason; 工作流: 塔砖断言机器→thesis add(成员逐名论证)→masters-vote --thesis→L3/L4照旧; 种子: memory-supercycle(brick=trailing-gates-are-procyclical, 6成员: MU/603986 funnel内, 688008注入, SNDK被宇宙门挡excluded)
 - [2026-09-28 11:35] (ai) DCF第一原则（user mandate 2026-09-28）：L4融合层荐股以reverse DCF显形化市场隐含预期为起点，情景×概率代替点估计；相对估值（对标/PS/PB互证）只作参照不作买入论证；塔砖dcf-growth-three-laws
 - [2026-09-29 02:14] (ai) three-core redesign (user mandate 2026-09-29, commit 4c796ff): business/culture/dcf equal-weight cores (core_score, absolute anchors) are the ONLY ranking keys; vote_count/mean_composite/pillar scores demoted to veto+display. L1 pool = vote_count>=1 & ~veto_hard (intel_red|borrowed_dividend|profit_spike), cycle_trap excluded post-live-pass; funnel now dual-lane so NVDA-type premium compounders enter via lane B and are judged by the cores, not filtered by multiples
+- [2026-09-29 03:43] (ai) profile registry live: L3 reads raw source text via profile show X (A=东财F10 ORG_PROFIE typo列长文, HK=HKF10 ORGPROFILE, US=SEC+stockanalysis), writes three-core scores+arguments back via profile assess X (raw必须非空, 0-100校验); cores blend PROFILE_BLEND=0.5 quant×AI, stale(hash-keyed)只声明不融合
