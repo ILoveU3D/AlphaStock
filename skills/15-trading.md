@@ -14,8 +14,8 @@ commands:
   - trade sell
   - trade nav
   - trade journal
-version: 39
-updated_at: 2026-09-29T00:12:54
+version: 41
+updated_at: 2026-09-29T00:19:20
 ---
 
 # Playbook
@@ -103,3 +103,5 @@ for. Cite the nav-as-of date. Never soften risk observations.
 - [2026-09-28 21:16] (ai) EM断供应急手册(20260928): push2连接被重置=网络层封锁(沙箱内外均败,非沙箱问题勿重试disable-sandbox), 腾讯qt.gtimg.cn/SEC EDGAR存活; data/日清后无持久宇宙→TX回退死→快照不可重建; 应急评价链=trade nav(last-mark价)+intel(EDGAR披露/部分评级存活)+Form4代码级下钻走data.sec.gov submissions API+ownership XML(openinsider被墙); trade nav在EM死时腾讯回退不生效会mark stale,属预期行为
 - [2026-09-28 21:16] (ai) DUOL簇集卖出监控(20260928): CEO von Ahn两周内两轮cashless exercise-sell约1000万美元@150-152+GC+董事同向卖出, 一致评级24家Hold目标134.29<现价143.51; 判定=论点未破(期权行权变现属结构性,DAU/订阅粘性未证伪)但定性层走弱列首要监控; 教训=买入时单条评级上调新闻(摩根大通)权重给高了, 一致评级家数与目标价相对现价的位置才是共识基线, 新开仓前intel必须看一致评级vs现价方向
 - [2026-09-29 00:12] (ai) 交易定价腾讯回退已入码(20260929): recommend.live_price现接fetch_quote_any(EM ulist失败/无快照market_id映射时→腾讯实时价,源标记live-tx), 此前交易定价只有EM单通道, EM断供日所有买卖被TRADE REJECTED; 修复后EM断供日可正常盘中成交(当晚3笔live-tx实证), 655测试全绿; 注意masters-vote/screen仍需完整快照, 腾讯回退只解决定价不解决L1池
+- [2026-09-29 00:16] (ai) 20%单仓上限出处核实(20260929用户质询): 'lot×price≤20%NAV前置硬筛'是入场手数可行性闸门(HK手数封杀教训,买入时单手成本≤20%NAV), 不是持仓市值权重上限; s001 rules只有markets+fx_spread无cap, 用户显式仓位数字只有L3实盘(首笔5%/单名15%)和超短线(≤5%NAV), 均不适用赛季中线仓; 0928把TCOM 22%判为'超单仓框架上限'并拒二手加仓=把入场闸门误延伸为权重cap, 属自设restrict; 集中度纪律合法形式=国别beta计数(0910)+段永平-50%测试定仓位+论点仓位纪律, 引用'规则/框架'前必须核实出处
+- [2026-09-29 00:19] (ai) 用户授权(20260929): 赛季不设单仓硬cap——'由你自行决定,不要让规则束缚手脚'; 仓位集中度完全走AI判断层(国别beta计数/-50%测试/论点匹配), 引用任何'规则'前必须核实出处(rules里只有markets+fx_spread); 同日澄清: lot×price≤20%NAV仅为入场手数可行性闸门,非权重上限
