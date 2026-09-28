@@ -16,8 +16,8 @@ commands:
   - ask X --evidence
   - intel X
   - recommend --user me
-version: 17
-updated_at: 2026-09-28T11:35:15
+version: 19
+updated_at: 2026-09-29T02:14:54
 ---
 
 # Playbook
@@ -30,19 +30,36 @@ sanhuyi), the 7-master layer vetoed 6:1 (cycle trap + CEO/CFO
 synchronized selling + forward PE 8.41 vs TTM 4.30). The fusion must
 catch that BEFORE recommending, not after.
 
+**Three-core mandate (user mandate 2026-09-29):** 商业模式、企业文化、
+DCF 估值是等价的三个核心，是对候选股票排序的**唯一**依据
+（`core_score`，等权）。其他一切指标——六柱量化分、composite、
+大师票数、mean_composite——只能作为**不选的理由**（否决/展示），
+永远不能排序。这是段永平原则的架构化："数据只能成为我不买这个
+股票的理由，不能成为我买的理由。"
+
 ## The four layers (L1/L2 code-enforced, L3/L4 AI-run)
 
-### L1 — 量化共识层（代码，`masters-vote`）
+### L1 — 否决过滤层（代码，`masters-vote`）
 
 `python -m value_genie masters-vote --top 15 [--json]`
 
 - Each stock is voted against all 7 masters' hard gates:
-  `vote_count` (0-7) + `masters_passed` + `mean_composite` (mean of
-  composites under each master's own weights).
-- Ranking: vote_count desc → mean_composite desc. A 2-vote Graham #1
-  (GSL) correctly ranks below 4-vote consensus names.
-- **Never recommend from a single strategy's top rank** — the pool
-  starts at the cross-master consensus.
+  `vote_count` (0-7) + `masters_passed` + `mean_composite`.
+  **These can EXCLUDE, never rank.**
+- Pool rule (code-enforced): `(vote_count >= 1) & (~veto_hard)` where
+  `veto_hard = intel_red | borrowed_dividend | profit_spike`;
+  `cycle_trap` is excluded after the live pass. 0 票 = 全大师否决 =
+  出局；单个大师不过仅在展示层呈现，不构成否决。
+- **Ranking = `core_score` only** — equal-weight mean of the three
+  cores (business / culture / dcf), each scored on absolute anchors
+  (no percentiles; see `value_genie/strategy/cores.py`). Stocks whose
+  core_score is entirely NaN fail the data-sufficiency veto.
+- The funnel itself is dual-lane: lane A (错杀: cheap on pe/pb/ps) ∪
+  lane B (复利机器: roe≥15 & gm≥40 & debt≤60, no cheapness gate) — so
+  NVDA-type premium compounders reach the pool and are judged by the
+  three cores, not filtered out by multiples.
+- **Never recommend from a single strategy's top rank** — and never
+  read vote_count as a quality ordering.
 
 ### L2 — 否决层（代码 flags + 规则）
 
@@ -62,11 +79,25 @@ catch that BEFORE recommending, not after.
   信号、借钱分红 are vetoes per the 舆情铁律 (2026-09-09). Insider
   synchronized selling + high profit growth = classic sell signal.
 
-### L3 — 大师定性层（AI，per the deepened playbooks 07-12, 17）
+### L3 — 三核深评层（AI，书面论证义务）
 
-For each L2 survivor, run the 7-master qualitative vote — business
-model, culture, moat, earn/lose paths (data via `ask X --evidence` +
-`intel X`). Each master votes from their own playbook lens:
+For each L2 survivor, run the three-core deep review — this is where
+the ranking is *earned*, not computed. The code's core_score is the
+receipt; the AI must supply the argument behind each core:
+
+- **商业模式**: moat 三层定位 + 变宽/变窄证据 + 谁能攻破；机器
+  类型与生命周期（增发期/收租期/停机期）；创新姿态（S 曲线破局者
+  vs 周期底现金牛）。
+- **企业文化**: 创始人履历 + 本分审计（说过 vs 做到 / 资本配置 /
+  拒绝过什么 / 压力期选择）——只收行为级证据，不收形容词。
+- **DCF 估值**: reverse DCF 显形化市场隐含预期（`dcf_implied_g`
+  是起点："现价隐含什么路径，我信不信"），情景×概率代替点估计；
+  相对估值只作参照，不作买入论证。
+
+Then the 7-master qualitative vote runs **on top of** the three-core
+review — each master votes from their own playbook lens (business
+model, culture, moat, earn/lose paths per the deepened playbooks
+07-12, 17; data via `ask X --evidence` + `intel X`):
 
 - Buffett: 三时代定位 + owner earnings + right people
 - Munger: 双轨分析 + 三筐 (In/Out/Too Hard) + Lollapalooza
@@ -82,20 +113,26 @@ sufficient alone.
 
 ### L4 — 融合裁决（AI 决策权）
 
-Fuse: L1 vote count + L2 survivors + L3 master table + user style
+Fuse: core_score ranking (the only quantitative ordering) + L2
+survivors + L3 three-core argument & master table + user style
 (`recommend --user me` for style gates + holdings exclusion) + market
 conditions. NOT a mechanical gate intersection (user principle):
-统筹兼顾，最终判断由 AI 掌控并给出明确结论。
+统筹兼顾，最终判断由 AI 掌控并给出明确结论。DCF 第一原则
+(2026-09-28): reverse DCF 显形化隐含预期为起点，情景×概率代替点
+估计。
 
 Output shape (hard rules):
 
 1. **One verdict, one pick** — the quant+master optimal. Runners-up
    listed with one-line reasons, no case-by-case branching.
-2. Master vote table (7 rows: vote + one-line reason).
-3. Position discipline per Duan: -50% drawdown tolerance sizing;
+2. Three-core block (business / culture / dcf + dcf_implied_g, with
+   core_gaps declared verbatim) — the ranking receipt.
+3. Master vote table (7 rows: vote + one-line reason) — context and
+   veto provenance, never the ordering.
+4. Position discipline per Duan: -50% drawdown tolerance sizing;
    keyhole compatibility check (分红收回路径 for 分红舱 candidates).
-4. Data-as-of line + declared gaps verbatim.
-5. 短炒警示 if the horizon is ultrashort/short.
+5. Data-as-of line + declared gaps verbatim.
+6. 短炒警示 if the horizon is ultrashort/short.
 
 ## Worked example (2026-09-15, the calibration case)
 
@@ -136,3 +173,4 @@ Output shape (hard rules):
 - [2026-09-26 17:38] (ai) 20260926 机器生命周期层（阶级分析对话蒸馏, 塔砖 class-map-2026-china + terminal-value-vehicle-rotation v2）: L3商业模式论证强制两问——①该候选是哪台收租机器的哪个部件、收租方还是被收租方（平台/算力/IP/电力/牌照=收租方, 入驻商家/内容供给方=被收租方, 被收租方原则上不推荐除非议价力结构性反转）; ②机器处于增发期/收租期/停机期——增发期三特征（新到没被定价+被技术或人口周期需要长大+存在技能或注意力套利）进成长舱候选, 收租期（租金可持续+分红纪律）进分红舱候选, 停机机器（2021后土地链模板）任何便宜都是价值陷阱、便宜不修停机机器；六原型=机器类型学、增发窗口=机器生命周期, 先问类型再问阶段; 禁令: 禁止按用户持仓反推机器清单（0926错误记录: 红利+算力两机论=把组合投影到历史的叙事替代核查变体）
 - [2026-09-26 18:14] (ai) thesis 喂池机制已落地(2026-09-26): masters-vote --thesis <id> 把 theses/<id>.json 的成员注入 L1 池(funnel∪members, 池外成员经门控宇宙重建+实时kline/HK F10回填带完整pillar分); seat-not-a-vote——注入只买席位, 七大师gates/L2/L3/L4照旧, 成员0票是合法结果; 每个thesis必须有brick谱系+三特征+证伪集, 证伪触发即 thesis retire --reason; 工作流: 塔砖断言机器→thesis add(成员逐名论证)→masters-vote --thesis→L3/L4照旧; 种子: memory-supercycle(brick=trailing-gates-are-procyclical, 6成员: MU/603986 funnel内, 688008注入, SNDK被宇宙门挡excluded)
 - [2026-09-28 11:35] (ai) DCF第一原则（user mandate 2026-09-28）：L4融合层荐股以reverse DCF显形化市场隐含预期为起点，情景×概率代替点估计；相对估值（对标/PS/PB互证）只作参照不作买入论证；塔砖dcf-growth-three-laws
+- [2026-09-29 02:14] (ai) three-core redesign (user mandate 2026-09-29, commit 4c796ff): business/culture/dcf equal-weight cores (core_score, absolute anchors) are the ONLY ranking keys; vote_count/mean_composite/pillar scores demoted to veto+display. L1 pool = vote_count>=1 & ~veto_hard (intel_red|borrowed_dividend|profit_spike), cycle_trap excluded post-live-pass; funnel now dual-lane so NVDA-type premium compounders enter via lane B and are judged by the cores, not filtered by multiples
