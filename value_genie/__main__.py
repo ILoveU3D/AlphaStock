@@ -41,6 +41,8 @@ import json
 import sys
 from pathlib import Path
 
+import pandas as pd
+
 from . import config, report
 from .fetch.pipeline import run_fetch
 
@@ -199,13 +201,29 @@ def cmd_masters_vote(args) -> int:
             raise SystemExit(str(exc)) from None
 
     masters = [s.id for s in list_strategies(kind="master")]
+    # three-core backfill for old snapshots (pure function, no IO) so
+    # rank_consensus can order by core_score
+    from .strategy import cores as _cores
+    if "core_score" not in master.columns:
+        master = _cores.add_core_scores(master)
     df = cs.add_snapshot_flags(cs.masters_vote(master, markets=markets))
     if thesis_infos:
         tcol = df.get("thesis")
         for ti in thesis_infos:
             mask = tcol.astype(str).str.contains(ti["id"], na=False)
             ti["voted"] = int((df.loc[mask, "vote_count"] >= 1).sum())
-    pool = df[df["vote_count"] >= 1]
+    # L1 pool = passed >=1 master gate AND not hard-vetoed (2026-09-29
+    # redesign: gates/red flags can only EXCLUDE, never rank)
+    vetoed = df[(df["vote_count"] >= 1) & (df["veto_hard"])]
+    veto_sources = {
+        "intel_red": int((pd.to_numeric(vetoed.get("intel_red"),
+                                        errors="coerce") == 1).sum()),
+        "borrowed_dividend": int((pd.to_numeric(
+            vetoed.get("borrowed_dividend"),
+            errors="coerce") == 1).sum()),
+        "profit_spike": int(vetoed["profit_spike"].sum()),
+    }
+    pool = df[(df["vote_count"] >= 1) & (~df["veto_hard"])]
     if pool.empty:
         raise SystemExit("no stocks passed any master's gates")
     top = cs.rank_consensus(pool, top_n=args.top)
@@ -231,9 +249,21 @@ def cmd_masters_vote(args) -> int:
         elif div >= cs.CYCLE_WARN_RATIO:
             top.at[idx, "cycle_warn"] = True
 
+    # cycle_trap is a hard veto (2026-09-29 redesign): excluded after the
+    # live pass; cycle_warn stays display-only
+    cycle_trapped = top[top["cycle_trap"]]
+    if not cycle_trapped.empty:
+        top = top[~top["cycle_trap"]].reset_index(drop=True)
+
     if args.json:
         meta = {"snapshot": snap_dir.name, "masters": masters,
                 "markets": markets or list(config.MARKETS),
+                "ranking": "core_score (three-core equal weight)",
+                "veto_excluded": {"count": int(len(vetoed)),
+                                  **veto_sources},
+                "cycle_trap_excluded": [
+                    f"{r.get('market')}/{r.get('code')}"
+                    for _, r in cycle_trapped.iterrows()],
                 "cycle_trap_ratio": cs.CYCLE_TRAP_RATIO,
                 "cycle_warn_ratio": cs.CYCLE_WARN_RATIO,
                 "profit_spike_pct": cs.PROFIT_SPIKE_PCT}
@@ -255,31 +285,39 @@ def cmd_masters_vote(args) -> int:
             line += ("; excluded: " + "; ".join(
                 f"{lbl} ({why})" for lbl, why in ti["excluded"]))
         print(line + ")")
+    print(f"vetoed   : {len(vetoed)} excluded by hard veto "
+          f"(intel_red={veto_sources['intel_red']}, "
+          f"borrowed_dividend={veto_sources['borrowed_dividend']}, "
+          f"profit_spike={veto_sources['profit_spike']})"
+          + (f"; cycle_trap: {len(cycle_trapped)}"
+             if not cycle_trapped.empty else ""))
     print()
     print(f"{'rank':>4} {'market':>6} {'code':>8} {'name':<14} "
-          f"{'price':>8} {'votes':>5} {'mean_comp':>9} "
-          f"{'pe_div':>6}  flags")
+          f"{'price':>8} {'votes':>5} {'core':>5} {'dcf_g':>6} "
+          f"{'mean_comp':>9} {'pe_div':>6}  flags")
     for i, (_, r) in enumerate(top.iterrows(), 1):
         flags = []
         if r.get("thesis"):
             flags.append(f"thesis:{r['thesis']}")
-        if r.get("cycle_trap"):
-            flags.append("CYCLE_TRAP")
         if r.get("cycle_warn"):
             flags.append("cycle_warn")
-        if r.get("profit_spike"):
-            flags.append("profit_spike")
         if r.get("data_gap"):
             flags.append(f"gap:{r['data_gap']}")
         div = r.get("pe_divergence")
         div_s = f"{div:g}" if div is not None else "-"
+        core = r.get("core_score")
+        core_s = f"{core:.0f}" if pd.notna(core) else "-"
+        dcf_g = r.get("dcf_implied_g")
+        dcf_g_s = f"{dcf_g:+.1f}" if pd.notna(dcf_g) else "-"
         name = str(r.get("name") or "")[:14]
         print(f"{i:>4} {str(r.get('market')):>6} {str(r.get('code')):>8} "
               f"{name:<14} {r.get('price', float('nan')):>8g} "
-              f"{int(r['vote_count']):>5} {r['mean_composite']:>9.1f} "
+              f"{int(r['vote_count']):>5} {core_s:>5} {dcf_g_s:>6} "
+              f"{r['mean_composite']:>9.1f} "
               f"{div_s:>6}  {', '.join(flags)}")
         print(f"{'':>4} masters: {r['masters_passed']}")
-    print("\nL1 = master-gate votes (quant); L2 = veto flags above; "
+    print("\nL1 = veto filter (gates + red flags can only EXCLUDE, never "
+          "rank); ranking = three-core equal weight (core_score); "
           "L3/L4 (qualitative + fused verdict) run per "
           "skills/18-fused-quant-master.md")
     return 0

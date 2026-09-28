@@ -22,6 +22,7 @@ from .fetch.pipeline import add_cashflow_factors, apply_gates, \
 from .fetch.quotes import fetch_quotes_by_secids
 from .report import resolve_snapshot
 from .resolve import Match
+from .strategy import cores
 from .strategy.composite import apply_composite
 from .strategy.factors import PILLARS, add_pillar_scores, kline_metrics
 from .strategy.horizons import apply_horizon_score
@@ -422,8 +423,28 @@ def analyze_stock(match: Match, snapshot_dir=None, live: bool = True,
     result["composite_percentile"] = composite_pct
     result["horizon_profile"] = prof if snap is not None else {}
     result["verdict"] = verdict_band(composite_pct)
+    # Three cores (2026-09-29 redesign): absolute anchors, computable
+    # from the target row alone — no peer frame needed.
+    core_row = _flat_row(result)
+    core_row.update(result.get("intel") or {})
+    cr = cores.add_core_scores(pd.DataFrame([core_row])).iloc[0]
+    result["cores"] = {
+        "business": _core_val(cr.get("core_business")),
+        "culture": _core_val(cr.get("core_culture")),
+        "dcf": _core_val(cr.get("core_dcf")),
+        "dcf_implied_g": _core_val(cr.get("dcf_implied_g")),
+        "core_score": _core_val(cr.get("core_score")),
+        "gaps": str(cr.get("core_gaps") or ""),
+    }
     result["risk_flags"] = risk_flags(result)
     return result
+
+
+def _core_val(v):
+    """Rounded core value; None for missing (JSON-safe)."""
+    if v is None or (isinstance(v, float) and pd.isna(v)):
+        return None
+    return round(float(v), 1)
 
 
 # ---------------------------------------------------------------------------
@@ -485,6 +506,21 @@ def render_brief(result: dict) -> str:
     if result.get("composite_percentile") is not None:
         lines.append(f"blended rank: {result['composite_percentile']:.0f}th "
                      f"percentile of the {m.market} gated universe")
+    c = result.get("cores") or {}
+    if c.get("core_score") is not None:
+        parts = " | ".join(
+            f"{lbl} {c[k]:.0f}" if c.get(k) is not None else f"{lbl} -"
+            for lbl, k in (("business", "business"),
+                           ("culture", "culture"), ("dcf", "dcf")))
+        lines.append(f"three cores (absolute anchors): {parts} "
+                     f"-> core {c['core_score']:.0f}")
+        if c.get("dcf_implied_g") is not None:
+            lines.append(f"  dcf implied g: {c['dcf_implied_g']:+.1f}%/yr "
+                         f"(r={config.DCF_DISCOUNT:.0%}, "
+                         f"tg={config.DCF_TERMINAL_G:.1%}, "
+                         f"{config.DCF_FADE_YEARS}y fade)")
+        if c.get("gaps"):
+            lines.append(f"  core gaps: {c['gaps']}")
     for col, label in (("pe_ttm", "PE"), ("rev_yoy", "rev YoY"),
                        ("roe", "ROE"), ("fcf_yield", "FCF yield"),
                        ("capex_to_ocf", "capex/ocf")):
@@ -548,6 +584,7 @@ def to_json(result: dict) -> str:
         "horizon": result.get("horizon"),
         "horizon_profile": result.get("horizon_profile"),
         "scores": result.get("scores"),
+        "cores": result.get("cores"),
         "percentiles": result.get("percentiles"),
         "metrics": {k: v for k, v in _flat_row(result).items()
                     if isinstance(v, (int, float, str))

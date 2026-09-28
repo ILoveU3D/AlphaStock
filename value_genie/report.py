@@ -13,7 +13,8 @@ import pandas as pd
 
 from . import config
 from .atomic import atomic_to_csv
-from .strategy.composite import apply_composite, rank_top
+from .strategy import cores
+from .strategy.composite import apply_composite
 from .strategy.horizons import recompute_momentum_score
 from .strategy.presets import normalize_weights
 
@@ -21,14 +22,17 @@ REPORT_COLUMNS = [
     "rank", "market", "code", "name", "industry", "price", "market_cap",
     "pe_ttm", "pb", "ps", "dividend_yield", "rev_yoy", "profit_yoy",
     "roe", "gross_margin", "net_margin", "report_date",
-    "composite_score", "value_score", "growth_score", "quality_score",
+    # three-core ranking keys (2026-09-29 redesign) + composite as context
+    "core_business", "core_culture", "core_dcf", "dcf_implied_g",
+    "core_score", "composite_score",
+    "value_score", "growth_score", "quality_score",
     "safety_score", "momentum_score", "cashflow_score", "data_completeness",
 ]
 
 CONSOLE_COLUMNS = [
     "rank", "market", "code", "name", "price", "pe_ttm", "pb", "rev_yoy",
-    "profit_yoy", "roe", "composite_score", "value_score", "growth_score",
-    "quality_score", "safety_score", "momentum_score", "cashflow_score",
+    "profit_yoy", "roe", "core_business", "core_culture", "core_dcf",
+    "core_score", "composite_score",
 ]
 
 
@@ -75,8 +79,14 @@ def screen(master: pd.DataFrame, strategy=None, preset=None, weights=None,
     """Apply a strategy/horizon to a master frame; return ranked rows.
 
     ``strategy`` is a registry id (presets + masters); ``preset`` is a
-    backward-compatible alias. ``weights`` (custom pillar weights) takes
-    precedence when given (gates are then skipped, as before).
+    backward-compatible alias. ``weights`` (custom pillar weights) skips
+    the strategy's gates, as before.
+
+    Ranking (2026-09-29 three-core redesign): the ONLY ranking key is
+    ``core_score`` (business/culture/dcf equal-weight, absolute anchors).
+    Strategy gates and ``--weights`` can only EXCLUDE (veto-only);
+    weights no longer order the output — they still feed the composite
+    column kept as display context.
 
     ``horizon`` adds the holding-period lens:
     - horizon alone (no strategy/preset/weights): the horizon IS the
@@ -141,12 +151,29 @@ def screen(master: pd.DataFrame, strategy=None, preset=None, weights=None,
         master["momentum_score"] = recompute_momentum_score(
             master, h.momentum_cols)
 
+    # Three-core backfill for old snapshots: pure function of existing
+    # columns (absolute anchors need no peer frame, no IO).
+    if "core_score" not in master.columns:
+        import sys
+        print("[WARN] backfilling three-core scores from raw factors "
+              "(old snapshot)", file=sys.stderr)
+        master = cores.add_core_scores(master)
+
     if gates:
         master = master[evaluate_gates(master, gates)]
 
+    # composite stays as display context; core_score is the ONLY
+    # ranking key — pillar weights and master gates can exclude,
+    # never order (2026-09-29 redesign). Rows with no computable core
+    # at all carry no ranking basis: data-sufficiency veto.
     scored = apply_composite(master, profile,
                              min_pillars=config.MIN_PILLARS)
-    top = rank_top(scored, top_n, markets=markets)
+    scored = cores.add_core_scores(scored)
+    scored = scored[scored["core_score"].notna()]
+    if markets:
+        scored = scored[scored["market"].isin(markets)]
+    top = scored.sort_values("core_score", ascending=False,
+                             na_position="last").head(top_n)
     out = top.reset_index(drop=True).reindex(columns=REPORT_COLUMNS)
     out["rank"] = range(1, len(out) + 1)
     return out

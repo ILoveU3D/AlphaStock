@@ -14,9 +14,17 @@ from value_genie import report
 def _master() -> pd.DataFrame:
     """Seven stocks with known pillar scores.
 
-    Balanced composite (0.35/0.25/0.30/0.10, min 3 pillars):
+    Balanced composite (0.35/0.25/0.30/0.10, min 3 pillars) — kept as
+    display context only since the 2026-09-29 redesign:
       600519 68.50   00700 61.75   AAPL 57.50   MSFT 54.50
-      300750 52.00   000858 47.50  601318 42.22   BADX excluded (2 pillars)
+      300750 52.00   000858 47.50  601318 42.22   BADX NaN (2 pillars)
+
+    Three-core ranking (the ONLY ranking key now): with the fixture's
+    inputs only the business core computes (gross_margin + roe anchors;
+    culture/dcf inputs absent -> those cores stay NaN and the mean
+    renormalizes), giving:
+      600519 100.0  MSFT 97.5  000858 92.5  AAPL 82.5
+      00700 63.75   300750 35.0   601318 30.0   BADX 12.5
     """
     rows = [
         {"market": "A", "code": "600519", "name": "Moutai",
@@ -70,7 +78,7 @@ def _master() -> pd.DataFrame:
         {"market": "US", "code": "MSFT", "name": "Microsoft",
          "industry": "Software", "price": 400.0, "market_cap": 3.0e12,
          "pe_ttm": 33.0, "pb": 35.0, "ps": 11.0, "dividend_yield": 0.8,
-         "rev_yoy": 15.0, "profit_yoy": 20.0, "roe": 35.0,
+         "rev_yoy": 15.0, "profit_yoy": 20.0, "roe": 24.0,
          "gross_margin": 70.0, "net_margin": 35.0,
          "report_date": "2025-12-31",
          "value_score": 30.0, "growth_score": 80.0, "quality_score": 60.0,
@@ -140,29 +148,47 @@ def test_screen_balanced_ranking():
     top = report.screen(_master(), preset="balanced", top_n=10)
     assert list(top.columns) == report.REPORT_COLUMNS
     assert list(top["rank"]) == list(range(1, len(top) + 1))
-    # expected composite order (BADX dropped: only 2 of 4 pillars)
-    assert list(top["code"]) == ["600519", "00700", "AAPL", "MSFT",
-                                 "300750", "000858", "601318"]
+    # 2026-09-29 redesign: core_score is the ONLY ranking key (absolute
+    # anchors); composite order no longer applies. BADX is NOT excluded
+    # anymore — its core computes from fundamentals (gaps declared in
+    # core_gaps, not in this report table).
+    assert list(top["code"]) == ["600519", "MSFT", "000858", "AAPL",
+                                 "00700", "300750", "601318", "BADX"]
+    assert top["core_score"].is_monotonic_decreasing
+    assert top.iloc[0]["core_score"] == pytest.approx(100.0)
+    assert top.iloc[1]["core_score"] == pytest.approx(97.5)
+    # composite survives as display context, min-pillar rule intact
     assert top.iloc[0]["composite_score"] == pytest.approx(68.5)
-    assert top.iloc[1]["composite_score"] == pytest.approx(61.75)
-    # missing safety renormalized over the remaining pillars
-    assert top.iloc[-1]["composite_score"] == pytest.approx(
+    assert top.iloc[4]["composite_score"] == pytest.approx(61.75)  # 00700
+    # missing safety renormalized over the remaining pillars (601318)
+    assert top.iloc[6]["composite_score"] == pytest.approx(
         (20 * 0.35 + 10 * 0.25 + 95 * 0.30) / 0.90)
+    # BADX has only 2 pillars -> composite context is NaN
+    assert pd.isna(top.iloc[-1]["composite_score"])
 
 
 def test_screen_top_n_and_market_filter():
     top = report.screen(_master(), top_n=2)
     assert len(top) == 2
+    assert set(top["code"]) == {"600519", "MSFT"}   # the two top cores
     us = report.screen(_master(), top_n=10, markets=["US"])
     assert set(us["market"]) == {"US"}
-    assert set(us["code"]) == {"AAPL", "MSFT"}     # BADX lacks 3 pillars
+    # core ranking admits BADX (core computable, gaps declared); the
+    # pillar-min rule only gates the composite context column now
+    assert list(us["code"]) == ["MSFT", "AAPL", "BADX"]
 
 
-def test_screen_custom_weights():
-    # value-only weights lower the pillar requirement to 1
+def test_screen_custom_weights_do_not_rank():
+    # 2026-09-29 redesign: custom weights skip the strategy gates but
+    # NEVER order the output — core_score remains the only ranking key
     top = report.screen(_master(), weights={"value": 1.0}, top_n=10)
-    assert list(top["code"]) == ["BADX", "600519", "00700", "300750",
-                                 "AAPL", "000858", "MSFT", "601318"]
+    assert top["core_score"].is_monotonic_decreasing
+    # BADX owns the best value_score yet ranks LAST on the three cores
+    assert top.iloc[-1]["code"] == "BADX"
+    assert list(top["code"]) == ["600519", "MSFT", "000858", "AAPL",
+                                 "00700", "300750", "601318", "BADX"]
+    # the value-only composite is still computed as context
+    assert top.iloc[0]["composite_score"] == pytest.approx(80.0)
 
 
 def test_screen_unknown_preset():

@@ -1,10 +1,13 @@
 """Snapshot pipeline: quotes -> gates -> funnel -> deep data -> master.csv.
 
 Two-stage funnel:
-1. Full-market quotes (+ batch financials for A/US) pass hard gates and a
-   stage-1 pillar blend to select ~CANDIDATES_PER_MARKET names per market.
+1. Full-market quotes (+ batch financials for A/US) pass hard gates, then
+   dual recall lanes (A: cheapness gates / B: quality-compounder gates)
+   select ~CANDIDATES_PER_MARKET names per market (2026-09-29 redesign:
+   lanes replace the old stage-1 pillar blend; admission never ranks).
 2. Candidates get deep data: daily klines (all markets) and HK F10
-   financials, then final gates, master assembly and pillar scoring.
+   financials, then final gates, master assembly, pillar scores (display
+   only) and three-core scores (business/culture/dcf — the ranking keys).
 
 Everything lands in a date-stamped snapshot directory; fresh klines and
 recent HK F10 rows are reused from the latest prior snapshot.
@@ -20,6 +23,7 @@ import pandas as pd
 from .. import config
 from ..atomic import atomic_to_csv, atomic_write_text
 from ..strategy.composite import apply_composite
+from ..strategy import cores
 from ..strategy.factors import PILLARS, add_pillar_scores, kline_metrics
 from .fundamentals import (fetch_a_balance, fetch_a_cashflow,
                            fetch_a_cashflow_annual, fetch_a_dividends,
@@ -43,6 +47,9 @@ MASTER_COLUMNS = [
     "ret_5d", "ret_20d", "vol_20d",
     "report_date", "value_score", "growth_score", "quality_score",
     "safety_score", "momentum_score", "cashflow_score", "data_completeness",
+    # three-core redesign (2026-09-29): recall lane + the only ranking keys
+    "lane", "core_business", "core_culture", "core_dcf", "dcf_implied_g",
+    "core_score", "core_gaps",
 ] + list(RADAR_COLUMNS)
 
 KLINE_FEATURES = ("pos_52w", "drawdown_52w", "ret_250d", "ret_60d",
@@ -173,20 +180,66 @@ def merge_us_financials(quotes: pd.DataFrame,
     return out
 
 
-def stage1_blend(df: pd.DataFrame, market: str) -> pd.DataFrame:
-    """Score the stage-1 pool and blend available pillars into one rank."""
-    scored = add_pillar_scores(df)
-    blended = apply_composite(scored, config.FUNNEL_WEIGHTS[market],
-                              min_pillars=1)
-    return blended.rename(columns={"composite_score": "stage1_score"})
+def _lane_score(df: pd.DataFrame) -> pd.Series:
+    """Stage-1 three-core approximation for lane-internal ordering.
+
+    Lanes lack annual cash-flow data, so FCF is approximated as
+    0.7 x earnings (config.DCF_FUNNEL_EARNINGS_HAIRCUT) — final ranking in
+    master.csv uses the precise per-market FCF, this is recall ordering
+    only. Culture is not computable at stage 1 and is omitted.
+    """
+    approx = df.copy()
+    pe = cores._num(approx, "pe_ttm")
+    approx["fcf_yield"] = config.DCF_FUNNEL_EARNINGS_HAIRCUT * 100.0 / pe
+    parts = [cores.business_score(approx),
+             cores.dcf_score(approx)["core_dcf"]]
+    return pd.concat(parts, axis=1).mean(axis=1, skipna=True)
 
 
 def select_candidates(df: pd.DataFrame, market: str) -> pd.DataFrame:
-    """Top-N per market by stage-1 blend score."""
+    """Recall lanes replace the blended-score cutoff (2026-09-29 redesign).
+
+    Lane A (错杀): any cheapness gate fires (positive pe/pb/ps below the
+    LANE_A_GATES thresholds) — pe>0 / rev_yoy gates already guarantee the
+    fundamentals are not broken. Lane B (复利机器): all LANE_B_GATES pass
+    with NO cheapness gate, so premium compounders (NVDA/TSM class) can
+    enter the pool for the first time. Lanes order internally by the
+    stage-1 three-core approximation; admission never ranks by value.
+    """
     if df.empty:
         return df
-    return df.sort_values("stage1_score", ascending=False).head(
-        config.CANDIDATES_PER_MARKET)
+    out = df.copy()
+    pe = cores._num(out, "pe_ttm")
+    pb = cores._num(out, "pb")
+    ps = cores._num(out, "ps")
+    lane_a = ((pe <= config.LANE_A_GATES["pe_ttm"])
+              | ((pb > 0) & (pb <= config.LANE_A_GATES["pb"]))
+              | ((ps > 0) & (ps <= config.LANE_A_GATES["ps"])))
+    roe = cores._num(out, "roe")
+    gm = cores._num(out, "gross_margin")
+    debt = cores._num(out, "debt_ratio")
+    lane_b = ((roe >= config.LANE_B_GATES["roe"])
+              & (gm >= config.LANE_B_GATES["gross_margin"])
+              & (debt <= config.LANE_B_GATES["debt_ratio"]))
+
+    score = _lane_score(out)
+
+    def _ordered(mask):
+        sub = out[mask.fillna(False)]
+        return sub.assign(_ls=score[sub.index]).sort_values(
+            "_ls", ascending=False, na_position="last")
+
+    a = _ordered(lane_a)
+    b = _ordered(lane_b)
+    sel = pd.concat([a.head(config.LANE_A_CAP).assign(lane="A"),
+                     b.head(config.LANE_B_CAP).assign(lane="B")])
+    sel = sel[~sel.index.duplicated(keep="first")]
+    if len(sel) < config.CANDIDATES_PER_MARKET and not a.empty:
+        extra = a.drop(index=sel.index, errors="ignore").head(
+            config.CANDIDATES_PER_MARKET - len(sel)).assign(lane="A")
+        sel = pd.concat([sel, extra])
+    sel = sel.head(config.CANDIDATES_PER_MARKET)
+    return sel.drop(columns=["_ls"])
 
 
 # ---------------------------------------------------------------------------
@@ -552,6 +605,8 @@ def build_master(cands_by_market: dict, snap_dir: Path,
             master[col] = float("nan")
     master["data_completeness"] = (
         master[score_cols].notna().sum(axis=1) / len(PILLARS))
+    # first core-score pass (pre-radar): business/dcf final, culture partial
+    master = cores.add_core_scores(master)
     return master.reindex(columns=MASTER_COLUMNS)
 
 
@@ -804,6 +859,7 @@ def build_watchlist(snap_dir: Path, reuse_dirs: list,
             scored[col] = float("nan")
     scored["data_completeness"] = (
         scored[score_cols].notna().sum(axis=1) / len(PILLARS))
+    scored = cores.add_core_scores(scored)
     out = scored.reindex(columns=MASTER_COLUMNS)
     atomic_to_csv(out, snap_dir / "watchlist.csv")
     manifest["datasets"]["watchlist"] = len(out)
@@ -966,13 +1022,18 @@ def run_fetch(markets=None, data_dir=None, refresh: bool = False,
             df = quotes
         df = apply_gates(df, market)
         gated = len(df)
-        df = stage1_blend(df, market)
         df = select_candidates(df, market)
         cands_by_market[market] = df
+        lane_counts = (df["lane"].value_counts().to_dict()
+                       if "lane" in df.columns else {})
         manifest["datasets"][market] = {
-            "quotes": len(quotes), "gated": gated, "candidates": len(df)}
+            "quotes": len(quotes), "gated": gated, "candidates": len(df),
+            # HK stage-1 carries no fundamentals: lane_b is honestly 0 there
+            "lane_a": int(lane_counts.get("A", 0)),
+            "lane_b": int(lane_counts.get("B", 0))}
         log(f"    [{market}] quotes={len(quotes)} gated={gated} "
-            f"candidates={len(df)}")
+            f"candidates={len(df)} (A={lane_counts.get('A', 0)} "
+            f"B={lane_counts.get('B', 0)})")
 
     kstats = {}
     for market, cands in cands_by_market.items():
@@ -1014,9 +1075,13 @@ def run_fetch(markets=None, data_dir=None, refresh: bool = False,
                                  refresh=refresh, quiet=quiet)
     if radar_df is not None and not radar_df.empty:
         master = merge_radar(master, radar_df)
+        # radar feeds the culture core (insider/buyback/eq flags, intel_red):
+        # second core-score pass so the final write carries the full picture
+        master = cores.add_core_scores(master)
         atomic_to_csv(master, snap_dir / "master.csv")
         if watch is not None and not watch.empty:
             watch = merge_radar(watch, radar_df)
+            watch = cores.add_core_scores(watch)
             atomic_to_csv(watch, snap_dir / "watchlist.csv")
 
     manifest["elapsed_sec"] = round(time.time() - t0, 1)

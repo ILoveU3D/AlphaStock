@@ -6,9 +6,13 @@ quant half of the fusion code-enforced:
 
 - ``masters_vote``: how many of the registered master strategies' hard
   gates each stock passes (vote_count 0..N) plus the mean composite
-  under each master's own weights — the quant consensus pool.
+  under each master's own weights.  Per the 2026-09-29 three-core
+  redesign these are DISPLAY-ONLY: votes and composites can exclude
+  (zero votes = out, veto_hard = out) but NEVER rank — ranking belongs
+  to core_score (strategy/cores.py).
 - snapshot flags: ``profit_spike`` (profit_yoy >= +200, low-base /
-  one-off rebound) for the whole pool.
+  one-off rebound) and ``veto_hard`` (intel_red / borrowed_dividend /
+  profit_spike) for the whole pool.
 - ``forward_pe_divergence``: live A-share pass — TTM EPS vs the
   analyst-consensus current-year EPS.  eps_ttm / eps_fwd >= 1.5 means
   the market expects earnings to fall by a third or more: the classic
@@ -45,9 +49,10 @@ def masters_vote(master: pd.DataFrame, markets=None) -> pd.DataFrame:
 
     Adds per-master vote columns (``vote_<id>``), ``vote_count``,
     ``masters_passed`` and ``mean_composite`` (mean of the composites
-    computed under each master's own pillar weights).  Gates whose
-    column is missing from the snapshot are skipped by
-    ``evaluate_gates`` with a stderr warning, matching ``screen``.
+    computed under each master's own pillar weights — context only,
+    never ranks).  Gates whose column is missing from the snapshot are
+    skipped by ``evaluate_gates`` with a stderr warning, matching
+    ``screen``.
     """
     out = add_derived_factors(master.copy())
     if markets:
@@ -78,10 +83,19 @@ def masters_vote(master: pd.DataFrame, markets=None) -> pd.DataFrame:
 
 
 def add_snapshot_flags(df: pd.DataFrame) -> pd.DataFrame:
-    """Whole-pool flags computable from snapshot columns only."""
+    """Whole-pool flags computable from snapshot columns only.
+
+    ``veto_hard`` is the only snapshot-side exclusion semantics left
+    (2026-09-29 redesign): intel red flags, borrowed dividend, one-off
+    profit spike.  cycle_trap belongs to the live pass (CLI layer).
+    """
     out = df.copy()
     py = pd.to_numeric(out.get("profit_yoy"), errors="coerce")
     out["profit_spike"] = (py >= PROFIT_SPIKE_PCT).fillna(False)
+    intel_red = pd.to_numeric(out.get("intel_red"), errors="coerce") == 1
+    borrowed = pd.to_numeric(out.get("borrowed_dividend"),
+                             errors="coerce") == 1
+    out["veto_hard"] = intel_red | borrowed | out["profit_spike"]
     return out
 
 
@@ -117,8 +131,17 @@ def forward_pe_divergence(row: pd.Series) -> float | None:
 
 
 def rank_consensus(df: pd.DataFrame, top_n: int = 15) -> pd.DataFrame:
-    """Sort the consensus pool: vote_count desc, mean_composite desc."""
-    out = df.sort_values(["vote_count", "mean_composite"],
-                         ascending=[False, False],
+    """Sort the pool by the three-core mean — the ONLY ranking key.
+
+    2026-09-29 redesign: ``core_score`` desc ranks; ``vote_count`` is
+    tie-break/display only; ``mean_composite`` never ranks.  Old
+    snapshots lacking core columns fall back to the legacy order (the
+    CLI backfills cores before calling, so the fallback is defensive).
+    """
+    if "core_score" in df.columns:
+        keys = ["core_score", "vote_count"]
+    else:
+        keys = ["vote_count", "mean_composite"]
+    out = df.sort_values(keys, ascending=False,
                          na_position="last").head(top_n)
     return out.reset_index(drop=True)
