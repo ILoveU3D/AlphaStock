@@ -37,18 +37,20 @@ def _register_sources():
         fetchers={"financials": "fetch_us_financials"},
     ))
 
-    # --- Tencent: kline backup ---
+    # --- Tencent: quotes + kline backup ---
     register_source(DataSource(
         id="tencent",
         name="Tencent (腾讯行情)",
-        capabilities=["kline:A", "kline:HK", "kline:US"],
-        fetchers={"kline": "fetch_kline_any (tx fallback)"},
+        capabilities=["quotes:A", "quotes:HK", "quotes:US",
+                      "kline:A", "kline:HK", "kline:US"],
+        fetchers={"quotes": "fetch_market_quotes_tx (batch fallback)",
+                  "kline": "fetch_kline_any (tx fallback)"},
     ))
 
     # Set lookup order: primary first, backup second
-    set_source_order("quotes", "A", ["eastmoney"])
-    set_source_order("quotes", "HK", ["eastmoney"])
-    set_source_order("quotes", "US", ["eastmoney"])
+    set_source_order("quotes", "A", ["eastmoney", "tencent"])
+    set_source_order("quotes", "HK", ["eastmoney", "tencent"])
+    set_source_order("quotes", "US", ["eastmoney", "tencent"])
     set_source_order("financials", "A", ["eastmoney"])
     set_source_order("financials", "HK", ["eastmoney"])
     set_source_order("financials", "US", ["sec_edgar"])
