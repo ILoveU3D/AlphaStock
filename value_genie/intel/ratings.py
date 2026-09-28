@@ -10,12 +10,13 @@ HK: no source found (reportapi carries no HK reports — probe
 rating headlines surface via the news timeline.
 """
 
-import json
 import re
 from datetime import date, timedelta
 
 from .. import config
 from ..fetch.http import EM_WEB, SA
+from ..fetch.sa_parse import sa_flight_array as _sa_flight_array
+from ..fetch.sa_parse import sa_json as _sa_json
 from .model import IntelItem
 
 REPORT_URL_TMPL = "https://data.eastmoney.com/report/info/{info}.html"
@@ -83,50 +84,6 @@ def fetch_stock_ratings(code: str, name: str = "",
 # ---------------------------------------------------------------------------
 # US: stockanalysis.com consensus (P3)
 # ---------------------------------------------------------------------------
-def _sa_flight_array(html: str, key: str) -> str | None:
-    """Extract `key:[...]` from an embedded flight-data payload via a
-    quote-aware balanced bracket scan (probe-verified 2026-09-09)."""
-    j = html.find(f"{key}:[")
-    if j < 0:
-        return None
-    k = j + len(key) + 1            # position of '['
-    depth, in_str, esc = 0, False, False
-    start = k
-    while k < len(html):
-        c = html[k]
-        if in_str:
-            if esc:
-                esc = False
-            elif c == "\\":
-                esc = True
-            elif c == '"':
-                in_str = False
-        else:
-            if c == '"':
-                in_str = True
-            elif c == "[":
-                depth += 1
-            elif c == "]":
-                depth -= 1
-                if depth == 0:
-                    return html[start:k + 1]
-        k += 1
-    return None
-
-
-def _sa_json(blob: str) -> list | None:
-    """Bare-key JS array literal -> parsed list. Two probe-validated
-    fixes: quote bare keys, and leading-dot floats (stars:.6 -> 0.6)."""
-    fixed = re.sub(r'([{,]\s*)([A-Za-z_][A-Za-z0-9_]*)(\s*:)',
-                   r'\1"\2"\3', blob)
-    fixed = re.sub(r'([{:[,\s])\.(\d)', r'\g<1>0.\2', fixed)
-    try:
-        v = json.loads(fixed)
-        return v if isinstance(v, list) else None
-    except json.JSONDecodeError:
-        return None
-
-
 def fetch_us_consensus(ticker: str, name: str = "") -> list | None:
     """US 一致评级 + 个体评级时间线（stockanalysis.com）。
 

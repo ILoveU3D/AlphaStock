@@ -700,3 +700,184 @@ class TestAskIntelIntegration:
         out = capsys.readouterr().out
         assert rc == 0
         assert "intel red" not in out
+
+
+# ---------------------------------------------------------------------------
+# profile subcommand (公司档案库)
+# ---------------------------------------------------------------------------
+@pytest.fixture()
+def preg(tmp_path, monkeypatch):
+    """Isolated profile registry rooted at tmp_path."""
+    from value_genie import config as _cfg
+    from value_genie import profile as pm
+    monkeypatch.setattr(_cfg, "PROFILES_DIR", tmp_path / "profiles")
+    return pm
+
+
+def _make_profile(pm, market="A", code="600519", name="Moutai",
+                  assess=False, restale=False):
+    p = pm.Profile(id=f"{market}:{code}", market=market, code=code,
+                   name=name)
+    pm.set_raw(p, {"summary": "白酒龙头，赤水河畔", "main_business":
+                   "茅台酒及系列酒的生产与销售",
+                   "source": "test", "meta": {"chairman": "丁雄军"}})
+    if assess:
+        pm.set_assessment(
+            p, business={"score": 85.0, "moat_type": "brand"},
+            culture={"score": 70.0, "founder_led": False},
+            verdict="复利机器")
+        if restale:        # raw changes after assessing -> stale
+            pm.set_raw(p, {"summary": "白酒龙头（年报更新）",
+                           "main_business": "茅台酒及系列酒",
+                           "source": "test"})
+    pm.save_profile(p)
+    return p
+
+
+def _stub_resolve(monkeypatch, market="A", code="600519", name="Moutai"):
+    from value_genie.resolve import Match
+    monkeypatch.setattr("value_genie.resolve.resolve",
+                        lambda q, **k: [Match(market, code, name, 100.0)])
+
+
+class TestProfileCLI:
+    def test_list_json_pure(self, preg, capsys):
+        _make_profile(preg)
+        _make_profile(preg, code="000858", name="Wuliangye")
+        rc = main(["profile", "list", "--json"])
+        assert rc == 0
+        data = json.loads(capsys.readouterr().out)
+        assert len(data) == 2
+        assert {d["id"] for d in data} == {"A:000858", "A:600519"}
+        assert "raw_fresh" in data[0] and "assessment_stale" in data[0]
+
+    def test_list_stale_filter(self, preg, capsys):
+        _make_profile(preg, assess=True, restale=True)      # stale
+        _make_profile(preg, code="000858", name="Wuliangye",
+                      assess=True)                          # valid
+        rc = main(["profile", "list", "--stale"])
+        out = capsys.readouterr().out
+        assert rc == 0
+        assert "A:600519" in out and "STALE" in out
+        assert "A:000858" not in out
+
+    def test_list_empty_registry(self, preg, capsys):
+        rc = main(["profile", "list"])
+        assert rc == 1
+        assert "no profiles" in capsys.readouterr().out
+
+    def test_show_json(self, preg, capsys, monkeypatch):
+        _make_profile(preg, assess=True)
+        _stub_resolve(monkeypatch)
+        rc = main(["profile", "show", "600519", "--json"])
+        assert rc == 0
+        data = json.loads(capsys.readouterr().out)
+        assert data["raw"]["summary"].startswith("白酒龙头")
+        assert data["assessment"]["business"]["score"] == 85.0
+        assert data["assessment_stale"] is False
+
+    def test_show_missing_profile(self, preg, capsys, monkeypatch):
+        _stub_resolve(monkeypatch)
+        rc = main(["profile", "show", "600519"])
+        assert rc == 1
+        assert "no profile" in capsys.readouterr().err
+
+    def test_assess_writeback(self, preg, capsys, monkeypatch):
+        _make_profile(preg)
+        _stub_resolve(monkeypatch)
+        rc = main(["profile", "assess", "600519",
+                   "--business-score", "80", "--culture-score", "65",
+                   "--moat-type", "brand", "--founder-led",
+                   "--benfen", "十年不提价", "--verdict", "复利机器"])
+        assert rc == 0
+        out = capsys.readouterr().out
+        assert "business=80" in out and "culture=65" in out
+        p = preg.load_profile("A", "600519")
+        a = p.assessment
+        assert a.business["score"] == 80.0
+        assert a.business["moat_type"] == "brand"
+        assert a.culture["founder_led"] is True
+        assert a.culture["benfen_evidence"] == ["十年不提价"]
+        assert a.verdict == "复利机器"
+        assert a.raw_hash == p.raw.content_hash
+
+    def test_assess_invalid_score_fails(self, preg, capsys, monkeypatch):
+        _make_profile(preg)
+        _stub_resolve(monkeypatch)
+        rc = main(["profile", "assess", "600519",
+                   "--business-score", "150"])
+        assert rc == 1
+        assert "0-100" in capsys.readouterr().err
+
+    def test_assess_empty_raw_fails(self, preg, capsys, monkeypatch):
+        preg.save_profile(preg.Profile(id="A:600519", market="A",
+                                       code="600519", name="Moutai"))
+        _stub_resolve(monkeypatch)
+        rc = main(["profile", "assess", "600519",
+                   "--business-score", "80"])
+        assert rc == 1
+        assert "raw zone is empty" in capsys.readouterr().err
+
+    def test_assess_nothing_given_fails(self, preg, capsys, monkeypatch):
+        _make_profile(preg)
+        _stub_resolve(monkeypatch)
+        rc = main(["profile", "assess", "600519"])
+        assert rc == 1
+        assert "nothing to assess" in capsys.readouterr().err
+
+    def test_update_and_incremental_skip(self, snapshot, preg, capsys,
+                                         monkeypatch):
+        from value_genie.fetch import profiles as pf
+        payload = {"summary": "源文", "main_business": "主业",
+                   "source": "test", "meta": {}}
+        monkeypatch.setitem(pf.FETCHERS, "A", lambda code: dict(payload))
+        monkeypatch.setitem(pf.FETCHERS, "US", lambda code: dict(payload))
+        monkeypatch.setattr(pf.time, "sleep", lambda s: None)
+        rc = main(["profile", "update", "--data-dir", str(snapshot)])
+        out = capsys.readouterr().out
+        assert rc == 0
+        assert "fetched=2" in out
+        assert preg.load_profile("A", "600519").raw.summary == "源文"
+        # second run: everything inside the freshness window -> skipped
+        rc = main(["profile", "update", "--data-dir", str(snapshot)])
+        out = capsys.readouterr().out
+        assert rc == 0
+        assert "skipped_fresh=2" in out and "fetched=0" in out
+
+    def test_update_failed_fetcher_rc1(self, snapshot, preg, capsys,
+                                       monkeypatch):
+        from value_genie.fetch import profiles as pf
+        monkeypatch.setitem(pf.FETCHERS, "A", lambda code: None)
+        monkeypatch.setitem(pf.FETCHERS, "US", lambda code: None)
+        monkeypatch.setattr(pf.time, "sleep", lambda s: None)
+        rc = main(["profile", "update", "--data-dir", str(snapshot)])
+        assert rc == 1
+        # failed fetch leaves no file behind
+        with pytest.raises(FileNotFoundError):
+            preg.load_profile("A", "600519")
+
+    def test_fetch_one(self, preg, capsys, monkeypatch):
+        from value_genie.fetch import profiles as pf
+        _stub_resolve(monkeypatch)
+        monkeypatch.setitem(
+            pf.FETCHERS, "A",
+            lambda code: {"summary": "简介", "main_business": "主业",
+                          "source": "test", "meta": {}})
+        monkeypatch.setattr(pf.time, "sleep", lambda s: None)
+        rc = main(["profile", "fetch", "600519"])
+        assert rc == 0
+        assert preg.load_profile("A", "600519").raw.summary == "简介"
+
+    def test_status_json(self, snapshot, preg, capsys):
+        _make_profile(preg, assess=True)          # 600519 covered+assessed
+        rc = main(["profile", "status", "--data-dir", str(snapshot),
+                   "--json"])
+        assert rc == 0
+        stats = json.loads(capsys.readouterr().out)
+        assert stats["pool"] == 2                 # master has 600519+AAPL
+        assert stats["pool_covered"] == 1
+        assert stats["pool_missing"] == 1
+        assert stats["profiles"] == 1
+        assert stats["assessed"] == 1
+        assert stats["assessment_stale"] == 0
+        assert stats["blend_weight"] == 0.5

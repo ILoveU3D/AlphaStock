@@ -154,18 +154,55 @@ CORE_COLUMNS = ("core_business", "core_culture", "core_dcf",
                 "dcf_implied_g", "core_score", "core_gaps")
 
 
-def add_core_scores(df: pd.DataFrame) -> pd.DataFrame:
+def _blend(quant: pd.Series, assessed: pd.Series) -> pd.Series:
+    """PROFILE_BLEND × quant-proxy + (1-blend) × AI assessment; the
+    assessment carries the core alone when the proxy is NaN. Rows
+    without an assessment keep the proxy unchanged (by design — most
+    companies are proxy-only in the registry's first year)."""
+    w = config.PROFILE_BLEND
+    out = quant.copy()
+    has_a = assessed.notna()
+    both = has_a & quant.notna()
+    only_a = has_a & quant.isna()
+    out[both] = w * quant[both] + (1.0 - w) * assessed[both]
+    out[only_a] = assessed[only_a]
+    return out
+
+
+def add_core_scores(df: pd.DataFrame,
+                    assessments: pd.DataFrame | None = None,
+                    stale_keys: set | None = None) -> pd.DataFrame:
     """Append the six core columns; pure function, no IO — safe to backfill
-    old snapshots on demand."""
+    old snapshots on demand.
+
+    ``assessments``: DataFrame[market, code, a_business, a_culture]
+    (profile.load_assessment_frame — non-stale only), blended into
+    core_business / core_culture at config.PROFILE_BLEND.
+    ``stale_keys``: {(market, code)} with outdated assessments, declared
+    in core_gaps as "AI assessment stale (raw updated)"."""
     out = df.copy()
     out["core_business"] = business_score(out)
     culture, culture_gaps = culture_score(out)
     out["core_culture"] = culture
+    if assessments is not None and not assessments.empty:
+        keyed = assessments.copy()
+        keyed["market"] = keyed["market"].astype(str)
+        keyed["code"] = keyed["code"].astype(str)
+        key = out["market"].astype(str) + "/" + out["code"].astype(str)
+        a_bus = keyed.set_index(
+            keyed["market"] + "/" + keyed["code"])["a_business"]
+        a_cul = keyed.set_index(
+            keyed["market"] + "/" + keyed["code"])["a_culture"]
+        out["core_business"] = _blend(
+            out["core_business"], key.map(a_bus))
+        out["core_culture"] = _blend(
+            out["core_culture"], key.map(a_cul))
     d = dcf_score(out)
     out["core_dcf"] = d["core_dcf"]
     out["dcf_implied_g"] = d["dcf_implied_g"]
     cores = out[["core_business", "core_culture", "core_dcf"]]
     out["core_score"] = cores.mean(axis=1, skipna=True)
+    stale_keys = stale_keys or set()
     gaps = []
     for idx in out.index:
         g = []
@@ -175,6 +212,10 @@ def add_core_scores(df: pd.DataFrame) -> pd.DataFrame:
             g.append(culture_gaps.at[idx])
         if pd.isna(out.at[idx, "core_dcf"]):
             g.append("no annual FCF")
+        mk = (str(out.at[idx, "market"]), str(out.at[idx, "code"])) \
+            if stale_keys else None
+        if mk in stale_keys:
+            g.append("AI assessment stale (raw updated)")
         gaps.append("; ".join(g) or None)
     out["core_gaps"] = gaps
     return out

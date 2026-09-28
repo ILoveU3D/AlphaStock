@@ -566,7 +566,9 @@ def _apply_hk_f10(df: pd.DataFrame, hk_map: dict, fx: float | None) -> None:
 
 def build_master(cands_by_market: dict, snap_dir: Path,
                  hk_f10: pd.DataFrame | None,
-                 fx: float | None) -> pd.DataFrame:
+                 fx: float | None,
+                 assessments: pd.DataFrame | None = None,
+                 stale_keys: set | None = None) -> pd.DataFrame:
     """Assemble the master frame, apply final gates, score pillars."""
     hk_map = {}
     if hk_f10 is not None and not hk_f10.empty:
@@ -606,7 +608,8 @@ def build_master(cands_by_market: dict, snap_dir: Path,
     master["data_completeness"] = (
         master[score_cols].notna().sum(axis=1) / len(PILLARS))
     # first core-score pass (pre-radar): business/dcf final, culture partial
-    master = cores.add_core_scores(master)
+    master = cores.add_core_scores(master, assessments=assessments,
+                                   stale_keys=stale_keys)
     return master.reindex(columns=MASTER_COLUMNS)
 
 
@@ -735,7 +738,9 @@ def _watch_us_financials(codes: list, snap_dir: Path) -> pd.DataFrame:
 def build_watchlist(snap_dir: Path, reuse_dirs: list,
                     master: pd.DataFrame, hk_f10: pd.DataFrame | None,
                     fx: float | None, manifest: dict,
-                    quiet: bool = False) -> pd.DataFrame:
+                    quiet: bool = False,
+                    assessments: pd.DataFrame | None = None,
+                    stale_keys: set | None = None) -> pd.DataFrame:
     """Deep data for held symbols missing from master.csv -> watchlist.csv.
 
     For every user-held symbol the funnel excluded: a quote (snapshot
@@ -859,7 +864,8 @@ def build_watchlist(snap_dir: Path, reuse_dirs: list,
             scored[col] = float("nan")
     scored["data_completeness"] = (
         scored[score_cols].notna().sum(axis=1) / len(PILLARS))
-    scored = cores.add_core_scores(scored)
+    scored = cores.add_core_scores(scored, assessments=assessments,
+                                   stale_keys=stale_keys)
     out = scored.reindex(columns=MASTER_COLUMNS)
     atomic_to_csv(out, snap_dir / "watchlist.csv")
     manifest["datasets"]["watchlist"] = len(out)
@@ -920,6 +926,16 @@ def run_fetch(markets=None, data_dir=None, refresh: bool = False,
                 "failures": []}
     log = (lambda *a: None) if quiet else print
     log(f"== value-genie fetch -> {snap_dir} ==")
+
+    # AI assessments from the profile registry (three-core knowledge
+    # base) — loaded once, blended into the core scores of every frame
+    # this run writes. Registry absent/empty -> pure quant proxies.
+    from .. import profile as profile_mod
+    assessments = profile_mod.load_assessment_frame()
+    stale_keys = profile_mod.stale_assessment_keys()
+    if not assessments.empty:
+        log(f"    [profiles] blending {len(assessments)} AI assessments"
+            + (f" ({len(stale_keys)} stale)" if stale_keys else ""))
 
     fx = None
     if "HK" in markets:
@@ -1061,13 +1077,15 @@ def run_fetch(markets=None, data_dir=None, refresh: bool = False,
         manifest["datasets"]["hk_cashflow"] = dict(hk_cf_stats)
         log(f"    [HK] cashflow {hk_cf_stats}")
 
-    master = build_master(cands_by_market, snap_dir, hk_f10, fx)
+    master = build_master(cands_by_market, snap_dir, hk_f10, fx,
+                          assessments=assessments, stale_keys=stale_keys)
     atomic_to_csv(master, snap_dir / "master.csv")
     manifest["datasets"]["master"] = len(master)
 
     # deep data for holdings the funnel excluded (watchlist.csv)
     watch = build_watchlist(snap_dir, kline_reuse, master, hk_f10, fx,
-                            manifest, quiet=quiet)
+                            manifest, quiet=quiet,
+                            assessments=assessments, stale_keys=stale_keys)
 
     # intel radar: A-share event risk columns into master + watchlist
     # (design 2026-09-08 §6; P1 = A-share batch tables, fail-closed)
@@ -1077,12 +1095,26 @@ def run_fetch(markets=None, data_dir=None, refresh: bool = False,
         master = merge_radar(master, radar_df)
         # radar feeds the culture core (insider/buyback/eq flags, intel_red):
         # second core-score pass so the final write carries the full picture
-        master = cores.add_core_scores(master)
+        master = cores.add_core_scores(master, assessments=assessments,
+                                       stale_keys=stale_keys)
         atomic_to_csv(master, snap_dir / "master.csv")
         if watch is not None and not watch.empty:
             watch = merge_radar(watch, radar_df)
-            watch = cores.add_core_scores(watch)
+            watch = cores.add_core_scores(watch, assessments=assessments,
+                                          stale_keys=stale_keys)
             atomic_to_csv(watch, snap_dir / "watchlist.csv")
+
+    # company-profile registry: fetch raw text for pool newcomers and
+    # stale raws (candidate-pool-first coverage; never blocks the
+    # snapshot — failures land in manifest, same policy as the radar)
+    try:
+        from . import profiles as prof_fetch
+        pstats = prof_fetch.update_profiles(
+            profile_mod.pool_members(snap_dir), quiet=quiet)
+        manifest["datasets"]["profiles"] = pstats
+        log(f"    [profiles] {pstats}")
+    except Exception as exc:
+        manifest["failures"].append(f"profiles: {type(exc).__name__}")
 
     manifest["elapsed_sec"] = round(time.time() - t0, 1)
     atomic_write_text(snap_dir / "manifest.json",

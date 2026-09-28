@@ -1,0 +1,50 @@
+{
+  "id": "A:600519",
+  "market": "A",
+  "code": "600519",
+  "name": "Kweichow Moutai",
+  "version": 2,
+  "created_at": "2026-09-29T03:15:15",
+  "updated_at": "2026-09-29T03:37:35",
+  "raw": {
+    "fetched_at": "2026-09-29T03:37:35",
+    "source": "eastmoney_f10_org_basicinfo",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "贵州茅台酒股份有限公司(以下简称“公司”)成立于1999年11月20日,由中国贵州茅台酒厂(集团)有限责任公司(以下简称“茅台集团”)作为主发起人,联合另外七家单位共同发起设立,目前控股股东为茅台集团。公司总部位于贵州省北部风光旖旎的赤水河畔茅台镇,主营茅台酒及茅台酱香系列酒的生产与销售,主导产品贵州茅台酒是我国大曲酱香型白酒的鼻祖和典型代表,是有机食品和国家地理标志保护产品,是香飘世界的中国名片。2001年8月27日,公司股票在上海证券交易所上市交易。据“BrandZ最具价值全球品牌排行榜”显示,是全球最具价值的酒类品牌。",
+    "main_business": "茅台酒及系列酒的生产与销售",
+    "vision": "",
+    "meta": {
+      "org_name": "贵州茅台酒股份有限公司",
+      "chairman": "陈华",
+      "president": "王莉(代)",
+      "secretary": "余思明",
+      "founded": "1999-11-20 00:00:00",
+      "listed": "2001-08-27 00:00:00",
+      "website": "www.moutaichina.com",
+      "address": "贵州省仁怀市茅台镇",
+      "control_holder": "中国贵州茅台酒厂(集团)有限责任公司",
+      "real_controller": "贵州省人民政府国有资产监督管理委员会",
+      "independent_directors": "盛雷鸣,郭田勇,王鑫",
+      "employees": "34992",
+      "industry": "食品饮料-饮料-白酒",
+      "org_form": "地方国有企业",
+      "top_profit_product": "茅台酒",
+      "income_structure": "茅台酒、系列酒、其他业务",
+      "income_structure_ratio": "85.69%、14.26%、0.05%",
+      "auditor": "天健会计师事务所(特殊普通合伙)",
+      "concepts": "西部大开发,电商概念,央国企改革,超级品牌,乡村振兴,白酒,酿酒概念,味蕾经济,HS300_,融资融券,央视50_,上证50_,上证180_,沪股通,MSCI中国,富时罗素,标准普尔,茅指数,百元股,东方财富热股,行业龙头,权重股,大盘股,消费风格",
+      "business_scope": "茅台酒及系列酒的生产与销售;饮料、食品、包装材料的生产、销售;防伪技术开发、信息产业相关产品的研制、开发;酒店经营管理、住宿、餐饮、娱乐、洗浴及停车场管理服务;车辆运输、维修保养;第二类增值电信业务。(具体内容以工商核定登记为准)"
+    },
+    "content_hash": "4da0f0e7a580"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

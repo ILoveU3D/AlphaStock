@@ -259,6 +259,21 @@ THESIS_MAX = 40       # total thesis members injectable per masters-vote run
 TRADE_CURRENCIES = ("CNY", "HKD", "USD")
 TRADE_FX_SPREAD = 0.003              # default FX spread per season
 
+# Company profiles (business model / culture / vision raw text + AI
+# assessments) — durable, git-tracked; deliberately NOT under the
+# cleanable data/ tree. Probe-validated 2026-09-29:
+#   A  = datacenter RPT_F10_ORG_BASICINFO -> ORG_PROFILE / MAIN_BUSINESS
+#        / BUSINESS_SCOPE + governance meta (CHAIRMAN, CONTROL_HOLDER...)
+#   HK = RPT_HKF10_INFO_ORGPROFILE (columns ALL) -> ORG_PROFILE /
+#        MAIN_BUSINESS / CHAIRMAN / EMP_NUM ...
+#   US = SEC submissions (meta) + stockanalysis.com main page
+#        flight-data `description:"..."` (business summary text)
+PROFILES_DIR = BASE_DIR / "profiles"
+PROFILE_FRESH_DAYS = 90     # raw reuse window; company profiles drift slowly
+PROFILE_BLEND = 0.5         # AI assessment vs quant-proxy blend in cores
+A_PROFILE_REPORT = "RPT_F10_ORG_BASICINFO"
+SA_PROFILE_URL_TMPL = "https://stockanalysis.com/stocks/{slug}/"
+
 # A-share fills (CITIC model): commission 0.025% both ways, min 5 CNY;
 # stamp 0.05% sell only (stocks; ETFs exempt); transfer fee 0.001% both ways.
 A_COMMISSION_RATE = 0.00025

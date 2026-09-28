@@ -132,3 +132,66 @@ def test_add_core_scores_all_missing():
     out = cores.add_core_scores(df)
     assert pd.isna(out.iloc[0]["core_score"])
     assert "business inputs missing" in out.iloc[0]["core_gaps"]
+
+# ---------------------------------------------------------------------------
+# AI-assessment blend (profile registry bridge, 2026-09-29)
+# ---------------------------------------------------------------------------
+def _frame_for_blend():
+    # one row whose quant business = 60 and quant culture = 40:
+    # gm 50 -> (50-20)/(80-20)*100 = 50?  use single-part frames instead
+    return pd.DataFrame({
+        "market": ["A"], "code": ["600900"],
+        "gross_margin": [50.0],          # -> 50.0
+        "borrowed_dividend": [0.0],      # s_div 100
+        "eq_flags": [2.0],               # s_book 40 -> culture mean 70
+        "fcf_yield": [np.nan],
+    })
+
+
+def test_blend_math():
+    df = _frame_for_blend()
+    base = cores.add_core_scores(df)
+    q_bus = base.iloc[0]["core_business"]          # 50.0
+    q_cul = base.iloc[0]["core_culture"]           # 70.0
+    a = pd.DataFrame({"market": ["A"], "code": ["600900"],
+                      "a_business": [80.0], "a_culture": [20.0]})
+    out = cores.add_core_scores(df, assessments=a)
+    w = config.PROFILE_BLEND
+    row = out.iloc[0]
+    assert row["core_business"] == pytest.approx(
+        w * q_bus + (1 - w) * 80.0)
+    assert row["core_culture"] == pytest.approx(
+        w * q_cul + (1 - w) * 20.0)
+
+
+def test_blend_assessment_alone_when_quant_nan():
+    df = pd.DataFrame({"market": ["US"], "code": ["MU"]})
+    a = pd.DataFrame({"market": ["US"], "code": ["MU"],
+                      "a_business": [75.0], "a_culture": [None]})
+    out = cores.add_core_scores(df, assessments=a)
+    assert out.iloc[0]["core_business"] == 75.0
+    assert pd.isna(out.iloc[0]["core_culture"])
+
+
+def test_no_assessments_regression_lock():
+    df = _frame_for_blend()
+    a = cores.add_core_scores(df)
+    b = cores.add_core_scores(df, assessments=None, stale_keys=None)
+    pd.testing.assert_frame_equal(a, b)
+
+
+def test_stale_keys_declared_in_gaps():
+    df = _frame_for_blend()
+    out = cores.add_core_scores(df, stale_keys={("A", "600900")})
+    assert "AI assessment stale (raw updated)" in out.iloc[0]["core_gaps"]
+    out2 = cores.add_core_scores(df, stale_keys={("US", "MU")})
+    assert "stale" not in (out2.iloc[0]["core_gaps"] or "")
+
+
+def test_unmatched_assessment_ignored():
+    df = _frame_for_blend()
+    a = pd.DataFrame({"market": ["US"], "code": ["NVDA"],
+                      "a_business": [99.0], "a_culture": [99.0]})
+    out = cores.add_core_scores(df, assessments=a)
+    base = cores.add_core_scores(df)
+    assert out.iloc[0]["core_business"] == base.iloc[0]["core_business"]

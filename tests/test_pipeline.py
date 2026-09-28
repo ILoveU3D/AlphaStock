@@ -181,7 +181,7 @@ def counters():
 
 
 @pytest.fixture()
-def patched_fetchers(monkeypatch, counters):
+def patched_fetchers(monkeypatch, counters, tmp_path):
     def fake_quotes(market):
         return {"A": a_quotes(), "HK": hk_quotes(), "US": us_quotes()}[market]
 
@@ -202,6 +202,17 @@ def patched_fetchers(monkeypatch, counters):
     monkeypatch.setattr(pl, "fetch_kline_any", fake_kline)
     # keep run_fetch hermetic: real user holdings would hit the network
     monkeypatch.setattr(pl, "collect_watch_symbols", lambda *a, **k: [])
+    # same for the profile registry: stub the incremental updater and
+    # point PROFILES_DIR at an empty tmp dir (no assessments to blend)
+    from value_genie.fetch import profiles as prof_fetch
+    counters["profiles_symbols"] = []
+
+    def fake_update(symbols, force=False, quiet=True):
+        counters["profiles_symbols"] = list(symbols)
+        return {"fetched": len(symbols), "skipped_fresh": 0,
+                "changed": len(symbols), "failed": 0, "errors": []}
+    monkeypatch.setattr(prof_fetch, "update_profiles", fake_update)
+    monkeypatch.setattr(config, "PROFILES_DIR", tmp_path / "profiles")
     stub_intel_fetchers(monkeypatch)
     return counters
 
@@ -274,6 +285,28 @@ def test_run_fetch_full_flow(patched_fetchers, tmp_path):
     assert manifest["markets"] == ["A", "HK", "US"]
     assert manifest["datasets"]["master"] == len(master)
     assert manifest["fx_hkdcny"] == 0.92
+
+    # profile registry: incremental updater ran over master pool
+    # (watchlist empty via collect_watch_symbols stub) and was recorded
+    pstats = manifest["datasets"]["profiles"]
+    assert pstats["failed"] == 0
+    assert pstats["fetched"] == len(master)
+    assert {(m, c) for m, c, _ in
+            patched_fetchers["profiles_symbols"]} == {
+        (r["market"], r["code"]) for _, r in master.iterrows()}
+
+
+def test_run_fetch_profiles_failure_does_not_block(patched_fetchers,
+                                                   monkeypatch, tmp_path):
+    from value_genie.fetch import profiles as prof_fetch
+
+    def boom(symbols, force=False, quiet=True):
+        raise RuntimeError("profiles store down")
+    monkeypatch.setattr(prof_fetch, "update_profiles", boom)
+    snap = pl.run_fetch(data_dir=tmp_path, quiet=True)
+    manifest = json.loads((snap / "manifest.json").read_text())
+    assert any(f.startswith("profiles:") for f in manifest["failures"])
+    assert (snap / "master.csv").exists()
 
 
 def test_incremental_reuse(patched_fetchers, tmp_path):

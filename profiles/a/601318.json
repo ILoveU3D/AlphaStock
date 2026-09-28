@@ -1,0 +1,50 @@
+{
+  "id": "A:601318",
+  "market": "A",
+  "code": "601318",
+  "name": "Ping An Insurance",
+  "version": 2,
+  "created_at": "2026-09-29T03:15:15",
+  "updated_at": "2026-09-29T03:38:04",
+  "raw": {
+    "fetched_at": "2026-09-29T03:38:04",
+    "source": "eastmoney_f10_org_basicinfo",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "中国平安保险(集团)股份有限公司于1988年诞生于深圳蛇口,是中国第一家股份制保险企业,在各级政府及监管部门、广大客户和社会各界的支持下,中国平安成长为国内金融牌照最齐全、业务范围最广泛的综合金融集团之一,致力于成为国际领先的综合金融、医疗养老服务提供商。中国平安在香港联合交易所主板(2318.HK)及上海证券交易所(601318.SH)两地上市。平安集团旗下专业公司主要包括以保险、银行、资管为代表的综合金融业务和以平安健康、北大国际医院为代表的的医疗健康业务,涵盖金融、医疗、养老的各个领域。中国平安深化“综合金融+医疗养老”服务体系,提供专业的“金融顾问、家庭医生、养老管家”服务,让客户享有“省心、省时、又省钱”的综合金融、医疗养老消费体验。",
+    "main_business": "从事金融业,提供多元化的金融产品及服务",
+    "vision": "",
+    "meta": {
+      "org_name": "中国平安保险(集团)股份有限公司",
+      "chairman": "马明哲",
+      "president": "谢永林",
+      "secretary": "盛瑞生",
+      "founded": "1988-03-21 00:00:00",
+      "listed": "2007-03-01 00:00:00",
+      "website": "www.pingan.cn",
+      "address": "深圳市福田区益田路5033号平安金融中心47、48、108、109、110、111、112层",
+      "control_holder": "无",
+      "real_controller": "无",
+      "independent_directors": "金李,王广谦,吴港平(Albert Kong Ping NG),洪小源,宋献中,陈晓峰(Hon CHAN Hiu Fung Nicholas)",
+      "employees": "258806",
+      "industry": "金融-非银行金融-保险",
+      "org_form": "其他企业",
+      "top_profit_product": "寿险及健康险",
+      "income_structure": "寿险及健康险、财产保险、银行、资产管理、金融赋能、内部抵销",
+      "income_structure_ratio": "46.84%、31.13%、12.28%、7.42%、3.91%、-1.58%",
+      "auditor": "安永华明会计师事务所(特殊普通合伙),安永会计师事务所",
+      "concepts": "参股券商,参股银行,深圳特区,互联网金融,养老概念,IPO受益,区块链,独角兽,互联网医疗,AH股,HS300_,融资融券,央视50_,上证50_,上证180_,沪股通,证金持股,MSCI中国,富时罗素,标准普尔,红利破净股,周期股,红利股,权重股,大盘股,大盘价值,金融地产风格",
+      "business_scope": "投资保险企业;监督管理控股投资企业的各种国内、国际业务;开展保险资金运用业务;经批准开展国内、国际保险业务;经中国保险监督管理委员会及国家有关部门批准的其他业务。"
+    },
+    "content_hash": "6e00de2b349d"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

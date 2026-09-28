@@ -1,0 +1,50 @@
+{
+  "id": "A:000858",
+  "market": "A",
+  "code": "000858",
+  "name": "Wuliangye",
+  "version": 2,
+  "created_at": "2026-09-29T03:15:15",
+  "updated_at": "2026-09-29T03:37:50",
+  "raw": {
+    "fetched_at": "2026-09-29T03:37:50",
+    "source": "eastmoney_f10_org_basicinfo",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "宜宾五粮液股份有限公司(以下简称公司)成立于1998年4月21日,公司位于有四千多年酿酒史的世界十大烈酒产区之一、长江首城、中国酒都宜宾,被联合国教科文及粮农组织誉为“在地球同纬度上最适合酿造优质纯正蒸馏白酒的地区”。主要产品“五粮液酒”是我国浓香型白酒的典型代表,是国家地理标志产品和首批受欧盟保护的中国首批地理标志产品,并根据生产工艺特点和市场需求开发了五粮春、五粮醇、五粮特头曲、绵柔尖庄等品类齐全、层次清晰的五粮浓香酒产品,致力于满足不同层次消费者的多样化需求和人们对美好生活的向往。",
+    "main_business": "白酒生产和销售",
+    "vision": "",
+    "meta": {
+      "org_name": "宜宾五粮液股份有限公司",
+      "chairman": "邓敏",
+      "president": "华涛",
+      "secretary": "李剑伟",
+      "founded": "1998-04-21 00:00:00",
+      "listed": "1998-04-27 00:00:00",
+      "website": "www.wuliangye.com.cn",
+      "address": "四川省宜宾市翠屏区岷江西路150号",
+      "control_holder": "宜宾发展控股集团有限公司",
+      "real_controller": "宜宾市政府国有资产监督管理委员会",
+      "independent_directors": "罗华伟,侯水平,鲁篱,丁南",
+      "employees": "25216",
+      "industry": "食品饮料-饮料-白酒",
+      "org_form": "地方国有企业",
+      "top_profit_product": "酒类",
+      "income_structure": "酒类、非酒类产品",
+      "income_structure_ratio": "94.55%、5.45%",
+      "auditor": "天职国际会计师事务所(特殊普通合伙)",
+      "concepts": "参股银行,成渝特区,西部大开发,电商概念,央国企改革,超级品牌,新零售,白酒,酿酒概念,味蕾经济,HS300_,机构重仓,深成500,融资融券,证金持股,深股通,MSCI中国,深证100R,富时罗素,标准普尔,茅指数,权重股,大盘股,大盘价值,消费风格,2026中报预增",
+      "business_scope": "酒类产品及相关辅助产品(瓶盖、商标、标识及包装制品)的生产经营。"
+    },
+    "content_hash": "cf7f75af197c"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

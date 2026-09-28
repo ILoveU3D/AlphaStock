@@ -1274,6 +1274,236 @@ def cmd_thesis(args) -> int:
     return 0
 
 
+def cmd_profile(args) -> int:
+    """Company profile registry (公司档案库): business model / culture /
+    vision source text, distilled by the AI into three-core assessments
+    (`profile assess` is the only assessment write path).
+
+    Registry management is not freshness-gated; `update`/`status` read
+    the snapshot pool read-only when one exists — profiles/ is
+    git-tracked and survives data/ wipes.
+    """
+    import sys as _sys
+    from dataclasses import asdict
+
+    from . import profile as pm
+    from .fetch import profiles as pf
+
+    def _dict(p):
+        d = asdict(p)
+        d["raw_fresh"] = pm.raw_is_fresh(p)
+        d["assessment_stale"] = pm.assessment_is_stale(p)
+        return d
+
+    def _pool():
+        """(market, code, name) coverage target: snapshot pool when
+        available, else the on-disk registry (data/ is wipable)."""
+        try:
+            snap = report.resolve_snapshot(args.data_dir,
+                                           getattr(args, "snapshot",
+                                                   None))
+            return pm.pool_members(snap)
+        except (SystemExit, FileNotFoundError, ValueError, OSError):
+            return [(p.market, p.code, p.name)
+                    for p in pm.list_profiles()]
+
+    try:
+        if args.profile_cmd == "list":
+            ps = pm.list_profiles(market=args.market)
+            if args.stale:
+                ps = [p for p in ps if pm.assessment_is_stale(p)]
+            if args.json:
+                print(json.dumps([_dict(p) for p in ps],
+                                 ensure_ascii=False, indent=2))
+                return 0
+            if not ps:
+                print(f"no profiles under {pm.profiles_dir()}")
+                return 1
+            for p in ps:
+                a = p.assessment
+                flags = []
+                if not pm.raw_is_fresh(p):
+                    flags.append("raw-expired")
+                if a.assessed_at:
+                    flags.append("STALE" if pm.assessment_is_stale(p)
+                                 else "assessed")
+                print(f"{p.id:<12} {p.name[:24]:<24} "
+                      f"raw={p.raw.fetched_at[:10] or '-':<10} "
+                      f"{'|'.join(flags) or '-'}")
+            return 0
+
+        if args.profile_cmd == "show":
+            p = pm.find_profile(args.stock)
+            if args.json:
+                print(json.dumps(_dict(p), ensure_ascii=False,
+                                 indent=2))
+                return 0
+            print(f"id      : {p.id}  {p.name}")
+            print(f"raw     : fetched {p.raw.fetched_at or '-'}  "
+                  f"source={p.raw.source or '-'}  "
+                  f"hash={p.raw.content_hash or '-'}"
+                  + ("" if pm.raw_is_fresh(p) else "  [EXPIRED]"))
+            if p.raw.meta:
+                print("meta    : " + "; ".join(
+                    f"{k}={v}" for k, v in p.raw.meta.items()))
+            print("\n-- summary --")
+            print(p.raw.summary or "(empty)")
+            if p.raw.main_business:
+                print("\n-- main business --")
+                print(p.raw.main_business)
+            if p.raw.vision:
+                print("\n-- vision --")
+                print(p.raw.vision)
+            a = p.assessment
+            print("\n-- assessment --")
+            if not a.assessed_at:
+                print("(not assessed — distill with `profile assess`)")
+            else:
+                stale = pm.assessment_is_stale(p)
+                print(f"assessed: {a.assessed_at} by {a.agent or '-'}"
+                      + ("  [STALE: raw updated since — re-assess]"
+                         if stale else ""))
+                if a.business:
+                    print(f"business: score="
+                          f"{a.business.get('score', '-')}  moat="
+                          f"{a.business.get('moat_type', '-')}  "
+                          f"lifecycle="
+                          f"{a.business.get('machine_lifecycle', '-')}")
+                    if a.business.get("argument"):
+                        print(f"  {a.business['argument']}")
+                if a.culture:
+                    print(f"culture : score="
+                          f"{a.culture.get('score', '-')}  founder_led="
+                          f"{a.culture.get('founder_led', '-')}")
+                    for ev in a.culture.get("benfen_evidence") or []:
+                        print(f"  benfen: {ev}")
+                    if a.culture.get("argument"):
+                        print(f"  {a.culture['argument']}")
+                if a.dcf and a.dcf.get("argument"):
+                    print(f"dcf     : {a.dcf['argument']}")
+                if a.verdict:
+                    print(f"verdict : {a.verdict}")
+            return 0
+
+        if args.profile_cmd == "fetch":
+            from . import resolve as rz
+            matches = rz.resolve(args.stock)
+            if not matches:
+                raise ValueError(
+                    f"cannot resolve {args.stock!r} to a listed company")
+            m = matches[0]
+            stats = pf.update_profiles([(m.market, m.code, m.name)],
+                                       force=True, quiet=False)
+            if args.json:
+                print(json.dumps(stats, ensure_ascii=False))
+            elif stats["failed"]:
+                print(f"profile fetch failed for "
+                      f"{m.market}/{m.code}: source returned nothing")
+            return 0 if not stats["failed"] else 1
+
+        if args.profile_cmd == "update":
+            pool = _pool()
+            if args.market:
+                pool = [s for s in pool if s[0] == args.market]
+            if args.limit:
+                pool = pool[: args.limit]
+            stats = pf.update_profiles(pool, force=args.force,
+                                       quiet=False)
+            if args.json:
+                print(json.dumps(stats, ensure_ascii=False))
+            else:
+                print(f"profiles update: pool={len(pool)} "
+                      f"fetched={stats['fetched']} "
+                      f"skipped_fresh={stats['skipped_fresh']} "
+                      f"changed={stats['changed']} "
+                      f"failed={stats['failed']}")
+            return 0 if not stats["failed"] else 1
+
+        if args.profile_cmd == "assess":
+            p = pm.find_profile(args.stock)
+            business = {}
+            if args.business_score is not None:
+                business["score"] = args.business_score
+            if args.moat_type:
+                business["moat_type"] = args.moat_type
+            if args.lifecycle:
+                business["machine_lifecycle"] = args.lifecycle
+            if args.business_arg:
+                business["argument"] = args.business_arg
+            culture = {}
+            if args.culture_score is not None:
+                culture["score"] = args.culture_score
+            if args.founder_led:
+                culture["founder_led"] = True
+            if args.benfen:
+                culture["benfen_evidence"] = list(args.benfen)
+            if args.culture_arg:
+                culture["argument"] = args.culture_arg
+            dcf = {}
+            if args.dcf_arg:
+                dcf["argument"] = args.dcf_arg
+            if not (business or culture or dcf
+                    or args.verdict is not None):
+                raise ValueError(
+                    "nothing to assess — pass at least one of "
+                    "--business-score/--culture-score/arguments/--verdict")
+            pm.set_assessment(p, business=business, culture=culture,
+                              dcf=dcf, verdict=args.verdict,
+                              agent=args.agent or "")
+            pm.save_profile(p)
+            if args.json:
+                print(json.dumps(_dict(p), ensure_ascii=False,
+                                 indent=2))
+            else:
+                print(f"assessed {p.id}: business="
+                      f"{p.assessment.business.get('score', '-')} "
+                      f"culture="
+                      f"{p.assessment.culture.get('score', '-')}"
+                      + ("  [verdict updated]"
+                         if args.verdict is not None else ""))
+            return 0
+
+        if args.profile_cmd == "status":
+            pool = _pool()
+            pool_keys = {(m, c) for m, c, _ in pool}
+            ps = pm.list_profiles()
+            on_disk = {(p.market, p.code) for p in ps}
+            assessed = [p for p in ps if p.assessment.assessed_at]
+            stale = [p for p in assessed if pm.assessment_is_stale(p)]
+            fresh = [p for p in ps if pm.raw_is_fresh(p)]
+            stats = {
+                "pool": len(pool_keys),
+                "pool_covered": len(pool_keys & on_disk),
+                "pool_missing": len(pool_keys - on_disk),
+                "profiles": len(ps),
+                "raw_fresh": len(fresh),
+                "raw_expired": len(ps) - len(fresh),
+                "assessed": len(assessed),
+                "assessment_stale": len(stale),
+                "fresh_days": config.PROFILE_FRESH_DAYS,
+                "blend_weight": config.PROFILE_BLEND,
+            }
+            if args.json:
+                print(json.dumps(stats, ensure_ascii=False, indent=2))
+            else:
+                print(f"pool coverage : {stats['pool_covered']}/"
+                      f"{stats['pool']} profiled "
+                      f"({stats['pool_missing']} missing)")
+                print(f"registry      : {stats['profiles']} profiles — "
+                      f"raw fresh {stats['raw_fresh']}, expired "
+                      f"{stats['raw_expired']}")
+                print(f"assessments   : {stats['assessed']} distilled, "
+                      f"{stats['assessment_stale']} stale")
+                print(f"blend         : PROFILE_BLEND="
+                      f"{config.PROFILE_BLEND} quant vs AI; raw window "
+                      f"{config.PROFILE_FRESH_DAYS}d")
+            return 0
+    except (ValueError, FileNotFoundError) as exc:
+        print(exc, file=_sys.stderr)
+        return 1
+    return 0
+
+
 # ---------------------------------------------------------------------------
 # Parser
 # ---------------------------------------------------------------------------
@@ -1758,6 +1988,76 @@ def build_parser() -> argparse.ArgumentParser:
                                                "theses use `retire`)")
     pth_rm.add_argument("thesis_id")
     pth.set_defaults(func=cmd_thesis)
+
+    ppr = sub.add_parser(
+        "profile", help="company profile registry (公司档案库): business "
+                        "model / culture / vision source text + AI "
+                        "three-core assessments")
+    ppr_sub = ppr.add_subparsers(dest="profile_cmd", required=True)
+    ppr_list = ppr_sub.add_parser("list", help="list profiles")
+    ppr_list.add_argument("--market", default=None,
+                          choices=list(config.MARKETS))
+    ppr_list.add_argument("--stale", action="store_true",
+                          help="only assessments distilled from older raw")
+    ppr_list.add_argument("--json", action="store_true",
+                          help="pure-JSON stdout")
+    ppr_show = ppr_sub.add_parser(
+        "show", help="show one profile: raw source text + assessment "
+                     "(the L3 read entry; any name/code form)")
+    ppr_show.add_argument("stock")
+    ppr_show.add_argument("--json", action="store_true")
+    ppr_fetch = ppr_sub.add_parser(
+        "fetch", help="force-refetch one profile from source "
+                      "(probe / repair use)")
+    ppr_fetch.add_argument("stock")
+    ppr_fetch.add_argument("--json", action="store_true")
+    ppr_upd = ppr_sub.add_parser(
+        "update", help="incremental update over the snapshot pool "
+                       "(on-disk registry when no snapshot)")
+    ppr_upd.add_argument("--market", default=None,
+                         choices=list(config.MARKETS))
+    ppr_upd.add_argument("--force", action="store_true",
+                         help="ignore the PROFILE_FRESH_DAYS window")
+    ppr_upd.add_argument("--limit", type=int, default=None, metavar="N")
+    ppr_upd.add_argument("--snapshot", default=None, metavar="YYYYMMDD")
+    ppr_upd.add_argument("--data-dir", default=None)
+    ppr_upd.add_argument("--json", action="store_true")
+    ppr_assess = ppr_sub.add_parser(
+        "assess", help="AI write-back: three-core assessment scores + "
+                       "arguments (the ONLY assessment write path)")
+    ppr_assess.add_argument("stock")
+    ppr_assess.add_argument("--business-score", type=float, default=None,
+                            help="0-100 (CORE_ANCHORS scale)")
+    ppr_assess.add_argument("--culture-score", type=float, default=None,
+                            help="0-100 (CORE_ANCHORS scale)")
+    ppr_assess.add_argument("--moat-type", default=None)
+    ppr_assess.add_argument("--lifecycle", default=None,
+                            help="machine lifecycle stage")
+    ppr_assess.add_argument("--founder-led", action="store_true")
+    ppr_assess.add_argument("--benfen", action="append", default=None,
+                            metavar="E",
+                            help="本分 evidence, behavior-level "
+                                 "(repeatable)")
+    ppr_assess.add_argument("--business-arg", default=None,
+                            help="business-model argument (moat + "
+                                 "lifecycle)")
+    ppr_assess.add_argument("--culture-arg", default=None,
+                            help="culture argument (founder + 本分)")
+    ppr_assess.add_argument("--dcf-arg", default=None,
+                            help="reverse-DCF argument (implied path vs "
+                                 "belief)")
+    ppr_assess.add_argument("--verdict", default=None)
+    ppr_assess.add_argument("--agent", default=None,
+                            help="assessor id")
+    ppr_assess.add_argument("--json", action="store_true")
+    ppr_status = ppr_sub.add_parser(
+        "status", help="coverage report: pool vs profiled / fresh / "
+                       "assessed / stale")
+    ppr_status.add_argument("--snapshot", default=None,
+                            metavar="YYYYMMDD")
+    ppr_status.add_argument("--data-dir", default=None)
+    ppr_status.add_argument("--json", action="store_true")
+    ppr.set_defaults(func=cmd_profile)
     return parser
 
 

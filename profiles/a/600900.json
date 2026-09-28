@@ -1,0 +1,64 @@
+{
+  "id": "A:600900",
+  "market": "A",
+  "code": "600900",
+  "name": "长江电力",
+  "version": 4,
+  "created_at": "2026-09-29T03:28:13",
+  "updated_at": "2026-09-29T03:39:01",
+  "raw": {
+    "fetched_at": "2026-09-29T03:37:21",
+    "source": "eastmoney_f10_org_basicinfo",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "中国长江电力股份有限公司是由中国长江三峡集团有限公司作为主发起人设立的股份有限公司,创立于2002年9月29日,2003年11月在上交所IPO挂牌上市。2020年9月,长江电力发行的“沪伦通”全球存托凭证在英国伦敦证券交易所上市交易。长江电力主要从事水力发电、投融资、抽水蓄能、智慧综合能源、新能源和配售电等业务,经营区域覆盖中国、秘鲁、巴西、巴基斯坦等多个国家,是中国最大的电力上市公司和全球最大的水电上市公司。长江电力运营管理的乌东德、白鹤滩、溪洛渡、向家坝、三峡、葛洲坝六座梯级电站,构成了世界最大清洁能源走廊,有效保障了长江流域防洪、航运、补水和生态安全,为我国经济社会绿色发展提供了强劲动能。",
+    "main_business": "大型水电运营",
+    "vision": "",
+    "meta": {
+      "org_name": "中国长江电力股份有限公司",
+      "chairman": "刘伟平",
+      "president": "刘海波",
+      "secretary": "薛宁",
+      "founded": "2002-11-04 00:00:00",
+      "listed": "2003-11-18 00:00:00",
+      "website": "www.cypc.com.cn",
+      "address": "湖北省武汉市江岸区三阳路88号",
+      "control_holder": "中国长江三峡集团有限公司",
+      "real_controller": "国务院国有资产监督管理委员会",
+      "independent_directors": "孙正运,赵新炎,王方,张咸阳,李建伟",
+      "employees": "8482",
+      "industry": "公用事业-电力-水电",
+      "org_form": "央企子公司",
+      "top_profit_product": "水电",
+      "income_structure": "水电、其他主营业务、其他业务",
+      "income_structure_ratio": "84.91%、14.77%、0.32%",
+      "auditor": "信永中和会计师事务所(特殊普通合伙)",
+      "concepts": "创投,参股银行,核能核电,风能,水利建设,央国企改革,储能概念,抽水蓄能,绿色电力,HS300_,融资融券,上证50_,上证180_,沪股通,MSCI中国,富时罗素,GDR,标准普尔,茅指数,行业龙头,权重股,大盘股",
+      "business_scope": "电力生产、经营和投资;电力生产技术咨询;水电工程检修维护。"
+    },
+    "content_hash": "05bc792a7034"
+  },
+  "assessment": {
+    "assessed_at": "2026-09-29T03:39:01",
+    "raw_fetched_at": "2026-09-29T03:37:21",
+    "raw_hash": "05bc792a7034",
+    "agent": "kimi-k3",
+    "business": {
+      "score": 86.0,
+      "moat_type": "resource_rent",
+      "machine_lifecycle": "mature_cashcow",
+      "argument": "六座梯级电站构成世界最大清洁能源走廊，水资源特许+低成本长寿命资产=收租机器；收入即现金流，capex 低，分红能力稳定"
+    },
+    "culture": {
+      "score": 72.0,
+      "benfen_evidence": [
+        "长年稳定高分红",
+        "不蹭热点不扩张乱投资"
+      ],
+      "argument": "三峡集团控股的央企，治理稳健偏官僚；行为级证据：长年稳定高分红、无借钱分红记录"
+    },
+    "dcf": {
+      "argument": "市场隐含低增长，水电资产的超长寿命使终值假设比模型更可靠"
+    },
+    "verdict": "分红舱原型（资源收租/水电），钥匙孔分红舱候选"
+  }
+}
