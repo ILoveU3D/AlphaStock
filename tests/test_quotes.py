@@ -112,6 +112,8 @@ class TestFetchMarketQuotes:
             return None  # every page fails
 
         monkeypatch.setattr(q, "em_push2_get", fake_get)
+        monkeypatch.setattr(q, "fetch_market_quotes_tx",
+                            lambda m: pd.DataFrame())  # isolate EM layer
         monkeypatch.setattr(q.time, "sleep", lambda s: None)
         df = q.fetch_market_quotes("A")
         assert df.empty
@@ -157,6 +159,8 @@ class TestFetchMarketQuotes:
             return None  # page 2 always fails
 
         monkeypatch.setattr(q, "em_push2_get", fake_get)
+        monkeypatch.setattr(q, "fetch_market_quotes_tx",
+                            lambda m: pd.DataFrame())  # isolate EM layer
         monkeypatch.setattr(q.time, "sleep", lambda s: None)
         df = q.fetch_market_quotes("A")
         assert len(df) == 2  # partial universe kept
@@ -175,6 +179,8 @@ class TestFetchMarketQuotes:
             return None  # page 2 always fails
 
         monkeypatch.setattr(q, "em_push2_get", fake_get)
+        monkeypatch.setattr(q, "fetch_market_quotes_tx",
+                            lambda m: pd.DataFrame())  # isolate EM layer
         monkeypatch.setattr(q.time, "sleep", lambda s: None)
         df = q.fetch_market_quotes("A")
         assert len(df) == 2
@@ -271,3 +277,144 @@ class TestFetchQuoteAny:
                             lambda s: pd.DataFrame())
         monkeypatch.setattr(q, "fetch_quote_tx", lambda sym: None)
         assert q.fetch_quote_any("HK", "00700") is None
+
+
+# ---------------------------------------------------------------------------
+# Tencent full-market batch fallback (EM push2 outage)
+# ---------------------------------------------------------------------------
+def _tx_market_tx(lines):
+    text = "\n".join('v_%s="%s";' % (s, p) for s, p in lines)
+    return _tx_session(text.encode("gbk"))
+
+
+def _tx_parts(nfields=88, **over):
+    parts = ["x"] * nfields
+    parts[1], parts[2], parts[3], parts[4], parts[6] = (
+        "Name", "CODE", "10.0", "9.0", "1000")
+    parts[37], parts[38], parts[39] = "5000", "1.5", "12.5"
+    parts[44], parts[45], parts[46] = "80.0", "100.0", "2.5"
+    for k, v in over.items():
+        parts[int(k)] = v
+    return "~".join(parts)
+
+
+class TestFetchMarketQuotesTx:
+    def _universe(self):
+        return pd.DataFrame({
+            "code": ["600519", "000807"],
+            "industry": ["Liquor", "Aluminum"],
+            "market_id": ["1", "0"],
+        })
+
+    def test_a_share_batch_mapping(self, monkeypatch):
+        from value_genie.fetch import quotes as q
+
+        monkeypatch.setattr(q, "TX", _tx_market_tx([
+            ("sh600519", _tx_parts(**{"1": "贵州茅台", "2": "600519"})),
+            ("sz000807", _tx_parts(**{"1": "云铝股份", "2": "000807",
+                                      "3": "25.35"})),
+        ]))
+        monkeypatch.setattr(q.time, "sleep", lambda s: None)
+        df = q.fetch_market_quotes_tx("A", universe=self._universe())
+        assert len(df) == 2
+        r = df[df["code"] == "600519"].iloc[0]
+        assert r["price"] == 10.0
+        assert r["pct_chg"] == pytest.approx((10.0 / 9.0 - 1.0) * 100.0)
+        assert r["pe_ttm"] == 12.5
+        assert r["pe_dyn"] is None or pd.isna(r["pe_dyn"])
+        assert r["pb"] == 2.5
+        assert r["market_cap"] == 100.0 * 1e8
+        assert r["float_cap"] == 80.0 * 1e8
+        assert r["amount"] == 5000 * 1e4
+        assert r["turnover"] == 1.5
+        assert r["industry"] == "Liquor"      # inherited from universe
+        assert r["market_id"] == "1"
+        assert df.attrs["fallback"] == "tencent"
+
+    def test_hk_no_pb(self, monkeypatch):
+        from value_genie.fetch import quotes as q
+
+        uni = pd.DataFrame({"code": ["01258"], "industry": ["Metals"],
+                            "market_id": ["116"]})
+        hk = _tx_parts(78, **{"1": "中国有色矿业", "2": "01258",
+                              "46": "CHINFMINING"})
+        monkeypatch.setattr(q, "TX", _tx_market_tx([("hk01258", hk)]))
+        monkeypatch.setattr(q.time, "sleep", lambda s: None)
+        df = q.fetch_market_quotes_tx("HK", universe=uni)
+        assert pd.isna(df.iloc[0]["pb"])
+        assert df.iloc[0]["industry"] == "Metals"
+        assert df.iloc[0]["market_id"] == "116"
+
+    def test_us_code_from_request_symbol_map(self, monkeypatch):
+        from value_genie.fetch import quotes as q
+
+        uni = pd.DataFrame({"code": ["AAPL"], "industry": ["Tech"],
+                            "market_id": ["105"]})
+        us = _tx_parts(73, **{"1": "苹果", "2": "AAPL.OQ",
+                              "46": "Apple Inc."})
+        monkeypatch.setattr(q, "TX", _tx_market_tx([("usAAPL", us)]))
+        monkeypatch.setattr(q.time, "sleep", lambda s: None)
+        df = q.fetch_market_quotes_tx("US", universe=uni)
+        assert df.iloc[0]["code"] == "AAPL"   # not the '.OQ' payload form
+
+    def test_skips_none_and_short_rows(self, monkeypatch):
+        from value_genie.fetch import quotes as q
+
+        monkeypatch.setattr(q, "TX", _tx_session(
+            b'v_sh600519="none";\nv_sz000001="1~short";\n'))
+        monkeypatch.setattr(q.time, "sleep", lambda s: None)
+        assert q.fetch_market_quotes_tx("A", universe=self._universe()).empty
+
+    def test_empty_universe_returns_empty(self):
+        from value_genie.fetch import quotes as q
+
+        assert q.fetch_market_quotes_tx("A", universe=pd.DataFrame()).empty
+
+    def test_em_outage_triggers_tx_fallback(self, monkeypatch):
+        from value_genie.fetch import quotes as q
+
+        monkeypatch.setattr(q, "em_push2_get", lambda *a, **k: None)
+        monkeypatch.setattr(q.time, "sleep", lambda s: None)
+        tx_df = pd.DataFrame({"market": ["A"], "code": ["600519"],
+                              "price": [1.0]})
+        monkeypatch.setattr(q, "fetch_market_quotes_tx", lambda m: tx_df)
+        df = q.fetch_market_quotes("A")
+        assert len(df) == 1 and df.iloc[0]["code"] == "600519"
+
+    def test_partial_em_prefers_complete_tx(self, monkeypatch):
+        """A complete Tencent-degraded universe beats a partial EM one."""
+        from value_genie.fetch import quotes as q
+
+        def fake_get(path, params=None, **kw):
+            if params["pn"] == 1:
+                return {"data": {"total": 3, "diff": [_row("600001"),
+                                                      _row("600002")]}}
+            return None
+
+        monkeypatch.setattr(q, "em_push2_get", fake_get)
+        monkeypatch.setattr(q.time, "sleep", lambda s: None)
+        tx_df = pd.DataFrame({"market": ["A"] * 3,
+                              "code": ["600001", "600002", "600003"],
+                              "price": [1.0] * 3})
+        monkeypatch.setattr(q, "fetch_market_quotes_tx", lambda m: tx_df)
+        df = q.fetch_market_quotes("A")
+        assert len(df) == 3
+        assert df.attrs.get("partial") in (None, False)
+
+    def test_tx_failure_keeps_partial_em(self, monkeypatch):
+        """When Tencent also fails the partial EM frame survives, flagged."""
+        from value_genie.fetch import quotes as q
+
+        def fake_get(path, params=None, **kw):
+            if params["pn"] == 1:
+                return {"data": {"total": 3, "diff": [_row("600001"),
+                                                      _row("600002")]}}
+            return None
+
+        monkeypatch.setattr(q, "em_push2_get", fake_get)
+        monkeypatch.setattr(q.time, "sleep", lambda s: None)
+        monkeypatch.setattr(q, "fetch_market_quotes_tx",
+                            lambda m: pd.DataFrame())
+        df = q.fetch_market_quotes("A")
+        assert len(df) == 2
+        assert df.attrs.get("partial") is True

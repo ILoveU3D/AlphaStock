@@ -79,6 +79,13 @@ def fetch_market_quotes(market: str) -> pd.DataFrame:
             break
         pn += 1
         time.sleep(PAGE_SLEEP)
+    if not all_rows or partial:
+        # EM push2 outage (or a truncated universe): prefer a COMPLETE
+        # Tencent-degraded universe over a partial/rich EM one — the funnel
+        # screens the whole market, so missing rows lose candidates.
+        tx = fetch_market_quotes_tx(market)
+        if not tx.empty:
+            return tx
     if not all_rows:
         print(f"    [{market}] WARN: no quotes fetched")
         return pd.DataFrame(columns=["market", "code"])
@@ -107,6 +114,127 @@ def fetch_quotes_by_secids(secids: list) -> pd.DataFrame:
     })
     rows = ((d or {}).get("data") or {}).get("diff") or []
     return pd.DataFrame(_parse_clist_rows(rows))
+
+
+# ---------------------------------------------------------------------------
+# Tencent full-market batch fallback (EM push2 outage)
+# ---------------------------------------------------------------------------
+TX_BATCH_SIZE = 50
+TX_BATCH_SLEEP = 0.25
+
+
+def _prev_universe_quotes(market: str) -> pd.DataFrame:
+    """Most recent persisted quotes CSV for the market (any snapshot date).
+
+    The fallback inherits its universe list + static columns (industry,
+    market_id) from it — listings churn slowly enough that a day-old
+    universe is safe for one degraded run.
+    """
+    root = config.SNAPSHOTS_DIR
+    if not root.exists():
+        return pd.DataFrame()
+    fname = f"{market.lower()}_quotes.csv"
+    dirs = sorted((p for p in root.iterdir() if p.is_dir()), reverse=True)
+    for d in dirs:
+        p = d / fname
+        if not p.exists():
+            continue
+        try:
+            df = pd.read_csv(p, dtype={"code": str})
+        except (OSError, pd.errors.ParserError, ValueError):
+            continue
+        if not df.empty and "code" in df.columns:
+            return df
+    return pd.DataFrame()
+
+
+def fetch_market_quotes_tx(market: str,
+                           universe: pd.DataFrame | None = None) -> pd.DataFrame:
+    """Full-market quotes via Tencent's batch endpoint (EM push2 fallback).
+
+    Field basis (probed 2026-09-28): idx1 name, idx2 code (US carries the
+    '.OQ'-style suffix — the request-symbol map is authoritative), idx3
+    price, idx4 prev close, idx6 volume, idx37 amount in 10k CNY (A only),
+    idx38 turnover (A only), idx39 PE (Tencent dynamic basis — NOT EM
+    pe_ttm), idx44/45 float/total market cap in 100M local currency,
+    idx46 PB (A only; HK/US carry a string there -> None). industry and
+    market_id are inherited from the latest persisted universe. pe_dyn /
+    pe_static stay None. The frame's attrs mark fallback=tencent.
+    """
+    if universe is None:
+        universe = _prev_universe_quotes(market)
+    if universe.empty:
+        print(f"    [{market}] WARN: no persisted universe for TX fallback")
+        return pd.DataFrame()
+    sym2code, symbols = {}, []
+    for c in universe["code"].astype(str):
+        cands = _tx_quote_symbols(market, c)
+        if cands:
+            sym2code[cands[0]] = c
+            symbols.append(cands[0])
+    rows = []
+    for i in range(0, len(symbols), TX_BATCH_SIZE):
+        batch = symbols[i:i + TX_BATCH_SIZE]
+        try:
+            r = TX.session.get(config.TX_QUOTE_URL + ",".join(batch),
+                               timeout=15)
+            if r.status_code != 200:
+                continue
+            text = r.content.decode("gbk", errors="replace")
+        except Exception:  # noqa: BLE001 — degraded path must not raise
+            continue
+        for line in text.strip().splitlines():
+            if "=" not in line:
+                continue
+            sym = line.split("=", 1)[0].strip()
+            sym = sym[2:] if sym.startswith("v_") else sym
+            payload = line.split("=", 1)[1].strip().strip(";").strip('"')
+            parts = payload.split("~")
+            if len(parts) < 47:
+                continue  # "none"/error rows and short layouts
+            price, prev = num(parts[3]), num(parts[4])
+            if price is None:
+                continue
+            amount = num(parts[37]) if market == "A" else None
+            mcap, fcap = num(parts[45]), num(parts[44])
+            rows.append({
+                "code": sym2code.get(sym, parts[2].split(".")[0]),
+                "name": parts[1],
+                "price": price,
+                "pct_chg": ((price / prev - 1.0) * 100.0
+                            if prev is not None and prev > 0 else None),
+                "volume": num(parts[6]),
+                "amount": amount * 1e4 if amount is not None else None,
+                "turnover": num(parts[38]) if market == "A" else None,
+                "pe_dyn": None,
+                "pe_static": None,
+                "pe_ttm": num(parts[39]),
+                "pb": num(parts[46]),
+                "market_cap": mcap * 1e8 if mcap is not None else None,
+                "float_cap": fcap * 1e8 if fcap is not None else None,
+            })
+        if (i // TX_BATCH_SIZE) % 20 == 0:
+            print(f"    [{market}] tx quotes: {len(rows)}/{len(symbols)}")
+        time.sleep(TX_BATCH_SLEEP)
+    if not rows:
+        return pd.DataFrame()
+    df = pd.DataFrame(rows)
+    df.insert(0, "market", market)
+    static_cols = [c for c in ("industry", "market_id")
+                   if c in universe.columns]
+    if static_cols:
+        df = df.merge(universe[["code"] + static_cols], on="code",
+                      how="left")
+        for c in static_cols:
+            df[c] = df[c].fillna("")
+    else:
+        df["industry"], df["market_id"] = "", ""
+    df.attrs["fallback"] = "tencent"
+    df.attrs["pe_basis"] = "tencent_idx39"
+    print(f"    [{market}] quotes: {len(df)} via Tencent fallback "
+          f"(pe=idx39 basis, pb A-share only)")
+    return df
+
 
 
 # ---------------------------------------------------------------------------
