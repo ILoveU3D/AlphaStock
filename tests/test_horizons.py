@@ -237,7 +237,10 @@ class TestPeerBackfill:
 # ---------------------------------------------------------------------------
 def _horizon_master() -> pd.DataFrame:
     """Three A-shares; value scores and short-window momentum are
-    deliberately anti-correlated so weight choices flip the ranking."""
+    deliberately anti-correlated so weight choices flip the composite.
+    fcf_yield differentiates the three-core ranking (2026-09-29): the
+    dcf core orders them 600001 > 600002 > 600003 regardless of
+    weights, while gates/momentum-window mechanics stay testable."""
     rows = []
     for i, code in enumerate(["600001", "600002", "600003"]):
         rows.append({
@@ -246,6 +249,7 @@ def _horizon_master() -> pd.DataFrame:
             "pb": 1.0, "ps": 1.0, "dividend_yield": 1.0,
             "rev_yoy": 10.0, "profit_yoy": 10.0, "roe": 15.0,
             "gross_margin": 40.0, "net_margin": 10.0, "debt_ratio": 40.0,
+            "fcf_yield": [6.0, 4.0, 2.0][i],
             "ret_5d": [10.0, 2.0, -3.0][i],
             "ret_20d": [20.0, 5.0, -8.0][i],
             "ret_60d": [30.0, 10.0, -5.0][i],
@@ -280,16 +284,22 @@ class TestScreenHorizon:
                             horizon="ultrashort", top_n=5)
         assert list(top["code"])[0] == "600001"
 
-    def test_strategy_plus_horizon_keeps_strategy_weights(self):
-        # buffett has momentum weight 0 -> ranking driven by value_score
-        # (600002 has 60) even though momentum is measured on short window
+    def test_strategy_plus_horizon_keeps_gates_and_window(self):
+        # 2026-09-29 redesign: strategy weights no longer rank — the
+        # three-core winner (600001, highest fcf_yield -> cheapest
+        # implied growth) leads under ANY strategy. What the combo
+        # keeps: buffett's gates (fcf_yield>=4 excludes 600003) and the
+        # short momentum window for context.
         top = report.screen(_horizon_master(), strategy="buffett",
                             horizon="short", top_n=5)
-        assert list(top["code"])[0] == "600002"
+        assert list(top["code"]) == ["600001", "600002"]
 
-    def test_no_horizon_unchanged(self):
+    def test_no_horizon_ranks_by_core(self):
         top = report.screen(_horizon_master(), top_n=5)
-        assert list(top["code"])[0] == "600002"   # balanced: value-heavy
+        # balanced composite preferred 600002 (value-heavy); the three
+        # cores rank 600001 first — the redesign made explicit
+        assert list(top["code"]) == ["600001", "600002", "600003"]
+        assert top["core_score"].is_monotonic_decreasing
 
 
 class TestScreenCliHorizon:
