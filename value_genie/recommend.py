@@ -19,6 +19,7 @@ from pathlib import Path
 
 from . import config, report, users
 from .analyze import live_quote
+from .fetch.quotes import fetch_quote_any
 from .resolve import Match
 
 SINGLE_WEIGHT_WARN = 30.0    # % of portfolio value in one stock
@@ -106,7 +107,9 @@ def _load_watchlist(snap_dir):
 
 def live_price(market: str, code: str, name: str, snap_dir=None,
                us_market_ids=None):
-    """(price, source) — live via push2, snapshot fallback, else None."""
+    """(price, source) — live via push2, Tencent realtime fallback
+    (EM outage / no snapshot market_id map), snapshot fallback,
+    else None."""
     mid = ""
     if market == "A":
         # 6xxxxx stocks + 5xxxxx funds (ETF) are Shanghai; rest SZ/BJ
@@ -122,6 +125,12 @@ def live_price(market: str, code: str, name: str, snap_dir=None,
                 return float(q["price"]), "live"
             except (TypeError, ValueError):
                 pass
+    q2 = fetch_quote_any(market, str(code), mid)
+    if q2 and q2.get("price") is not None:
+        try:
+            return float(q2["price"]), "live-tx"
+        except (TypeError, ValueError):
+            pass
     price = _snapshot_price(snap_dir, market, code)
     if price is not None:
         return price, "snapshot"
