@@ -7,6 +7,7 @@ from types import SimpleNamespace
 import pandas as pd
 import pytest
 
+from value_genie import config
 from value_genie.__main__ import (_parse_markets, _parse_weights,
                                   build_parser, main)
 
@@ -142,8 +143,229 @@ def test_screen_json_pure_stdout(snapshot, tmp_path, capsys):
 
 
 # ---------------------------------------------------------------------------
-# fetch subcommand
+# masters-vote subcommand (QMF L1/L2; v2 wide pool, 2026-09-29)
 # ---------------------------------------------------------------------------
+def _mv_master() -> pd.DataFrame:
+    """One clean compounder, one profit-spike veto, one all-fail."""
+    def _scores():
+        return {"value_score": 70.0, "growth_score": 80.0,
+                "quality_score": 90.0, "safety_score": 70.0,
+                "momentum_score": 50.0, "cashflow_score": 85.0}
+
+    rows = [
+        {"market": "A", "code": "000001", "name": "低波优质", "price": 10.0,
+         "pe_ttm": 12.0, "pb": 1.2, "roe": 25.0, "gross_margin": 60.0,
+         "debt_ratio": 30.0, "ocf_yield": 8.0, "fcf_yield": 7.0,
+         "borrowed_dividend": 0, "dividend_yield": 3.0,
+         "profit_yoy": 20.0, "ret_60d": 5.0,
+         "volatility": 20.0, "pos_52w": 70.0, **_scores()},
+        {"market": "A", "code": "000002", "name": "周期顶", "price": 5.0,
+         "pe_ttm": 4.0, "pb": 0.8, "roe": 25.0, "gross_margin": 10.0,
+         "debt_ratio": 40.0, "ocf_yield": 30.0, "fcf_yield": 20.0,
+         "borrowed_dividend": 0, "dividend_yield": 2.0,
+         "profit_yoy": 250.0, "ret_60d": 5.0,
+         "volatility": 30.0, "pos_52w": 70.0, **_scores()},
+        {"market": "A", "code": "000003", "name": "全挂", "price": 8.0,
+         "pe_ttm": 60.0, "pb": 9.0, "roe": 2.0, "gross_margin": 5.0,
+         "debt_ratio": 80.0, "ocf_yield": 0.5, "fcf_yield": 0.2,
+         "borrowed_dividend": 1, "dividend_yield": 0.0,
+         "profit_yoy": -30.0, "ret_60d": -20.0,
+         "volatility": 80.0, "pos_52w": 5.0, **_scores()},
+    ]
+    return pd.DataFrame(rows)
+
+
+@pytest.fixture()
+def mv_snapshot(tmp_path, monkeypatch):
+    # isolate the local-only profiles dir so real distillations can
+    # never leak into the masters-vote overlay (Phase 5)
+    monkeypatch.setattr(config, "PROFILES_DIR", tmp_path / "profiles")
+    monkeypatch.setattr(config, "PROFILE_RAW_DIR",
+                        tmp_path / "pdata" / "raw")
+    snap = tmp_path / "snapshots" / "20260201"
+    snap.mkdir(parents=True)
+    _mv_master().to_csv(snap / "master.csv", index=False)
+    return tmp_path
+
+
+def test_masters_vote_wide_pool_is_default(mv_snapshot, capsys):
+    # no --no-live: wide mode defers the network pass by design
+    rc = main(["masters-vote", "--data-dir", str(mv_snapshot),
+               "--no-check", "--json"])
+    assert rc == 0
+    data = json.loads(capsys.readouterr().out)
+    assert data["pool_mode"] == "wide"
+    assert "NOT ranked" in data["ranking"] or "none" in data["ranking"]
+    # 000001 in pool; 000002 vetoed by profit_spike; 000003 zero votes
+    assert [r["code"] for r in data["rows"]] == ["000001"]
+    assert data["veto_excluded"]["count"] == 1
+    assert data["veto_excluded"]["profit_spike"] == 1
+    # wide mode defers the live pass: the A-share row declares it
+    assert data["rows"][0]["data_gap"] == "live pass pending (--check)"
+
+
+def test_masters_vote_legacy_top_keeps_ranking(mv_snapshot, capsys):
+    rc = main(["masters-vote", "--data-dir", str(mv_snapshot),
+               "--no-check", "--no-live", "--top", "5", "--json"])
+    assert rc == 0
+    data = json.loads(capsys.readouterr().out)
+    assert data["pool_mode"] == "legacy_top"
+    assert data["ranking"] == "core_score (three-core equal weight)"
+    assert len(data["rows"]) == 1      # pool filter still applies
+
+
+def test_masters_vote_check_live_pass(mv_snapshot, capsys):
+    rc = main(["masters-vote", "--data-dir", str(mv_snapshot),
+               "--no-check", "--no-live",
+               "--check", "A:000001", "000003", "--json"])
+    assert rc == 0
+    data = json.loads(capsys.readouterr().out)
+    assert data["mode"] == "live_check"
+    ok, miss = data["rows"]
+    assert ok["code"] == "000001"
+    assert ok["data_gap"] == "live pass skipped (--no-live)"
+    assert miss["error"] == "not in pool"   # 000003 passed zero gates
+
+
+# ---------------------------------------------------------------------------
+# masters-vote --horizon (D4 tactical mode, 2026-09-29)
+# ---------------------------------------------------------------------------
+def _write_tactical_snap(tmp_path):
+    df = _mv_master()
+    # 000001: uptrend + sweet-spot pullback; others don't matter (filtered)
+    df["weekly_uptrend"] = [1.0, 1.0, 0.0]
+    df["pullback_from_high"] = [-8.0, -1.0, -30.0]
+    snap = tmp_path / "snapshots" / "20260201"
+    snap.mkdir(parents=True)
+    df.to_csv(snap / "master.csv", index=False)
+    return tmp_path
+
+
+def test_masters_vote_horizon_short(tmp_path, capsys):
+    snap = _write_tactical_snap(tmp_path)
+    rc = main(["masters-vote", "--data-dir", str(snap), "--no-check",
+               "--horizon", "short", "--json"])
+    assert rc == 0
+    data = json.loads(capsys.readouterr().out)
+    assert data["horizon"] == "short"
+    assert "tactical" in data["ranking"]
+    assert "DCF display-only" in data["ranking"]
+    assert data["short_floor"]["business_min"] == 50.0
+    assert data["short_floor"]["weekly_uptrend_required"] is True
+    assert "-7%" in data["discipline"]["rules"]
+    assert "1个月" in data["discipline"]["rules"]
+    (row,) = data["rows"]
+    assert row["code"] == "000001"
+    assert row["short_floor"] is True       # real business + weekly trend
+    assert row["pullback_sweet"] is True    # -8% sits in [-15, -5]
+
+
+def test_masters_vote_horizon_floor_fails_closed(tmp_path, capsys):
+    snap = _write_tactical_snap(tmp_path)
+    m = pd.read_csv(snap / "snapshots" / "20260201" / "master.csv",
+                    dtype={"code": str})
+    m.loc[m["code"] == "000001", "weekly_uptrend"] = 0.0   # trend broken
+    m.to_csv(snap / "snapshots" / "20260201" / "master.csv", index=False)
+    rc = main(["masters-vote", "--data-dir", str(snap), "--no-check",
+               "--horizon", "ultrashort", "--json"])
+    assert rc == 0
+    data = json.loads(capsys.readouterr().out)
+    (row,) = data["rows"]
+    assert row["short_floor"] is False      # no weekly trend, no floor
+    assert "次日收盘" in data["discipline"]["rules"]
+
+
+def test_masters_vote_horizon_text_discipline(tmp_path, capsys):
+    snap = _write_tactical_snap(tmp_path)
+    rc = main(["masters-vote", "--data-dir", str(snap), "--no-check",
+               "--horizon", "short"])
+    assert rc == 0
+    out = capsys.readouterr().out
+    assert "短炒警示" in out
+    assert "-7% 硬止损" in out
+    assert "floor" in out                   # per-row floor flag
+
+
+# ---------------------------------------------------------------------------
+# profile subcommand + masters-vote culture overlay (Phase 5, 2026-09-29)
+# ---------------------------------------------------------------------------
+@pytest.fixture()
+def pdirs(tmp_path, monkeypatch):
+    """Redirect profiles/ + raw dirs into tmp (never touch local data)."""
+    monkeypatch.setattr(config, "PROFILES_DIR", tmp_path / "profiles")
+    monkeypatch.setattr(config, "PROFILE_RAW_DIR",
+                        tmp_path / "data" / "profiles" / "raw")
+    return tmp_path
+
+
+def test_profile_assess_list_show(pdirs, capsys):
+    rc = main(["profile", "assess", "600900", "--culture-score", "72",
+               "--business-score", "86", "--moat-type", "resource_rent",
+               "--benfen", "长年稳定高分红", "--verdict", "分红舱原型",
+               "--agent", "kimi-k3", "--json"])
+    assert rc == 0
+    a = json.loads(capsys.readouterr().out)
+    assert a["id"] == "A:600900"
+    assert a["culture"]["score"] == 72.0
+    assert a["raw_hash"] is None            # no raw fetched yet
+
+    rc = main(["profile", "list", "--json"])
+    assert rc == 0
+    rows = json.loads(capsys.readouterr().out)
+    assert [r["id"] for r in rows] == ["A:600900"]
+
+    rc = main(["profile", "show", "600900", "--json"])
+    assert rc == 0
+    data = json.loads(capsys.readouterr().out)
+    assert data["assessment"]["verdict"] == "分红舱原型"
+    assert data["raw"] is None
+
+    rc = main(["profile", "status", "--json"])
+    assert rc == 0
+    assert json.loads(capsys.readouterr().out)["assessments"] == 1
+
+
+def test_profile_assess_requires_a_score(pdirs, capsys):
+    rc = main(["profile", "assess", "600900", "--verdict", "notes only"])
+    assert rc == 1
+
+
+def test_profile_assess_score_bounds(pdirs, capsys):
+    rc = main(["profile", "assess", "600900", "--culture-score", "120"])
+    assert rc == 1
+
+
+def test_masters_vote_culture_distilled_overlay(
+        mv_snapshot, pdirs, capsys):
+    from value_genie import profile as prof
+    prof.assess("A", "000001", culture_score=88, agent="kimi-k3")
+    rc = main(["masters-vote", "--data-dir", str(mv_snapshot),
+               "--no-check", "--json"])
+    assert rc == 0
+    data = json.loads(capsys.readouterr().out)
+    assert data["culture_distilled"] == 1
+    (row,) = data["rows"]
+    assert row["code"] == "000001"
+    assert row["core_culture"] == 88.0
+    # core_score = skipna mean of the three cores (all present here)
+    expected = (row["core_business"] + 88.0 + row["core_dcf"]) / 3
+    assert row["core_score"] == pytest.approx(expected)
+    assert prof.CULTURE_DISTILLED in row["core_gaps"]
+
+
+def test_masters_vote_without_distillations_unchanged(
+        mv_snapshot, pdirs, capsys):
+    rc = main(["masters-vote", "--data-dir", str(mv_snapshot),
+               "--no-check", "--json"])
+    assert rc == 0
+    data = json.loads(capsys.readouterr().out)
+    assert "culture_distilled" not in data
+    (row,) = data["rows"]
+    assert row["core_culture"] is None      # veto-only, NaN -> null
+
+
+
+
 def test_fetch_calls_pipeline(snapshot, tmp_path, monkeypatch, capsys):
     from value_genie import __main__ as cli
 
