@@ -1,5 +1,6 @@
 """Tests for value_genie.analyze (no network)."""
 
+import json
 from pathlib import Path
 
 import pandas as pd
@@ -330,6 +331,20 @@ class TestPeerSetMasterFallback:
         snap = make_hk_snapshot(tmp_path)
         peers = az.build_peer_set(snap, "HK")
         assert peers.attrs.get("peer_basis") != "master_fallback"
+
+    def test_fallback_declared_in_result(self, tmp_path, monkeypatch):
+        """Degraded basis must surface: peer_basis field + warning, so a
+        recommendation can never silently rest on narrowed percentiles."""
+        snap = self._snap_without_quotes(tmp_path)
+        monkeypatch.setattr(az, "fetch_quotes_by_secids",
+                            lambda s: pd.DataFrame())
+        monkeypatch.setattr(az, "fetch_kline_any", lambda *a, **k: None)
+        r = az.analyze_stock(Match("HK", "00001", "HK Alpha", 100.0,
+                                   "116"), snapshot_dir=snap)
+        assert r["peer_basis"] == "master_fallback"
+        assert any("master_fallback" in w for w in r["warnings"])
+        payload = json.loads(az.to_json(r))
+        assert payload["peer_basis"] == "master_fallback"
 
     def test_empty_when_neither_file(self, tmp_path):
         """Fully empty snapshot: explicit FileNotFoundError, not phantom

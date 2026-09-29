@@ -387,6 +387,14 @@ def analyze_stock(match: Match, snapshot_dir=None, live: bool = True,
     prof = {}
     if snap is not None:
         peers = build_peer_set(snap, match.market)
+        basis = peers.attrs.get("peer_basis")
+        if basis == "master_fallback":
+            # degraded basis: percentiles are vs the candidate universe,
+            # not the gated full market — declare it, never silently
+            result["peer_basis"] = "master_fallback"
+            result["warnings"].append(
+                "peer percentiles vs candidate universe (master_fallback: "
+                "partial quotes not persisted)")
         peers = peers[peers["code"].astype(str) != match.code]
         if peers.empty:
             result["warnings"].append("empty peer universe")
@@ -625,6 +633,7 @@ def to_json(result: dict) -> str:
                     and not (isinstance(v, float) and pd.isna(v))},
         "risk_flags": result["risk_flags"],
         "warnings": result["warnings"],
+        "peer_basis": result.get("peer_basis"),
         "data_as_of": _as_of(result),
     }
     return json.dumps(payload, ensure_ascii=False, indent=2,
