@@ -69,7 +69,7 @@ you found it.
 
 - Every data command accepts `--json`: `ask`, `screen`, `compare`,
   `overview`, `recommend`, `holding list`, `doctor`, and every
-  `tower` subcommand.
+  `tower` / `thesis` / `profile` subcommand.
 - With `--json`, stdout is **pure JSON** — full float precision,
   NaN→null, no banner lines, no `wrote ...` chatter. `screen --json`
   also skips the CSV/Markdown side-effect files. Exit codes and the
@@ -110,8 +110,10 @@ excluded when no USD rate, concentration observations verbatim).
 | "...but why / 证据" | single-stock-analysis | `python -m value_genie ask X --evidence` |
 | "X和Y哪个好 / X vs Y" | compare-stocks | `python -m value_genie compare X Y` |
 | "今天给我推荐股票（按我的风格、结合我的持仓）" | user-recommend | `python -m value_genie recommend --user me` |
-| "推荐/最被低估/量化+大师最优" | fused-quant-master | `python -m value_genie masters-vote`（L1 否决过滤 + core_score 排序）+ L2 红旗 + L3 三核深评与大师定性 + L4 融合裁决，per skills/18 — user mandate 2026-09-15: 融合，不分情况讨论；2026-09-29: 三核（商业模式/企业文化/DCF）为唯一排序键 |
+| "推荐/最被低估/量化+大师最优" | fused-quant-master | `python -m value_genie masters-vote`（L1 宽池=量化只否决、AI 从全池选深评名单 + core_score 唯一排序）+ L2 红旗 + L3 三核深评与大师定性 + L4 融合裁决，per skills/18 — user mandate 2026-09-15: 融合，不分情况讨论；2026-09-29: 三核（商业模式/企业文化/DCF）为唯一排序键，量化只否决 AI 做选择 |
+| "短线/超短线有什么机会" | fused-quant-master | `python -m value_genie masters-vote --horizon short|ultrashort`（D4 战术模式：floor=真生意 core_business≥50 + 周K结构上行 + 无否决，甜点区=60日高点回撤 5-15%，同一融合管道 + 纪律块；塔砖 weekly-trend-daily-pullback） |
 | "把塔砖断言的机器注入候选池 / 管理产业论点" | fused-quant-master | `python -m value_genie masters-vote --thesis <id>` + `thesis list|show|add|amend|retire`（见 Thesis pools 节） |
+| "读公司原文 / 蒸馏商业模式与文化" | fused-quant-master | `python -m value_genie profile fetch|show|assess|list|status`（见 Company profiles 节——蒸馏回写后文化核恢复打分，profiles/ 本地-only 永不推送） |
 | "设置/修改我的投资风格" | user-profile | `python -m value_genie user set-style me --base buffett --weight value=0.3` |
 | "录入/修改/查看我的持仓" | user-portfolio | `python -m value_genie holding add|update|remove|list` |
 | "审视我的持仓 / 深度分析持仓" | holding-deep-review | `holding list` 先看体检，再 `ask X --evidence` per holding + `screen --strategy <master>` (business model, moat, culture, earn/lose paths, two master frameworks) |
@@ -212,6 +214,34 @@ conditions), `members` (market:code list), `industry_hints`
   theses are never deleted (like `refuted` bricks, they are assets).
   Cap: `THESIS_MAX = 40` members per pool build.
 
+## Company profiles (公司画像, 本地-only)
+
+Profiles are the L3 read-store: raw company source text on one side,
+the AI's distilled business-model / culture assessment on the other.
+They close the D3 loop — the culture core in `core_score` is
+veto-only until a distillation activates it.
+
+- **Storage split (user mandate 2026-09-29)**: raw fetches live under
+  `data/profiles/raw/<market>/<code>.json` (cleanable, regenerable);
+  assessments live in the top-level `profiles/<market>/<code>.json`
+  dir which is **gitignored LOCAL-ONLY — never pushed to any remote**.
+  The schema is stable (source / raw_hash / scores / argument texts)
+  so the store can later become a portable dataset.
+- Commands: `python -m value_genie profile fetch|show|assess|list|
+  status` — all `--json`-capable. Profile commands do **not** run the
+  freshness gate. Sources: A = 东财 F10 机构概况；HK = 东财 HKF10
+  公司概况；US = SEC submissions meta + stockanalysis 简介.
+- The loop (per L3 deep-review candidate): `profile fetch X` →
+  `profile show X` + `intel X` （读原文） → three-core argumentation →
+  `profile assess X --business-score N --culture-score N ...` → the
+  D3 hook re-activates `core_culture` on the next `masters-vote` /
+  `ask` run (`core_gaps` marks `CULTURE_DISTILLED`).
+- **Staleness**: the assessment pins the raw content hash; a
+  refetched/changed raw marks it STALE and it drops out of scoring
+  until re-distilled. `profile status` lists coverage + staleness.
+- Never improvise a culture score from pillar data — no distillation
+  means the culture core stays veto-only.
+
 ## Investment masters
 
 Six built-in master strategies, ordered by fame (this ordering is
@@ -267,10 +297,18 @@ position-sizing discipline.
    every other metric — pillar scores, composites, vote_count,
    mean_composite — can only be a reason NOT to pick (veto/display),
    never a ranking input:
-   **L1** `masters-vote` (pool = vote_count≥1 & ~veto_hard where
+   **L1** `masters-vote` (wide pool = vote_count≥1 & ~veto_hard where
    veto_hard = intel_red | borrowed_dividend | profit_spike; cycle_trap
    excluded post-live-pass; ranked by core_score only — never from a
-   single strategy's top rank, never by vote count) →
+   single strategy's top rank, never by vote count. 量化只否决、AI
+   做选择: the AI reads the whole pool and picks the deep-review
+   list; `--check` runs the live cycle-trap pass on that shortlist;
+   `--top N` is a legacy shortlist, not a selection mechanism.
+   `masters-vote --horizon short|ultrashort` runs the same fusion in
+   D4 tactical mode: floor = real business (core_business≥50) +
+   weekly uptrend structure + no veto, pullback-from-60d-high sweet
+   spot (-15%,-5%), DCF downgraded to an honest "失败变持有" note,
+   mandatory 短炒警示 discipline block) →
    **L2** veto flags (cycle_trap = pe_divergence ≥ 1.5, cycle_warn ≥
    1.25, profit_spike ≥ +200%, intel red flags: insider selling /
    解禁减持 / 粉饰 / 借钱分红) → **L3** AI three-core deep review with
