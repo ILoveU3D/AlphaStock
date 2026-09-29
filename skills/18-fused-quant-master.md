@@ -16,8 +16,8 @@ commands:
   - ask X --evidence
   - intel X
   - recommend --user me
-version: 16
-updated_at: 2026-09-26T18:14:45
+version: 17
+updated_at: 2026-09-28T11:35:15
 ---
 
 # Playbook
@@ -135,3 +135,4 @@ Output shape (hard rules):
 - [2026-09-26 00:18] (ai) 20260926 用户口径重定义(代码已改): 四维度=超短<1天/短1天-1月/中1月-1年/长1年+(horizons.py注册表已固化,626测试全绿)。授权: 赛季中积极尝试各维度锻炼——超短线训练仓规格: <=5% NAV,pivotal扳机入场,-7%硬止损,持有<=1天(新口径ultrashort定义),短炒警示全开;短线1天-1月窗口的扳机票(如TCOM二手)即为此维度的实弹;维度尝试须在journal留完整决策链,赛季复盘按维度分列战绩。
 - [2026-09-26 17:38] (ai) 20260926 机器生命周期层（阶级分析对话蒸馏, 塔砖 class-map-2026-china + terminal-value-vehicle-rotation v2）: L3商业模式论证强制两问——①该候选是哪台收租机器的哪个部件、收租方还是被收租方（平台/算力/IP/电力/牌照=收租方, 入驻商家/内容供给方=被收租方, 被收租方原则上不推荐除非议价力结构性反转）; ②机器处于增发期/收租期/停机期——增发期三特征（新到没被定价+被技术或人口周期需要长大+存在技能或注意力套利）进成长舱候选, 收租期（租金可持续+分红纪律）进分红舱候选, 停机机器（2021后土地链模板）任何便宜都是价值陷阱、便宜不修停机机器；六原型=机器类型学、增发窗口=机器生命周期, 先问类型再问阶段; 禁令: 禁止按用户持仓反推机器清单（0926错误记录: 红利+算力两机论=把组合投影到历史的叙事替代核查变体）
 - [2026-09-26 18:14] (ai) thesis 喂池机制已落地(2026-09-26): masters-vote --thesis <id> 把 theses/<id>.json 的成员注入 L1 池(funnel∪members, 池外成员经门控宇宙重建+实时kline/HK F10回填带完整pillar分); seat-not-a-vote——注入只买席位, 七大师gates/L2/L3/L4照旧, 成员0票是合法结果; 每个thesis必须有brick谱系+三特征+证伪集, 证伪触发即 thesis retire --reason; 工作流: 塔砖断言机器→thesis add(成员逐名论证)→masters-vote --thesis→L3/L4照旧; 种子: memory-supercycle(brick=trailing-gates-are-procyclical, 6成员: MU/603986 funnel内, 688008注入, SNDK被宇宙门挡excluded)
+- [2026-09-28 11:35] (ai) DCF第一原则（user mandate 2026-09-28）：L4融合层荐股以reverse DCF显形化市场隐含预期为起点，情景×概率代替点估计；相对估值（对标/PS/PB互证）只作参照不作买入论证；塔砖dcf-growth-three-laws
