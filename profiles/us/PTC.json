@@ -3,9 +3,9 @@
   "market": "US",
   "code": "PTC",
   "name": "PTC Inc",
-  "version": 1,
+  "version": 2,
   "created_at": "2026-09-29T11:23:09",
-  "updated_at": "2026-09-29T11:23:09",
+  "updated_at": "2026-09-29T16:15:58",
   "raw": {
     "fetched_at": "2026-09-29T11:23:09",
     "source": "stockanalysis+sec_submissions",
@@ -26,13 +26,23 @@
     "content_hash": "09cfee3dc263"
   },
   "assessment": {
-    "assessed_at": null,
-    "raw_fetched_at": null,
-    "raw_hash": null,
+    "assessed_at": "2026-09-29T16:15:58",
+    "raw_fetched_at": "2026-09-29T11:23:09",
+    "raw_hash": "09cfee3dc263",
     "agent": null,
-    "business": {},
-    "culture": {},
-    "dcf": {},
-    "verdict": ""
+    "business": {
+      "score": 84.0,
+      "moat_type": "switching",
+      "machine_lifecycle": "growth",
+      "argument": "工业软件PLM/ALM/CAD/SLM矩阵(Windchill/Codebeamer/Creo/ServiceMax)+SaaS转型(Onshape/Arena);护城河=产品数据系统级记录(system of record)的极高切换成本+制造业长周期粘性;最浅处=客户IT预算周期+SaaS转型期ARR与利润的口径打架;FY25营收+19.2%/GM83.8%,仍处增发期"
+    },
+    "culture": {
+      "score": 68.0,
+      "argument": "职业经理人时代(CEO Neil Barua 2024接任,ServiceMax系),非创始人;行为级证据:SaaS转型纪律+并购聚焦工业生命周期(不跨界);投行一致Buy 20家目标(+24%);扣分=后创始人时代资本配置记录尚短,给中性分"
+    },
+    "dcf": {
+      "argument": "七仓中唯一reverse-DCF隐含正增长:+6.0%/yr(其余全为负)=市场对其定价最贵;但PE12.4(TTM口径,FY25利润+95%含一次性收益需警惕高基数)对应工业软件同类仍便宜;基准(60%):ARR高个位数-低双位数增长,估值维持;悲观(30%):SaaS转型颠簸+制造业 capex 下行;乐观(10%):数字主线+AI工业应用加速;它是组合里'质量最实但安全边际最薄'的一仓"
+    },
+    "verdict": "真护城河+真转型,代价是七仓里最贵隐含预期(+6.0%),持有不追加,赚兑现的钱不赚修复的钱"
   }
 }

@@ -1,0 +1,52 @@
+{
+  "id": "US:TCOM",
+  "market": "US",
+  "code": "TCOM",
+  "name": "TCOM",
+  "version": 2,
+  "created_at": "2026-09-29T15:31:23",
+  "updated_at": "2026-09-29T16:16:44",
+  "raw": {
+    "fetched_at": "2026-09-29T15:31:23",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/tcom/",
+    "summary": "Trip.com Group Limited, through its subsidiaries, operates as a travel service provider for accommodation reservation, transportation ticketing, packaged tours, in-destination, corporate travel management, and other travel-related services in China and internationally. It acts as an agent for hotel-related transactions and selling air tickets, as well as provides train, long-distance bus, and ferry tickets; travel insurance products, such as flight delay, air accident, and baggage loss coverage; and air-ticket delivery, online check-in and seat...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Trip.com Group Ltd",
+      "sic": "7389",
+      "industry": "Services-Business Services, NEC",
+      "entity_type": "other",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "E9",
+      "cik": "1269238"
+    },
+    "content_hash": "76e402f43b94"
+  },
+  "assessment": {
+    "assessed_at": "2026-09-29T16:16:44",
+    "raw_fetched_at": "2026-09-29T15:31:23",
+    "raw_hash": "76e402f43b94",
+    "agent": null,
+    "business": {
+      "score": 88.0,
+      "moat_type": "network",
+      "machine_lifecycle": "growth",
+      "argument": "中国OTA超级平台(携程/去哪儿/Trip.com/Skyscanner),代理佣金模式;护城河=供给端规模+服务基础设施(7×24多语种客服/退改履约)+双边网络,出境游与国际业务是第二曲线;最浅处=国内低端被美团/抖音内容化分流+旅游天然周期性+ADR/VIE结构;FY25营收+22.2%/ROE21.7/GM80.6,仍处增发期"
+    },
+    "culture": {
+      "score": 82.0,
+      "founder_led": true,
+      "benfen_evidence": [
+        "新冠零收入期未大规模股权稀释(可转债为主)扛过来;9/29新闻:员工无理由事假团队反获600元/天奖励=反内卷组织实验;历史回购记录"
+      ],
+      "argument": "创始人梁建章仍在任(人口学家型企业家,长期主义写在公开言论里)+CEO孙洁运营搭档;行为级本分:危机期不稀释股东、员工政策人性化、国际化投入耐心;扣分=ADR结构+中概监管环境非管理层可控"
+    },
+    "dcf": {
+      "argument": "PE7.4(TTM)/PB1.1对+22.2%增长=市场按中国消费崩塌+中概折价定价,reverse-DCF隐含深度负增长;距52周高点-49%;投行一致Strong Buy 29家目标.34(+46%),JPM(9/17);基准(60%):出境游修复+国际放量,PE回12-15x;悲观(30%):消费二次探底+地缘折价加深;乐观(10%):入境游政策红利;当前-2.0%浮亏在护照纪律内"
+    },
+    "verdict": "短线护照仓里装着长线生意:四票入口+平台护城河+创始人长期主义,但纪律归纪律——10月下旬前必须给结论,到期由论点兑现度决定去留,不因价格自我感动"
+  }
+}

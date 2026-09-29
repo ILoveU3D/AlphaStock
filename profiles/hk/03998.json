@@ -3,9 +3,9 @@
   "market": "HK",
   "code": "03998",
   "name": "波司登",
-  "version": 1,
+  "version": 2,
   "created_at": "2026-09-29T10:44:19",
-  "updated_at": "2026-09-29T10:44:19",
+  "updated_at": "2026-09-29T16:13:21",
   "raw": {
     "fetched_at": "2026-09-29T10:44:19",
     "source": "eastmoney_hk_f10_orgprofile",
@@ -30,13 +30,27 @@
     "content_hash": "c9574c488e4e"
   },
   "assessment": {
-    "assessed_at": null,
-    "raw_fetched_at": null,
-    "raw_hash": null,
+    "assessed_at": "2026-09-29T16:13:21",
+    "raw_fetched_at": "2026-09-29T10:44:19",
+    "raw_hash": "c9574c488e4e",
     "agent": null,
-    "business": {},
-    "culture": {},
-    "dcf": {},
-    "verdict": ""
+    "business": {
+      "score": 88.0,
+      "moat_type": "brand",
+      "machine_lifecycle": "rent",
+      "argument": "中国羽绒服绝对龙头(波司登/雪中飞/冰洁品牌矩阵),2018战略转型聚焦主业+高端化兑现;护城河=寒冷品类信任品牌+渠道规模+供应链快反;最浅处=品类天花板+暖冬风险+时尚波动;机器处收租期:品牌税变现+回购缩股本"
+    },
+    "culture": {
+      "score": 82.0,
+      "founder_led": true,
+      "benfen_evidence": [
+        "2018多元化受挫后砍回羽绒服主业=认错的资本纪律;低估区间持续每日回购(9/25再购200万股)"
+      ],
+      "argument": "创始人高德康仍在任(1976年创业),13年老臣团队;行为级本分:多元化失败后收缩聚焦、每日回购托底、股息率7.7%真实回报小股东;扣分=接班人未明(创始人年事已高)+家族企业治理透明度"
+    },
+    "dcf": {
+      "argument": "reverse-DCF隐含-5.0%/yr,而中报利润+13.7%/FCF收益率13.3%/现金转换161%;市场按品类衰退定价,零增长即值回票价;基准(65%):高端化+轻薄羽延展,PE修复12-14x;悲观(25%):暖冬+消费降级压高端,PE 8x有7.7%股息托底;乐观(10%):四季化/出海第二曲线"
+    },
+    "verdict": "品牌税收租机器,市场按衰退定价,持有=收股息+等修复"
   }
 }

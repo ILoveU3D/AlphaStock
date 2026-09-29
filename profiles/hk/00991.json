@@ -3,9 +3,9 @@
   "market": "HK",
   "code": "00991",
   "name": "大唐发电",
-  "version": 1,
+  "version": 2,
   "created_at": "2026-09-29T10:43:34",
-  "updated_at": "2026-09-29T10:43:34",
+  "updated_at": "2026-09-29T16:14:28",
   "raw": {
     "fetched_at": "2026-09-29T10:43:34",
     "source": "eastmoney_hk_f10_orgprofile",
@@ -30,13 +30,23 @@
     "content_hash": "234d4f0cea77"
   },
   "assessment": {
-    "assessed_at": null,
-    "raw_fetched_at": null,
-    "raw_hash": null,
+    "assessed_at": "2026-09-29T16:14:28",
+    "raw_fetched_at": "2026-09-29T10:43:34",
+    "raw_hash": "234d4f0cea77",
     "agent": null,
-    "business": {},
-    "culture": {},
-    "dcf": {},
-    "verdict": ""
+    "business": {
+      "score": 62.0,
+      "moat_type": "license",
+      "machine_lifecycle": "rent",
+      "argument": "央企火电龙头+绿电转型;护城河=发电牌照+并网通道+规模,本质是煤电价差接受者(spread taker);最浅处=电价政策+煤价回摆+负债率69.5%;收租期机器:盈利靠煤价下行+AI电力需求重估的价差红利,资本开支0.8/OCF吃掉大部分现金流"
+    },
+    "culture": {
+      "score": 55.0,
+      "argument": "国企治理:保供政治责任优先于小股东回报,资本配置服务政策;无创始人;9.5%股息率是真实回报但历史上有电力国企增发摊薄先例(证券变动月报表持续);行为级证据薄,给中性偏下分"
+    },
+    "dcf": {
+      "argument": "reverse-DCF隐含-5.0%/yr,中报利润+28.4%(煤价下行弹性)/FCF收益率18.6%但capex/OCF=0.8;市场按周期顶+政策定价;基准(60%):煤价低位+AI需求叙事延续,股息9.5%为主收益;悲观(30%):电价下调或煤价反弹挤压价差+转型资本开支增发摊薄;乐观(10%):容量电价+绿电溢价重估"
+    },
+    "verdict": "价差红利+AI电力叙事的收租仓,仓位匹配理解深度(小仓10%),负债率破闸门绝不加仓"
   }
 }

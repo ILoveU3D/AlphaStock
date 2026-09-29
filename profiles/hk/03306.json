@@ -3,9 +3,9 @@
   "market": "HK",
   "code": "03306",
   "name": "江南布衣",
-  "version": 1,
+  "version": 2,
   "created_at": "2026-09-29T10:44:10",
-  "updated_at": "2026-09-29T10:44:10",
+  "updated_at": "2026-09-29T16:13:36",
   "raw": {
     "fetched_at": "2026-09-29T10:44:10",
     "source": "eastmoney_hk_f10_orgprofile",
@@ -30,13 +30,27 @@
     "content_hash": "096f5cfa676b"
   },
   "assessment": {
-    "assessed_at": null,
-    "raw_fetched_at": null,
-    "raw_hash": null,
+    "assessed_at": "2026-09-29T16:13:36",
+    "raw_fetched_at": "2026-09-29T10:44:10",
+    "raw_hash": "096f5cfa676b",
     "agent": null,
-    "business": {},
-    "culture": {},
-    "dcf": {},
-    "verdict": ""
+    "business": {
+      "score": 86.0,
+      "moat_type": "brand",
+      "machine_lifecycle": "rent",
+      "argument": "设计师品牌矩阵(JNBY/速写/LESS/童装/家居),会员粉丝经济驱动高复购;GM66.6%+ROE38.3%=品牌税机器;护城河=设计DNA+会员资产+多品牌覆盖人生阶段;最浅处=审美疲劳+细分天花板+创意依赖创始人夫妇;收租期早段,会员ARPU与品牌矩阵成熟期仍有纵深"
+    },
+    "culture": {
+      "score": 84.0,
+      "founder_led": true,
+      "benfen_evidence": [
+        "2021童装图案风波后召回道歉并收紧设计治理;慢扩张纪律,不烧钱换规模"
+      ],
+      "argument": "创始人夫妇吴健/李琳(设计)双核仍在任=艺术家+经营者配对;行为级本分:风波后治理整改落地、慢扩张、6.4%股息;扣分=创意核心二人绑定的关键人风险"
+    },
+    "dcf": {
+      "argument": "reverse-DCF隐含-4.2%/yr,中报利润+11.7%/FCF收益率11.8%/现金转换144%;市场按设计师品牌生命周期衰退定价,会员复购的持续性被低估;基准(65%):矩阵成熟+会员深挖PE12-15x;悲观(25%):审美代际断层,PE8x+股息6.4%托底;乐观(10%):出海/家居放大"
+    },
+    "verdict": "会员制设计品牌税,pos52=100后不追加,持有收租"
   }
 }

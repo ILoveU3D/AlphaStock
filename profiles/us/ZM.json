@@ -3,9 +3,9 @@
   "market": "US",
   "code": "ZM",
   "name": "Zoom通讯",
-  "version": 1,
+  "version": 2,
   "created_at": "2026-09-29T11:27:39",
-  "updated_at": "2026-09-29T11:27:39",
+  "updated_at": "2026-09-29T16:15:41",
   "raw": {
     "fetched_at": "2026-09-29T11:27:39",
     "source": "stockanalysis+sec_submissions",
@@ -26,13 +26,27 @@
     "content_hash": "301ca0a27745"
   },
   "assessment": {
-    "assessed_at": null,
-    "raw_fetched_at": null,
-    "raw_hash": null,
+    "assessed_at": "2026-09-29T16:15:41",
+    "raw_fetched_at": "2026-09-29T11:27:39",
+    "raw_hash": "301ca0a27745",
     "agent": null,
-    "business": {},
-    "culture": {},
-    "dcf": {},
-    "verdict": ""
+    "business": {
+      "score": 78.0,
+      "moat_type": "switching",
+      "machine_lifecycle": "rent_transition",
+      "argument": "AI-first协作平台(Meetings/Phone/Contact Center/Docs),护城河=企业侧切换成本(Zoom Rooms/Phone嵌入工作流)+品牌动词化;最浅处=会议功能商品化+微软Teams捆绑绞杀;机器正从增发期转收租期:营收+4.4%但净利率39%+OCF/NI1.05,FCF机器属性已成,Contact Center/AI Companion是尚未兑现的再增长期权"
+    },
+    "culture": {
+      "score": 84.0,
+      "founder_led": true,
+      "benfen_evidence": [
+        "增长停滞不粉饰(FY25营收+4.4%如实披露);约,持续大额回购;创始人袁征仍在一线"
+      ],
+      "argument": "创始人袁征(华裔移民工程师,因'给女友打电话'创业)仍在任;行为级本分:不追逐叙事式并购、净现金堡垒、回购在低估区间执行;扣分=SBC对FCF的侵蚀+内部人Form4常态减持(薪酬结构,非信心信号但需盯)"
+    },
+    "dcf": {
+      "argument": "快照缺年度FCF行,用实算口径:市值~-净现金~=经营价值~,对应FCF~-20亿=EV/FCF~10x,隐含g≈0%;基准(60%):个位数增长+回购年缩3-4%股本,EPS仍可双位数;悲观(30%):Teams捆绑挤压,增长归零=持有FCF收益率~10%的债券化资产;乐观(10%):AI Companion/Contact Center兑现第二曲线;亏大钱路径概率低,亏时间路径概率真实"
+    },
+    "verdict": "收租化转型中的FCF机器,买的不是增长是'便宜+回购+期权免费',最大风险是时间不是价格"
   }
 }

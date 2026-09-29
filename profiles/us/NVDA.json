@@ -3,9 +3,9 @@
   "market": "US",
   "code": "NVDA",
   "name": "英伟达",
-  "version": 1,
+  "version": 2,
   "created_at": "2026-09-29T11:19:04",
-  "updated_at": "2026-09-29T11:19:04",
+  "updated_at": "2026-09-29T19:24:16",
   "raw": {
     "fetched_at": "2026-09-29T11:19:04",
     "source": "stockanalysis+sec_submissions",
@@ -26,13 +26,28 @@
     "content_hash": "4bdead55a60d"
   },
   "assessment": {
-    "assessed_at": null,
-    "raw_fetched_at": null,
-    "raw_hash": null,
-    "agent": null,
-    "business": {},
-    "culture": {},
-    "dcf": {},
-    "verdict": ""
+    "assessed_at": "2026-09-29T19:24:16",
+    "raw_fetched_at": "2026-09-29T11:19:04",
+    "raw_hash": "4bdead55a60d",
+    "agent": "kimi-k3",
+    "business": {
+      "score": 95.0,
+      "moat_type": "platform_ecosystem",
+      "machine_lifecycle": "hypergrowth",
+      "argument": "CUDA生态锁定+全栈平台，71%毛利率=定价权实锤；AI基建卖铲人，风险在capex消化周期"
+    },
+    "culture": {
+      "score": 90.0,
+      "founder_led": true,
+      "benfen_evidence": [
+        "CUDA十年无回报期持续投入",
+        "小分红+大回购的资本纪律"
+      ],
+      "argument": "黄仁勋创始人在任33年，扁平组织+偏执执行；CUDA无回报期投入是本分实锤"
+    },
+    "dcf": {
+      "argument": "28.6x PE TTM较2024年70+大幅消化，现价隐含数据中心多年增长；AI capex为多年基建周期，信"
+    },
+    "verdict": "复利机器（车道B门票实证），成长舱原型"
   }
 }
