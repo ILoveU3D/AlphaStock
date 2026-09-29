@@ -1,0 +1,38 @@
+{
+  "id": "US:RMD",
+  "market": "US",
+  "code": "RMD",
+  "name": "瑞思迈",
+  "version": 1,
+  "created_at": "2026-09-29T11:27:14",
+  "updated_at": "2026-09-29T11:27:14",
+  "raw": {
+    "fetched_at": "2026-09-29T11:27:14",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/rmd/",
+    "summary": "ResMed Inc. engages in the digital health and cloud-connected medical devices business in the United States and internationally. It operates in two segments, Sleep and Breathing Health, and Residential Care Software. The company offers sleep recorders for the diagnosis and titration of sleep apnea in sleep clinics, hospitals, and at home, including ApneaLink Air, a portable diagnostic device that measures oximetry, respiratory effort, pulse, nasal flow, and snoring; NightOwl, a portable, cloud-connected, and disposable diagnostic device that me...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "RESMED INC",
+      "sic": "3841",
+      "industry": "Surgical & Medical Instruments & Apparatus",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "0630",
+      "state_of_incorporation": "DE",
+      "cik": "943819"
+    },
+    "content_hash": "85e4e503482c"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

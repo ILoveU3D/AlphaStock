@@ -1,0 +1,38 @@
+{
+  "id": "US:PTC",
+  "market": "US",
+  "code": "PTC",
+  "name": "PTC Inc",
+  "version": 1,
+  "created_at": "2026-09-29T11:23:09",
+  "updated_at": "2026-09-29T11:23:09",
+  "raw": {
+    "fetched_at": "2026-09-29T11:23:09",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/ptc/",
+    "summary": "PTC Inc. operates as software company in the Americas, Europe, and the Asia Pacific. The company provides Windchill, a suite that manages all aspects of the product development lifecycle(PLM) that provides real-time information sharing, dynamic data visualization, collaborate across geographically distributed teams, and enabling manufacturers to elevate product development, manufacturing, field service, and end-of-life processes; ThingWorx, an Industrial Internet of Things software; ServiceMax, a service lifecycle management solutions enable co...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "PTC INC.",
+      "sic": "7372",
+      "industry": "Services-Prepackaged Software",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "0930",
+      "state_of_incorporation": "MA",
+      "cik": "857005"
+    },
+    "content_hash": "09cfee3dc263"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

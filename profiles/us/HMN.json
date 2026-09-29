@@ -1,0 +1,38 @@
+{
+  "id": "US:HMN",
+  "market": "US",
+  "code": "HMN",
+  "name": "霍勒斯曼恩",
+  "version": 1,
+  "created_at": "2026-09-29T11:12:31",
+  "updated_at": "2026-09-29T11:12:31",
+  "raw": {
+    "fetched_at": "2026-09-29T11:12:31",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/hmn/",
+    "summary": "Horace Mann Educators Corporation, together with its subsidiaries, operates as an insurance holding company in the United States. It operates through three segments: Property & Casualty, Life & Retirement, and Supplemental & Group Benefits segments. The Property & Casualty segment offers insurance products, including private passenger auto insurance, residential home insurance, and personal umbrella insurance; standard auto coverage including liability, collision, and comprehensive; property coverage for homeowners and renters. The Life & Retir...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "HORACE MANN EDUCATORS CORP /DE/",
+      "sic": "6331",
+      "industry": "Fire, Marine & Casualty Insurance",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "850141"
+    },
+    "content_hash": "c697995f6110"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

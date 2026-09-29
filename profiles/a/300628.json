@@ -1,0 +1,50 @@
+{
+  "id": "A:300628",
+  "market": "A",
+  "code": "300628",
+  "name": "亿联网络",
+  "version": 1,
+  "created_at": "2026-09-29T10:42:37",
+  "updated_at": "2026-09-29T10:42:37",
+  "raw": {
+    "fetched_at": "2026-09-29T10:42:36",
+    "source": "eastmoney_f10_org_basicinfo",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "厦门亿联网络技术股份有限公司(股票代码:300628)是全球领先的沟通与协作解决方案提供商,提供国际品质、技术领先、体验友好的云+端视频会议、IP语音通信及协作解决方案,且与微软等国际品牌达成长期深度的战略合作。亿联网络以研发为核心,坚持自主创新,拥有多项音视频核心技术专利,致力于让沟通更简单、更高效。专注统一通信领域,包括音视频会议、语音通信、个人协作通信,以及数字化时代下的智慧办公,帮助各类企事业单位提高效率和竞争力。其自主品牌Yealink畅销美国、英国、澳大利亚等140多个国家和地区,根据2021年Frost&Sullivan的统计数据,IP话机市场占有率为全球第一;VoIP Phones Customer Satisfaction Report2018 Licensed for Distribution Eastern Management Group数据显示用户满意度全球第一;根据IDC2021年全球视频会议市场统计数据,全球视频会议系统出货量TOP5。",
+    "main_business": "个人桌面通信、会议室通信及远程移动通信等沟通协作全场景的统一通信解决方案,打造了包括专业会议、语音通话、高效协作、智慧办公在内四大模块UC全能力矩阵,可以一站式赋能,也支持多个模块灵活组合、按需构建,满足企业多场景、多形式、多融合的全场景通信需求。",
+    "vision": "",
+    "meta": {
+      "org_name": "厦门亿联网络技术股份有限公司",
+      "chairman": "陈智松",
+      "president": "陈智松",
+      "secretary": "刘之阳",
+      "founded": "2001-11-05 00:00:00",
+      "listed": "2017-03-17 00:00:00",
+      "website": "www.yealink.com.cn",
+      "address": "厦门市湖里区护安路666号",
+      "control_holder": "陈智松、吴仲毅、卢荣富、周继伟",
+      "real_controller": "陈智松、吴仲毅、卢荣富、周继伟",
+      "independent_directors": "叶丽荣,宋培林,王艳艳,吴翀",
+      "employees": "2394",
+      "industry": "信息技术-通信设备-通信终端设备",
+      "org_form": "大型民企",
+      "top_profit_product": "桌面通信终端",
+      "income_structure": "桌面通信终端、会议产品、云办公终端",
+      "income_structure_ratio": "46.67%、40.71%、12.63%",
+      "auditor": "容诚会计师事务所(特殊普通合伙)",
+      "concepts": "超清视频,无线耳机,信创,HS300_,社保重仓,机构重仓,股权激励,深成500,融资融券,创业成份,深股通,MSCI中国,创业板综,富时罗素,中盘股",
+      "business_scope": "一般项目:技术服务、技术开发、技术咨询、技术交流、技术转让、技术推广;通讯设备销售;电子产品销售;货物进出口;技术进出口;信息系统集成服务;软件开发;计算机软硬件及辅助设备零售;计算机软硬件及辅助设备批发。(除依法须经批准的项目外,凭营业执照依法自主开展经营活动)许可项目:第二类增值电信业务。(依法须经批准的项目,经相关部门批准后方可开展经营活动,具体经营项目以相关部门批准文件或许可证件为准)"
+    },
+    "content_hash": "a0d01396bca9"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

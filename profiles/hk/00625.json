@@ -1,0 +1,42 @@
+{
+  "id": "HK:00625",
+  "market": "HK",
+  "code": "00625",
+  "name": "希音-W",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:29",
+  "updated_at": "2026-09-29T10:43:29",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:29",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "希音国际控股有限公司是一家全球线上时尚和生活方式公司,在2025年期间为约160个市场的约2.73亿活跃顾客提供服务。公司通过提供丰富多样、高度包容、不断上新且极具性价比的产品,满足了消费者的多元化需求,重新塑造了消费者追求时尚的方式。公司帮助消费者拥抱潮流生活方式和表达个性。",
+    "main_business": "主要提供线上时尚产品。该公司主要提供服装、鞋类、配饰、美妆、家居和生活方式等在内的多样产品。该公司拥有“SHEIN”、“MOTF”和“SHEGLAM”品牌。该公司主要在中国国内和海外市场开展业务。",
+    "vision": "",
+    "meta": {
+      "org_name": "希音国际控股有限公司",
+      "org_name_en": "SHEIN Global Holdings Limited",
+      "chairman": "许仰天",
+      "secretary": "郭恩廷",
+      "founded": "2026-07-02",
+      "listed": "2026-09-01 00:00:00",
+      "website": "www.sheingroup.com",
+      "address": "香港湾仔皇后大道东183号合和中心46楼,中国广州番禺区万惠二路四海城5栋",
+      "employees": "17751",
+      "industry": "专业零售",
+      "auditor": "德勤·关黄陈方会计师行",
+      "org_form": "一般企业"
+    },
+    "content_hash": "c2d2c8a2516e"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "US:CSTM",
+  "market": "US",
+  "code": "CSTM",
+  "name": "Constellium SE-A",
+  "version": 1,
+  "created_at": "2026-09-29T11:01:27",
+  "updated_at": "2026-09-29T11:01:27",
+  "raw": {
+    "fetched_at": "2026-09-29T11:01:27",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/cstm/",
+    "summary": "Constellium SE, together with its subsidiaries, engages in the design, manufacture, and sale of rolled and extruded aluminum products for the aerospace, packaging, automotive, commercial transportation, general industrial, and defense end-markets. It operates through three segments: Packaging & Automotive Rolled Products, Aerospace & Transportation, and Automotive Structures & Industry. The Packaging & Automotive Rolled Products segment produces and develops rolled aluminum products, including canstock and closure stock for the beverage and foo...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "CONSTELLIUM SE",
+      "sic": "3341",
+      "industry": "Secondary Smelting & Refining of  Nonferrous Metals",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "cik": "1563411"
+    },
+    "content_hash": "b5a1b46c6d15"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

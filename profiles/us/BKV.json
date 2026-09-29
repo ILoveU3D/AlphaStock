@@ -1,0 +1,38 @@
+{
+  "id": "US:BKV",
+  "market": "US",
+  "code": "BKV",
+  "name": "BKV Corp",
+  "version": 1,
+  "created_at": "2026-09-29T10:50:30",
+  "updated_at": "2026-09-29T10:50:30",
+  "raw": {
+    "fetched_at": "2026-09-29T10:50:30",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/bkv/",
+    "summary": "BKV Corporation produces and sells natural gas in the Barnett Shale in the Fort Worth Basin of Texas and in the Marcellus Shale in the Appalachian Basin of Northeast Pennsylvania. It is also involved in the gathering, processing, and transportation of natural gas; power generation; and carbon capture, utilization, and sequestration activities. The company was founded in 2015 and is headquartered in Denver, Colorado. BKV Corporation operates as a subsidiary of Banpu North America Corporation.",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "BKV Corp",
+      "sic": "1311",
+      "industry": "Crude Petroleum & Natural Gas",
+      "entity_type": "operating",
+      "filer_category": "<br>Emerging growth company",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "1838406"
+    },
+    "content_hash": "e41166a4f496"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

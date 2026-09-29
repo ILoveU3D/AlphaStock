@@ -1,0 +1,42 @@
+{
+  "id": "HK:01208",
+  "market": "HK",
+  "code": "01208",
+  "name": "五矿资源",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:38",
+  "updated_at": "2026-09-29T10:43:38",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:38",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "五矿资源有限公司成立于2009年,公司的愿景是成为享誉全球的矿业公司。公司通过采矿事业来培养人才、提高当地社区能力、为股东实现价值,从而不断创造财富。公司的目标是,在主要股东中国五矿的引领下,在2020年前发展成为全球顶尖的中型矿业公司之一,并在未来成为全球顶尖矿业公司之一。公司以MMG《行为准则》为指导,秉承安全至上、互相尊重、团队合作、信守承诺、不断进取的价值观。公司在澳大利亚、刚果(金)和秘鲁开发并运营铜、锌及其他基本金属业务。公司总部位于澳大利亚墨尔本,并在香港联合交易所(股票代码:1208)上市。立足长远、专注矿业,信守公认的国际标准,尊重人文、资源和土地,是公司成功的基石。在MMG,公司开采美好未来。",
+    "main_business": "五矿资源有限公司是一家总部位于澳大利亚的矿业公司。该公司的主要业务包括勘探、开发和开采世界各地的铜、锌、钴、金、银、钼和铅矿床。它的分部包括Las Bambas、Kinsevere、Khoemacau、Dugald River、Rosebery和其他。Las Bambas是一个露天、可扩展、长寿命的铜和钼矿开采项目,位于秘鲁阿普里马克地区的Cotabambas。Kinsevere是位于刚果民主共和国(DRC)上加丹加省的露天铜矿开采业务。Dugald River矿是位于昆士兰州西北部Cloncurry附近的地下锌矿。Rosebery是一个位于塔斯马尼亚西海岸的地下多金属基础金属采矿作业。Khoemacau矿是位于博茨瓦纳西北部喀拉哈里铜带的地下铜矿和银矿,采矿权覆盖面积超过4040平方公里。",
+    "vision": "",
+    "meta": {
+      "org_name": "五矿资源有限公司",
+      "org_name_en": "MMG Limited",
+      "chairman": "曹亮",
+      "secretary": "黄珞媛",
+      "founded": "1988-07-29",
+      "listed": "1994-12-15 00:00:00",
+      "website": "www.mmg.com",
+      "address": "香港九龙尖沙咀漆咸道南79号中国五矿大厦12楼1208室, Level 23, 28 Freshwater Place, Southbank, Victoria, Australia",
+      "employees": "5595",
+      "industry": "一般金属及矿石",
+      "auditor": "安永会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "b207961929e3"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

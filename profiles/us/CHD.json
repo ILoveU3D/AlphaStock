@@ -1,0 +1,38 @@
+{
+  "id": "US:CHD",
+  "market": "US",
+  "code": "CHD",
+  "name": "丘奇&德怀特",
+  "version": 1,
+  "created_at": "2026-09-29T10:55:30",
+  "updated_at": "2026-09-29T10:55:30",
+  "raw": {
+    "fetched_at": "2026-09-29T10:55:30",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/chd/",
+    "summary": "Church & Dwight Co., Inc. develops, manufactures, and markets household, personal care, and specialty products. It operates in three segments: Consumer Domestic, Consumer International, and Specialty Products Division. The company offers baking soda, cat litters, laundry detergents, carpet deodorizers, and other baking soda-based products under the ARM & HAMMER brand; stain removers, cleaning solutions, laundry detergents, and bleach alternatives under the OXICLEAN brand; dry shampoos under the BATISTE brand; water flossers under the WATERPIK b...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "CHURCH & DWIGHT CO INC /DE/",
+      "sic": "2840",
+      "industry": "Soap, Detergents, Cleang Preparations, Perfumes, Cosmetics",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "313927"
+    },
+    "content_hash": "c4ddabad3732"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

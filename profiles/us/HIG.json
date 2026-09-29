@@ -1,0 +1,38 @@
+{
+  "id": "US:HIG",
+  "market": "US",
+  "code": "HIG",
+  "name": "哈特福德保险",
+  "version": 1,
+  "created_at": "2026-09-29T11:11:37",
+  "updated_at": "2026-09-29T11:11:37",
+  "raw": {
+    "fetched_at": "2026-09-29T11:11:37",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/hig/",
+    "summary": "The Hartford Insurance Group, Inc., together with its subsidiaries, provides insurance and financial services to individual and business customers in the United States, the United Kingdom, and internationally. It operates through Business Insurance, Personal Insurance, Property & Casualty Other Operations, Employee Benefits and Hartford Funds. The company offers insurance coverage, including workersâ compensation, property, automobile, general and professional liability, package business, umbrella, fidelity and surety, marine, livestock, accide...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "HARTFORD INSURANCE GROUP, INC.",
+      "sic": "6331",
+      "industry": "Fire, Marine & Casualty Insurance",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "874766"
+    },
+    "content_hash": "147dd6b1d89a"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

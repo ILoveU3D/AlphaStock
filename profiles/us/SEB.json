@@ -1,0 +1,38 @@
+{
+  "id": "US:SEB",
+  "market": "US",
+  "code": "SEB",
+  "name": "Seaboard Corp",
+  "version": 1,
+  "created_at": "2026-09-29T11:27:35",
+  "updated_at": "2026-09-29T11:27:35",
+  "raw": {
+    "fetched_at": "2026-09-29T11:27:35",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/seb/",
+    "summary": "Seaboard Corporation, together with its subsidiaries, operates in agricultural, energy, and ocean transportation business worldwide. It operates through Pork, Commodity Trading and Milling (CT&M), Marine, Liquid Fuels, Power, and Turkey segments. The Pork segment produces and sells pork products to further processors, food service operators, grocery stores, and distributors; and hogs. The CT&M segment sources, transports, and markets wheat, corn, soybeans, soybean meal, and other commodities; and produces and sells wheat flour, maize meal, manu...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "SEABOARD CORP /DE/",
+      "sic": "5150",
+      "industry": "Wholesale-Farm Product Raw Materials",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "88121"
+    },
+    "content_hash": "8675f814f177"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

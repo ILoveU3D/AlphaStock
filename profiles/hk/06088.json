@@ -1,0 +1,42 @@
+{
+  "id": "HK:06088",
+  "market": "HK",
+  "code": "06088",
+  "name": "鸿腾精密",
+  "version": 1,
+  "created_at": "2026-09-29T10:44:21",
+  "updated_at": "2026-09-29T10:44:21",
+  "raw": {
+    "fetched_at": "2026-09-29T10:44:21",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "鸿腾六零八八精密科技股份有限公司(FIT)是业界领先的全球解决方案供应商,为了让世界更美好,公司致力于促成连线能力。公司的愿景是透过创新的技术、产品以及服务,让人们使用各种装置互相连结并且分享经验。公司在消费者洞见、业界趋势、设计、研发、制造、生产、供应链以及上市计画等层面拥有无与伦比的优势,能够为横跨B2C与B2B的各种世界级品牌与自有品牌产品提供服务,是全世界技术趋势的先驱者,因此公司将会为您带来精彩动人的使用者体验。",
+    "main_business": "是一家台湾公司,专门从事精密零件供应相关业务。“Belkin”品牌包含多种消费性电子产品配件,并聚焦于智慧型手机、平板电脑、ultrabook以及穿戴式装置。",
+    "vision": "",
+    "meta": {
+      "org_name": "鸿腾六零八八精密科技股份有限公司",
+      "org_name_en": "FIT Hon Teng Limited",
+      "chairman": "卢松青",
+      "secretary": "伍秀薇,黄德坚",
+      "founded": "2013-04-08",
+      "listed": "2017-07-13 00:00:00",
+      "website": "www.fit-foxconn.com",
+      "address": "香港铜锣湾勿地臣街1号时代广场二座31楼,台湾新北市土城区中山路66-1号",
+      "employees": "67563",
+      "industry": "工业工程",
+      "auditor": "罗兵咸永道会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "d3953c02cb34"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

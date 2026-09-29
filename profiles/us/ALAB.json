@@ -1,0 +1,38 @@
+{
+  "id": "US:ALAB",
+  "market": "US",
+  "code": "ALAB",
+  "name": "Astera Labs Inc",
+  "version": 1,
+  "created_at": "2026-09-29T10:45:51",
+  "updated_at": "2026-09-29T10:45:51",
+  "raw": {
+    "fetched_at": "2026-09-29T10:45:51",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/alab/",
+    "summary": "Astera Labs, Inc. designs, manufactures, and sells semiconductor-based connectivity solutions for cloud and AI infrastructure in Taiwan and the United States. It offers an intelligent connectivity platform, comprised of semiconductor-based, high-speed, mixed-signal connectivity products that integrate a matrix of microcontrollers and sensors, and COSMOS. The company provides COSMOS software suite, a connectivity system management and optimization software that enables management and optimization of resources for large fleets at cloud-scale via ...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Astera Labs, Inc.",
+      "sic": "3674",
+      "industry": "Semiconductors & Related Devices",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "1736297"
+    },
+    "content_hash": "1dd7a58a4503"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

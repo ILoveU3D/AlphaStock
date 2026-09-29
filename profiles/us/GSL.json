@@ -1,0 +1,38 @@
+{
+  "id": "US:GSL",
+  "market": "US",
+  "code": "GSL",
+  "name": "环球租船",
+  "version": 1,
+  "created_at": "2026-09-29T11:10:56",
+  "updated_at": "2026-09-29T11:10:56",
+  "raw": {
+    "fetched_at": "2026-09-29T11:10:56",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/gsl/",
+    "summary": "Global Ship Lease, Inc., together with its subsidiaries, engages in owning and chartering out containerships under fixed-rate charters to container liner companies worldwide. As of March 12, 2026, it owned 71 mid-sized and smaller containerships, ranging from 2,207 to 11,040 (TEU), with an aggregate capacity of 423,003 TEU. Global Ship Lease, Inc. was founded in 2007 and is based in Athens, Greece.",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Global Ship Lease, Inc.",
+      "sic": "4412",
+      "industry": "Deep Sea Foreign Transportation of  Freight",
+      "entity_type": "other",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "1T",
+      "cik": "1430725"
+    },
+    "content_hash": "45958b94adf8"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

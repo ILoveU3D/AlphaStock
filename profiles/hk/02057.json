@@ -1,0 +1,42 @@
+{
+  "id": "HK:02057",
+  "market": "HK",
+  "code": "02057",
+  "name": "中通快递-W",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:54",
+  "updated_at": "2026-09-29T10:43:54",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:54",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "中通快递(开曼)有限公司创建于2002年5月8日,是中国业务量领先的快递服务供应商,2023年市场份额达到22.9%。中通是中国快速增长的电子商务市场关键推动者,也是直接受益者,已成为数百万电子商务客户值得信赖的快递合作伙伴,包括在阿里巴巴、拼多多和京东等电子商务网站上销售和购买产品的在线商家和消费者。\r\n中通运营着一种高度可扩展的网络合作伙伴模式,使其能够快速扩展全国网络,并以低成本为电子商务商家提供更大的地理覆盖范围。在网络合作伙伴的模式下,中通在快递服务价值链中运营关键的干线运输和分拣,而网络合作伙伴则提供揽件和最后一公里派件服务。运营效率和规模经济使中通能够实现更高投资资本和股权的回报。中通的目标是成为世界领先的综合物流服务企业。",
+    "main_business": "主要通过全国性网络提供快递服务和其他增值物流服务。快递服务主要包括包裹分拣和线路运输。该公司直接向企业客户提供快递服务,包括垂直电子商务和传统商户,以及向最终消费者交付产品。该公司在国内外市场开展业务。",
+    "vision": "",
+    "meta": {
+      "org_name": "中通快递(开曼)有限公司",
+      "org_name_en": "ZTO Express (Cayman) Inc.",
+      "chairman": "赖梅松",
+      "secretary": "赵明璟,李送霏",
+      "founded": "2015-04-08",
+      "listed": "2020-09-29 00:00:00",
+      "website": "zto.investorroom.com",
+      "address": "中华人民共和国上海市青浦区华志路1685号1栋,香港皇后大道中99号中环中心56楼5603室",
+      "employees": "23888",
+      "industry": "工用运输",
+      "auditor": "德勤·关黄陈方会计师行",
+      "org_form": "一般企业"
+    },
+    "content_hash": "dbd0e5a12e76"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

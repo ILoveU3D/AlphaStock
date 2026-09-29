@@ -1,0 +1,42 @@
+{
+  "id": "HK:02888",
+  "market": "HK",
+  "code": "02888",
+  "name": "渣打集团",
+  "version": 1,
+  "created_at": "2026-09-29T10:44:08",
+  "updated_at": "2026-09-29T10:44:08",
+  "raw": {
+    "fetched_at": "2026-09-29T10:44:08",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "渣打集团有限公司是一家国际银行公司。该银行的业务部门包括企业与机构银行部门、零售银行部门、商业银行部门和私人银行部门。其企业与机构银行部门允许公司和金融机构在全球开展业务和交易。其私人银行部门支持高净值人士的跨境银行业务需求,并提供全球投资机会。其零售银行部门为客户及小型企业提供一系列银行支持解决方案。其商业银行部门为中型企业提供金融解决方案和服务。其个人银行业务包括投资和员工银行业务。其商业银行业务包括交易银行业务、伊斯兰银行业务和全球研究服务。其私人银行业务包括在线服务。",
+    "main_business": "一家国际银行公司。该公司的业务部门包括企业、商业和机构银行部门;消费者、私人及商业银行业务部门;风险投资部门,以及中央及其他专案部门。企业、商业和机构银行业务部门为世界各地的公司,从中小型企业到大型企业和机构,提供数位化和面对面的支援。消费者、私人和商业银行业务部门以数位方式和面对面方式为从大众零售客户到富裕和高净值人士的小型企业和个人提供支援。风险投资部门包括金融科技和三十多家创投公司的管道,其中包括两家云端原生数位银行。其产品和服务包括宏观、大宗商品和信用交易,债务资本市场和杠杆融资,现金管理,投资,贸易金融,存款,保险,抵押贷款和其他。其在52个市场开展业务。",
+    "vision": "",
+    "meta": {
+      "org_name": "渣打集团有限公司",
+      "org_name_en": "Standard Chartered Plc",
+      "chairman": "Maria Ramos",
+      "secretary": "Scott Corrigan",
+      "founded": "1969-11-16",
+      "listed": "2002-10-31 00:00:00",
+      "website": "www.sc.com",
+      "address": "香港德辅道中4-4A号32楼",
+      "employees": "81673",
+      "industry": "银行",
+      "auditor": "Ernst &  Young  LLP",
+      "org_form": "银行"
+    },
+    "content_hash": "640cdbcf5adb"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

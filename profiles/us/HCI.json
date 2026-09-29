@@ -1,0 +1,38 @@
+{
+  "id": "US:HCI",
+  "market": "US",
+  "code": "HCI",
+  "name": "HCI集团",
+  "version": 1,
+  "created_at": "2026-09-29T11:10:58",
+  "updated_at": "2026-09-29T11:10:58",
+  "raw": {
+    "fetched_at": "2026-09-29T11:10:58",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/hci/",
+    "summary": "HCI Group, Inc., together with its subsidiaries, engages in the property and casualty insurance business in the United States. The company operates through Insurance Operations, Exzeo, Reciprocal Exchange Operations, and Real Estate segments. It provides homeownersâ property and casualty insurance products; claim adjusting and processing services; turnkey insurance technology and operations solutions to property and casualty insurance carriers and its agents through the Exzeo platform; and SAMSTM, a web-based system designed to automate and str...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "HCI Group, Inc.",
+      "sic": "6331",
+      "industry": "Fire, Marine & Casualty Insurance",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "FL",
+      "cik": "1400810"
+    },
+    "content_hash": "4c82bf09dc27"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

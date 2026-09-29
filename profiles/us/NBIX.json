@@ -1,0 +1,38 @@
+{
+  "id": "US:NBIX",
+  "market": "US",
+  "code": "NBIX",
+  "name": "神经分泌生物科学",
+  "version": 1,
+  "created_at": "2026-09-29T11:17:55",
+  "updated_at": "2026-09-29T11:17:55",
+  "raw": {
+    "fetched_at": "2026-09-29T11:17:55",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/nbix/",
+    "summary": "Neurocrine Biosciences, Inc. discovers, develops, and commercialize pharmaceuticals for neurological, psychiatric, endocrine, and immunological disorders in the United States and internationally. The companyâs products include INGREZZA for tardive dyskinesia and chorea associated with Huntingtonâs disease; Orilissa tablets for endometriosis; Oriahnn capsules to treat uterine fibroids; and CRENESSITY to treat congenital adrenal hyperplasia, as well as offers products under the name of ALKINDI and Efmody. Its product candidates in clinical develo...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "NEUROCRINE BIOSCIENCES INC",
+      "sic": "2836",
+      "industry": "Biological Products, (No Diagnostic Substances)",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "914475"
+    },
+    "content_hash": "ec9d5ff774f2"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "HK:03750",
+  "market": "HK",
+  "code": "03750",
+  "name": "宁德时代",
+  "version": 1,
+  "created_at": "2026-09-29T10:44:14",
+  "updated_at": "2026-09-29T10:44:14",
+  "raw": {
+    "fetched_at": "2026-09-29T10:44:14",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "宁德时代新能源科技股份有限公司是全球领先的零碳新能源科技公司,致力于为全球新能源应用提供一流解决方案和服务,以全域增量战略构建零碳能源生态,推动能源转型与可持续发展。",
+    "main_business": "从事动力电池、储能电池的研发、生产、销售,以推动固定式化石能源替代、移动式化石能源替代,并通过电动化和智能化实现市场应用的集成创新",
+    "vision": "",
+    "meta": {
+      "org_name": "宁德时代新能源科技股份有限公司",
+      "org_name_en": "Contemporary Amperex Technology Co., Ltd.",
+      "chairman": "曾毓群",
+      "secretary": "蒋理,简雪艮",
+      "founded": "2011-12-16",
+      "listed": "2025-05-20 00:00:00",
+      "website": "www.catl.com",
+      "address": "中国福建省宁德市蕉城区漳湾镇新港路2号,香港中环毕打街20号会德丰大厦5楼",
+      "employees": "213226",
+      "industry": "工业工程",
+      "auditor": "致同(香港)会计师事务所有限公司",
+      "org_form": "一般企业"
+    },
+    "content_hash": "1d48c9cb162b"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

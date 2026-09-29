@@ -1,0 +1,42 @@
+{
+  "id": "HK:09856",
+  "market": "HK",
+  "code": "09856",
+  "name": "纳真科技",
+  "version": 1,
+  "created_at": "2026-09-29T10:44:26",
+  "updated_at": "2026-09-29T10:44:26",
+  "raw": {
+    "fetched_at": "2026-09-29T10:44:26",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "纳真科技公司(以下简称纳真科技),是全球领先的光通信与光连接解决方案的全栈式供应商,为AI算力网络提供最关键的光通信产品。作为全球少数拥有光模块及光芯片研发及量产能力的企业之一,过去二十年,凭借在AI、云计算、光纤到x (FTTx)、传输网络和无线应用领域全品类优质产品的量产交付能力,广泛赋能世界各地的云服务厂商、电信和网络设备供应商及运营商。",
+    "main_business": "是全球领先的光通信与光连接解决方案的全栈式供应商,为AI算力网络提供最关键的光通信产品。",
+    "vision": "",
+    "meta": {
+      "org_name": "纳真科技公司",
+      "org_name_en": "Ligent Technologies, Inc.",
+      "chairman": "于芝涛",
+      "secretary": "王惠,谢愉阳",
+      "founded": "2009-02-20",
+      "listed": "2026-09-22 00:00:00",
+      "website": "www.ligent.com",
+      "address": "中国山东省青岛市崂山区香港东路88号海信国际中心A座26楼,香港英皇道1111号太古城中心一期27楼2701室",
+      "employees": "5852",
+      "industry": "资讯科技器材",
+      "auditor": "安永会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "d8fe947d882e"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

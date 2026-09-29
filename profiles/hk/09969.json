@@ -1,0 +1,42 @@
+{
+  "id": "HK:09969",
+  "market": "HK",
+  "code": "09969",
+  "name": "诺诚健华",
+  "version": 1,
+  "created_at": "2026-09-29T10:44:27",
+  "updated_at": "2026-09-29T10:44:27",
+  "raw": {
+    "fetched_at": "2026-09-29T10:44:27",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "诺诚健华医药有限公司(上交所代码:688428;港交所代码:09969)是一家商业化阶段的生物医药高科技公司,于2015年由拥有丰富新药研发及企业管理经验的崔霁松博士和世界著名结构生物学家施一公院士联合创立。我们为恶性肿瘤和自身免疫性疾病患者研发创新药,让创新成果惠及更多患者。积累创新的价值,相信时间的力量。我们从一个个分子开始,向着人类健康蓝图迈进,持续开发创新技术与疗法,并构建完善的全球知识产权和质量管理体系。",
+    "main_business": "主要从事生物医药研发、生产和商业化。该公司专注于肿瘤和自身免疫性疾病等存在巨大未满足临床需求的领域。该公司的主要产品管线包括奥布替尼、Tafasitamab、ICP-490、ICP-B02、ICP-248、ICP-B05、ICP-332、ICP-488、ICP-192、ICP-723、ICP-033和ICP-189等。其产品主要用于治疗血液瘤、实体瘤和自身免疫病。该公司还在开发用于治疗由B细胞或T细胞功能异常所导致的自身免疫性疾病的产品。该公司主要在国内和国外市场开展业务。",
+    "vision": "",
+    "meta": {
+      "org_name": "诺诚健华医药有限公司",
+      "org_name_en": "InnoCare Pharma Limited",
+      "chairman": "Jisong Cui(崔霁松)",
+      "secretary": "练少娥,袁蓓",
+      "founded": "2015-11-03",
+      "listed": "2020-03-23 00:00:00",
+      "website": "www.innocarepharma.com",
+      "address": "中国北京市昌平区中关村生命科学园生命园路8号院8号楼,香港湾仔皇后大道东248号大新金融中心40楼",
+      "employees": "1388",
+      "industry": "药品及生物科技",
+      "auditor": "安永会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "3814686f0278"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

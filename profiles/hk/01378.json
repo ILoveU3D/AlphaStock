@@ -1,0 +1,42 @@
+{
+  "id": "HK:01378",
+  "market": "HK",
+  "code": "01378",
+  "name": "中国宏桥",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:43",
+  "updated_at": "2026-09-29T10:43:43",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:43",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "中国宏桥集团有限公司(HK:01378)是一家集热电、采矿、氧化铝、液态铝合金、铝合金锭、铝合金铸轧产品、铝母线、高精铝板带箔、新材料于一体的铝全产业链特大型企业。2011年于香港联交所主板上市。截止2023年年底,拥有总资产2003.2亿元,是全球领先的铝产品制造商之一。",
+    "main_business": "主要从事铝产品的生产与销售的投资控股公司。该公司主要产品包括液态铝合金、铝合金锭、铝合金加工产品及氧化铝产品。该公司主要在中国国内市场及印尼市场开展业务。",
+    "vision": "",
+    "meta": {
+      "org_name": "中国宏桥集团有限公司",
+      "org_name_en": "China Hongqiao Group Limited",
+      "chairman": "张波",
+      "secretary": "张月霞",
+      "founded": "2010-02-09",
+      "listed": "2011-03-24 00:00:00",
+      "website": "www.hongqiaochina.com",
+      "address": "香港中环皇后大道中2号长江集团中心51楼5105室,中国山东省邹平县邹平经济开发区会仙一路",
+      "employees": "51234",
+      "industry": "一般金属及矿石",
+      "auditor": "信永中和(香港)会计师事务所有限公司",
+      "org_form": "一般企业"
+    },
+    "content_hash": "7134a6736f8e"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

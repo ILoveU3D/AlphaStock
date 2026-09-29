@@ -1,0 +1,38 @@
+{
+  "id": "US:ALLY",
+  "market": "US",
+  "code": "ALLY",
+  "name": "Ally Financial Inc",
+  "version": 1,
+  "created_at": "2026-09-29T10:46:22",
+  "updated_at": "2026-09-29T10:46:22",
+  "raw": {
+    "fetched_at": "2026-09-29T10:46:22",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/ally/",
+    "summary": "Ally Financial Inc., a digital financial-services company, provides various digital financial products and services in the United States and Canada. The company operates through Automotive Finance operations, Insurance operations, and Corporate Finance operations. It offers automotive financing services, including providing retail installment sales contracts, loans and operating leases, term loans to dealers, financing dealer floorplans and other lines of credit to dealers, warehouse lines to automotive retailers, and fleet financing; and finan...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Ally Financial Inc.",
+      "sic": "6022",
+      "industry": "State Commercial Banks",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "40729"
+    },
+    "content_hash": "a3f0677b33a3"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

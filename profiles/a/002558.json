@@ -1,0 +1,50 @@
+{
+  "id": "A:002558",
+  "market": "A",
+  "code": "002558",
+  "name": "巨人网络",
+  "version": 1,
+  "created_at": "2026-09-29T10:42:24",
+  "updated_at": "2026-09-29T10:42:24",
+  "raw": {
+    "fetched_at": "2026-09-29T10:42:24",
+    "source": "eastmoney_f10_org_basicinfo",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "巨人网络集团股份有限公司(002558.SZ)是巨人集团旗下A股上市公司,是一家用创新驱动的互联网企业,通过提供有核心价值的产品或服务,让用户享受创新带来的便利。公司坚持聚焦、用户第一、阳光经营的发展理念,致力于打造百年品牌。巨人网络坚持精品战略,自主研发了《征途》系列、《球球大作战》等受玩家喜爱的精品游戏,其中《征途》开创免费商业模式,首创自动寻路、自动打怪等创新玩法被全行业模仿,成为行业游戏制作标准。《球球大作战》开创休闲竞技全新游戏品类,累计设备安装量6亿。",
+    "main_business": "互联网游戏的研发和运营",
+    "vision": "",
+    "meta": {
+      "org_name": "巨人网络集团股份有限公司",
+      "chairman": "史玉柱",
+      "president": "刘伟",
+      "secretary": "孟玮",
+      "founded": "1997-07-22 00:00:00",
+      "listed": "2011-03-02 00:00:00",
+      "website": "www.ztgame.com",
+      "address": "上海市松江区中辰路655号",
+      "control_holder": "上海巨人投资管理有限公司",
+      "real_controller": "史玉柱",
+      "independent_directors": "ZHOU DONGSHENG(周东生),凌鸿,顾文贤(Gu Wenxian)",
+      "employees": "1674",
+      "industry": "互联网-互联网服务-游戏娱乐",
+      "org_form": "中小微民企",
+      "top_profit_product": "移动端网络游戏",
+      "income_structure": "移动端网络游戏、电脑端网络游戏、其他游戏相关业务、其他业务",
+      "income_structure_ratio": "93.15%、5.58%、1.17%、0.10%",
+      "auditor": "安永华明会计师事务所(特殊普通合伙)",
+      "concepts": "创投,网络游戏,西部大开发,参股保险,互联网金融,阿里概念,虚拟现实,人工智能,百度概念,电子竞技,抖音概念(字节概念),蚂蚁金服概念,鸿蒙概念,元宇宙概念,AIGC概念,多模态AI,AI应用,文娱消费,HS300_,QFII重仓,基金重仓,机构重仓,深成500,融资融券,深股通,MSCI中国,标准普尔,昨日高振幅,大盘股,2026一季报预增,2026中报预增",
+      "business_scope": "计算机游戏软件的开发、销售;网络游戏出版运营;利用互联网销售游戏产品;动漫设计、制作;计算机软硬件设计、系统集成服务及数据处理;设计、制作、发布国内外广告;组织文化艺术交流活动(不含演出);承办展览展示活动;演出经纪;广播电视节目制作;健康咨询;货物及技术的进出口业务。(依法须经批准的项目,经相关部门批准后方可开展经营活动)"
+    },
+    "content_hash": "0ded5aaf24cb"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

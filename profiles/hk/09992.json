@@ -1,0 +1,42 @@
+{
+  "id": "HK:09992",
+  "market": "HK",
+  "code": "09992",
+  "name": "泡泡玛特",
+  "version": 1,
+  "created_at": "2026-09-29T10:44:28",
+  "updated_at": "2026-09-29T10:44:28",
+  "raw": {
+    "fetched_at": "2026-09-29T10:44:28",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "泡泡玛特国际集团有限公司(09992.HK)成立于2010年,作为全球领先的潮流文化娱乐集团,泡泡玛特以IP为核心,为全球创作者打造了全链路创意孵化与运营平台,给消费者提供令人心动的产品、服务及美好的娱乐体验。泡泡玛特在全球范围内挖掘极具潜力的潮流艺术家和设计师,通过成熟的IP运营体系,打造潮流文化领域备受欢迎的IP形象及产品。目前孵化及开发了MOLLY、SKULLPANDA、DIMOO、THEMONSTERS、Hirono等知名IP。公司围绕旗下IP推出众多广受欢迎的潮玩及周边商品,不断引领消费潮流。截至2025年上半年,泡泡玛特在全球共开设超过550家线下门店和超过2500台机器人商店,并通过多个跨境电商平台触达全球超过90个国家和地区,为全球年轻消费者带来更多快乐。",
+    "main_business": "是一家主要从事潮流玩具的产品设计与开发及销售的投资控股公司。该公司拥有覆盖潮流玩具知识产权(IP)全产业链的综合运营平台,业务包括IP孵化与运营、潮流玩具与零售、主题乐园与体验和数字娱乐。该公司的产品包括盲盒、手办、球形关节娃娃(BJD)、MEGA、毛绒玩具和衍生品及其他。该公司的自主产品主要分为艺术家IP和授权IP。该公司产品销往国内外市场。",
+    "vision": "",
+    "meta": {
+      "org_name": "泡泡玛特国际集团有限公司",
+      "org_name_en": "POP MART INTERNATIONAL GROUP LIMITED",
+      "chairman": "王宁",
+      "secretary": "李菁怡,李鸿轩",
+      "founded": "2019-05-09",
+      "listed": "2020-12-11 00:00:00",
+      "website": "www.popmart.com",
+      "address": "中国北京市朝阳区大望京科技商务园区宏泰东街浦项中心A座36及37楼,香港德辅道中188号金龙中心19楼",
+      "employees": "10879",
+      "industry": "家庭电器及用品",
+      "auditor": "罗兵咸永道会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "d8fec4185f21"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

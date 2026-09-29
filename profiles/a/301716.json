@@ -1,0 +1,49 @@
+{
+  "id": "A:301716",
+  "market": "A",
+  "code": "301716",
+  "name": "N鸿富诚",
+  "version": 1,
+  "created_at": "2026-09-29T10:42:43",
+  "updated_at": "2026-09-29T10:42:43",
+  "raw": {
+    "fetched_at": "2026-09-29T10:42:43",
+    "source": "eastmoney_f10_org_basicinfo",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "深圳市鸿富诚新材料股份有限公司成立于2003年,总部位于深圳,在重庆、浙江、武汉、马来西亚、泰国设立了子公司,是一家专注于先进热管理材料及EMC材料研发、制造与销售一体化的企业。公司面向AI大功率芯片、光模块、数据中心、5G通信、汽车智驾、消费终端等领域开发了一系列具有自主知识产权的先进热界面材料,其中包括取向石墨烯导热垫片、取向碳纤维垫片、液态金属片等特色产品。公司主持制订3项企标、3项行标及3项团标,参与制订1项国标;通过ISO9001、ISO14001、IATF16949、ISO45001、QC080000、知识产权管理等体系认证。2022年公司荣获国家级专精特新“小巨人”资质。与此同时,还获得R&D100创新奖、爱迪生发明奖、日内瓦发明金奖及美国CES创新奖等国际权威奖项。入选“深圳知名品牌”、“深圳高成长企业TOP100”及“深圳市绿色工厂”等奖项。",
+    "main_business": "专注热管理、电磁屏蔽和吸波等先进电子功能材料及器件研发、产业化",
+    "vision": "",
+    "meta": {
+      "org_name": "深圳市鸿富诚新材料股份有限公司",
+      "chairman": "孙爱祥",
+      "president": "窦兰月",
+      "secretary": "杨健虹",
+      "founded": "2003-05-13 00:00:00",
+      "listed": "2026-09-29 00:00:00",
+      "website": "www.hfcsz.com",
+      "address": "深圳市宝安区腾丰四路11号A栋、B栋三层",
+      "real_controller": "孙爱祥、赵建平",
+      "independent_directors": "姜胜林,周卫华,符春林",
+      "employees": "694",
+      "industry": "电子设备-电子器件-其他电子器件",
+      "org_form": "中小微民企",
+      "top_profit_product": "热管理材料及器件",
+      "income_structure": "热管理材料及器件、屏蔽材料、吸波材料、其他业务",
+      "income_structure_ratio": "80.50%、13.88%、5.29%、0.34%",
+      "auditor": "立信会计师事务所(特殊普通合伙)",
+      "concepts": "新材料,融资融券,创业板综",
+      "business_scope": "一般经营项目:屏蔽材料的研发及销售;导热材料的研发及销售;吸波材料的研发及销售;超导热元器件的研发及销售;国内商业、物资供销业;货物及技术进出口。(以上均不含法律、行政法规、国务院决定禁止及规定需。前置审批项目)。公司应当在登记的经营范围内从事活动。许可经营项目:屏蔽材料的生产;导热材料的生产;吸波材料的生产;超导热元器件的生产。"
+    },
+    "content_hash": "32d75c3aa1d7"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

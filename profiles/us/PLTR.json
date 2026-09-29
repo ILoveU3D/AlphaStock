@@ -1,0 +1,37 @@
+{
+  "id": "US:PLTR",
+  "market": "US",
+  "code": "PLTR",
+  "name": "Palantir Technologies Inc-A",
+  "version": 1,
+  "created_at": "2026-09-29T11:22:50",
+  "updated_at": "2026-09-29T11:22:50",
+  "raw": {
+    "fetched_at": "2026-09-29T11:22:50",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/pltr/",
+    "summary": "Palantir Technologies Inc. builds and deploys software platforms for the intelligence community to assist in counterterrorism investigations and operations in the United States, the United Kingdom, and internationally. It provides Palantir Gotham integrates with other platforms for defense offerings which enables users to see, understand, and act in the modern battlespace; operations centers to the tactical edge; integrating data from domains and sensors in near real-time; and situational awareness and accelerating operational decision-making, ...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Palantir Technologies Inc.",
+      "sic": "7372",
+      "industry": "Services-Prepackaged Software",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "cik": "1321655"
+    },
+    "content_hash": "0c4121b3d66e"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

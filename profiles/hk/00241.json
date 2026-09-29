@@ -1,0 +1,41 @@
+{
+  "id": "HK:00241",
+  "market": "HK",
+  "code": "00241",
+  "name": "阿里健康",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:24",
+  "updated_at": "2026-09-29T10:43:24",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:24",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "阿里健康信息技术有限公司是阿里巴巴集团整合线上线下医药和健康行业资源,提供一站式医疗解决方案的旗舰平台。阿里健康以用户需求为中心,充分发挥现有医药电子商务优势,同时探索互联网医疗创新商业模式。依托领先的数字技术和数字运营能力,以“云基建”为基础,“云药房”为核心、“云医院”为引擎,为亿万家庭提供普惠便捷、高效安全的医疗健康服务。阿里健康的主营业务包括医药自营业务、医药电商平台业务、医疗健康及数字化服务业务。凭借互联网科技与数字技术领域的优势,以及深耕多年的品牌优势与资源,阿里健康在医生、药企商家及患者用户间构筑起解决供需关系的关键桥梁,打造出线上线下一体化的医药健康品服务平台,并不断提升用户体验。",
+    "main_business": "为医疗医药行业提供产业互联网解决方案的投资控股公司,是阿里巴巴控股在大健康领域的旗舰平台。该公司主要从事发展医药健康产品销售业务,营运医药电商平台及消费医疗服务平台,通过云计算、大数据等技术发展追溯及数字医疗及互联网医疗业务。",
+    "vision": "",
+    "meta": {
+      "org_name": "阿里健康信息技术有限公司",
+      "org_name_en": "Alibaba Health Information Technology Limited",
+      "chairman": "余涌",
+      "secretary": "邓燕,徐晓亮",
+      "listed": "1972-07-06 00:00:00",
+      "website": "www.alihealth.cn",
+      "address": "香港铜锣湾勿地臣街1号时代广场1座26楼",
+      "employees": "1394",
+      "industry": "药品及生物科技",
+      "auditor": "安永会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "c25f56536c71"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

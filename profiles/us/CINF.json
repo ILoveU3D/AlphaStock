@@ -1,0 +1,38 @@
+{
+  "id": "US:CINF",
+  "market": "US",
+  "code": "CINF",
+  "name": "辛辛那提金融",
+  "version": 1,
+  "created_at": "2026-09-29T11:00:13",
+  "updated_at": "2026-09-29T11:00:13",
+  "raw": {
+    "fetched_at": "2026-09-29T11:00:13",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/cinf/",
+    "summary": "Cincinnati Financial Corporation provides property casualty insurance products in the United States. The company operates through five segments: Commercial Lines Insurance, Personal Lines Insurance, Excess and Surplus Lines Insurance, Life Insurance, and Investments. The Commercial Lines Insurance segment offers coverage for commercial casualty and property, commercial auto, and workersâ compensation. This segment also provides contract and commercial surety bonds, and fidelity bonds; management liability; and machinery and equipment insurance ...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "CINCINNATI FINANCIAL CORP",
+      "sic": "6331",
+      "industry": "Fire, Marine & Casualty Insurance",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "OH",
+      "cik": "20286"
+    },
+    "content_hash": "b60edab5f095"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

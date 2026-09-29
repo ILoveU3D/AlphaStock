@@ -1,0 +1,38 @@
+{
+  "id": "US:JEF",
+  "market": "US",
+  "code": "JEF",
+  "name": "Jefferies Financial Group Inc",
+  "version": 1,
+  "created_at": "2026-09-29T11:14:30",
+  "updated_at": "2026-09-29T11:14:30",
+  "raw": {
+    "fetched_at": "2026-09-29T11:14:30",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/jef/",
+    "summary": "Jefferies Financial Group Inc. operates as an investment banking and capital markets firm in the Americas, Europe, the Middle East, and the Asia-Pacific. It operates in two segments, Investment Banking and Capital Markets, and Asset Management. The company provides investment banking and advisory services for mergers or acquisitions, debt financing, restructurings, and private capital advisory transactions; underwriting and placement services related to corporate debt, municipal debt, mortgage-backed and asset-backed securities, equity and equi...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Jefferies Financial Group Inc.",
+      "sic": "6211",
+      "industry": "Security Brokers, Dealers & Flotation Companies",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1130",
+      "state_of_incorporation": "NY",
+      "cik": "96223"
+    },
+    "content_hash": "3f8fa17b6c7b"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

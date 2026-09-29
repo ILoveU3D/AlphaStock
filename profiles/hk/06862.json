@@ -1,0 +1,42 @@
+{
+  "id": "HK:06862",
+  "market": "HK",
+  "code": "06862",
+  "name": "海底捞",
+  "version": 1,
+  "created_at": "2026-09-29T10:44:23",
+  "updated_at": "2026-09-29T10:44:23",
+  "raw": {
+    "fetched_at": "2026-09-29T10:44:23",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "海底捞国际控股有限公司创建于1994年,历经三十几年的发展,海底捞国际控股有限公司已经成长为国际知名的餐饮企业。截至2024年年底,海底捞品牌共经营1368家餐厅,其中自营餐厅中国大陆地区1332家,港澳台地区共23家,加盟餐厅共13家,整个大中华区的自营海底捞餐厅共计服务顾客超过4.15亿人次。海底捞多年来历经市场和顾客的检验,成功地打造出信誉度高,融汇各地火锅特色于一体的优质火锅品牌。海底捞秉承诚信经营的理念,以提升食品质量的稳定性和安全性为前提条件,为广大消费者提供更贴心的服务,更健康、更安全、更营养和更放心的食品。",
+    "main_business": "是一家主要从事餐厅经营业务的中国公司。该公司主要从事“海底捞”品牌的连锁火锅店的经营业务。该公司还从事外卖业务以及调味品及食材的销售业务。该公司主要在中国国内市场开展业务。",
+    "vision": "",
+    "meta": {
+      "org_name": "海底捞国际控股有限公司",
+      "org_name_en": "HAIDILAO INTERNATIONAL HOLDING LTD.",
+      "chairman": "张勇",
+      "secretary": "李朋,胡倩铷",
+      "founded": "2015-07-14",
+      "listed": "2018-09-26 00:00:00",
+      "website": "www.haidilao.com",
+      "address": "香港湾仔皇后大道东248号大新金融中心40楼",
+      "employees": "113325",
+      "industry": "旅游及消闲设施",
+      "auditor": "德勤·关黄陈方会计师行",
+      "org_form": "一般企业"
+    },
+    "content_hash": "8792115ce6c1"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

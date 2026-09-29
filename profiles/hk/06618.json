@@ -1,0 +1,42 @@
+{
+  "id": "HK:06618",
+  "market": "HK",
+  "code": "06618",
+  "name": "京东健康",
+  "version": 1,
+  "created_at": "2026-09-29T10:44:22",
+  "updated_at": "2026-09-29T10:44:22",
+  "raw": {
+    "fetched_at": "2026-09-29T10:44:22",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "京东健康股份有限公司是中国最大的在线医疗健康平台,也是医疗产业链数字化改造的领跑者,致力于打造以医药及健康产品供应为核心,医疗服务为抓手,数字驱动的用户全生命周期全场景的健康管理平台。其零售药房和在线医疗健康服务业务可以满足用户对于健康领域的各方面需求,让国民享有易得、便捷、优质和可负担的医疗健康产品与服务。",
+    "main_business": "是一家主要从事“互联网+医疗健康”生态系统业务的中国投资控股公司。该公司主要为客户提供医药和健康产品、互联网医疗、健康管理及智能医疗保健解决方案及为业务合作夥伴提供市场营销服务。该公司主要在国内市场开展业务。",
+    "vision": "",
+    "meta": {
+      "org_name": "京东健康股份有限公司",
+      "org_name_en": "JD Health International Inc.",
+      "chairman": "刘强东",
+      "secretary": "赵明璟",
+      "founded": "2018-11-30",
+      "listed": "2020-12-08 00:00:00",
+      "website": "ir.jdhealth.com",
+      "address": "香港铜锣湾希慎道33号利园一期19楼1901室,中华人民共和国北京市大兴区亦庄经济技术开发区科创十一街20号院京东总部二号楼C座",
+      "employees": "6018",
+      "industry": "药品及生物科技",
+      "auditor": "德勤·关黄陈方会计师行",
+      "org_form": "一般企业"
+    },
+    "content_hash": "4b19c6d36102"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

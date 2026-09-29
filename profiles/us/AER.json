@@ -1,0 +1,38 @@
+{
+  "id": "US:AER",
+  "market": "US",
+  "code": "AER",
+  "name": "AerCap飞机租赁",
+  "version": 1,
+  "created_at": "2026-09-29T10:45:48",
+  "updated_at": "2026-09-29T10:45:48",
+  "raw": {
+    "fetched_at": "2026-09-29T10:45:48",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/aer/",
+    "summary": "AerCap Holdings N.V. engages in the lease, financing, sale, and management of commercial flight equipment in the United States, China, and internationally. The company engages in aircraft and engine asset management services, such as remarketing aircraft and engines for lease or sale; collecting rental and supplemental maintenance rent payments, monitoring aircraft maintenance, monitoring and enforcing contract compliance, and accepting delivery and redelivery of aircraft and engines; conducting ongoing lessee financial performance reviews. Its...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "AerCap Holdings N.V.",
+      "sic": "7359",
+      "industry": "Services-Equipment Rental & Leasing, NEC",
+      "entity_type": "other",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "P7",
+      "cik": "1378789"
+    },
+    "content_hash": "c7506e32b3de"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

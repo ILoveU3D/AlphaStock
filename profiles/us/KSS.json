@@ -1,0 +1,38 @@
+{
+  "id": "US:KSS",
+  "market": "US",
+  "code": "KSS",
+  "name": "柯尔百货",
+  "version": 1,
+  "created_at": "2026-09-29T11:14:46",
+  "updated_at": "2026-09-29T11:14:46",
+  "raw": {
+    "fetched_at": "2026-09-29T11:14:46",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/kss/",
+    "summary": "Kohl's Corporation operates as an omnichannel retailer in the United States. It offers apparel, footwear, accessories, beauty products, and home products through its stores and website. The company provides its products primarily under the brand names of Apt. 9, Croft & Barrow, FLX, Jumping Beans, SO, Sonoma Goods for Life, and Tek Gear, as well as LC Lauren Conrad, Nine West, and Simply Vera Vera Wang. Kohl's Corporation was founded in 1988 and is headquartered in Menomonee Falls, Wisconsin.",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "KOHLS Corp",
+      "sic": "5311",
+      "industry": "Retail-Department Stores",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "0129",
+      "state_of_incorporation": "WI",
+      "cik": "885639"
+    },
+    "content_hash": "4a5cd8e4f942"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

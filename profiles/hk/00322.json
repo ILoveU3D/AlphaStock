@@ -1,0 +1,42 @@
+{
+  "id": "HK:00322",
+  "market": "HK",
+  "code": "00322",
+  "name": "康师傅控股",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:26",
+  "updated_at": "2026-09-29T10:43:26",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:26",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "康师傅控股有限公司是一家主要从事生产和销售方便面和饮料的投资控股公司。该公司运营三个分部。方便面分部从事生产和销售方便面产品,包括双享桶、迷你桶和干拌桶,以及Express速达面馆系列产品。饮品分部提供不同种类的饮料,包括即饮茶,比如康师傅冰红茶和康师傅奶茶;碳酸饮料,比如百事可乐、美年达和七喜;果汁,比如冰糖雪梨;包装水;以及咖啡饮料、功能饮料和乳酸菌饮料,比如贝纳颂咖啡。其他分部的业务包括方便食品的生产和销售。",
+    "main_business": "是一家主要从事方便面及饮品的制造及销售的投资控股公司。该公司主要通过三个分部开展业务。方便面分部包括红烧牛肉面、老坛酸菜牛肉面、番茄鸡蛋牛肉面、干脆面等方便面产品的制造及销售。饮品分部包括即饮茶(RTD)、碳酸饮料、果汁、包装水、咖啡饮料、功能饮料、乳酸菌饮料等产品的制造及销售。其他分部包括投资性房地产租赁等业务。",
+    "vision": "",
+    "meta": {
+      "org_name": "康师傅控股有限公司",
+      "org_name_en": "Tingyi (Cayman Islands) Holding Corp.",
+      "chairman": "魏宏名",
+      "secretary": "叶沛林",
+      "founded": "1994-01-12",
+      "listed": "1996-02-05 00:00:00",
+      "website": "www.masterkong.com.cn",
+      "address": "中国上海闵行区吴中路1688号A栋,香港湾仔港湾道18号中环广场56楼5607室",
+      "employees": "59096",
+      "industry": "食物饮品",
+      "auditor": "富睿玛泽会计师事务所有限公司",
+      "org_form": "一般企业"
+    },
+    "content_hash": "01b99d543d63"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

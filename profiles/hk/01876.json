@@ -1,0 +1,42 @@
+{
+  "id": "HK:01876",
+  "market": "HK",
+  "code": "01876",
+  "name": "百威亚太",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:51",
+  "updated_at": "2026-09-29T10:43:51",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:51",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "百威亚太控股有限公司是一家主要从事啤酒酿造及经销的投资控股公司,为AB InBev Group的一部分。人才是公司最大的优势,公司梦想远大,而公司的主人翁精神文化推动公司取得成功。截至2018年12月31日,公司的泛亚平台由遍布亚太地区的超过31,000名全职雇员、62家酿酒厂及74个经销中心组成。公司为按零售额计亚太地区最大啤酒公司,截至2018年,该地区为按销量及价值计的最大啤酒消费区,亦是全球增速最高的啤酒消费区之一,预期未来持续增长(根据Global Data的资料,未来五年按啤酒价值计的的复合年增长率为4.8%)。 於2018年,按正常化除息税折旧摊销前盈利计,公司亦是以亚洲为基地的啤酒公司中溢利最高的其中一家。公司的业务独特而多元化,在高溢利市场均占据领先地位,而且在高增长及利润扩大的市场稳定增长。公司在多个亚太地区主要市场占据领先地位。",
+    "main_business": "是一家主要从事啤酒酿造及经销的投资控股公司。该公司生产、进口、推广、经销及出售该公司拥有或许可使用的啤酒品牌组合,包括百威、时代、科罗娜、福佳、凯狮及哈尔滨。该公司还生产、推广、经销及出售其他非啤酒类饮品。该公司主要在中国、韩国、印度、越南和其他亚太地区分销其产品。",
+    "vision": "",
+    "meta": {
+      "org_name": "百威亚太控股有限公司",
+      "org_name_en": "Budweiser Brewing Company APAC Limited",
+      "chairman": "程衍俊,邓明潇",
+      "secretary": "何咏紫,朱隽清",
+      "founded": "2019-04-10",
+      "listed": "2019-09-30 00:00:00",
+      "website": "www.budweiserapac.com",
+      "address": "香港铜锣湾轩尼诗道500号希慎广场27楼2701室",
+      "employees": "21227",
+      "industry": "食物饮品",
+      "auditor": "罗兵咸永道会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "ba7b2a4c3d79"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "HK:06693",
+  "market": "HK",
+  "code": "06693",
+  "name": "赤峰黄金",
+  "version": 1,
+  "created_at": "2026-09-29T10:44:23",
+  "updated_at": "2026-09-29T10:44:23",
+  "raw": {
+    "fetched_at": "2026-09-29T10:44:23",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "赤峰吉隆黄金矿业集团股份有限公司是一家快速成长的国际化黄金生产商,主要在全球范围内从事黄金的采、选和销售业务。公司拥有中国、东南亚和西非的7个矿业投资项目和1个资源综合回收利用项目,矿业投资项目包括中国境内的吉隆矿业-撰山子金矿、五龙矿业-五龙金矿、华泰矿业-红花沟金矿、锦泰矿业-溪灯坪金矿、瀚丰矿业-天宝山锌铅铜钼多金属矿,境外的万象矿业-塞班金铜矿、金星资源-瓦萨金矿,资源综合回收利用项目是位于中国安徽省合肥市的广源科技,从事的废弃电器电子产品拆解业务。公司秉承\"让更多的人因赤峰黄金的发展而受益\"的核心价值观,高度重视环境、安全,重视人文关怀、承担社会责任。公司始终以高“ESG”标准坚持高质量可持续发展,致力于遵循相关行业最高标准及最佳实践。作为一家成长中的黄金上市公司,赤峰黄金致力于\"做专注、专业的黄金矿山公司\",通过不断创新管理机制,坚持低成本运营,加大对黄金资源的收购整合力度,实现资源的有效利用、合理开发,坚持国际化道路,努力成为全球欢迎的主要黄金生产商。",
+    "main_business": "黄金的开采、选矿及销售",
+    "vision": "",
+    "meta": {
+      "org_name": "赤峰吉隆黄金矿业集团股份有限公司",
+      "org_name_en": "Chifeng Jilong Gold Mining Group Limited",
+      "chairman": "王建华",
+      "secretary": "黄学斌",
+      "founded": "1998-06-22",
+      "listed": "2025-03-10 00:00:00",
+      "website": "www.cfgold.com",
+      "address": "中国北京市丰台区万丰路小井甲七号,香港湾仔港湾道26号华润大厦19楼1905室",
+      "employees": "6738",
+      "industry": "黄金及贵金属",
+      "auditor": "安永会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "6a9a4fa49170"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

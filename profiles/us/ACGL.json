@@ -1,0 +1,37 @@
+{
+  "id": "US:ACGL",
+  "market": "US",
+  "code": "ACGL",
+  "name": "艾奇资本",
+  "version": 1,
+  "created_at": "2026-09-29T10:45:05",
+  "updated_at": "2026-09-29T10:45:05",
+  "raw": {
+    "fetched_at": "2026-09-29T10:45:05",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/acgl/",
+    "summary": "Arch Capital Group Ltd., together with its subsidiaries, provides insurance, reinsurance, and mortgage insurance products in the United States, Canada, Bermuda, the United Kingdom, Europe, and Australia. The company operates through three segments: Insurance, Reinsurance, and Mortgage. The Insurance segment offers commercial automobile; commercial multiperil; financial and professional line liability; admitted, excess, and surplus casualty lines; property and short-tail specialty; workers compensation; and casualty insurance. Its Reinsurance se...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "ARCH CAPITAL GROUP LTD.",
+      "sic": "6331",
+      "industry": "Fire, Marine & Casualty Insurance",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "cik": "947484"
+    },
+    "content_hash": "0bc0e00290f1"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

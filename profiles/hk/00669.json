@@ -1,0 +1,42 @@
+{
+  "id": "HK:00669",
+  "market": "HK",
+  "code": "00669",
+  "name": "创科实业",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:29",
+  "updated_at": "2026-09-29T10:43:29",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:29",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "创科实业有限公司(「创科实业」或「公司」)于一九八五年由德国企业家Horst Julius Pudwill创立, 是领导全球充电式技术的领导者。作为电动工具、户外园艺工具、地板护理及清洁产品等的先驱,创科实业为全球专业、工业、DIY和消费者市场提供服务。公司借着努力不懈追求创新及战略增长,巩固了公司在行业中的领导地位。MILWAUKEE是创科实业专业工具组合的前锋。历史悠久的MILWAUKEE品牌的全球研发总部设在威斯康辛州布鲁克菲尔德,以推动创新、安全和工地生产力而闻名于世。 RYOBI品牌的总部位于南卡罗莱纳州格林维尔,长久以来一直是DIY爱好者的首选,并不断为DIY工具行业订立创新的标准。创科实业旗下多元品牌组合还包括AEG、 EMPIRE、HOMELITE等深受信赖的品牌,以及HOOVER、 ORECK、VAX及总部位于北卡罗来纳州夏洛特的DIRT DEVIL等地板护理产品的领导品牌。创科实业誉满全球,拥有著名品牌组合 ,及强大的股权结构,突显了公司业务的全球性和稳定性。 Pudwill家族一直都是公司的最大的股东,其余股权主要则由北美和欧洲机构投资者持有。创科实业在香港联交所挂牌上市,是恒生指数成份股之一,业务范围遍及全球,并致力于保持环境、社会和企业管治的标准。",
+    "main_business": "主要从事电动工具产品业务的投资控股公司。该公司主要通过两大分部运营。电动工具分部从事出售电动工具、电动工具配件、户外园艺工具及户外园艺工具配件。其电动工具产品通过MILWAUKEE、EMPIRE、AEG、RYOBI、HOMELITE、ImperialBlades、STILETTO、以及HART品牌营销或原设计制造商客户出售。地板护理及清洁分部出售地板护理产品及地板护理配件。其地板护理及清洁产品通过HOOVER、DIRTDEVIL、VAX及ORECK品牌或原设计制造商客户出售。",
+    "vision": "",
+    "meta": {
+      "org_name": "创科实业有限公司",
+      "org_name_en": "TECHTRONIC INDUSTRIES CO. LTD.",
+      "chairman": "Horst Julius Pudwill",
+      "secretary": "伍家宝",
+      "founded": "1985-05-24",
+      "listed": "1990-12-17 00:00:00",
+      "website": "www.ttigroup.com",
+      "address": "香港新界葵涌葵昌路51号九龙贸易中心二座29楼",
+      "employees": "47575",
+      "industry": "家庭电器及用品",
+      "auditor": "德勤·关黄陈方会计师行",
+      "org_form": "一般企业"
+    },
+    "content_hash": "a6ea15727f47"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

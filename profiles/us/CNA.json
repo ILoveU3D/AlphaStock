@@ -1,0 +1,38 @@
+{
+  "id": "US:CNA",
+  "market": "US",
+  "code": "CNA",
+  "name": "CNA金融",
+  "version": 1,
+  "created_at": "2026-09-29T11:00:26",
+  "updated_at": "2026-09-29T11:00:26",
+  "raw": {
+    "fetched_at": "2026-09-29T11:00:26",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/cna/",
+    "summary": "CNA Financial Corporation, an insurance holding company, primarily provides commercial property and casualty insurance products in the United States, Canada, the United Kingdom, Continental Europe, and internationally. It operates through Specialty, Commercial, International, and Life & Group segments. The company offers professional liability coverage and risk management services to various professional firms, including architects, real estate agents, and accounting and law firms; directors and officers, errors and omissions, employment practi...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "CNA FINANCIAL CORP",
+      "sic": "6331",
+      "industry": "Fire, Marine & Casualty Insurance",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "21175"
+    },
+    "content_hash": "2d9ec64ac861"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

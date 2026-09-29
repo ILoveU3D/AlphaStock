@@ -1,0 +1,38 @@
+{
+  "id": "US:ESE",
+  "market": "US",
+  "code": "ESE",
+  "name": "ESCO科技",
+  "version": 1,
+  "created_at": "2026-09-29T11:05:28",
+  "updated_at": "2026-09-29T11:05:28",
+  "raw": {
+    "fetched_at": "2026-09-29T11:05:28",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/ese/",
+    "summary": "ESCO Technologies Inc. provides engineered components and systems for aviation, navy, defense, and industrial customers. The Aerospace & Defense segment designs and manufactures specialty filtration products, including hydraulic filter elements and fluid control devices used in commercial and defense aerospace applications; miniature electro-explosive devices for military aircraft ejection seats and missile arming devices; manufactures and sells mission-critical bushings, pins, sleeves, and precision-tolerance machined components for landing ge...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "ESCO TECHNOLOGIES INC",
+      "sic": "3669",
+      "industry": "Communications Equipment, NEC",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "0930",
+      "state_of_incorporation": "MO",
+      "cik": "866706"
+    },
+    "content_hash": "5640a68e564a"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

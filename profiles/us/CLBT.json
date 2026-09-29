@@ -1,0 +1,37 @@
+{
+  "id": "US:CLBT",
+  "market": "US",
+  "code": "CLBT",
+  "name": "Cellebrite DI Ltd",
+  "version": 1,
+  "created_at": "2026-09-29T11:00:17",
+  "updated_at": "2026-09-29T11:00:17",
+  "raw": {
+    "fetched_at": "2026-09-29T11:00:17",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/clbt/",
+    "summary": "Cellebrite DI Ltd. develops software and services for legally sanctioned investigations in Europe, the Middle East, Africa, the Americas, and the Asia-Pacific. The company provides a platform of software solutions used to access, collect, review, extract, decode, decrypt, analyze, share and manage digital evidence across the investigative lifecycle for a range of investigations, such as child exploitation, homicide, anti-terror, border control, sexual crimes, organized crime, human trafficking, corporate security, and intellectual property thef...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Cellebrite DI Ltd.",
+      "sic": "7372",
+      "industry": "Services-Prepackaged Software",
+      "entity_type": "other",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "cik": "1854587"
+    },
+    "content_hash": "d045a9cba5a2"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "id": "US:ADBE",
+  "market": "US",
+  "code": "ADBE",
+  "name": "奥多比",
+  "version": 1,
+  "created_at": "2026-09-29T10:45:43",
+  "updated_at": "2026-09-29T10:45:43",
+  "raw": {
+    "fetched_at": "2026-09-29T10:45:43",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/adbe/",
+    "summary": "Adobe Inc. operates as a technology company worldwide. The Digital Media segment offers products and services that enable individuals, teams, and enterprises to create, publish, and promote content. This segment serves photographers, video editors, graphic and experience designers, game developers, content creators, students, marketers, business owners, knowledge workers, and consumers. The Digital Experience segment provides an integrated platform; and products, services, and solutions that enable brands and businesses to create, manage, execu...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "ADOBE INC.",
+      "sic": "7372",
+      "industry": "Services-Prepackaged Software",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1127",
+      "state_of_incorporation": "DE",
+      "cik": "796343"
+    },
+    "content_hash": "b41fe15ac3c4"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

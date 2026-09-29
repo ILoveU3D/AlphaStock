@@ -1,0 +1,42 @@
+{
+  "id": "HK:03306",
+  "market": "HK",
+  "code": "03306",
+  "name": "江南布衣",
+  "version": 1,
+  "created_at": "2026-09-29T10:44:10",
+  "updated_at": "2026-09-29T10:44:10",
+  "raw": {
+    "fetched_at": "2026-09-29T10:44:10",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "江南布衣有限公司是一家有影响力的设计师品牌时尚公司,创立于1994年,2016年在港交所上市(股票代码:03306),总部位于中国杭州。公司主营业务为设计、推广及销售时尚服装、鞋类、配饰和家居产品,品牌组合包括JNBY女装、速写男装、jnbybyJNBY童装、LESS女装、蓬马(POMME DE TERRE)童装、JNBYHOME家居、onmygame童装和可持续生活品牌RE;RE;RE;LAB。每一个品牌专注于独特的细分消费者群体,并且拥有各自的独特设计形象。多元化、细分化的品牌组合,使江南布衣可以为大多数年龄阶层的消费者提供产品和服务。同时,江南布衣不断推出包括“BOX不止盒子”及“江南布衣”多品牌集合店等新兴消费场景或产品,力求为消费者提供更多增值服务。截止至2025年6月30日,江南布衣在全球的独立实体零售店共计2,117家,其中2,099家位于中国内地、中国香港和中国台湾,其余的分布在8个国家(澳大利亚、马来西亚等)。此外,江南布衣还拥有和运营「B1OCK」,融合当代艺术与生活美学的买手制百货品牌。秉承“艺术探索美好生活(Better Design,Better Life)”的企业使命和践行“值得信赖、多元包容、探索创新、有效执行、持续成长”的企业价值观,江南布衣致力于构筑充满艺术感的生活氛围,让消费者从多元化的艺术设计产品中获得更多乐趣,体味更美好的艺术生活。",
+    "main_business": "主要从事时尚服装、配饰产品及家居用品的设计、营销及销售。该公司主要通过三个分部运营其业务。成熟品牌分部是指“JNBY”。成长品牌分部包括“速写”、“jnby by JNBY”及“LESS”。新兴品牌分部包括“蓬马”、“JNBYHOME”、 “onmygame”、“B1OCK”等。该公司的产品包括女士、男士、儿童及青少年时尚服装、鞋类、配饰及家居类产品。该公司在中国国内和海外市场开展业务。",
+    "vision": "",
+    "meta": {
+      "org_name": "江南布衣有限公司",
+      "org_name_en": "JNBY Design Limited",
+      "chairman": "吴健",
+      "secretary": "钱晓萍,崔嘉欣",
+      "founded": "2012-11-26",
+      "listed": "2016-10-31 00:00:00",
+      "website": "www.jiangnanbuyigroup.com.cn",
+      "address": "香港九龙尖沙咀科学馆道1号康宏广场北座航天科技大厦22楼9室,中国浙江省杭州市西湖区天目山路398号天目里2–6号楼",
+      "employees": "1777",
+      "industry": "纺织及服饰",
+      "auditor": "德勤·关黄陈方会计师行",
+      "org_form": "一般企业"
+    },
+    "content_hash": "096f5cfa676b"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

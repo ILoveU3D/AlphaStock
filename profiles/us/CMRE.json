@@ -1,0 +1,38 @@
+{
+  "id": "US:CMRE",
+  "market": "US",
+  "code": "CMRE",
+  "name": "Costamare Inc",
+  "version": 1,
+  "created_at": "2026-09-29T11:00:23",
+  "updated_at": "2026-09-29T11:00:23",
+  "raw": {
+    "fetched_at": "2026-09-29T11:00:23",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/cmre/",
+    "summary": "Costamare Inc. owns and operates containerships and dry bulk vessels worldwide. Its containerships are chartered to liner companies providing transportation of cargoes. The company also charters dry bulk vessels to various customers providing worldwide transportation for dry bulk cargoes. As of February 24, 2026, it had a fleet of 79 containerships and 38 dry bulk vessels. The company was founded in 1974 and is based in Monaco.",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Costamare Inc.",
+      "sic": "4412",
+      "industry": "Deep Sea Foreign Transportation of  Freight",
+      "entity_type": "other",
+      "filer_category": "Accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "1T",
+      "cik": "1503584"
+    },
+    "content_hash": "859dd7788924"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

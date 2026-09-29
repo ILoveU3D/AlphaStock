@@ -1,0 +1,38 @@
+{
+  "id": "US:CARG",
+  "market": "US",
+  "code": "CARG",
+  "name": "CarGurus Inc-A",
+  "version": 1,
+  "created_at": "2026-09-29T10:53:38",
+  "updated_at": "2026-09-29T10:53:38",
+  "raw": {
+    "fetched_at": "2026-09-29T10:53:38",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/carg/",
+    "summary": "CarGurus, Inc. operates an online automotive platform for buying and selling vehicles in the United States and internationally. The company offers dealer subscription fees, advertising from auto manufacturers and other brand advertisers, and partnerships with financing services companies. It provides an online automotive marketplace that connects large audience of car shoppers with extensive network of dealers, anchoring integrated suite of products. It also offers Digital Deal which allows consumers the option to start their vehicle purchase p...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "CarGurus, Inc.",
+      "sic": "7374",
+      "industry": "Services-Computer Processing & Data Preparation",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "1494259"
+    },
+    "content_hash": "b9a2a7ef3294"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

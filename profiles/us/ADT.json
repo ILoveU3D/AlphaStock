@@ -1,0 +1,38 @@
+{
+  "id": "US:ADT",
+  "market": "US",
+  "code": "ADT",
+  "name": "ADT Inc",
+  "version": 1,
+  "created_at": "2026-09-29T10:45:46",
+  "updated_at": "2026-09-29T10:45:46",
+  "raw": {
+    "fetched_at": "2026-09-29T10:45:46",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/adt/",
+    "summary": "ADT Inc. provides security, interactive, and smart home solutions in the United States. The company offers burglar and life safety alarms, smart security cameras, smart home automation systems, and video surveillance systems to detect intrusion; control access; sense movement, smoke, fire, carbon monoxide, leaks, temperature, and other environmental conditions and hazards; and address personal medical emergencies, such as injuries or unanticipated falls. It also provides routine maintenance and installation services for upgraded or additional e...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "ADT Inc.",
+      "sic": "7381",
+      "industry": "Services-Detective, Guard & Armored Car Services",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "1703056"
+    },
+    "content_hash": "6a948b5a2453"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

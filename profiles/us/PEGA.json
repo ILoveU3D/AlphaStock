@@ -1,0 +1,38 @@
+{
+  "id": "US:PEGA",
+  "market": "US",
+  "code": "PEGA",
+  "name": "Pegasystems Inc",
+  "version": 1,
+  "created_at": "2026-09-29T11:21:54",
+  "updated_at": "2026-09-29T11:21:54",
+  "raw": {
+    "fetched_at": "2026-09-29T11:21:54",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/pega/",
+    "summary": "Pegasystems Inc. develops, markets, licenses, hosts, and supports enterprise software in the United States, rest of the Americas, the United Kingdom, rest of Europe, the Middle East, Africa, and the Asia-Pacific. It provides Pega Infinity, a software portfolio comprising of Pega Customer Decision Hub, a real-time AI-powered decision engine, which can predict a customerâs behavior and recommend the next best action to take across channels in real-time; Pega Customer Service to anticipate customer needs, connect customers to people and systems, a...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "PEGASYSTEMS INC",
+      "sic": "7374",
+      "industry": "Services-Computer Processing & Data Preparation",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "MA",
+      "cik": "1013857"
+    },
+    "content_hash": "c70d37a3a98e"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

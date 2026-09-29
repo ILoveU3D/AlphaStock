@@ -1,0 +1,42 @@
+{
+  "id": "HK:02018",
+  "market": "HK",
+  "code": "02018",
+  "name": "瑞声科技",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:53",
+  "updated_at": "2026-09-29T10:43:53",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:53",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "瑞声科技控股有限公司是感知体验解决方案的领导者,以打造感官体验技术的未来为企业目标。公司坚持技术创新,注重全球布局,经过数十年的行业深耕,公司与国内外终端客户建立紧密、长期、稳定的战略合作关系,在声学、光学、触感、传感器及半导体、精密制造等领域拥有强大的综合竞争力。公司的使命是创造极致体验,愿景是创造多元化价值和成为体验科技的领导者。在感知科学上,公司不断创新,打造各类全新的交互体验,为行业注入新的活力。在未来,公司将在智能手机、智能汽车、虚拟现实、现实增强、智能家居等多行业持续发力,开创感知体验新纪元。凭借优异的经营业绩和领先的制造能力公司近年连续荣获《福布斯》“亚太区最佳上市公司50强”、《机构投资者》“最受尊崇公司”、APEC“中国数字经济产业示范样本”等重要奖项。",
+    "main_business": "是一家中国的投资控股公司。该公司通过四个业务部门开展业务:光学业务部门、声学业务部门、电磁传动/精密结构件业务部门和微机电系统(MEMS)业务部门。该公司的主要产品包括声学产品、电磁传动及精密结构件、光学产品和微机电系统器件。",
+    "vision": "",
+    "meta": {
+      "org_name": "瑞声科技控股有限公司",
+      "org_name_en": "AAC Technologies Holdings Inc.",
+      "chairman": "张宏江",
+      "secretary": "何绍德,关慕宜",
+      "founded": "2003-12-04",
+      "listed": "2005-08-09 00:00:00",
+      "website": "www.aactechnologies.com",
+      "address": "香港湾仔轩尼诗道1号One Hennessy26楼2601室",
+      "employees": "41674",
+      "industry": "资讯科技器材",
+      "auditor": "德勤·关黄陈方会计师行",
+      "org_form": "一般企业"
+    },
+    "content_hash": "30533c0ba249"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "id": "US:PAA",
+  "market": "US",
+  "code": "PAA",
+  "name": "Plains All American Pipeline LP",
+  "version": 1,
+  "created_at": "2026-09-29T11:20:20",
+  "updated_at": "2026-09-29T11:20:20",
+  "raw": {
+    "fetched_at": "2026-09-29T11:20:20",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/paa/",
+    "summary": "Plains All American Pipeline, L.P., through its subsidiaries, engages in the pipeline transportation, terminalling, storage, and gathering of crude oil and natural gas liquids (NGL) in the United States and Canada. The company operates through two segments, Crude Oil and NGL. The Crude Oil segment offers gathering and transporting crude oil through pipelines, trucks, and on barges or railcars. This segment provides terminalling, storage, and other related services, as well as merchant activities. The NGL segment is involved in natural gas proce...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "PLAINS ALL AMERICAN PIPELINE LP",
+      "sic": "4610",
+      "industry": "Pipe Lines (No Natural Gas)",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "1070423"
+    },
+    "content_hash": "6fc3276dbfb2"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

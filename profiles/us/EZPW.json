@@ -1,0 +1,38 @@
+{
+  "id": "US:EZPW",
+  "market": "US",
+  "code": "EZPW",
+  "name": "艾茨克普",
+  "version": 1,
+  "created_at": "2026-09-29T11:05:41",
+  "updated_at": "2026-09-29T11:05:41",
+  "raw": {
+    "fetched_at": "2026-09-29T11:05:41",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/ezpw/",
+    "summary": "EZCORP, Inc. provides pawn services in the United States, Mexico, and Latin America. It operates through U.S. Pawn, Latin America Pawn, and Other Investments segments. The company retails merchandise, primarily collateral forfeited from pawn lending operations and pre-owned merchandise purchased from customers. It also provides pawn loans collateralized by tangible personal property, jewelry, consumer electronics, tools, sporting goods, and musical instruments. In addition, the company offers EZ+, a web-based application that allow customers to...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "EZCORP INC",
+      "sic": "5900",
+      "industry": "Retail-Miscellaneous Retail",
+      "entity_type": "operating",
+      "filer_category": "Accelerated filer",
+      "fiscal_year_end": "0930",
+      "state_of_incorporation": "DE",
+      "cik": "876523"
+    },
+    "content_hash": "47e8b2bc8045"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

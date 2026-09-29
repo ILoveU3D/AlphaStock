@@ -1,0 +1,37 @@
+{
+  "id": "US:FIS",
+  "market": "US",
+  "code": "FIS",
+  "name": "富达国民信息服务",
+  "version": 1,
+  "created_at": "2026-09-29T11:06:54",
+  "updated_at": "2026-09-29T11:06:54",
+  "raw": {
+    "fetched_at": "2026-09-29T11:06:54",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/fis/",
+    "summary": "Fidelity National Information Services, Inc. provides solutions to financial institutions, businesses, and developers worldwide. The company operates through Banking Solutions, Capital Market Solutions, and Corporate and Other segments. It provides core processing and ancillary applications; mobile and online banking; fraud, risk management, and compliance; card and retail payment; electronic funds transfer and network; wealth and retirement; and item processing and output solutions. The company also offers trading and assets, lending, leverage...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Fidelity National Information Services, Inc.",
+      "sic": "7389",
+      "industry": "Services-Business Services, NEC",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "cik": "1136893"
+    },
+    "content_hash": "dd1ec491f524"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

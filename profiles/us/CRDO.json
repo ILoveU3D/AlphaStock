@@ -1,0 +1,38 @@
+{
+  "id": "US:CRDO",
+  "market": "US",
+  "code": "CRDO",
+  "name": "Credo Technology Group Holding ",
+  "version": 1,
+  "created_at": "2026-09-29T11:00:56",
+  "updated_at": "2026-09-29T11:00:56",
+  "raw": {
+    "fetched_at": "2026-09-29T11:00:56",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/crdo/",
+    "summary": "Credo Technology Group Holding Ltd provides various high-speed connectivity solutions for optical and electrical Ethernet and PCIe applications in the United States, Taiwan, Mainland China, Hong Kong, and other international markets. The company offers ZeroFlap (ZF) active electrical cables and ZF optical transceivers, OmniConnect memory solutions, and a suite of retimers and DSPs for optical and copper Ethernet and PCIe, as well as integrated circuits, active electrical cables, and SerDes chiplets. It also provides intellectual property (IP) s...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Credo Technology Group Holding Ltd",
+      "sic": "3674",
+      "industry": "Semiconductors & Related Devices",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "0429",
+      "state_of_incorporation": "E9",
+      "cik": "1807794"
+    },
+    "content_hash": "16a7c61036ea"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

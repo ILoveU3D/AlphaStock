@@ -1,0 +1,42 @@
+{
+  "id": "HK:00019",
+  "market": "HK",
+  "code": "00019",
+  "name": "太古股份公司A",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:20",
+  "updated_at": "2026-09-29T10:43:20",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:20",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "太古股份有限公司A是基地设于香港的国际综合企业,其多元化的业务在市场拥有领先地位。公司在大中华区历史悠久,‘太古’的名字在这地区享誉超过一百五十年。公司的目标是透过长远地创造理想的权益回报以实现股东价值持续增长,及维持一般股息持续增长以将价值回馈股东。公司的策略是以大中华区及东南亚为业务重心,致力在该等地区发展地产、饮料及航空核心部门。公司正在医疗保健等新的领域开拓业务。",
+    "main_business": "是一家主要从事生产和销售饮料的投资控股公司。公司通过五个分部运营。饮料分部主要从事生产、推广及经销可口可乐公司产品,包括汽水、饮用水及其他饮料等。航空分部主要包括提供客运和货运服务的航空公司的联属权益,以及航空维修及修理业务。地产部门主要从事物业投资、酒店投资及管理,以及物业买卖,其投资组合包括办公楼及零售物业、酒店、服务式住宅及其他住宅物业。贸易及实业分部从事零售及经销鞋履、服装及有关用品,包装及销售糖产品,经营烘焙连锁店以及销售客车、商用车、摩托车及小型摩托车等。总办事处、医疗保健及其他分部主要包括投资于医疗保健业务,包括私营医院及诊所。",
+    "vision": "",
+    "meta": {
+      "org_name": "太古股份有限公司A",
+      "org_name_en": "Swire Pacific Limited A",
+      "chairman": "白德利",
+      "secretary": "麦洁贞",
+      "founded": "1940-03-12",
+      "listed": "1959-04-14 00:00:00",
+      "website": "www.swirepacific.com",
+      "address": "香港金钟道88号太古广场一座31楼",
+      "employees": "45798",
+      "industry": "综合企业",
+      "auditor": "罗兵咸永道会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "c8485a9caddf"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

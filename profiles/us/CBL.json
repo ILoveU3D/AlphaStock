@@ -1,0 +1,38 @@
+{
+  "id": "US:CBL",
+  "market": "US",
+  "code": "CBL",
+  "name": "CBL & Associates Properties Inc",
+  "version": 1,
+  "created_at": "2026-09-29T10:53:41",
+  "updated_at": "2026-09-29T10:53:41",
+  "raw": {
+    "fetched_at": "2026-09-29T10:53:41",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/cbl/",
+    "summary": "CBL & Associates Properties, Inc. is headquartered in Chattanooga, TN, CBL Properties owns and manages a national portfolio of market-dominant properties located in dynamic and growing communities. CBLâs owned and managed portfolio is comprised of 85 properties totaling 54.8 million square feet across 23 states, including 54 high-quality enclosed malls, outlet centers and lifestyle retail centers as well as more than 20 open-air centers and other assets. CBL seeks to continuously strengthen its company and portfolio through active management, a...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "CBL & ASSOCIATES PROPERTIES INC",
+      "sic": "6798",
+      "industry": "Real Estate Investment Trusts",
+      "entity_type": "operating",
+      "filer_category": "Accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "910612"
+    },
+    "content_hash": "14394c3e9a0e"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

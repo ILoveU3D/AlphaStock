@@ -1,0 +1,42 @@
+{
+  "id": "HK:01171",
+  "market": "HK",
+  "code": "01171",
+  "name": "兖矿能源",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:38",
+  "updated_at": "2026-09-29T10:43:38",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:38",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "兖矿能源集团股份有限公司(“兖矿能源”“公司”)成立于1997年,以矿业、高端化工新材料、新能源、高端装备制造、智慧物流为主导产业,资产和业务分布在山东、陕蒙、新疆以及境外的澳大利亚、北美、欧洲等国家和地区,是中国唯一一家拥有上海、香港、纽约、澳大利亚、法兰克福、慕尼黑等境内外六地上市平台的特大型能源企业。公司秉持“创造绿色动能、引领能源变革”的企业使命,主动融入国家“双碳”战略,聚力守正创新,加快变革转型,加快向世界一流、可持续发展的清洁能源引领示范企业迈进。凭借优良业绩、稳健经营、强劲国际竞争力和模范履行社会责任,公司获得了世界能源行业以及国内外资本市场的普遍认可。入选国务院国资委国企改革“双百企业”,三次获得“全国质量奖”,是中国唯一一家荣获“亚洲质量卓越奖”和“全球卓越绩效奖”的能源企业。连续多年荣获中国上市公司董事会金圆桌奖“最佳董事会”等荣誉,成为中国首家通过ESG管理体系认证的企业,位列“中国上市公司百强”第45位,全球矿业市值50强第38位。",
+    "main_business": "煤炭开采及销售、煤化工产品的生产及销售、物流运输业务以及设备制造和电力业务等",
+    "vision": "",
+    "meta": {
+      "org_name": "兖矿能源集团股份有限公司",
+      "org_name_en": "Yankuang Energy Group Company Limited",
+      "chairman": "李伟",
+      "secretary": "黄霄龙",
+      "founded": "1997-09-25",
+      "listed": "1998-04-01 00:00:00",
+      "website": "www.ykenergy.com,www.yanzhoucoal.com.cn",
+      "address": "中国山东省邹城市凫山南路949号",
+      "employees": "90921",
+      "industry": "煤炭",
+      "auditor": "天职国际会计师事务所(特殊普通合伙),天职香港会计师事务所有限公司",
+      "org_form": "一般企业"
+    },
+    "content_hash": "639935f99ef7"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

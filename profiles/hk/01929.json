@@ -1,0 +1,42 @@
+{
+  "id": "HK:01929",
+  "market": "HK",
+  "code": "01929",
+  "name": "周大福",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:52",
+  "updated_at": "2026-09-29T10:43:52",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:52",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "周大福珠宝集团有限公司,周大福珠宝集团的旗舰品牌‘周大福’创立于1929年,一直透过别出心裁的设计和对细节的坚持,让传统成为经典。时至今日,品牌已成为了卓越品质、非凡价值及诚信可靠的代名词。作为全球知名的中国奢侈品集团,公司深信透过现代创新设计揉合传统工艺,能创造出代代相传的臻品。每个系列皆承载顾客的人生故事,庆祝他们生命中每个珍贵时刻,并在追寻幸福的旅程中带来启发和激励,让‘周大福’的品牌故事深深融入顾客的生活脉络。集团拥有丰富的品牌组合,除了旗舰品牌‘周大福’,还有HEARTS ON FIRE、ENZO与MONOLOGUE。公司亦积极开拓IP联乘合作,为顾客提供多元化的选择。公司的业务网络遍布中国,且持续延伸至全球多个市场。在全球设有逾5,000家门店,致力于全渠道为顾客提供无缝体验。周大福珠宝集团有限公司(香港联交所股份代号:1929)于2011年12月在香港联合交易所主板上市,致力通过提高盈利质量和推动更高价值的增长,为不同持份者创造可持续的长期价值。",
+    "main_business": "主要从事生产和销售珠宝产品。该公司主要从事生产和销售珠宝镶嵌、铂金及K金首饰和黄金首饰及产品。该公司还分销不同品牌的钟表。该公司通过两个部门运营业务,分别是位于中国内地的业务分部和位于中国香港、中国澳门及其他市场的业务分部。",
+    "vision": "",
+    "meta": {
+      "org_name": "周大福珠宝集团有限公司",
+      "org_name_en": "CHOW TAI FOOK JEWELLERY GROUP LIMITED",
+      "chairman": "郑家纯",
+      "secretary": "郑炳熙,黎寿昌",
+      "founded": "2011-07-20",
+      "listed": "2011-12-15 00:00:00",
+      "website": "www.ctfjewellerygroup.com",
+      "address": "香港皇后大道中16-18号新世界大厦33楼",
+      "employees": "24700",
+      "industry": "专业零售",
+      "auditor": "罗兵咸永道会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "62e15e7afc2a"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "id": "A:000567",
+  "market": "A",
+  "code": "000567",
+  "name": "海德股份",
+  "version": 1,
+  "created_at": "2026-09-29T10:42:01",
+  "updated_at": "2026-09-29T10:42:01",
+  "raw": {
+    "fetched_at": "2026-09-29T10:42:01",
+    "source": "eastmoney_f10_org_basicinfo",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "海南海德资本管理股份有限公司(股票代码000567)于1994年5月在深交所主板上市,是一家以“大数据+AI技术”为支撑的科技型困境资产管理公司,是海南省唯一金融类上市公司,也是境内证券市场唯一以不良资产管理(AMC)为主业的上市公司。在防范化解金融风险的大背景下,公司依托自身科技优势和股东产业背景优势,运用持有的稀缺AMC牌照,将业务聚焦于熟悉和擅长的个人困境和机构困境资产管理领域,与其他资产管理公司错位竞争,业绩连续三年创出历史新高。",
+    "main_business": "困境资产收购重组业务、收购处置业务、特殊机遇投资业务以及管理类业务",
+    "vision": "",
+    "meta": {
+      "org_name": "海南海德资本管理股份有限公司",
+      "chairman": "蒲建平",
+      "president": "梁译之",
+      "secretary": "张大伟",
+      "founded": "1987-03-02 00:00:00",
+      "listed": "1994-05-25 00:00:00",
+      "website": "www.000567.com",
+      "address": "北京市海淀区首体南路22号国兴大厦三层,海南省海口市秀英区长滨东三街5号首东逸海国际广场写字楼大厦25层",
+      "control_holder": "永泰集团有限公司",
+      "real_controller": "王广西",
+      "independent_directors": "李世勇,王小骄,邢红梅",
+      "employees": "125",
+      "industry": "金融-非银行金融-其他非银行金融",
+      "org_form": "中小微民企",
+      "top_profit_product": "资产管理业务",
+      "income_structure": "资产管理业务、其他业务、金融科技服务",
+      "income_structure_ratio": "97.58%、2.00%、0.42%",
+      "auditor": "和信会计师事务所(特殊普通合伙)",
+      "concepts": "互联网金融,化债(AMC)概念,钒电池,海南自贸,电池技术,融资融券,深股通,小盘股,2026中报预增",
+      "business_scope": "资本运作及管理;投融资研究、咨询;企业重组、并购经营业务。(一般经营项目自主经营,许可经营项目凭相关许可证或者批准文件经营)(依法须经批准的项目,经相关部门批准后方可开展经营活动。)"
+    },
+    "content_hash": "a95d557e583e"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

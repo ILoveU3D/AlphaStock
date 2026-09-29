@@ -1,0 +1,42 @@
+{
+  "id": "HK:09987",
+  "market": "HK",
+  "code": "09987",
+  "name": "百胜中国",
+  "version": 1,
+  "created_at": "2026-09-29T10:44:27",
+  "updated_at": "2026-09-29T10:44:27",
+  "raw": {
+    "fetched_at": "2026-09-29T10:44:27",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "百胜中国控股有限公司(NYSE:YUMC及HKEX:9987)是中国领先的餐饮公司,致力于成为全球最创新的餐饮先锋。自从1987年第一家餐厅开业以来,百胜中国在中国的足迹遍布所有省市自治区(港澳台除外),超过2,600座城镇经营着18,000多家餐厅。百胜中国于2016年11月1日独立在纽约证券交易所上市。本公司于2020年9月10日在香港联合交易所第二上市。2022年10月24日,本公司成为于香港联合交易所和纽约证券交易所双重主要上市的公司。百胜中国在中国市场拥有肯德基、必胜客和塔可钟三个品牌的独家运营和授权经营权,并完全拥有小肥羊和黄记煌连锁餐厅品牌。公司也和Lavazza合作,在中国探索和发展Lavazza咖啡店。",
+    "main_business": "主要从事餐饮业务。该公司经营三个分部,包括肯德基、必胜客和所有其他分部。肯德基分部经营快餐厅,提供原味鸡、全鸡和其他鸡肉产品,以及牛肉堡、猪肉产品、海鲜、米饭、粥、新鲜蔬菜、甜品、咖啡、茶饮及多种其他产品。必胜客分部经营休闲餐厅,提供不同时段的食品,包括早餐、午餐、下午茶及晚餐。所有其他分部包括经营“拉瓦萨”、“黄记煌”、“小肥羊”及“塔可钟”、外送经营及电商业务。",
+    "vision": "",
+    "meta": {
+      "org_name": "百胜中国控股有限公司",
+      "org_name_en": "Yum China Holdings, Inc.",
+      "chairman": "胡祖六",
+      "secretary": "黄晖,张玲",
+      "founded": "2016-04-01",
+      "listed": "2020-09-10 00:00:00",
+      "website": "www.yumchina.com",
+      "address": "中国上海市天钥桥路20号百胜中国大厦6楼至16楼,香港铜锣湾轩尼诗道500号希慎广场30楼3003室",
+      "employees": "260000",
+      "industry": "旅游及消闲设施",
+      "auditor": "毕马威华振会计师事务所(特殊普通合伙),毕马威会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "4c5ac03b7ae0"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

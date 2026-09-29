@@ -1,0 +1,38 @@
+{
+  "id": "US:KO",
+  "market": "US",
+  "code": "KO",
+  "name": "可口可乐",
+  "version": 1,
+  "created_at": "2026-09-29T11:14:43",
+  "updated_at": "2026-09-29T11:14:43",
+  "raw": {
+    "fetched_at": "2026-09-29T11:14:43",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/ko/",
+    "summary": "The Coca-Cola Company, a beverage company, manufactures and sells various nonalcoholic beverages in the United States and internationally. The company provides Trademark Coca-Cola, sparkling soft drinks and flavors; water, sports, coffee, and tea; juice, value-added dairy, and plant-based beverages; and emerging beverages. It also offers beverage concentrates and syrups, as well as fountain syrups to fountain retailers comprising restaurants and convenience stores. The company sells its products under the Coca-Cola, Diet Coke/Coca-Cola Light, C...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "COCA COLA CO",
+      "sic": "2080",
+      "industry": "Beverages",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "21344"
+    },
+    "content_hash": "288ce308eaa4"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

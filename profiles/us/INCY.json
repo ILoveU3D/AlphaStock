@@ -1,0 +1,38 @@
+{
+  "id": "US:INCY",
+  "market": "US",
+  "code": "INCY",
+  "name": "因塞特医疗",
+  "version": 1,
+  "created_at": "2026-09-29T11:13:18",
+  "updated_at": "2026-09-29T11:13:18",
+  "raw": {
+    "fetched_at": "2026-09-29T11:13:18",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/incy/",
+    "summary": "Incyte Corporation, a biopharmaceutical company, engages in the discovery, development, and commercialization of therapeutics in the United States, Europe, Canada, and Japan. The company offers JAKAFI for the treatment of myelofibrosis (MF), polycythemia vera, and steroid-refractory acute graft-versus-host disease; ICLUSIG, a kinase inhibitor to treat chronic myeloid leukemia and Philadelphia-chromosome positive acute lymphoblastic leukemia; MONJUVI/ MINJUVI for the treatment of diffuse large B-cell lymphoma and Follicular Lymphoma; NIKTIMVO fo...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "INCYTE CORP",
+      "sic": "8731",
+      "industry": "Services-Commercial Physical & Biological Research",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "879169"
+    },
+    "content_hash": "bb4fa6efed6a"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

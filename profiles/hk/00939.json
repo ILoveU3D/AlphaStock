@@ -1,0 +1,42 @@
+{
+  "id": "HK:00939",
+  "market": "HK",
+  "code": "00939",
+  "name": "建设银行",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:33",
+  "updated_at": "2026-09-29T10:43:33",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:33",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "中国建设银行股份有限公司是一家中国领先的大型商业银行,总部设在北京,其前身中国人民建设银行成立于1954年10月。本行2005年10月在香港联合交易所挂牌上市(股票代码939),2007年9月在上海证券交易所挂牌上市(股票代码601939)。位列英国《银行家》杂志“2024年全球银行1000强榜单”第二名和英国BrandFinance“全球银行品牌价值500强”第二名。本行为客户提供公司金融业务、个人金融业务、资金资管业务等全面的金融服务,服务个人客户和公司类客户,并在基金、租赁、信托、保险、期货、养老金、投行等多个行业拥有子公司。本集团自觉践行金融工作的政治性、人民性,加强对国家重大战略、重点领域和薄弱环节的优质金融服务,全力做好科技金融、绿色金融、普惠金融、养老金融、数字金融“五篇大文章”,积极支持新质生产力发展,有力服务实体经济,助力高水平对外开放和区域协调发展,坚守主责主业,锚定做优做强,不断增强“三个能力”,自觉融入进一步全面深化改革大局,坚定不移推进高质量发展。",
+    "main_business": "公司金融业务、个人金融业务、资金资管业务和包括境外业务在内的其他业务",
+    "vision": "",
+    "meta": {
+      "org_name": "中国建设银行股份有限公司",
+      "org_name_en": "China Construction Bank Corporation",
+      "chairman": "张金良",
+      "secretary": "赵明璟,薄银根",
+      "founded": "2004-09-17",
+      "listed": "2005-10-27 00:00:00",
+      "website": "www.ccb.cn,www.ccb.com",
+      "address": "北京市西城区金融大街25号",
+      "employees": "378344",
+      "industry": "银行",
+      "auditor": "安永华明会计师事务所(特殊普通合伙),安永会计师事务所",
+      "org_form": "银行"
+    },
+    "content_hash": "b11af7cb845c"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

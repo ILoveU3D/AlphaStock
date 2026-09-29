@@ -1,0 +1,38 @@
+{
+  "id": "US:JKHY",
+  "market": "US",
+  "code": "JKHY",
+  "name": "杰克亨利",
+  "version": 1,
+  "created_at": "2026-09-29T11:14:34",
+  "updated_at": "2026-09-29T11:14:34",
+  "raw": {
+    "fetched_at": "2026-09-29T11:14:34",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/jkhy/",
+    "summary": "Jack Henry & Associates, Inc. operates as a financial technology company that connects people and financial institutions through technology solutions and payment processing services in the United States. It operates through four segments: Core, Payments, Complementary, and Corporate Services. The Core segment provides core information processing platforms to banks and credit unions, which consists of integrated applications required to process deposit, loan, general ledger transactions, and maintain centralized accountholder information. The Pa...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "JACK HENRY & ASSOCIATES INC",
+      "sic": "7373",
+      "industry": "Services-Computer Integrated Systems Design",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "0630",
+      "state_of_incorporation": "DE",
+      "cik": "779152"
+    },
+    "content_hash": "db34f1f8c7b9"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

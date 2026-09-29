@@ -1,0 +1,38 @@
+{
+  "id": "US:FUTU",
+  "market": "US",
+  "code": "FUTU",
+  "name": "富途控股",
+  "version": 1,
+  "created_at": "2026-09-29T11:07:54",
+  "updated_at": "2026-09-29T11:07:54",
+  "raw": {
+    "fetched_at": "2026-09-29T11:07:54",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/futu/",
+    "summary": "Futu Holdings Limited engages in the provision of digitalized securities brokerage and wealth management product distribution service in Hong Kong and internationally. It offers online financial services, including securities and derivative trades brokerage, margin financing and fund distribution services through its Futubull and Moomoo digital platforms. The company also provides financial information and online community services; online wealth management services under the Money Plus brand name through its Futubull and moomoo platforms, whic...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Futu Holdings Ltd",
+      "sic": "6211",
+      "industry": "Security Brokers, Dealers & Flotation Companies",
+      "entity_type": "other",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "E9",
+      "cik": "1754581"
+    },
+    "content_hash": "864c5c123fcb"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

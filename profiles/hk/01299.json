@@ -1,0 +1,42 @@
+{
+  "id": "HK:01299",
+  "market": "HK",
+  "code": "01299",
+  "name": "友邦保险",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:40",
+  "updated_at": "2026-09-29T10:43:40",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:40",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "友邦保险控股有限公司是最大的泛亚地区独立上市人寿保险集团,提供一系列的产品及服务,涵盖退休储蓄计划、寿险和意外及医疗保险。此外,亦为企业客户提供雇员福利、信贷保险和退休保障服务。集团在亚太区17个市场营运,包括在香港、泰国、新加坡、马来西亚、中国、韩国、菲律宾、澳洲、印度尼西亚、台湾、越南、新西兰、澳门和文莱拥有全资的分公司及附属公司、斯里兰卡附属公司的92%权益,以及印度合资公司的26%权益。集团今日的业务成就可追溯逾90年前于上海的发源地。按寿险保费计算,集团在亚太地区(日本除外)领先同业,并于大部分市场稳占领导地位。",
+    "main_business": "一家主要提供人寿保险的投资控股公司。该公司提供的产品和服务主要包括寿险、意外及医疗保险、储蓄计划及面向企业客户的雇员福利、信贷保险及退休保障服务。该公司通过八个业务分部运营:香港、泰国、新加坡、马来西亚、中国、韩国、其他市场和集团企业中心分部。其他市场部门包括澳洲、印尼、新西兰、菲律宾、斯里兰卡、台湾、越南及印度。",
+    "vision": "",
+    "meta": {
+      "org_name": "友邦保险控股有限公司",
+      "org_name_en": "AIA Group Limited",
+      "chairman": "谢仕荣",
+      "secretary": "包婷婷",
+      "founded": "2009-08-24",
+      "listed": "2010-10-29 00:00:00",
+      "website": "www.aia.com",
+      "address": "香港中环干诺道中1号友邦金融中心35楼",
+      "employees": "25938",
+      "industry": "保险",
+      "auditor": "毕马威会计师事务所",
+      "org_form": "保险"
+    },
+    "content_hash": "486d16d28c73"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

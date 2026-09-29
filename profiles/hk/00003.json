@@ -1,0 +1,42 @@
+{
+  "id": "HK:00003",
+  "market": "HK",
+  "code": "00003",
+  "name": "香港中华煤气",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:18",
+  "updated_at": "2026-09-29T10:43:18",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:18",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "香港中华煤气有限公司(煤气公司)于1862年成立,是香港历史最悠久的公用事业机构,亦是本港规模最大的能源供应商之一,企业管理和营运均达到世界级水平。煤气公司多年来一直与时并进,与香港一起成长,由初期供应煤气用于燃点街灯,发展到今天,为广大市民,以至各行各业,提供安全、可靠的能源方案,在大中华能源行业领先同侪。煤气公司于1994年发展内地市场。目前,公司在内地共有逾970个项目,包括可再生能源方案(如太阳能光伏系统)、城市管道燃气、气源供应链、供水及城市废物资源化利用、新兴环保能源等,业务遍布全国29个省级地区。近年,公司大力发展清洁能源方案,涵盖海、陆、空,包括氢能、船用绿甲醇,以及可持续航空燃料等,努力实现碳中和的愿景。",
+    "main_business": "是一家主要从事燃气生产、输送与销售、供水,以及经营新兴环保能源业务的公司。该公司通过四个分部运营业务。燃气、水务及相关之业务分部包括内地公用事业业务,香港燃气业务在内的燃气、水务及相关之业务。新能源分部主要从事经营煤矿,勘探、钻井及销售原有业务。地产业务分部主要从事地产业务。其他分部主要从事工程及有关业务。",
+    "vision": "",
+    "meta": {
+      "org_name": "香港中华煤气有限公司",
+      "org_name_en": "Hong Kong And China Gas Company Limited",
+      "chairman": "李家诚,李家杰",
+      "secretary": "黄丽坚",
+      "founded": "1862",
+      "listed": "1960-04-11 00:00:00",
+      "website": "www.towngas.com",
+      "address": "香港北角渣华道363号23楼",
+      "employees": "2120",
+      "industry": "公用事业",
+      "auditor": "罗兵咸永道会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "545be38dfea1"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

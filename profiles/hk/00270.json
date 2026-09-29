@@ -1,0 +1,42 @@
+{
+  "id": "HK:00270",
+  "market": "HK",
+  "code": "00270",
+  "name": "粤海投资",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:25",
+  "updated_at": "2026-09-29T10:43:25",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:25",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "粤海投资有限公司(股份代号:0270)于1973年在香港证券交易市场取得上市地位。本集团之主要业务为水资源、物业投资及发展、百货营运、酒店持有、经营及管理以及基建(能源项目和道路及桥梁)。",
+    "main_business": "是一家主要从事供水和污水处理的投资控股公司。该公司通过七个分部运营其业务。水资源分部从事供水、污水处理以及供水和污水处理基础设施建设。物业投资及发展分部从事物业的开发和销售并为商业物业提供物业管理服务。百货营运分部分部营运百货店。发电分部经营营运燃煤发电厂以及提供电力和蒸汽。酒店经营及管理分部分部从事酒店营运。道路及桥梁分部从事收费公路运营。其他分部提供司库服务。",
+    "vision": "",
+    "meta": {
+      "org_name": "粤海投资有限公司",
+      "org_name_en": "Guangdong Investment Ltd.",
+      "chairman": "王闵(代)",
+      "secretary": "阳娜",
+      "founded": "1973-01-05",
+      "listed": "1993-01-08 00:00:00",
+      "website": "www.gdi.com.hk",
+      "address": "香港干诺道中148号粤海投资大厦28楼至29楼",
+      "employees": "10979",
+      "industry": "公用事业",
+      "auditor": "德勤·关黄陈方会计师行",
+      "org_form": "一般企业"
+    },
+    "content_hash": "ed224c014643"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

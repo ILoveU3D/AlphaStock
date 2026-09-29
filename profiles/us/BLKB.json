@@ -1,0 +1,38 @@
+{
+  "id": "US:BLKB",
+  "market": "US",
+  "code": "BLKB",
+  "name": "布莱克波特科技",
+  "version": 1,
+  "created_at": "2026-09-29T10:53:29",
+  "updated_at": "2026-09-29T10:53:29",
+  "raw": {
+    "fetched_at": "2026-09-29T10:53:29",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/blkb/",
+    "summary": "Blackbaud, Inc. engages in the providing AI-powered solutions in the United States and internationally. The company offers fundraising and engagement solutions, including Blackbaud Raiser's Edge NXT, Blackbaud CRM, Blackbaud Luminate Online, Blackbaud TeamRaiser, JustGiving from Blackbaud, Blackbaud Fundraiser Performance Management, and Blackbaud Altru; financial management solutions, such as Blackbaud Financial Edge NXT, Blackbaud Purchase Cards, Blackbaud Tuition Management, Blackbaud Financial Aid Management, and Blackbaud Billing Managemen...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "BLACKBAUD INC",
+      "sic": "7372",
+      "industry": "Services-Prepackaged Software",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "1280058"
+    },
+    "content_hash": "f861c43fb3b4"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "id": "US:INSP",
+  "market": "US",
+  "code": "INSP",
+  "name": "Inspire Medical Systems Inc",
+  "version": 1,
+  "created_at": "2026-09-29T11:14:16",
+  "updated_at": "2026-09-29T11:14:16",
+  "raw": {
+    "fetched_at": "2026-09-29T11:14:16",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/insp/",
+    "summary": "Inspire Medical Systems, Inc., a medical technology company, focuses on the development and commercialization of minimally invasive solutions for patients with obstructive sleep apnea (OSA) in the United States and internationally. The company offers Inspire system, a neurostimulation technology that provides a safe and effective treatment for patients with moderate to severe OSA. It also develops a novel, closed-loop solution that continuously monitors a patientâs breathing and delivers mild hypoglossal nerve stimulation to maintain an open ai...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Inspire Medical Systems, Inc.",
+      "sic": "3841",
+      "industry": "Surgical & Medical Instruments & Apparatus",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "1609550"
+    },
+    "content_hash": "9f6976004569"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

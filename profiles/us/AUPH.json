@@ -1,0 +1,37 @@
+{
+  "id": "US:AUPH",
+  "market": "US",
+  "code": "AUPH",
+  "name": "Aurinia Pharmaceuticals Inc",
+  "version": 1,
+  "created_at": "2026-09-29T10:48:27",
+  "updated_at": "2026-09-29T10:48:27",
+  "raw": {
+    "fetched_at": "2026-09-29T10:48:27",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/auph/",
+    "summary": "Aurinia Pharmaceuticals Inc., a biopharmaceutical company, engages in delivering therapies to people living with autoimmune diseases with high unmet medical needs in the United States and Japan. The company offers LUPKYNIS (voclosporin), an oral therapy for the treatment of adult patients with active lupus nephritis. It also develops aritinercept, a dual inhibitor of B cell-activating factor and proliferation-inducing ligand for the potential treatment of autoimmune diseases. The company was founded in 1993 and is headquartered in Edmonton, Can...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Aurinia Pharmaceuticals Inc.",
+      "sic": "2834",
+      "industry": "Pharmaceutical Preparations",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "cik": "1600620"
+    },
+    "content_hash": "7695e8b57e4c"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

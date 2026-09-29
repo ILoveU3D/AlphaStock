@@ -1,0 +1,50 @@
+{
+  "id": "A:601058",
+  "market": "A",
+  "code": "601058",
+  "name": "赛轮轮胎",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:04",
+  "updated_at": "2026-09-29T10:43:04",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:04",
+    "source": "eastmoney_f10_org_basicinfo",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "赛轮集团股份有限公司前身青岛赛轮子午线轮胎信息化生产示范基地有限公司成立于2002年11月18日,是国家橡胶与轮胎工程技术研究中心科研示范基地,同时也是国内首家集新材料、新技术、新装备、新工艺、新管理模式于一体的信息化生产示范基地。集团以“做一条好轮胎”为使命,致力于为全球轮胎用户提供更优质的产品与服务,以先进的技术推动橡胶轮胎行业高质量发展。",
+    "main_business": "轮胎产品的研发、生产和销售",
+    "vision": "",
+    "meta": {
+      "org_name": "赛轮集团股份有限公司",
+      "chairman": "刘燕华",
+      "president": "谢小红",
+      "secretary": "李吉庆",
+      "founded": "2002-11-18 00:00:00",
+      "listed": "2011-06-30 00:00:00",
+      "website": "www.sailungroup.com",
+      "address": "青岛市郑州路43号橡塑新材料大楼",
+      "control_holder": "袁仲雪",
+      "real_controller": "袁仲雪",
+      "independent_directors": "于培友,鲍在山,权锡鉴",
+      "employees": "25128",
+      "industry": "基础化工-橡胶制品-轮胎",
+      "org_form": "大型民企",
+      "top_profit_product": "轮胎",
+      "income_structure": "轮胎、其他业务",
+      "income_structure_ratio": "98.92%、1.08%",
+      "auditor": "中兴华会计师事务所(特殊普通合伙)",
+      "concepts": "HS300_,QFII重仓,基金重仓,融资融券,上证380,沪股通,MSCI中国,养老金,富时罗素,标准普尔,中盘股,先进制造风格",
+      "business_scope": "轮胎、橡胶制品、机械设备、模具、化工产品(不含危险品)的研发、生产、销售、安装及相关服务;轮胎生产技术软件开发及相关技术的开发、销售及相关服务;货物进出口、技术进出口及相关服务;废旧轮胎收购与销售;轮胎循环利用装备、材料、产品的研发、生产与销售;轮胎循环利用技术开发、销售及相关服务(法律、行政法规禁止的项目除外,法律行政法规限制的项目取得许可后方可经营)。"
+    },
+    "content_hash": "1f2940bb61a3"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

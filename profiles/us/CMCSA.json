@@ -1,0 +1,38 @@
+{
+  "id": "US:CMCSA",
+  "market": "US",
+  "code": "CMCSA",
+  "name": "康卡斯特",
+  "version": 1,
+  "created_at": "2026-09-29T11:00:21",
+  "updated_at": "2026-09-29T11:00:21",
+  "raw": {
+    "fetched_at": "2026-09-29T11:00:21",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/cmcsa/",
+    "summary": "Comcast Corporation operates as a media and technology company worldwide. The company operates through Residential Connectivity & Platforms, Business Services Connectivity, Media, Studios, and Theme Parks segments. Its Residential Connectivity & Platforms segment provides residential broadband and wireless connectivity services, residential and business video services, sky-branded entertainment television networks, and advertising. The Business Services Connectivity segment offers connectivity services for small business locations, which includ...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "COMCAST CORP",
+      "sic": "4841",
+      "industry": "Cable & Other Pay Television Services",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "PA",
+      "cik": "1166691"
+    },
+    "content_hash": "d62de964d740"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

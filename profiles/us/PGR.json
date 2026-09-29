@@ -1,0 +1,38 @@
+{
+  "id": "US:PGR",
+  "market": "US",
+  "code": "PGR",
+  "name": "前进保险",
+  "version": 1,
+  "created_at": "2026-09-29T11:22:45",
+  "updated_at": "2026-09-29T11:22:45",
+  "raw": {
+    "fetched_at": "2026-09-29T11:22:45",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/pgr/",
+    "summary": "The Progressive Corporation operates as an insurance company in the United States. It writes insurance for personal autos and special lines products, including motorcycles, RVs, and watercraft; and personal residential property insurance for homeowners and renters. The company also writes auto-related liability and physical damage insurance for comprising dump trucks, log trucks, garbage trucks, tractors, trailers, straight trucks, tow trucks and wreckers, vans, pick-up trucks, and autos; business-related general liability and commercial proper...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "PROGRESSIVE CORP/OH/",
+      "sic": "6331",
+      "industry": "Fire, Marine & Casualty Insurance",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "OH",
+      "cik": "80661"
+    },
+    "content_hash": "310762382bfb"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

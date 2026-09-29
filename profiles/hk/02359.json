@@ -1,0 +1,42 @@
+{
+  "id": "HK:02359",
+  "market": "HK",
+  "code": "02359",
+  "name": "药明康德",
+  "version": 1,
+  "created_at": "2026-09-29T10:44:00",
+  "updated_at": "2026-09-29T10:44:00",
+  "raw": {
+    "fetched_at": "2026-09-29T10:44:00",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "无锡药明康德新药开发股份有限公司(股票代码:603259.SH/2359.HK)是全球医药及生命科学行业值得信赖的合作伙伴和重要贡献者,致力于通过提供一体化、端到端的新药研发和生产服务,推动全球医药健康创新。公司在亚洲、欧洲、北美等地均设有运营基地,依托独特的“CRDMO”业务模式,不断降低研发门槛,助力客户提升研发效率,为患者带来突破性的治疗方案。目前,公司的赋能平台正承载着来自全球30多个国家的合作伙伴的研发创新项目,致力于将更多新药、好药带给全球病患,早日实现“让天下没有难做的药,难治的病”的愿景。",
+    "main_business": "全球医药及生命科学行业提供一体化、端到端的新药研发和生产服务,在亚洲、欧洲、北美等地均设有运营基地。公司通过独特的“CRDMO”业务模式,不断降低研发门槛,助力客户提升研发效率,为患者带来更多突破性的治疗方案,服务范围涵盖化学药研发和生产、生物学研究、临床前测试和临床研发等领域。",
+    "vision": "",
+    "meta": {
+      "org_name": "无锡药明康德新药开发股份有限公司",
+      "org_name_en": "WuXi AppTec Co., Ltd.",
+      "chairman": "李革",
+      "secretary": "韩敏,杨小慧",
+      "founded": "2000-12-01",
+      "listed": "2018-12-13 00:00:00",
+      "website": "www.wuxiapptec.com.cn",
+      "address": "中国上海浦东新区外高桥保税区富特中路288号",
+      "employees": "35584",
+      "industry": "药品及生物科技",
+      "auditor": "德勤华永会计师事务所(特殊普通合伙),德勤·关黄陈方会计师行",
+      "org_form": "一般企业"
+    },
+    "content_hash": "c6a67cda2771"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

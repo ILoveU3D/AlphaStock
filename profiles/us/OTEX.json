@@ -1,0 +1,38 @@
+{
+  "id": "US:OTEX",
+  "market": "US",
+  "code": "OTEX",
+  "name": "Open Text Corp",
+  "version": 1,
+  "created_at": "2026-09-29T11:20:02",
+  "updated_at": "2026-09-29T11:20:02",
+  "raw": {
+    "fetched_at": "2026-09-29T11:20:02",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/otex/",
+    "summary": "Open Text Corporation provides data management solutions for enterprise AI in North, Central and South America, Europe, the Middle East, Africa, Australia, Japan, Singapore, India, and China. Its products and solutions help organizations collect, connect, contextualize, protect, govern, use, and secure data across their operations. The company offers cloud services and subscriptions, including software as a service offerings, application programming interfaces and data services, and private cloud products, such as hosted services and managed se...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "OPEN TEXT CORP",
+      "sic": "7373",
+      "industry": "Services-Computer Integrated Systems Design",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "0630",
+      "state_of_incorporation": "A6",
+      "cik": "1002638"
+    },
+    "content_hash": "ace4b3b278b1"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

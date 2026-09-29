@@ -1,0 +1,38 @@
+{
+  "id": "US:ECPG",
+  "market": "US",
+  "code": "ECPG",
+  "name": "安可资本",
+  "version": 1,
+  "created_at": "2026-09-29T11:03:56",
+  "updated_at": "2026-09-29T11:03:56",
+  "raw": {
+    "fetched_at": "2026-09-29T11:03:56",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/ecpg/",
+    "summary": "Encore Capital Group, Inc., a specialty finance company, provides debt recovery solutions and other related services for consumers across financial assets worldwide. The company purchases portfolios of defaulted consumer receivables at discounts to face value, as well as manages them by working with individuals as they repay their obligations and works toward financial recovery. It is also involved in the provision of debt servicing, such as early stage collection, business process outsourcing, and contingent collection services. In addition, t...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "ENCORE CAPITAL GROUP INC",
+      "sic": "6153",
+      "industry": "Short-Term Business Credit Institutions",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "1084961"
+    },
+    "content_hash": "ba4b4a6f2e56"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

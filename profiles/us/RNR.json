@@ -1,0 +1,38 @@
+{
+  "id": "US:RNR",
+  "market": "US",
+  "code": "RNR",
+  "name": "RenaissanceRe Holdings Ltd",
+  "version": 1,
+  "created_at": "2026-09-29T11:27:18",
+  "updated_at": "2026-09-29T11:27:18",
+  "raw": {
+    "fetched_at": "2026-09-29T11:27:18",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/rnr/",
+    "summary": "RenaissanceRe Holdings Ltd., together with its subsidiaries, provides reinsurance and insurance products in the United States and internationally. The company operates through Property, and Casualty and Specialty segments. The Property segment writes property catastrophe excess of loss reinsurance contracts to insure insurance and reinsurance companies against natural and man-made catastrophes, including hurricanes, earthquakes, typhoons, and tsunamis, as well as winter storms, freezes, floods, fires, windstorms, tornadoes, explosions, and acts...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "RENAISSANCERE HOLDINGS LTD",
+      "sic": "6331",
+      "industry": "Fire, Marine & Casualty Insurance",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "D0",
+      "cik": "913144"
+    },
+    "content_hash": "b7c330c513c5"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

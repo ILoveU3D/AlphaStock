@@ -1,0 +1,38 @@
+{
+  "id": "US:MCY",
+  "market": "US",
+  "code": "MCY",
+  "name": "默邱利通用",
+  "version": 1,
+  "created_at": "2026-09-29T11:16:39",
+  "updated_at": "2026-09-29T11:16:39",
+  "raw": {
+    "fetched_at": "2026-09-29T11:16:39",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/mcy/",
+    "summary": "Mercury General Corporation, together with its subsidiaries, engages in writing personal automobile insurance in the United States. It also writes homeowners, commercial automobile, commercial property, mechanical protection, and umbrella insurance products. The companyâs automobile insurance products include collision, property damage, bodily injury, comprehensive, personal injury protection, underinsured and uninsured motorist, and other hazards; and homeowners insurance products comprise dwelling, liability, personal property, and other cove...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "MERCURY GENERAL CORP",
+      "sic": "6331",
+      "industry": "Fire, Marine & Casualty Insurance",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "CA",
+      "cik": "64996"
+    },
+    "content_hash": "12bac8799290"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

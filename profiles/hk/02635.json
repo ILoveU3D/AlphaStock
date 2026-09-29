@@ -1,0 +1,42 @@
+{
+  "id": "HK:02635",
+  "market": "HK",
+  "code": "02635",
+  "name": "诺比侃",
+  "version": 1,
+  "created_at": "2026-09-29T10:44:07",
+  "updated_at": "2026-09-29T10:44:07",
+  "raw": {
+    "fetched_at": "2026-09-29T10:44:07",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "诺比侃人工智能科技(成都)股份有限公司主要于中国为铁路运营及电网公司研发及销售监测与检测产品及解决方案,以及其他城市治理解决方案。公司主要提供基于全面的AI行业模型的软硬件一体化解决方案,用于监测、检测和运维等用途。",
+    "main_business": "主要于中国为铁路运营及电网公司研发及销售监测与检测产品及解决方案,以及其他城市治理解决方案。",
+    "vision": "",
+    "meta": {
+      "org_name": "诺比侃人工智能科技(成都)股份有限公司",
+      "org_name_en": "Nuobikan Artificial Intelligence Technology (Chengdu) Co., Ltd.",
+      "chairman": "廖峪",
+      "secretary": "黄凯婷,王丽",
+      "founded": "2015-03-06",
+      "listed": "2025-12-23 00:00:00",
+      "website": "www.nuobikan.com",
+      "address": "中国四川省成都市双流区国芯四街338号芯谷园区A9-4号,香港铜锣湾勿地臣街1号时代广场2座31楼",
+      "employees": "208",
+      "industry": "软件服务",
+      "auditor": "安永会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "20a2cf895ed5"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

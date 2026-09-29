@@ -1,0 +1,50 @@
+{
+  "id": "A:002468",
+  "market": "A",
+  "code": "002468",
+  "name": "申通快递",
+  "version": 1,
+  "created_at": "2026-09-29T10:42:22",
+  "updated_at": "2026-09-29T10:42:22",
+  "raw": {
+    "fetched_at": "2026-09-29T10:42:22",
+    "source": "eastmoney_f10_org_basicinfo",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "申通快递股份有限公司初创于1993年,是中国率先成立的民营快递公司,开快递加盟制先河,同时也是国家5A级物流企业、全国工商联2023中国民营企业500强、《财富》中国500强,A股上市企业。公司秉承“正道经营、长期主义”的发展理念,坚定“打造中国体验领先的经济型快递”战略目标,持续引领中国快递物流业改革、创新、发展。申通快递继续秉承“用心服务,成就你我”的企业理念,持续推进“三年百亿”产能提升计划,加强基础设施建设。作为全站上云的快递企业,公司将进一步深化数智化运营,精细化管理,改善时效及服务质量,推动全链路降本增效,以科技和人才为推动力,全力提升中国快递业特别是经济型快递的服务能力和水平。",
+    "main_business": "快递业务",
+    "vision": "",
+    "meta": {
+      "org_name": "申通快递股份有限公司",
+      "chairman": "陈德军",
+      "president": "韩永彦",
+      "secretary": "郭林",
+      "founded": "2001-11-01 00:00:00",
+      "listed": "2010-09-08 00:00:00",
+      "website": "www.sto.cn",
+      "address": "上海市青浦区赵重公路1888号",
+      "control_holder": "陈德军、陈小英",
+      "real_controller": "陈德军、陈小英",
+      "independent_directors": "杨芳,李路,郝振江",
+      "employees": "12637",
+      "industry": "交通运输-物流-物流",
+      "org_form": "大型民企",
+      "top_profit_product": "其他业务",
+      "income_structure": "快递服务、其他业务",
+      "income_structure_ratio": "98.69%、1.31%",
+      "auditor": "德勤华永会计师事务所(特殊普通合伙)",
+      "concepts": "参股保险,大数据,智能家居,阿里概念,快递概念,机构重仓,深成500,融资融券,深股通,富时罗素,标准普尔,小盘股,小盘价值,2026一季报预增,2026中报预增",
+      "business_scope": "国内快递(邮政企业专营业务除外)(凭许可证经营),普通货运(凭许可证经营),国际、国内货物运输代理,报关服务,仓储服务(除危险化学品),纸制品、电子产品的销售,实业投资。(依法须经批准的项目,经相关部门批准后方可开展经营活动)"
+    },
+    "content_hash": "1cadd7de850a"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

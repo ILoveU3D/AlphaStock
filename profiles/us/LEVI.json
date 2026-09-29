@@ -1,0 +1,38 @@
+{
+  "id": "US:LEVI",
+  "market": "US",
+  "code": "LEVI",
+  "name": "李维斯",
+  "version": 1,
+  "created_at": "2026-09-29T11:14:48",
+  "updated_at": "2026-09-29T11:14:48",
+  "raw": {
+    "fetched_at": "2026-09-29T11:14:48",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/levi/",
+    "summary": "Levi Strauss & Co. designs, markets, and sells apparels and related accessories for men, women, and children in the United States and internationally. The company offers jeans, casual and dress pants, activewears, tops, shorts, skirts, dresses, jumpsuits, shirts, sweaters, jackets, footwear, and related accessories under the Levi's, Levi Strauss Signature, Denizen, and Beyond Yoga brands. It sells its products through third-party retailers, such as department stores, specialty retailers, third-party e-commerce sites, and franchisees; and direct...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "LEVI STRAUSS & CO",
+      "sic": "2300",
+      "industry": "Apparel & Other Finishd Prods of  Fabrics & Similar Matl",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1129",
+      "state_of_incorporation": "DE",
+      "cik": "94845"
+    },
+    "content_hash": "260a072dbf1f"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

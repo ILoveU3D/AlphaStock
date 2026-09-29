@@ -1,0 +1,38 @@
+{
+  "id": "US:RLI",
+  "market": "US",
+  "code": "RLI",
+  "name": "RLI保险",
+  "version": 1,
+  "created_at": "2026-09-29T11:27:11",
+  "updated_at": "2026-09-29T11:27:11",
+  "raw": {
+    "fetched_at": "2026-09-29T11:27:11",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/rli/",
+    "summary": "RLI Corp., an insurance holding company, provides property, casualty, and surety insurance products. Its Casualty segment provides commercial excess, personal umbrella, general liability, transportation, and management liability coverages; professional liability and workersâ compensation for office-based professional coverages; commercial automobile liability and physical damage insurance to local, intermediate and long haul truckers, public transportation entities, and other specialty commercial automobile risks; incidental related insurance c...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "RLI CORP",
+      "sic": "6331",
+      "industry": "Fire, Marine & Casualty Insurance",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "84246"
+    },
+    "content_hash": "ad9a71dff63e"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

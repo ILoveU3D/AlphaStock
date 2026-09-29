@@ -1,0 +1,38 @@
+{
+  "id": "US:LPG",
+  "market": "US",
+  "code": "LPG",
+  "name": "Dorian LPG Ltd",
+  "version": 1,
+  "created_at": "2026-09-29T11:14:59",
+  "updated_at": "2026-09-29T11:14:59",
+  "raw": {
+    "fetched_at": "2026-09-29T11:14:59",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/lpg/",
+    "summary": "Dorian LPG Ltd., together with its subsidiaries, engages in the transportation of liquefied petroleum gas through its LPG tankers worldwide. It owns and operates twenty-eight very large gas carriers. Dorian LPG Ltd. was incorporated in 2013 and is headquartered in Stamford, Connecticut.",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "DORIAN LPG LTD.",
+      "sic": "4412",
+      "industry": "Deep Sea Foreign Transportation of  Freight",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "0331",
+      "state_of_incorporation": "1T",
+      "cik": "1596993"
+    },
+    "content_hash": "f81decf69a28"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

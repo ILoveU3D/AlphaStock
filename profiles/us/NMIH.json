@@ -1,0 +1,38 @@
+{
+  "id": "US:NMIH",
+  "market": "US",
+  "code": "NMIH",
+  "name": "NMI Holdings Inc-A",
+  "version": 1,
+  "created_at": "2026-09-29T11:18:11",
+  "updated_at": "2026-09-29T11:18:11",
+  "raw": {
+    "fetched_at": "2026-09-29T11:18:11",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/nmih/",
+    "summary": "NMI Holdings, Inc., together with its subsidiaries, provides private mortgage guaranty insurance services in the United States. It provides primary mortgage insurance services; and outsourced loan review services to mortgage loan originators. The company serves national and regional mortgage banks, money center banks, credit unions, community banks, builder-owned mortgage lenders, internet-sourced lenders, and other non-bank lenders. NMI Holdings, Inc. was incorporated in 2011 and is headquartered in Emeryville, California.",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "NMI Holdings, Inc.",
+      "sic": "6351",
+      "industry": "Surety Insurance",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "CA",
+      "cik": "1547903"
+    },
+    "content_hash": "9c2a4e760df6"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

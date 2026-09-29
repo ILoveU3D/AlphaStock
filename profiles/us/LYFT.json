@@ -1,0 +1,38 @@
+{
+  "id": "US:LYFT",
+  "market": "US",
+  "code": "LYFT",
+  "name": "Lyft Inc-A",
+  "version": 1,
+  "created_at": "2026-09-29T11:16:26",
+  "updated_at": "2026-09-29T11:16:26",
+  "raw": {
+    "fetched_at": "2026-09-29T11:16:26",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/lyft/",
+    "summary": "Lyft, Inc. operates multimodal transportation networks that offer access to various transportation options through platform and mobile based applications in the United States and internationally. The company facilitates peer-to-peer ridesharing by connecting drivers who have vehicles with riders who need a ride. It also operates Lyft Platform that provides a marketplace where drivers can be matched with riders via the Lyft mobile application. The companyâs platform provides a ridesharing marketplace that connects drivers with riders; Express Dr...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Lyft, Inc.",
+      "sic": "7389",
+      "industry": "Services-Business Services, NEC",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "1759509"
+    },
+    "content_hash": "93b5b9b09945"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

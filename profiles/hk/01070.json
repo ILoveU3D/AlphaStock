@@ -1,0 +1,42 @@
+{
+  "id": "HK:01070",
+  "market": "HK",
+  "code": "01070",
+  "name": "TCL电子",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:35",
+  "updated_at": "2026-09-29T10:43:35",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:35",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "TCL电子控股有限公司(01070.HK,于开曼群岛注册成立之有限公司),自1999年11月起于香港联交所主板上市,业务范围涵盖显示业务、创新业务以及互联网业务。TCL电子以“品牌引领价值,相对成本优势”为战略,积极变革创新,聚焦突破全球中高端市场,努力夯实“智能物联生态”全品类布局,致力为用户提供全场景智慧健康生活,打造全球领先的智能科技公司。TCL电子已获纳入深港通之合资格港股通股份名单,是恒生港股通指数、恒生综合中小型股指数及恒生可持续发展企业基准指数成份股,并从2018年起连续四年获得恒生指数公司授予ESG评级A。",
+    "main_business": "是一家主要从事显示器件制造和销售的投资控股公司。该公司通过四个业务分部进行运营。显示业务分部主要从事大尺寸显示业务,即智屏业务、中小尺寸显示业务及智慧商显业务。创新业务分部主要从事智能连接、智能家居、全品类营销及光伏业务。互联网业务分部主要从事家庭互联网业务。其他业务分部从事其他公司相关业务。",
+    "vision": "",
+    "meta": {
+      "org_name": "TCL电子控股有限公司",
+      "org_name_en": "TCL Electronics Holdings Limited",
+      "chairman": "杜娟",
+      "secretary": "蔡凤仪,宋红海",
+      "founded": "1999-11-19",
+      "listed": "1999-11-26 00:00:00",
+      "website": "electronics.tcl.com",
+      "address": "香港新界沙田香港科学园科技大道东22号22E大楼5楼",
+      "employees": "34308",
+      "industry": "家庭电器及用品",
+      "auditor": "安永会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "0e21b5234ac9"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

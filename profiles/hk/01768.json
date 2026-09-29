@@ -1,0 +1,42 @@
+{
+  "id": "HK:01768",
+  "market": "HK",
+  "code": "01768",
+  "name": "鸣鸣很忙",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:46",
+  "updated_at": "2026-09-29T10:43:46",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:46",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "湖南鸣鸣很忙商业连锁股份有限公司中国成熟且稳步发展的食品饮料零售商,旗下现有零食很忙、赵一鸣两大品牌。其中,零食很忙起步于2017年湖南长沙,赵一鸣零食起步于2019年江西宜春。公司服务于大众消费者,直连生产商和品牌方,减少中间环节,并依托全国门店布局,建立起专业化服务体系和标准化管理模式,为广大消费者提供高质价比的产品,打造老百姓家门口的零食连锁品牌,持续创造欢乐、舒适且便捷的民生零食消费体验,真正实现让利于民的消费普惠。",
+    "main_business": "是中国一家成熟且稳步发展的食品饮料零售商。",
+    "vision": "",
+    "meta": {
+      "org_name": "湖南鸣鸣很忙商业连锁股份有限公司",
+      "org_name_en": "BUSY MING GROUP CO., LTD.",
+      "chairman": "晏周",
+      "secretary": "陈超,叶嘉红",
+      "founded": "2019-12-12",
+      "listed": "2026-01-28 00:00:00",
+      "website": "www.busyming.com",
+      "address": "中国湖南省长沙市雨花区长沙大道567号运达中央广场二期商务综合楼33001-33006,香港铜锣湾勿地臣街1号时代广场2座31楼",
+      "employees": "10223",
+      "industry": "食物饮品",
+      "auditor": "安永会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "bbee67982bd6"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "HK:01113",
+  "market": "HK",
+  "code": "01113",
+  "name": "长实集团",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:37",
+  "updated_at": "2026-09-29T10:43:37",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:37",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "长江实业集团有限公司(‘长江实业’或‘集团’)为具领导地位跨国企业,以推动业务长期持续发展及增长为目标,一直致力强化地产本业,并贯彻环球审慎投资策略以加强固定收入基础。集团多元业务现涵盖物业发展及投资、酒店及服务套房业务、物业及项目管理、英式酒馆业务和投资基建及实用资产业务。集团为香港最具规模的地产发展商之一,于香港市场具领导地位,在中国内地亦拥有广泛业务组合,并在新加坡及英国建立稳固市场基础。集团具备丰富的物业发展经验,不少香港瞩目地标及大型发展项目均由集团策划兴建,当中部分项目为集团核心资产。集团亦投资于三个上市房地产投资信托基金,当中包括汇贤产业信托(股份代号:87001)、置富产业信托(股份代号:778)及泓富产业信托(股份代号:808)。长江实业秉承放眼全球、积极开拓的既定策略,除原有地产业务,亦已成功开拓全球多元化固定收入业务,将经营领域拓展至英式酒馆业务,以及基建及实用资产业务,相关投资及营运现已遍及欧洲、澳洲、加拿大及英国。集团全资附属公司 Greene King 乃具领导地位的酿酒厂及英式酒馆营运商,于英格兰、威尔斯及苏格兰等地雇用约三万八千名员工,并经营约二千七百间英式酒馆、餐厅及酒店。基建及实用资产包括CK William集团,该集团为能源资产拥有人及营运商,业务遍布澳洲,当中包括配气商 Multinet Gas、气体输送管道 Dampier Bunbury Pipeline、配电商 United Energy,及清洁能源及远端能源供应商 Energy Developments;ista,该公司为世界具领导地位的能源管理综合服务供应商之一,并在欧洲(包括德国、荷兰及法国)具有重要市场地位;Reliance Home Comfort,该公司主要于加拿大从事建筑设备服务业务;UK Power Networks,该公司为于伦敦、英格兰东南部及东部提供服务的配电商;Northumbrian Water,该公司为于英格兰及威尔斯受规管的食水及污水处理公司;Dutch Enviro Energy,该公司为于荷兰从事转废为能业务的营运商;以及 Wales & West Utilities,该公司为于威尔斯及英格兰西南部提供服务的配气商。集团亦持有基建及实用资产业务的经济收益权益包括 Park’N Fly,该公司于加拿大提供机场外围停车场设施;UK Rails,该公司于英国从事铁路车辆租赁;以及 Australian Gas Networks,该公司于澳洲从事天然气配气业务。有关项目可为集团提供固定收入及现金流。",
+    "main_business": "主要从事地产业务。该公司从事物业发展、物业投资、酒店及服务套房业务、物业及项目管理业务。此外,该公司还从事飞机租赁业务。该公司在香港、内地、新加坡等海外市场开展业务。",
+    "vision": "",
+    "meta": {
+      "org_name": "长江实业集团有限公司",
+      "org_name_en": "CK Asset Holdings Limited",
+      "chairman": "李泽钜",
+      "secretary": "杨逸芝",
+      "founded": "2015-01-02",
+      "listed": "2015-06-03 00:00:00",
+      "website": "www.ckah.com",
+      "address": "香港皇后大道中2号长江集团中心7楼",
+      "employees": "54000",
+      "industry": "地产",
+      "auditor": "德勤·关黄陈方会计师行",
+      "org_form": "一般企业"
+    },
+    "content_hash": "57c65101db4d"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "id": "A:002648",
+  "market": "A",
+  "code": "002648",
+  "name": "卫星化学",
+  "version": 1,
+  "created_at": "2026-09-29T10:42:26",
+  "updated_at": "2026-09-29T10:42:26",
+  "raw": {
+    "fetched_at": "2026-09-29T10:42:26",
+    "source": "eastmoney_f10_org_basicinfo",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "卫星化学股份有限公司自1992年创业以来,始终坚定\"化工让生活更美好\"的初心,坚持“科技创造未来,立足轻烃一体化,打造低碳化学新材料科技公司\"的发展战略,现已形成新材料、新能源为核心的特色一体化产业链。公司聚焦在高端聚烯烃、电子化学品、氢能利用、二氧化碳综合利用等方面持续研发与创新,产品广泛应用于航空航天、新能源汽车、电子芯片、医疗卫生等领域,以不断拓展的化学新材料生态圈,与世界分享化学之美。",
+    "main_business": "(聚)丙烯、丙烯酸及酯、乙二醇、环氧乙烷、环氧丙烷和聚乙烯等产品的生产和销售。",
+    "vision": "",
+    "meta": {
+      "org_name": "卫星化学股份有限公司",
+      "chairman": "杨卫东",
+      "president": "杨卫东",
+      "secretary": "沈晓炜",
+      "founded": "2005-08-03 00:00:00",
+      "listed": "2011-12-28 00:00:00",
+      "website": "www.stl-chem.com",
+      "address": "浙江省嘉兴市南湖区富强路196号",
+      "control_holder": "浙江卫星控股股份有限公司",
+      "real_controller": "杨亚珍、杨卫东",
+      "independent_directors": "冯连芳,郭百涛,童建华,吴依",
+      "employees": "4811",
+      "industry": "基础化工-化学原料-其他化学原料",
+      "org_form": "大型民企",
+      "top_profit_product": "功能化学品",
+      "income_structure": "功能化学品、高分子新材料、其他业务",
+      "income_structure_ratio": "76.09%、23.63%、0.29%",
+      "auditor": "天健会计师事务所(特殊普通合伙)",
+      "concepts": "化工原料,锂电池概念,互联网金融,婴童概念,氢能源,环氧丙烷,液冷服务器,电池技术,HS300_,深成500,融资融券,深股通,MSCI中国,深证100R,养老金,富时罗素,标准普尔,周期股,大盘股,2026中报预增",
+      "business_scope": "许可项目:危险化学品生产;危险化学品经营。(依法须经批准的项目,经相关部门批准后方可开展经营活动,具体经营项目以相关部门批准文件或许可证件为准)一般项目:热力生产和供应;化工产品生产(不含许可类化工产品);合成材料制造(不含危险化学品);专用化学产品制造(不含危险化学品);化工产品销售(不含许可类化工产品);货物进出口。(除依法须经批准的项目外,凭营业执照依法自主开展经营活动)。"
+    },
+    "content_hash": "cae6f0e3bf7f"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

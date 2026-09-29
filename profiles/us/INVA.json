@@ -1,0 +1,38 @@
+{
+  "id": "US:INVA",
+  "market": "US",
+  "code": "INVA",
+  "name": "Innoviva Inc",
+  "version": 1,
+  "created_at": "2026-09-29T11:14:21",
+  "updated_at": "2026-09-29T11:14:21",
+  "raw": {
+    "fetched_at": "2026-09-29T11:14:21",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/inva/",
+    "summary": "Innoviva, Inc. operates as a biopharmaceutical company in the United States and internationally. Its royalty portfolio includes RELVAR/BREO ELLIPTA, a once-daily combination medicine consisting of a LABA, vilanterol, and an inhaled corticosteroid, and fluticasone furoate; ANORO ELLIPTA, a once-daily medicine combining a long-acting muscarinic antagonist, umeclidinium bromide, and ABA, VI. The company also markets GIAPREZA for increasing blood pressure in adults with septic or other distributive shock; XACDURO, a co-packaged for intravenous use ...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Innoviva, Inc.",
+      "sic": "2834",
+      "industry": "Pharmaceutical Preparations",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "1080014"
+    },
+    "content_hash": "2c674c2cec03"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

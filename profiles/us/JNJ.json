@@ -1,0 +1,38 @@
+{
+  "id": "US:JNJ",
+  "market": "US",
+  "code": "JNJ",
+  "name": "强生",
+  "version": 1,
+  "created_at": "2026-09-29T11:14:37",
+  "updated_at": "2026-09-29T11:14:37",
+  "raw": {
+    "fetched_at": "2026-09-29T11:14:37",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/jnj/",
+    "summary": "Johnson & Johnson, together with its subsidiaries, engages in the research and development, manufacture, and sale of a range of products in the healthcare field worldwide. It operates in two segments, Innovative Medicine and MedTech. The Innovative Medicine segment offers products for various therapeutic areas, such as oncology, immunology, neuroscience, pulmonary hypertension, infectious diseases, and cardiovascular and metabolism distributed through retailers, wholesalers, distributors, hospitals, and healthcare professionals for prescription...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "JOHNSON & JOHNSON",
+      "sic": "2834",
+      "industry": "Pharmaceutical Preparations",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "0103",
+      "state_of_incorporation": "NJ",
+      "cik": "200406"
+    },
+    "content_hash": "c98d7f5c0114"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "HK:09995",
+  "market": "HK",
+  "code": "09995",
+  "name": "荣昌生物",
+  "version": 1,
+  "created_at": "2026-09-29T10:44:28",
+  "updated_at": "2026-09-29T10:44:28",
+  "raw": {
+    "fetched_at": "2026-09-29T10:44:28",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "荣昌生物制药(烟台)股份有限公司由王威东先生领导的烟台荣昌制药股份有限公司和留美科学家房健民博士于2008年共同创立。荣昌生物总部位于中国山东省烟台市,在中国和美国均设有实验研究机构和办事处。荣昌生物致力于发现、开发、生产和商业化同类首创、同类最佳的生物药物,针对自身免疫、肿瘤、眼科等重大疾病领域创制出一批具有重大临床价值的生物新药。",
+    "main_business": "专注于抗体药物偶联物(ADC)、抗体融合蛋白、单抗及双抗等治疗性抗体药物领域",
+    "vision": "",
+    "meta": {
+      "org_name": "荣昌生物制药(烟台)股份有限公司",
+      "org_name_en": "RemeGen Co., Ltd.",
+      "chairman": "王威东",
+      "founded": "2008-07-04",
+      "listed": "2020-11-09 00:00:00",
+      "website": "www.remegen.cn",
+      "address": "中国山东省自由贸易试验区烟台片区烟台开发区北京中路58号",
+      "employees": "3048",
+      "industry": "药品及生物科技",
+      "auditor": "安永华明会计师事务所(特殊普通合伙),安永会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "0fdf4a5cde89"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

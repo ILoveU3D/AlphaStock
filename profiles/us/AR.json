@@ -1,0 +1,37 @@
+{
+  "id": "US:AR",
+  "market": "US",
+  "code": "AR",
+  "name": "Antero Resources Corp",
+  "version": 1,
+  "created_at": "2026-09-29T10:47:48",
+  "updated_at": "2026-09-29T10:47:48",
+  "raw": {
+    "fetched_at": "2026-09-29T10:47:48",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/ar/",
+    "summary": "Antero Resources Corporation, an independent oil and natural gas company, engages in the development, production, exploration, and acquisition of natural gas, natural gas liquids (NGLs), and oil properties in the United States. It operates in three segments: Exploration and Production; Marketing; and Equity Method Investment in Antero Midstream. As of December 31, 2025, the company had approximately 537,000 net acres in the Appalachian Basin; and approximately 168,000 net acres in the Upper Devonian Shale. Its gathering and compression systems ...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "ANTERO RESOURCES Corp",
+      "sic": "1311",
+      "industry": "Crude Petroleum & Natural Gas",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "cik": "1433270"
+    },
+    "content_hash": "f85647bc65fc"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

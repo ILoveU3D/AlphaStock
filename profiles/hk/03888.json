@@ -1,0 +1,42 @@
+{
+  "id": "HK:03888",
+  "market": "HK",
+  "code": "03888",
+  "name": "金山软件",
+  "version": 1,
+  "created_at": "2026-09-29T10:44:15",
+  "updated_at": "2026-09-29T10:44:15",
+  "raw": {
+    "fetched_at": "2026-09-29T10:44:15",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "金山软件有限公司是一家于香港联交所上市的中国领先的软件及互联网服务公司,旗下拥有西山居、猎豹移动、金山云以及WPS等四家子公司。随着「移动互联网转型」的战略实施,金山在整体业务及管理模式等方面已完成全面转型,并形成以互动娱乐、互联网安全及办公软件为支柱,以云计算为新起点的战略布局。公司在全球范围内拥有约7,000名员工,并在北京、珠海、成都、大连、广州及香港等多地分设研发中心,在北美、欧洲、日本及马来西亚等海外市场享有重要的市场份额。",
+    "main_business": "主要通过两个业务部门运营业务。娱乐软件分部主要从事研究及开发网络游戏以及提供网络游戏、手机游戏及休闲游戏服务业务。办公软件分部主要提供设计、研究、开发以及销售推广办公软件产品及服务。该公司还提供包括云计算机、存储和交付、以及基于云的综合解决方案服务。",
+    "vision": "",
+    "meta": {
+      "org_name": "金山软件有限公司",
+      "org_name_en": "Kingsoft Corporation Limited",
+      "chairman": "雷军",
+      "secretary": "赵宇,陈晓琳",
+      "founded": "1998-03-20",
+      "listed": "2007-10-09 00:00:00",
+      "website": "www.kingsoft.com",
+      "address": "香港九龙尖沙咀海港城港威大厦第5座32楼3208室,中国北京海淀区小营西路33号金山软件大厦",
+      "employees": "8945",
+      "industry": "软件服务",
+      "auditor": "安永会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "fcf40814dabd"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

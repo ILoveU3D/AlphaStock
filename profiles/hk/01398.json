@@ -1,0 +1,42 @@
+{
+  "id": "HK:01398",
+  "market": "HK",
+  "code": "01398",
+  "name": "工商银行",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:43",
+  "updated_at": "2026-09-29T10:43:43",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:43",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "中国工商银行股份有限公司成立于1984年1月1日。2005年10月28日,本行整体改制为股份有限公司。2006年10月27日,本行成功在上交所和香港联交所同日挂牌上市。本行致力于建设中国特色世界一流现代金融机构,拥有优质的客户基础、多元的业务结构、强劲的创新能力和市场竞争力。本行将服务作为立行之本,坚持以服务创造价值,向全球对公客户和个人客户提供丰富的金融产品和优质的金融服务,以自身高质量发展服务经济社会高质量发展。本行自觉将社会责任融入发展战略和经营管理活动,在服务制造业、发展普惠金融、支持乡村振兴、发展绿色金融、支持公益事业等方面受到广泛赞誉。本行始终聚焦主业,坚持服务实体经济的本源,与实体经济共荣共存、共担风雨、共同成长;始终坚持风险为本,牢牢守住底线,不断提高控制和化解风险的能力;始终坚持对商业银行经营规律的把握与遵循,致力于成为基业长青的银行;始终坚持稳中求进、创新求进,持续深化重点发展战略,积极发展金融科技,加快数智化转型;始终坚持专业专注,开拓专业化经营模式,锻造“大行工匠”。本行连续十三年位列英国《银行家》全球银行1000强榜单榜首,连续十年位列英国Brand Finance全球银行品牌价值500强榜单榜首。",
+    "main_business": "提供银行及相关金融服务。",
+    "vision": "",
+    "meta": {
+      "org_name": "中国工商银行股份有限公司",
+      "org_name_en": "Industrial And Commercial Bank Of China Limited",
+      "chairman": "廖林",
+      "secretary": "于洪,田枫林",
+      "founded": "1985-11-22",
+      "listed": "2006-10-27 00:00:00",
+      "website": "www.icbc.com.cn,www.icbc-ltd.com",
+      "address": "中国北京市西城区复兴门内大街55号,中国香港中环花园道3号中国工商银行大厦33楼",
+      "employees": "409758",
+      "industry": "银行",
+      "auditor": "安永华明会计师事务所(特殊普通合伙),安永会计师事务所",
+      "org_form": "银行"
+    },
+    "content_hash": "893b8272eed5"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

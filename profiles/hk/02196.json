@@ -1,0 +1,42 @@
+{
+  "id": "HK:02196",
+  "market": "HK",
+  "code": "02196",
+  "name": "复星医药",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:56",
+  "updated_at": "2026-09-29T10:43:56",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:56",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "上海复星医药(集团)股份有限公司(股票代码:600196.SH;02196.HK)成立于1994年,是一家创新驱动的全球化医药健康产业集团。我们以“让每个家庭乐享健康”为使命,深耕制药业务,以创新药为发展重点,直接运营医疗器械与医学诊断、医疗健康服务业务,并通过联营公司国药控股覆盖医药商业领域,构建医药健康全产业链生态。聚力创新,深耕全球。复星医药已形成开放式、全球化的创新研发体系,围绕未满足临床需求,深度布局肿瘤、免疫炎症、神经退行性疾病等核心治疗领域,积极拓展慢病及罕见病等领域,打造具有长期竞争力的产品管线与综合解决方案。同时,复星医药持续夯实抗体和ADC、小分子、细胞治疗等核心技术平台,并积极拓展核药、小核酸等前沿技术,强化早期创新能力,加速科研成果转化。我们的创新产品已在全球90多个国家和地区销售,覆盖中国、美国、欧洲、非洲、印度及东南亚等市场。面向未来,在“创新引领、深度国际化、全面拥抱AI”的战略引领下,复星医药将秉持“关爱生命、不断创新、精益求精、合作共赢”的核心价值观,致力于成为全球领先的医疗创新整合者,努力推动医疗创新成果惠及更多全球患者,为守护人类健康贡献力量。",
+    "main_business": "制药、医疗器械与医学诊断、医疗健康服务",
+    "vision": "",
+    "meta": {
+      "org_name": "上海复星医药(集团)股份有限公司",
+      "org_name_en": "Shanghai Fosun Pharmaceutical (Group) Co.,Ltd.",
+      "chairman": "陈玉卿",
+      "secretary": "董晓娴,陈秀玲",
+      "founded": "1995-05-31",
+      "listed": "2012-10-30 00:00:00",
+      "website": "www.fosunpharma.com",
+      "address": "上海市宜山路1289号A楼",
+      "employees": "40684",
+      "industry": "药品及生物科技",
+      "auditor": "安永华明会计师事务所(特殊普通合伙),安永会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "a42724e254bc"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

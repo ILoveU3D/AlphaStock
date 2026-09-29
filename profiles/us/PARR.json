@@ -1,0 +1,38 @@
+{
+  "id": "US:PARR",
+  "market": "US",
+  "code": "PARR",
+  "name": "Par Pacific Holdings Inc",
+  "version": 1,
+  "created_at": "2026-09-29T11:20:26",
+  "updated_at": "2026-09-29T11:20:26",
+  "raw": {
+    "fetched_at": "2026-09-29T11:20:26",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/parr/",
+    "summary": "Par Pacific Holdings, Inc., an energy company, provides renewable and conventional fuels in the United States. The company operates through three segments: Refining, Retail, and Logistics. The Refining segment owns and operates refineries that convert crude oil into gasoline, distillate, asphalt, and other products. The Retail segment operates convenience stores and fuel retail outlets that sell gasoline, diesel, and retail merchandise, such as soft drinks, prepared food, and other sundries under the Hele, 76, and nomnom brands, as well as unat...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "PAR PACIFIC HOLDINGS, INC.",
+      "sic": "1311",
+      "industry": "Crude Petroleum & Natural Gas",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "821483"
+    },
+    "content_hash": "69d8caf0361e"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

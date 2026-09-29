@@ -1,0 +1,38 @@
+{
+  "id": "US:ALL",
+  "market": "US",
+  "code": "ALL",
+  "name": "好事达保险",
+  "version": 1,
+  "created_at": "2026-09-29T10:46:19",
+  "updated_at": "2026-09-29T10:46:19",
+  "raw": {
+    "fetched_at": "2026-09-29T10:46:19",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/all/",
+    "summary": "The Allstate Corporation, together with its subsidiaries, provides property and casualty, and other insurance products in the United States and Canada. It operates in four segments: Allstate Protection; Run-off Property-Liability; Protection Services; and Corporate and Other. The company offers private passenger auto, homeowners, other personal lines and commercial insurance through exclusive agents, independent agents, contact centers and online under the Allstate, National General, Direct Auto and Answer Financial brands. It also provides con...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "ALLSTATE CORP",
+      "sic": "6331",
+      "industry": "Fire, Marine & Casualty Insurance",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "899051"
+    },
+    "content_hash": "2831e31183dc"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

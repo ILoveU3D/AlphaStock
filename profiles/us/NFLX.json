@@ -1,0 +1,38 @@
+{
+  "id": "US:NFLX",
+  "market": "US",
+  "code": "NFLX",
+  "name": "奈飞",
+  "version": 1,
+  "created_at": "2026-09-29T11:18:00",
+  "updated_at": "2026-09-29T11:18:00",
+  "raw": {
+    "fetched_at": "2026-09-29T11:18:00",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/nflx/",
+    "summary": "Netflix, Inc. provides entertainment services worldwide. The company offers television (TV) series, documentaries, feature films, games, and live programming across various genres and languages. It also provides members the ability to receive streaming content through a host of internet-connected devices, including TVs, digital video players, TV set-top boxes, and mobile devices. Netflix, Inc. was incorporated in 1997 and is headquartered in Los Gatos, California.",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "NETFLIX INC",
+      "sic": "7841",
+      "industry": "Services-Video Tape Rental",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "1065280"
+    },
+    "content_hash": "c9a829032a7e"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

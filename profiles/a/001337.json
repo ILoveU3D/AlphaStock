@@ -1,0 +1,50 @@
+{
+  "id": "A:001337",
+  "market": "A",
+  "code": "001337",
+  "name": "四川黄金",
+  "version": 1,
+  "created_at": "2026-09-29T10:42:13",
+  "updated_at": "2026-09-29T10:42:13",
+  "raw": {
+    "fetched_at": "2026-09-29T10:42:13",
+    "source": "eastmoney_f10_org_basicinfo",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "四川黄金股份有限公司,木里县容大矿业有限责任公司成立于2006年8月16日,于2021年1月27日经核准企业名称变更为四川容大黄金有限责任公司,于2021年3月29日经核准企业名称变更为四川容大黄金股份有限公司(以下简称公司),由四川省天府容大矿业有限公司、北京金阳矿业投资有限责任公司、木里县国有投资发展有限责任公司、紫金矿业集团南方投资有限公司等十三家股东发起设立,主营黄金开采,矿产品及矿山机械的经营,矿产地质、工程地质、地质勘查的咨询服务、售后服务等。",
+    "main_business": "金矿的采选及销售",
+    "vision": "",
+    "meta": {
+      "org_name": "四川黄金股份有限公司",
+      "chairman": "冯希尧",
+      "president": "吴安东",
+      "secretary": "周立",
+      "founded": "2006-08-16 00:00:00",
+      "listed": "2023-03-03 00:00:00",
+      "website": "www.scrdgold.com",
+      "address": "四川省成都市高新区天泰路145号",
+      "control_holder": "四川黄金集团有限公司",
+      "real_controller": "四川省地质矿产勘查开发局",
+      "independent_directors": "刘云平,李磊,马骁,冯孝良",
+      "employees": "414",
+      "industry": "有色金属-贵金属-黄金",
+      "org_form": "地方国有企业",
+      "top_profit_product": "金精矿",
+      "income_structure": "金精矿",
+      "income_structure_ratio": "100.00%",
+      "auditor": "信永中和会计师事务所(特殊普通合伙)",
+      "concepts": "黄金概念,西部大开发,央国企改革,融资融券,深股通,小盘股,小盘成长,2026中报预增",
+      "business_scope": "黄金开采,矿产品及矿山机械的经营,矿产地质,工程地质、地质勘查的咨询服务(凭行政许可或审批文件经营)售后服务(依法须经批准的项目,经相关部门批准后方可开展经营活动)"
+    },
+    "content_hash": "46a478e349f7"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

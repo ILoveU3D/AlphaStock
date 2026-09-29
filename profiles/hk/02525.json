@@ -1,0 +1,42 @@
+{
+  "id": "HK:02525",
+  "market": "HK",
+  "code": "02525",
+  "name": "禾赛-W",
+  "version": 1,
+  "created_at": "2026-09-29T10:44:03",
+  "updated_at": "2026-09-29T10:44:03",
+  "raw": {
+    "fetched_at": "2026-09-29T10:44:03",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "禾赛科技是一家在开曼群岛注册成立的境外控股母公司,主要通过其境内实体子公司上海禾赛科技有限公司运营。其子公司禾赛科技于2014年创立于中国上海,致力于做“机器人的眼睛”,是全球自动驾驶及高级辅助驾驶(ADAS)激光雷达的领军企业。禾赛在光学、机械、电子等激光雷达核心领域有着卓越的研发能力和深厚的技术积累,在全球范围内拥有数百项专利,其自研芯片、功能安全、主动抗干扰等技术打破了行业多项记录。禾赛的客户包括全球主流自动驾驶公司和顶级汽车厂商、一级供应商、机器人公司等。公司累计获得包括小米、美团、博世、百度、光速、高瓴、CPE、启明等机构融资。禾赛的愿景是通过高性能、高可靠性、低成本的三维传感器赋能机器人,让人类生活更高效舒适。",
+    "main_business": "主要从事提供三维激光雷达(LiDAR)解决方案的控股公司。该公司的主要业务包括设计、开发、制造及销售激光雷达产品和气体传感器。该公司的主要产品包括AT系列、ET系列及FT系列等高级驾驶辅助系统(ADAS)产品,以及Pandar系列、OT系列、XT系列及QT系列机器人产品,用于远距离探测及盲点探测。该公司产品应用于支持ADAS的乘用车和商用车,自动驾驶汽车及机器人领域。该公司在中国国内市场和海外市场开展业务。",
+    "vision": "",
+    "meta": {
+      "org_name": "禾赛科技",
+      "org_name_en": "Hesai Group",
+      "chairman": "李一帆",
+      "secretary": "欧阳丽妮,杨彩莲",
+      "founded": "2021-04-21",
+      "listed": "2025-09-16 00:00:00",
+      "website": "www.hesaitech.com",
+      "address": "香港铜锣湾希慎道33号利园一期19楼1922室,中华人民共和国上海市长宁区昭化路658号A栋10楼",
+      "employees": "1249",
+      "industry": "软件服务",
+      "auditor": "德勤·关黄陈方会计师行",
+      "org_form": "一般企业"
+    },
+    "content_hash": "b783b3562bee"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

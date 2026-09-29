@@ -1,0 +1,42 @@
+{
+  "id": "HK:01258",
+  "market": "HK",
+  "code": "01258",
+  "name": "中国有色矿业",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:39",
+  "updated_at": "2026-09-29T10:43:39",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:39",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "中国有色矿业有限公司(香港联交所股份代号:01258.HK)是全球领先的铜生产商,在赞比亚专注经营铜开采、选矿、湿法冶炼、火法冶炼及销售的垂直综合业务。公司控股股东为中国有色矿业集团有限公司(简称“中国有色集团”),是国资委直属(直接管理)的大型中央(中国国有)企业,于中国及海外从事开发有色金属矿产资源开发、建筑工程和相关贸易及技术服务,亦是中国有色集团于铜及钴资源开发的海外平台。",
+    "main_business": "主要从事铜钴金属勘探、采矿、选矿、湿法冶炼、火法冶炼的控股公司。该公司经营两个分部。湿法分部生产及销售采用溶剂萃取,即电积法技术生产之阴极铜及氢氧化钴(包括勘探及开采氧化铜矿),并生产销售硫磺制酸。冶炼分部生产及销售采用ISA熔炼技术生产之粗铜和阳极铜(包括勘探及开采硫酸铜矿)、硫酸及液态二氧化硫。",
+    "vision": "",
+    "meta": {
+      "org_name": "中国有色矿业有限公司",
+      "org_name_en": "China Nonferrous Mining Corporation Limited",
+      "chairman": "肖波",
+      "secretary": "黄敏仪,王晓婧",
+      "founded": "2011-07-18",
+      "listed": "2012-06-29 00:00:00",
+      "website": "www.cnmcl.net",
+      "address": "香港九龙尖沙咀柯士甸路22–26号好兆年行13楼1303室",
+      "employees": "9005",
+      "industry": "一般金属及矿石",
+      "auditor": "毕马威会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "4600b0c01e1e"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

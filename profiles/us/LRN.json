@@ -1,0 +1,38 @@
+{
+  "id": "US:LRN",
+  "market": "US",
+  "code": "LRN",
+  "name": "Stride Inc",
+  "version": 1,
+  "created_at": "2026-09-29T11:16:18",
+  "updated_at": "2026-09-29T11:16:18",
+  "raw": {
+    "fetched_at": "2026-09-29T11:16:18",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/lrn/",
+    "summary": "Stride, Inc., a technology company, provides an educational platform to deliver proprietary and third-party curriculum, software systems, and educational services in the United States. The company offers online coursework and content in software engineering, healthcare, and medical fields, as well as state customized versions of those courses, electives, and instructional supports; end-to-end platform includes single sign-on capability for content management, learning management, student information, data reporting and analytics, and various su...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Stride, Inc.",
+      "sic": "8200",
+      "industry": "Services-Educational Services",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "0630",
+      "state_of_incorporation": "DE",
+      "cik": "1157408"
+    },
+    "content_hash": "2563372d5666"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

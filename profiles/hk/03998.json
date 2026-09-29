@@ -1,0 +1,42 @@
+{
+  "id": "HK:03998",
+  "market": "HK",
+  "code": "03998",
+  "name": "波司登",
+  "version": 1,
+  "created_at": "2026-09-29T10:44:19",
+  "updated_at": "2026-09-29T10:44:19",
+  "raw": {
+    "fetched_at": "2026-09-29T10:44:19",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "波司登国际控股有限公司(“本集团”)创立于1976年,经过不懈努力,致力成为行业领先的羽绒服专家。集团自2018年开始战略转型以来,获得消费者广泛认可,实现了可持续增长。目前,本集团旗下羽绒服品牌包括波司登、雪中飞及冰洁。通过这些品牌,本集团得以满足不同客户群体的需求及巩固其在中国市场的领导地位。本集团的女装业务品牌包括杰西、邦宝、柯利亚诺及柯罗芭;校服业务品牌为飒美特。本集团积极实施品牌发展战略。未来,集团将继续聚焦羽绒服核心主业,以品牌建设为核心,全面升级产品、渠道及终端,以波司登温暖全世界为使命,致力成为世界领先的时尚功能科技服饰集团。",
+    "main_business": "主要从事羽绒服品牌组合的开发和管理。该公司通过四个分部运营。羽绒服分部从事采购及分销品牌羽绒服及相关产品以及若干品牌授权业务。贴牌加工管理分部从事采购及分销贴牌加工产品业务。女装分部从事采购及分销品牌女装业务。多元化服装分部从事采购及分销四季化服装业务,包括校服及童装等。",
+    "vision": "",
+    "meta": {
+      "org_name": "波司登国际控股有限公司",
+      "org_name_en": "Bosideng International Holdings Ltd.",
+      "chairman": "高德康",
+      "secretary": "梁爽",
+      "founded": "2006-07-10",
+      "listed": "2007-10-11 00:00:00",
+      "website": "www.bosideng.com,company.bosideng.com",
+      "address": "香港中环皇后大道中99号中环中心57楼5709室",
+      "employees": "12895",
+      "industry": "纺织及服饰",
+      "auditor": "毕马威会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "c9574c488e4e"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

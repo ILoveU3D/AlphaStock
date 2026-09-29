@@ -1,0 +1,38 @@
+{
+  "id": "US:HRB",
+  "market": "US",
+  "code": "HRB",
+  "name": "H&R布洛克",
+  "version": 1,
+  "created_at": "2026-09-29T11:12:36",
+  "updated_at": "2026-09-29T11:12:36",
+  "raw": {
+    "fetched_at": "2026-09-29T11:12:36",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/hrb/",
+    "summary": "H&R Block, Inc., through its subsidiaries, provides assisted and do-it-yourself (DIY) tax preparation solutions in the United States, Canada, and Australia. The company offers tax preparation services, such as assisted income tax return preparation and related services through a system of retail offices operated directly or through its franchisees in person or virtually; refund transfers for clients to receive tax refunds; Peace of Mind, an extended service plan; and H&R Block Emerald Prepaid Mastercard and Spruce debit cards. It also provides ...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "H&R BLOCK INC",
+      "sic": "7200",
+      "industry": "Services-Personal Services",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "0630",
+      "state_of_incorporation": "MO",
+      "cik": "12659"
+    },
+    "content_hash": "bd975455dd20"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

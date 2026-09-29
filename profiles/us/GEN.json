@@ -1,0 +1,38 @@
+{
+  "id": "US:GEN",
+  "market": "US",
+  "code": "GEN",
+  "name": "Gen Digital Inc",
+  "version": 1,
+  "created_at": "2026-09-29T11:09:05",
+  "updated_at": "2026-09-29T11:09:05",
+  "raw": {
+    "fetched_at": "2026-09-29T11:09:05",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/gen/",
+    "summary": "Gen Digital Inc. engages in the provision of cyber safety and trust-based solutions for individuals, families, and small businesses. The company offers security and performance management, identity protection, and online privacy, as well as technology platforms. It also provides restoration support services, digital reputation, and secure financial wellness. The company offers its products under the Norton, Avast, LifeLock, MoneyLion, Avira, AVG, ReputationDefender, and CCleaner brands. The company was formerly known as NortonLifeLock Inc. and ...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Gen Digital Inc.",
+      "sic": "7372",
+      "industry": "Services-Prepackaged Software",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "0328",
+      "state_of_incorporation": "DE",
+      "cik": "849399"
+    },
+    "content_hash": "bb4cfa24ce20"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

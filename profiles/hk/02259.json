@@ -1,0 +1,42 @@
+{
+  "id": "HK:02259",
+  "market": "HK",
+  "code": "02259",
+  "name": "紫金黄金国际",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:57",
+  "updated_at": "2026-09-29T10:43:57",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:57",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "紫金黄金国际有限公司是紫金矿业的所有黄金矿山(除中国之外)整合而成的全球领先黄金开采公司之一,公司继承了紫金矿业在低品位难采选资源勘查、开发及运营的管理竞争优势,成为一家全球领先的黄金开采公司,主要从事黄金的勘查、开采、选矿、冶炼、精炼及销售。公司通过全球并购整合高潜力黄金矿山资源,并运用地质勘查、研发、工程、建设和矿山运营能力,以及国际ESG系统,使公司能够实现持续增储增产与高效运营。",
+    "main_business": "主要从事黄金及有色金属开采业务。该公司主要从事黄金及有色金属的勘探、采矿、选矿及销售业务。该公司主要销售金条、合质金及金精矿等产品。",
+    "vision": "",
+    "meta": {
+      "org_name": "紫金黄金国际有限公司",
+      "org_name_en": "ZIJIN GOLD INTERNATIONAL COMPANY LIMITED",
+      "chairman": "林泓富",
+      "secretary": "黄晓虹,何健伟",
+      "founded": "2007-10-22",
+      "listed": "2025-09-30 00:00:00",
+      "website": "www.zijingoldintl.com",
+      "address": "香港九龙柯士甸道西1号环球贸易广场75楼7506A室",
+      "employees": "11014",
+      "industry": "黄金及贵金属",
+      "auditor": "安永会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "b2e26acb2766"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

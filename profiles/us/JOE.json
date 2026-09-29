@@ -1,0 +1,38 @@
+{
+  "id": "US:JOE",
+  "market": "US",
+  "code": "JOE",
+  "name": "圣乔",
+  "version": 1,
+  "created_at": "2026-09-29T11:14:40",
+  "updated_at": "2026-09-29T11:14:40",
+  "raw": {
+    "fetched_at": "2026-09-29T11:14:40",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/joe/",
+    "summary": "The St. Joe Company, together with its subsidiaries, operates as a real estate development, asset management, and operating company in the United States. It operates through three segments: Residential, Hospitality, and Commercial. The Residential segment engages in the development of communities into homesites for sale to homebuilders and on a limited basis to retail customers. This segment primarily sells developed homesites, completed homes, parcels of entitled or undeveloped land or homesites, and a homesite residual on homebuilder, as well...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "ST JOE Co",
+      "sic": "6552",
+      "industry": "Land Subdividers & Developers (No Cemeteries)",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "FL",
+      "cik": "745308"
+    },
+    "content_hash": "8b379fa80860"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

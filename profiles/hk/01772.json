@@ -1,0 +1,42 @@
+{
+  "id": "HK:01772",
+  "market": "HK",
+  "code": "01772",
+  "name": "赣锋锂业",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:47",
+  "updated_at": "2026-09-29T10:43:47",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:47",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "江西赣锋锂业集团股份有限公司业务贯穿资源开采、提炼加工、电池制造回收全产业链,产品被广泛应用于电动汽车、储能、3C产品、化学品及制药等领域。集团锂矿资源遍及全球,同时拥有“卤水提锂”、“矿石提锂”和“回收提锂”产业化技术;锂化合物、金属锂产能充足,在海内外设有多处生产基地;拥有完整的电池制造及回收技术,为电池生产商及电动汽车生产商提供可持续的增值解决方案。",
+    "main_business": "贯穿上游锂资源开发、中游锂盐深加工及金属锂冶炼、下游锂电池制造及退役锂电池综合回收利用",
+    "vision": "",
+    "meta": {
+      "org_name": "江西赣锋锂业集团股份有限公司",
+      "org_name_en": "Ganfeng Lithium Group Co., Ltd.",
+      "chairman": "李良彬",
+      "secretary": "廖轶琳,温咏宜",
+      "founded": "2000-03-02",
+      "listed": "2018-10-11 00:00:00",
+      "website": "www.ganfenglithium.com",
+      "address": "江西省新余经济开发区龙腾路",
+      "employees": "19257",
+      "industry": "一般金属及矿石",
+      "auditor": "安永华明会计师事务所(特殊普通合伙),安永会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "4473533df8cb"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

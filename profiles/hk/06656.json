@@ -1,0 +1,42 @@
+{
+  "id": "HK:06656",
+  "market": "HK",
+  "code": "06656",
+  "name": "思格新能",
+  "version": 1,
+  "created_at": "2026-09-29T10:44:22",
+  "updated_at": "2026-09-29T10:44:22",
+  "raw": {
+    "fetched_at": "2026-09-29T10:44:22",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "思格新能源(上海)股份有限公司是分布式储能系统(DESS)解决方案领域的全球领先者。公司认为,分布式储能系统-一款全球各地数千万家庭和企业用于太阳能发电、储能和充电的产品-其特点是融合AI和先进的软件技术,且提供更智能、更安全和可拓展的能源解决方案。公司在战略上专注于可堆叠分布式光储一体机解决方案市场,这一细分市场于2024年约占储能系统市场的0.7%。据弗若斯特沙利文报告,于成立两年后,按产品出货量计,公司已成为全球排名第一的可堆叠分布式光储一体机解决方案提供商,2024年的市场份额达28.6%,占同期分布式储能系统市场的0.6%及储能系统市场的0.2%。",
+    "main_business": "是分布式储能系统(DESS)解决方案领域的全球领先者。",
+    "vision": "",
+    "meta": {
+      "org_name": "思格新能源(上海)股份有限公司",
+      "org_name_en": "Sigenergy Technology Co., Ltd.",
+      "chairman": "许映童",
+      "secretary": "赖浩恩,覃星",
+      "founded": "2022-05-24",
+      "listed": "2026-04-16 00:00:00",
+      "website": "www.sigenergy.com",
+      "address": "中国(上海)自由贸易试验区云桥路678号12-2幢,香港铜锣湾希慎道33号利园一期19楼1922室",
+      "employees": "2550",
+      "industry": "工业工程",
+      "auditor": "安永会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "4611cda9c2e0"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

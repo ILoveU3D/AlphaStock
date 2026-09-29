@@ -1,0 +1,50 @@
+{
+  "id": "A:000728",
+  "market": "A",
+  "code": "000728",
+  "name": "国元证券",
+  "version": 1,
+  "created_at": "2026-09-29T10:42:05",
+  "updated_at": "2026-09-29T10:42:05",
+  "raw": {
+    "fetched_at": "2026-09-29T10:42:05",
+    "source": "eastmoney_f10_org_basicinfo",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "国元证券股份有限公司(以下简称“公司”)是由原安徽省国际信托投资公司和原安徽省信托投资公司作为主发起人,于2001年10月成立。2007年10月30日以股权分置改革为契机,公司借壳“北京化二”成功在深圳证券交易所上市。",
+    "main_business": "财富信用业务,自营业务,投资银行业务,资产管理业务,机构业务板块,国际业务板块",
+    "vision": "",
+    "meta": {
+      "org_name": "国元证券股份有限公司",
+      "chairman": "沈和付",
+      "president": "胡伟",
+      "secretary": "李洲峰",
+      "founded": "1997-06-06 00:00:00",
+      "listed": "1997-06-16 00:00:00",
+      "website": "www.gyzq.com.cn",
+      "address": "安徽省合肥市梅山路18号",
+      "control_holder": "安徽国元金融控股集团有限责任公司",
+      "real_controller": "安徽省人民政府国有资产监督管理委员会",
+      "independent_directors": "鲁炜,任明川,郎元鹏,蒋翠清,阎焱(YAN Andrew Y)",
+      "employees": "4108",
+      "industry": "金融-非银行金融-证券",
+      "org_form": "地方国有企业",
+      "top_profit_product": "证券自营业务",
+      "income_structure": "证券自营业务、财富信用业务、其他业务、期货公司业务、国际公司业务、资产管理业务、投资银行业务",
+      "income_structure_ratio": "40.51%、32.73%、10.78%、7.66%、3.68%、2.99%、1.66%",
+      "auditor": "天职国际会计师事务所(特殊普通合伙)",
+      "concepts": "参股期货,互联网金融,央国企改革,券商概念,机构重仓,深成500,融资融券,参股新三板,中证500,深股通,MSCI中国,富时罗素,标准普尔,破净股,中盘股,破增发价股,金融地产风格",
+      "business_scope": "许可项目:证券业务;证券投资咨询;证券公司为期货公司提供中间介绍业务;保险兼业代理业务;证券投资基金托管(依法须经批准的项目,经相关部门批准后方可开展经营活动,具体经营项目以相关部门批准文件或许可证件为准)一般项目:证券财务顾问服务(除许可业务外,可自主依法经营法律法规非禁止或限制的项目)"
+    },
+    "content_hash": "2b5d2c6e180d"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

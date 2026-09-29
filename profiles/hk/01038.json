@@ -1,0 +1,42 @@
+{
+  "id": "HK:01038",
+  "market": "HK",
+  "code": "01038",
+  "name": "长江基建集团",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:34",
+  "updated_at": "2026-09-29T10:43:34",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:34",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "长江基建集团有限公司是一家环球基建集团,多元化业务包括:能源基建、交通基建、水处理基建、废物管理、转废为能、屋宇服务基建及基建相关业务。长江基建的投资及营运范围主要分布于香港、中国内地、英国、欧洲大陆、澳洲、新西兰、加拿大及美国。长江基建持有电能实业有限公司(‘电能实业’)百分之三十六点零一权益。电能实业是一家国际能源及公用事业投资公司,投资项目包括发电及输配电、可再生能源、转废为能、输气、配气及原油储存和输送业务。于香港,电能实业透过港灯电力投资及港灯电力投资有限公司持有香港电灯有限公司(‘港灯’)百分之三十三点三七的权益。港灯是港岛区及南丫岛的唯一供电商,为区内超过五十八万名客户提供电力。长江基建于英国拥有强大的投资组合,业务遍及配气、配电、食水供应和污水处理,发电范畴和铁路车辆租赁。投资项目包括:服务英格兰北部的配气商Northern Gas Networks;服务威尔斯及英格兰西南部的配气商Wales & West Utilities;服务北爱尔兰东部,包括贝尔法斯特的配气商Phoenix Energy;英国其中一家最大的配电商UK Power Networks,该公司的服务范围覆盖伦敦、英格兰东南部及东部;位于布里斯托市的发电厂Seabank Power;为英格兰东北部及东南部提供服务的食水及污水处理公司Northumbrian Water;及以长期合约形式出租广泛类型列车之UK Rails。于德国,长江基建持有ista之权益。ista为世界具领导地位的能源管理综合服务供应商之一,业务遍及全球超过20个国家,并在欧洲(包括德国、法国、丹麦及荷兰)具有重要市场地位。于荷兰,长江基建持有Dutch Enviro Energy之权益。Dutch Enviro Energy为该国最大之废物转化能源公司之一,于两个地区经营多间废物处理厂:位于鹿特丹港地区之Rozenburg;以及邻近德国边境之Duiven。长江基建是澳洲最大海外基建投资者之一,于当地从事配电、配气、输气、发电及可再生能源输电业务,投资组合包括:南澳洲省的主要配电商SA Power Networks;为墨尔本商业中心区及市郊一带提供配电服务的Citi Power;维多利亚省最大的配电商Powercor;于维多利亚省提供配电服务的United Energy;于维多利亚省经营可再生能源输电业务的Transmission General Holdings;澳洲其中一家最大的天然气配气商Australian Gas Networks Limited;维多利亚省的一个配气商Multinet Gas;连接Carnarvon/Browse Basins及珀斯的输气管道Dampier Bunbury Pipeline;及一家提供安全、清洁、低温室气体排放能源及远端能源解决方案的国际供应商Energy Developments。于新西兰,长江基建持有Wellington Electricity配电网络之权益。该电网为新西兰首都威灵顿、波里鲁瓦(Porirua)及哈特谷(Hutt Valley)地区提供配电服务。集团亦拥有EnviroNZ废物管理公司。该公司从事多元化的垂直废物综合管理业务,服务范围覆盖新西兰全国各地。长江基建旗下之Canadian Power于加拿大安大略省、阿尔伯达省及萨斯喀彻温省持有五家电厂及两家风力发电场之权益。集团亦持有Park'NFly之权益,该公司乃加拿大最具规模的机场外围停车场服务公司;以及持有Reliance Home Comfort之权益,该公司是在加拿大最大的建筑设备服务商之一,此外,集团亦持有Husky Midstream Limited Partnership之权益。该业务包括输油管道、原油储存设施、天然气基建设施以及其它配套。长江基建的中国内地投资组合包括多条分布于广东省的收费道路及桥梁,总长度约一百五十公里。长江基建于香港基建材料市场占领导地位,业务范畴包括水泥、混凝土、石料及沥青。集团亦于内地设有水泥生产设施,并于菲律宾经营石灰石矿开采业务。",
+    "main_business": "主要从事发展、投资及运营基建业务。该公司主要从事发展、投资及经营能源基建、交通基建、水处理基建、废物管理及转废为能业务、屋宇服务基建、基建相关业务。该公司主要还从事股份投资及项目策划以及证券投资。该公司在中国、英国、欧洲大陆、澳洲、新西兰、加拿大及美国从事业务。",
+    "vision": "",
+    "meta": {
+      "org_name": "长江基建集团有限公司",
+      "org_name_en": "CK Infrastructure Holdings Limited",
+      "chairman": "李泽钜",
+      "secretary": "杨逸芝",
+      "founded": "1996-05-28",
+      "listed": "1996-07-17 00:00:00",
+      "website": "www.cki.com.hk",
+      "address": "香港皇后大道中2号长江集团中心12楼",
+      "employees": "2031",
+      "industry": "公用事业",
+      "auditor": "德勤·关黄陈方会计师行",
+      "org_form": "一般企业"
+    },
+    "content_hash": "31065e22eebb"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

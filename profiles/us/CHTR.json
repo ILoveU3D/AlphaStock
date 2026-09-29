@@ -1,0 +1,29 @@
+{
+  "id": "US:CHTR",
+  "market": "US",
+  "code": "CHTR",
+  "name": "特许通讯",
+  "version": 1,
+  "created_at": "2026-09-29T10:58:57",
+  "updated_at": "2026-09-29T10:58:57",
+  "raw": {
+    "fetched_at": "2026-09-29T10:58:57",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/chtr/",
+    "summary": "Charter Communications, Inc. operates as a broadband connectivity company in the United States. The company offers subscription-based internet, mobile, video, and voice services; broadband connectivity services, including fixed internet, WiFi, and mobile; Spectrum internet products; advanced WiFi services; and in-home WiFi, which provides customers with high performance wireless routers and managed WiFi services to enhance their wireless internet experience. It also offers wireline voice communications services using voice over internet protoco...",
+    "main_business": "",
+    "vision": "",
+    "meta": {},
+    "content_hash": "c64a5f646676"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "HK:01651",
+  "market": "HK",
+  "code": "01651",
+  "name": "津上机床中国",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:44",
+  "updated_at": "2026-09-29T10:43:44",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:44",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "津上精密机床(中国)有限公司,是一家高精密数控机床专业制造商,其2016年在外资高精密数控机床制造商中销售收入排名第一,控股股东日本津上是一家历史悠久的日本机床制造商,成立于1937年,在东京证券交易所上市超过了50年。\r\n津上中国,秉承TSUGAMI品牌【高精度、高速度、高刚性】的特点,专业定制开发、生产、销售精密自动车床、精密刀塔车床、精密加工中心、精密磨床等各类高精密数控机床。公司所有产品都在中国平湖工厂生产完成。随着高精密数控技术的持续发展和国家政策的大力支持,高精密数控机床将在中国工业生产活动中不断普及开来。这对于公司来说,未来的市场,充满商机,充满挑战。\r\n津上中国,公司只做客户买了还想再买的机床",
+    "main_business": "主要从事高精度计算机数字控制(CNC)机床的制造和销售的投资控股公司。该公司的主营业务为专业订制开发、生产、销售精密车床、精密加工中心、精密磨床等各类数控高精密机床。该公司的产品主要应用在汽车零部件、移动电话和通讯设施等信息技术(IT)电子零部件、工业自动化用零部件、医疗器械和工程机械等行业。该公司在国内和国外市场开展业务。",
+    "vision": "",
+    "meta": {
+      "org_name": "津上精密机床(中国)有限公司",
+      "org_name_en": "Precision Tsugami (China) Corporation Limited",
+      "chairman": "王晓坤",
+      "secretary": "黄慧儿",
+      "founded": "2013-07-02",
+      "listed": "2017-09-25 00:00:00",
+      "website": "www.tsugami.com.cn",
+      "address": "香港铜锣湾希慎道33号利园一期19楼1915室,中华人民共和国(‘中国’)浙江省平湖经济技术开发区平成路2001号",
+      "employees": "2429",
+      "industry": "工业工程",
+      "auditor": "安永会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "d0d779e05798"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

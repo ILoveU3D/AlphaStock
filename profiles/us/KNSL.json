@@ -1,0 +1,37 @@
+{
+  "id": "US:KNSL",
+  "market": "US",
+  "code": "KNSL",
+  "name": "Kinsale Capital Group Inc",
+  "version": 1,
+  "created_at": "2026-09-29T11:14:41",
+  "updated_at": "2026-09-29T11:14:41",
+  "raw": {
+    "fetched_at": "2026-09-29T11:14:41",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/knsl/",
+    "summary": "Kinsale Capital Group, Inc. engages in the provision of property and casualty insurance products in the United States. The companyâs commercial lines offerings include commercial property, excess casualty, general casualty, small business casualty, construction, allied health, small business property, products liability, entertainment, commercial auto, energy, excess professional, life sciences, inland marine, professional liability, environmental, health care, management liability, public entity, agribusiness casualty and property, aviation, o...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Kinsale Capital Group, Inc.",
+      "sic": "6331",
+      "industry": "Fire, Marine & Casualty Insurance",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "cik": "1669162"
+    },
+    "content_hash": "53c7de451e3c"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

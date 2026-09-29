@@ -1,0 +1,37 @@
+{
+  "id": "US:NVMI",
+  "market": "US",
+  "code": "NVMI",
+  "name": "Nova Ltd",
+  "version": 1,
+  "created_at": "2026-09-29T11:19:37",
+  "updated_at": "2026-09-29T11:19:37",
+  "raw": {
+    "fetched_at": "2026-09-29T11:19:37",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/nvmi/",
+    "summary": "Nova Ltd. engages in the design, development, production, and sale of process control systems used in the manufacture of semiconductors in Taiwan, the United States, China, Korea, and internationally. The companyâs product portfolio includes a set of metrology platforms for dimensional, films, and materials and chemical metrology measurements for process control for various semiconductor manufacturing process steps, such as lithography, Etch, chemical mechanical planarization, deposition, electrochemical plating, and advanced packaging. It serv...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "NOVA LTD.",
+      "sic": "3827",
+      "industry": "Optical Instruments & Lenses",
+      "entity_type": "other",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "cik": "1109345"
+    },
+    "content_hash": "5aff7e36949a"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "id": "US:IDXX",
+  "market": "US",
+  "code": "IDXX",
+  "name": "IDEXX实验室",
+  "version": 1,
+  "created_at": "2026-09-29T11:12:51",
+  "updated_at": "2026-09-29T11:12:51",
+  "raw": {
+    "fetched_at": "2026-09-29T11:12:51",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/idxx/",
+    "summary": "IDEXX Laboratories, Inc. develops, manufactures, and distributes products for the companion animal veterinary, livestock and poultry, dairy, and water testing industries in the United States and internationally. It operates through three segments: Companion Animal Group; Water Quality Products; and Livestock, Poultry and Dairy. The company offers point-of-care diagnostic solutions, blood and urine chemistry, hematology, immunoassay, urinalysis, cytology/morphology, and coagulation analyzers; and SNAP rapid assays test kits. It also provides com...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "IDEXX LABORATORIES INC /DE",
+      "sic": "2835",
+      "industry": "In Vitro & In Vivo Diagnostic Substances",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "874716"
+    },
+    "content_hash": "8cd483676251"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

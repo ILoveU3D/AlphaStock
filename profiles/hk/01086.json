@@ -1,0 +1,42 @@
+{
+  "id": "HK:01086",
+  "market": "HK",
+  "code": "01086",
+  "name": "好孩子国际",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:35",
+  "updated_at": "2026-09-29T10:43:35",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:35",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "好孩子国际控股有限公司是一家世界领先的育儿产品公司。本集团通过设计,研发,制造,营销和销售儿童汽车安全座,推车、服饰及棉纺品、喂养和洗护用品、床,自行车,三轮车及其他儿童用品,服务亿万育儿家庭。公司在全球拥有7000+多名员工,8个坐落于美洲、欧洲和中国的研究与发展中心,并在11个国家建立了销售、市场营销和分销办事处。公司凭借全球性的布局、本土化的运营、结构化的品牌体系、卓越的研发能力和制造设施,在全球行业中处于领先地位。每天,千万父母依赖于公司生产的高质量、可靠、高性能的产品。",
+    "main_business": "主要从事制造及分销儿童用品业务的投资控股公司。该公司通过三个业务分部进行运营。儿童推车及配件分部以该公司自有品牌及第三方品牌从事研究、设计、制造及销售儿童推车及配件业务。汽车座及配件分部以该公司自有品牌及第三方品牌从事研究、设计、制造及销售汽车座及配件业务。其他儿童耐用品分部以该公司自有品牌及第三方品牌从事研究、设计、制造及销售童床及配件,以及其他儿童用品业务。该公司也通过其子公司从事生产婴儿护理产品业务。",
+    "vision": "",
+    "meta": {
+      "org_name": "好孩子国际控股有限公司",
+      "org_name_en": "Goodbaby International Holdings Ltd",
+      "chairman": "宋郑还",
+      "secretary": "何咏紫",
+      "founded": "2000-07-14",
+      "listed": "2010-11-24 00:00:00",
+      "website": "www.gbinternational.com.hk",
+      "address": "香港九龙新蒲岗太子道东698号宝光商业中心15楼1501室,中国江苏省昆山市陆家镇陆丰东路28号",
+      "employees": "5742",
+      "industry": "家庭电器及用品",
+      "auditor": "安永会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "0d9ec5a78989"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

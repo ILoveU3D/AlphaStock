@@ -1,0 +1,42 @@
+{
+  "id": "HK:02465",
+  "market": "HK",
+  "code": "02465",
+  "name": "龙蟠科技",
+  "version": 1,
+  "created_at": "2026-09-29T10:44:03",
+  "updated_at": "2026-09-29T10:44:03",
+  "raw": {
+    "fetched_at": "2026-09-29T10:44:03",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "江苏龙蟠科技集团股份有限公司2003年诞生于江苏南京。2017年,龙蟠科技正式登陆上海证券交易所,成为A股主板上市汽车精细化学品企业,并于2024年成功入驻香港证券交易所,成为A+H股两地上市的新能源科技企业。(股票简称:龙蟠科技股票代码:603906.SH/2465.HK)如今的龙蟠已成长为以绿色新能源核心材料为主要业务板块的国际化企业集团。",
+    "main_business": "车用环保精细化学品和磷酸铁锂正极材料的研发、生产和销售。",
+    "vision": "",
+    "meta": {
+      "org_name": "江苏龙蟠科技集团股份有限公司",
+      "org_name_en": "Jiangsu Lopal Tech. Group Co., Ltd.",
+      "chairman": "石俊峰",
+      "secretary": "张羿,梁皑欣",
+      "founded": "2003-03-11",
+      "listed": "2024-10-30 00:00:00",
+      "website": "www.lopal.cn",
+      "address": "南京经济技术开发区恒通大道6号",
+      "employees": "4617",
+      "industry": "工业工程",
+      "auditor": "安永华明会计师事务所(特殊普通合伙),安永会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "428a770db993"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

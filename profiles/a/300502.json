@@ -1,0 +1,50 @@
+{
+  "id": "A:300502",
+  "market": "A",
+  "code": "300502",
+  "name": "新易盛",
+  "version": 1,
+  "created_at": "2026-09-29T10:42:34",
+  "updated_at": "2026-09-29T10:42:34",
+  "raw": {
+    "fetched_at": "2026-09-29T10:42:34",
+    "source": "eastmoney_f10_org_basicinfo",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "成都新易盛通信技术股份有限公司(简称“新易盛”),2008年成立于中国成都,并于2010年被认证为国家高新技术企业,是一家领先的光模块解决方案与服务提供商。新易盛一直专注于研发、生产和销售多种类的高性能光模块和光器件,产品可广泛应用于数据中心、电信网络(FTTx、LTE和传输)、安全监控以及智能电网等ICT行业。公司拥有3000多种产品,严格遵从TUV、CE、UL、FCC、FDA、RoHS、REACH和EMC等国际标准,产品已服务于来自全球60多个国家和地区的超过300个客户。2016年,新易盛在深圳成功上市(股票代码:300502.SZ),开启公司发展的新篇章。目前,新易盛拥有1100多名员工,致力于通过不断创新构建一个高速的光通信世界。",
+    "main_business": "全系列光通信应用的光模块的研发、生产和销售",
+    "vision": "",
+    "meta": {
+      "org_name": "成都新易盛通信技术股份有限公司",
+      "chairman": "高光荣",
+      "president": "黄晓雷",
+      "secretary": "王诚",
+      "founded": "2008-04-15 00:00:00",
+      "listed": "2016-03-03 00:00:00",
+      "website": "www.eoptolink.com",
+      "address": "中国(四川)自由贸易试验区成都市双流区黄甲街道物联大道510号",
+      "control_holder": "黄晓雷、高光荣",
+      "real_controller": "黄晓雷、高光荣",
+      "independent_directors": "弋涛,夏常源,杨曼曼,许煦",
+      "employees": "8537",
+      "industry": "信息技术-通信设备-通信传输设备",
+      "org_form": "大型民企",
+      "top_profit_product": "光互联产品",
+      "income_structure": "光互联产品、其他主营业务",
+      "income_structure_ratio": "99.87%、0.13%",
+      "auditor": "天健会计师事务所(特殊普通合伙)",
+      "concepts": "西部大开发,5G概念,CPO概念,算力概念,光通信模块,通信技术,HS300_,基金重仓,机构重仓,深成500,融资融券,创业成份,深股通,MSCI中国,创业板综,深证100R,富时罗素,百元股,权重股,大盘股,大盘成长,科技风格,2026中报预增,股权分散,高市净率",
+      "business_scope": "一般项目:光通信设备制造;光通信设备销售;电子元器件制造;电子元器件批发;电子元器件零售;通讯设备销售;机械设备研发;电子产品销售;专用设备制造(不含许可类专业设备制造);技术进出口;货物进出口;技术服务、技术开发、技术咨询、技术交流、技术转让、技术推广。(除依法须经批准的项目外,凭营业执照依法自主开展经营活动)(涉及国家规定实施准入特别管理措施的除外)"
+    },
+    "content_hash": "2aded6f1a179"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

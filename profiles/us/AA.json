@@ -1,0 +1,38 @@
+{
+  "id": "US:AA",
+  "market": "US",
+  "code": "AA",
+  "name": "美国铝业",
+  "version": 1,
+  "created_at": "2026-09-29T10:44:58",
+  "updated_at": "2026-09-29T10:44:58",
+  "raw": {
+    "fetched_at": "2026-09-29T10:44:58",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/aa/",
+    "summary": "Alcoa Corporation, together with its subsidiaries, engages in the bauxite mining, alumina refining, aluminum production, and energy generation business in Australia, Brazil, Canada, Iceland, Norway, Spain, the United States, and internationally. The company operates through two segments: Alumina and Aluminum. It operates bauxite and other aluminous ores mining and processes bauxite into alumina for sale to aluminum smelter customers and customers who process it into industrial chemical products through supply contracts to third parties, as well...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Alcoa Corp",
+      "sic": "3334",
+      "industry": "Primary Production of  Aluminum",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "1675149"
+    },
+    "content_hash": "30c399ea903d"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

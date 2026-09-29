@@ -1,0 +1,42 @@
+{
+  "id": "HK:00016",
+  "market": "HK",
+  "code": "00016",
+  "name": "新鸿基地产",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:19",
+  "updated_at": "2026-09-29T10:43:19",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:19",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "新鸿基地产发展有限公司(新鸿基地产)于1972年上市,是香港最大的地产发展公司之一,致力兴建优质住宅,拥有庞大的商场和办公楼网络,及酒店项目,同时持有可观的土地储备,以配合集团未来持续发展。凭借优越品质和“以心建家”的精神,新鸿基地产多年来一直深得市场肯定和顾客的信任。",
+    "main_business": "一家主要从事物业销售的投资控股公司。公司及其子公司通过六大分部运营:物业销售分部,物业租赁分部,电讯分部,酒店经营分部,运输基建及物流分部,其他业务分部。物业销售部门及物业出租部门在香港、中国大陆及新加坡开展业务。电讯分部从事提供流动电话服务,以及数据中心及资讯科技基建业务。运输基建及物流分部从事运输基建营运及管理,港口业务,航空货运及物流业务,通过一田经营百货公司和超级市场。",
+    "vision": "",
+    "meta": {
+      "org_name": "新鸿基地产发展有限公司",
+      "org_name_en": "Sun Hung Kai Properties Limited",
+      "chairman": "郭炳联",
+      "secretary": "容上达",
+      "founded": "1972-07-14",
+      "listed": "1972-09-08 00:00:00",
+      "website": "www.shkp.com",
+      "address": "香港港湾道30号新鸿基中心45楼",
+      "employees": "38000",
+      "industry": "地产",
+      "auditor": "德勤·关黄陈方会计师行",
+      "org_form": "一般企业"
+    },
+    "content_hash": "3e19f403f54c"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "HK:02689",
+  "market": "HK",
+  "code": "02689",
+  "name": "玖龙纸业",
+  "version": 1,
+  "created_at": "2026-09-29T10:44:08",
+  "updated_at": "2026-09-29T10:44:08",
+  "raw": {
+    "fetched_at": "2026-09-29T10:44:08",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "玖龙纸业(控股)有限公司成立于1995年,总部位于中国广东省东莞市,2006年于香港联交所主板上市,目前为全球产能排名第一的造纸集团和林浆纸一体化的龙头企业(主要产品为各类环保包装纸、高档全木浆纸及其上下游产业链)。集团现有造纸设计年产能为超过2,000万吨,员工20,000余人。玖龙纸业目前在中国的东莞、太仓、重庆、天津、乐山、泉州、沈阳、河北及湖北拥有生产基地,并于广西北海建设浆纸基地。玖龙纸业积极响应‘一带一路’倡议,不断推进国际化发展,完善产业链,2008年完成对越南正阳造纸厂的收购和控股,进入东盟市场,2017年完成越南基地二期工程的扩建,成为越南造纸的龙头企业。为了进一步拓展国际化的资源配置,形成资源优势的互补,2018年收购了四家位于美国的浆纸厂(缅因州的Rumford、OldTown;威斯康星州的Biron;西佛吉尼亚州的Fairmont)。2019年收购了位于马来西亚文东的浆纸厂(生产废纸再生浆),并正在雪兰莪建设一个新的智能化造纸基地。",
+    "main_business": "主要於中华人民共和国(中国)从事生产及销售包装纸、环保型文化用纸及高价特种纸产品业务。该公司的子公司包括NineDragonsPaper(BVI)GroupLimited、玖龙环球投资有限公司和玖龙(中国)投资有限公司。",
+    "vision": "",
+    "meta": {
+      "org_name": "玖龙纸业(控股)有限公司",
+      "org_name_en": "Nine Dragons Paper (Holdings) Limited",
+      "chairman": "张茵",
+      "secretary": "郑慧珠",
+      "founded": "2005-08-17",
+      "listed": "2006-03-03 00:00:00",
+      "website": "www.ndpaper.com",
+      "address": "香港九龙观塘海滨道181号One Harbour Square22楼1室",
+      "employees": "27453",
+      "industry": "原材料",
+      "auditor": "罗兵咸永道会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "a7782e7a7226"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

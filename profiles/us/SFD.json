@@ -1,0 +1,38 @@
+{
+  "id": "US:SFD",
+  "market": "US",
+  "code": "SFD",
+  "name": "史密斯菲德食品",
+  "version": 1,
+  "created_at": "2026-09-29T11:27:37",
+  "updated_at": "2026-09-29T11:27:37",
+  "raw": {
+    "fetched_at": "2026-09-29T11:27:37",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/sfd/",
+    "summary": "Smithfield Foods, Inc., together with its subsidiaries, produces various packaged meats and fresh pork products in the United States and internationally. It operates through Packaged Meats, Fresh Pork, Hog Production, and Other segments. The Packaged Meats segment processes fresh meat into various packaged meats products, including bacon, sausage, hot dogs, deli and lunch meats, dry sausage products, ham products, ready-to-eat products, and prepared foods to retail and foodservice customers. This segment markets its packaged meat products under...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "SMITHFIELD FOODS INC",
+      "sic": "2011",
+      "industry": "Meat Packing Plants",
+      "entity_type": "operating",
+      "filer_category": "Non-accelerated filer",
+      "fiscal_year_end": "0103",
+      "state_of_incorporation": "VA",
+      "cik": "91388"
+    },
+    "content_hash": "31e3abb6a1d7"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

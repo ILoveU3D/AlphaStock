@@ -1,0 +1,38 @@
+{
+  "id": "US:HE",
+  "market": "US",
+  "code": "HE",
+  "name": "夏威夷电力",
+  "version": 1,
+  "created_at": "2026-09-29T11:11:02",
+  "updated_at": "2026-09-29T11:11:02",
+  "raw": {
+    "fetched_at": "2026-09-29T11:11:02",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/he/",
+    "summary": "Hawaiian Electric Industries, Inc. together with its subsidiaries, engages in the electric utility business. The company engages in the production, purchase, transmission, distribution, and sale of electricity in the islands of Oahu; Hawaii; and Maui, Lanai, and Molokai; and renewable energy sources and potential sources include wind, solar, photovoltaic, geothermal, wave, hydroelectric, municipal waste, and other biofuels. It also invests in non-regulated renewable energy and sustainable infrastructure in the State of Hawaii. In addition, the ...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "HAWAIIAN ELECTRIC INDUSTRIES INC",
+      "sic": "4911",
+      "industry": "Electric Services",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "HI",
+      "cik": "354707"
+    },
+    "content_hash": "93caf73714b3"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

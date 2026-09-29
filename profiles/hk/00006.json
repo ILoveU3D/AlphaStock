@@ -1,0 +1,42 @@
+{
+  "id": "HK:00006",
+  "market": "HK",
+  "code": "00006",
+  "name": "电能实业",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:19",
+  "updated_at": "2026-09-29T10:43:19",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:18",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "电能实业有限公司是一间国际能源投资公司,投资项目包括发电及输配电、可再生能源、转废为能、配气及输油业务。电能实业一直着眼于稳定及规划良好的国际能源市场,以期在公司专长的业务领域上寻求发展机遇。公司的业务遍布香港、英国、澳洲、新西兰、中国内地、美国、加拿大、泰国及荷兰,为世界各地约1,950万名客户提供稳定的能源及缔造优质生活。电能实业于香港联合交易所上市,为香港恒生指数成份股之一。此外,公司亦入选为‘恒生可持续发展企业指数’成份股。",
+    "main_business": "是一家主要从事投资能源及公用事业相关业务的投资控股公司。公司通过三个分部运营。投资分部从事投资能源及公用事业相关业务。投资于港灯电力投资分部从事投资于香港的生产及供应电力业务。所有其他活动分部从事该公司经营的其他业务。该公司的业务范围包括火力及可再生能源发电,输电和输油,配电及配气。该公司在国内市场和英国、澳洲、新西兰、泰国、荷兰、葡萄牙和加拿大等海外市场经营业务。",
+    "vision": "",
+    "meta": {
+      "org_name": "电能实业有限公司",
+      "org_name_en": "Power Assets Holdings Limited",
+      "chairman": "甄达安",
+      "secretary": "吴伟昌",
+      "founded": "1976-04-09",
+      "listed": "1976-08-16 00:00:00",
+      "website": "www.powerassets.com",
+      "address": "香港皇后大道中2号长江集团中心20楼2005室",
+      "employees": "13",
+      "industry": "公用事业",
+      "auditor": "毕马威会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "518a75b235e6"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

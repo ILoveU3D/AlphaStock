@@ -1,0 +1,38 @@
+{
+  "id": "US:M",
+  "market": "US",
+  "code": "M",
+  "name": "梅西百货",
+  "version": 1,
+  "created_at": "2026-09-29T11:16:33",
+  "updated_at": "2026-09-29T11:16:33",
+  "raw": {
+    "fetched_at": "2026-09-29T11:16:33",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/m/",
+    "summary": "Macy's, Inc., an omni-channel retail organization, operates stores, websites, and mobile applications in the United States. The company sells various merchandise, such as apparel and accessories for men, women, and kids; cosmetics; home furnishings; and other consumer goods under the Macy's, Bloomingdale's, and Bluemercury brands. It also operates in Dubai, the United Arab Emirates, and Al Zahra, Kuwait under the license agreements. The company was formerly known as Federated Department Stores, Inc. and changed its name to Macy's, Inc. in June ...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Macy's, Inc.",
+      "sic": "5311",
+      "industry": "Retail-Department Stores",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "0201",
+      "state_of_incorporation": "DE",
+      "cik": "794367"
+    },
+    "content_hash": "e30c2db244a1"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

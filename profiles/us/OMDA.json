@@ -1,0 +1,38 @@
+{
+  "id": "US:OMDA",
+  "market": "US",
+  "code": "OMDA",
+  "name": "Omada Health Inc",
+  "version": 1,
+  "created_at": "2026-09-29T11:19:39",
+  "updated_at": "2026-09-29T11:19:39",
+  "raw": {
+    "fetched_at": "2026-09-29T11:19:39",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/omda/",
+    "summary": "Omada Health, Inc., together with its subsidiary, Physera, Inc., provides a range of virtual care programs in the United States. The company offers cardiometabolic programs for prediabetes, diabetes, and hypertension; a physical therapy program to address musculoskeletal conditions; other support programs for members taking glucagon-like peptide-1 agonists in its cardiometabolic program; and weight management programs, as well as various behavioral health support programs. It also delivers virtual care. The company offers its programs for emplo...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Omada Health, Inc.",
+      "sic": "8000",
+      "industry": "Services-Health Services",
+      "entity_type": "operating",
+      "filer_category": "Non-accelerated filer<br>Emerging growth company",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "1611115"
+    },
+    "content_hash": "63aa7eb8cd73"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

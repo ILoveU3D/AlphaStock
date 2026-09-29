@@ -1,0 +1,38 @@
+{
+  "id": "US:CVSA",
+  "market": "US",
+  "code": "CVSA",
+  "name": "Covista Inc",
+  "version": 1,
+  "created_at": "2026-09-29T11:02:12",
+  "updated_at": "2026-09-29T11:02:12",
+  "raw": {
+    "fetched_at": "2026-09-29T11:02:12",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/cvsa/",
+    "summary": "Covista Inc., together with its subsidiaries, provides healthcare education in the United States, Barbados, St. Kitts, and St. Maarten. It operates in three segments: Chamberlain, Walden, and Medical and Veterinary. The company provides degree programs, including bachelorâs, masterâs, and doctoral degrees; and online certificate programs for nursing, health professions, medical, and veterinary postsecondary education, counseling, business, information technology, psychology, public health, social work and human services, public administration a...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Covista Inc.",
+      "sic": "8200",
+      "industry": "Services-Educational Services",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "0630",
+      "state_of_incorporation": "DE",
+      "cik": "730464"
+    },
+    "content_hash": "32cf1fbaa9de"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

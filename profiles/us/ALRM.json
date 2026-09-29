@@ -1,0 +1,38 @@
+{
+  "id": "US:ALRM",
+  "market": "US",
+  "code": "ALRM",
+  "name": "Alarm.com Holdings Inc",
+  "version": 1,
+  "created_at": "2026-09-29T10:47:22",
+  "updated_at": "2026-09-29T10:47:22",
+  "raw": {
+    "fetched_at": "2026-09-29T10:47:22",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/alrm/",
+    "summary": "Alarm.com Holdings, Inc. operates a platform for connected properties in North America and internationally. It operates in two segments, Alarm.com and Other. The company offers residential solutions, such as alarm transmission, smart signal, smart arming, and personal safety and awareness, as well as real-time alerts and always-on monitoring; video monitoring solutions, including video analytics, remote video monitoring, AI deterrence, video doorbell, intelligent integration, and cell connector; scenes, video analytics triggers, smart thermosta...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Alarm.com Holdings, Inc.",
+      "sic": "7372",
+      "industry": "Services-Prepackaged Software",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "1459200"
+    },
+    "content_hash": "713301d49be4"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

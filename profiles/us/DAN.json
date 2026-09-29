@@ -1,0 +1,38 @@
+{
+  "id": "US:DAN",
+  "market": "US",
+  "code": "DAN",
+  "name": "达纳",
+  "version": 1,
+  "created_at": "2026-09-29T11:02:40",
+  "updated_at": "2026-09-29T11:02:40",
+  "raw": {
+    "fetched_at": "2026-09-29T11:02:40",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/dan/",
+    "summary": "Dana Incorporated, together with its subsidiaries, provides power-conveyance and energy-management solutions for on-highway vehicles in North America, Europe, South America, and the Asia Pacific. The Light Vehicle segment provides axles, driveshafts, internal combustion engine (ICE), hybrid and electric transmissions, e-axle and e-transmission systems, inverters, electric motors, controllers, sealing and thermal products, e-sealing, e-thermal cooling systems, battery and electronics cooling, hydrogen fuel cell cooling, and new power industrial ...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "DANA Inc",
+      "sic": "3714",
+      "industry": "Motor Vehicle Parts & Accessories",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "26780"
+    },
+    "content_hash": "a717bece3006"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

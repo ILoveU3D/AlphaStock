@@ -1,0 +1,42 @@
+{
+  "id": "HK:03759",
+  "market": "HK",
+  "code": "03759",
+  "name": "康龙化成",
+  "version": 1,
+  "created_at": "2026-09-29T10:44:14",
+  "updated_at": "2026-09-29T10:44:14",
+  "raw": {
+    "fetched_at": "2026-09-29T10:44:14",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "康龙化成(北京)新药技术股份有限公司(股票代码:300759.SZ/3759.HK)是国际领先的生命科学研发服务企业。自2004年成立以来,康龙化成一直致力于其人才培养和设施建设,为包括小分子、大分子和细胞与基因治疗药物在内的多疗法药物研发打造了一个贯穿药物发现,临床前及临床开发全流程的研发生产服务体系。康龙化成在中国、美国、英国均开展运营,向北美、欧洲、日本和中国的合作伙伴提供研发解决方案并与之保持良好的合作关系。",
+    "main_business": "实验室服务、CMC(小分子CDMO)服务、临床研究服务、大分子和细胞与基因治疗服务",
+    "vision": "",
+    "meta": {
+      "org_name": "康龙化成(北京)新药技术股份有限公司",
+      "org_name_en": "Pharmaron Beijing Co., Ltd.",
+      "chairman": "Boliang Lou(楼柏良)",
+      "secretary": "麦宝文",
+      "founded": "2004-07-01",
+      "listed": "2019-11-28 00:00:00",
+      "website": "www.pharmaron.cn",
+      "address": "北京市北京经济技术开发区泰河路6号",
+      "employees": "27316",
+      "industry": "药品及生物科技",
+      "auditor": "安永华明会计师事务所(特殊普通合伙),安永会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "6d3be37a45a3"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

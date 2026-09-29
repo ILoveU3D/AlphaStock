@@ -1,0 +1,37 @@
+{
+  "id": "US:BLBD",
+  "market": "US",
+  "code": "BLBD",
+  "name": "Blue Bird Corp",
+  "version": 1,
+  "created_at": "2026-09-29T10:52:49",
+  "updated_at": "2026-09-29T10:52:49",
+  "raw": {
+    "fetched_at": "2026-09-29T10:52:49",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/blbd/",
+    "summary": "Blue Bird Corporation, together with its subsidiaries, designs, engineers, manufactures, and sells school buses in the United States, Canada, and internationally. The company operates through two segments, Bus and Parts. It offers Type C, Type D, and specialty buses; and alternative power options through its propane powered, gasoline powered, compressed natural gas powered, and electric powered school buses, as well as diesel engines. The company also sells replacement bus parts; and provides extended warranties related to its products. Blue Bi...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Blue Bird Corp",
+      "sic": "3713",
+      "industry": "Truck & Bus Bodies",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1003",
+      "cik": "1589526"
+    },
+    "content_hash": "d7d07a380e18"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

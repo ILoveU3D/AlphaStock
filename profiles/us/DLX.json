@@ -1,0 +1,38 @@
+{
+  "id": "US:DLX",
+  "market": "US",
+  "code": "DLX",
+  "name": "豪华",
+  "version": 1,
+  "created_at": "2026-09-29T11:03:42",
+  "updated_at": "2026-09-29T11:03:42",
+  "raw": {
+    "fetched_at": "2026-09-29T11:03:42",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/dlx/",
+    "summary": "Deluxe Corporation provides technology-enabled solutions to small and medium-sized businesses, and financial institutions in the United States and Canada. The company operates through four segments: Merchant Services, B2B Payments, Data Solutions, and Print. It offers credit and debit card authorization and payment systems; processing services to small and medium-sized retail and service businesses, as well as nonprofit and government organizations; treasury management solutions, including remittance and lockbox processing, remote deposit captu...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "DELUXE CORP",
+      "sic": "2780",
+      "industry": "Blankbooks, Looseleaf Binders & Bookbindg & Relatd Work",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "MN",
+      "cik": "27996"
+    },
+    "content_hash": "dd0bcaf997cb"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

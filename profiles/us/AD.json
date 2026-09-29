@@ -1,0 +1,38 @@
+{
+  "id": "US:AD",
+  "market": "US",
+  "code": "AD",
+  "name": "Array Digital Infrastructure In",
+  "version": 1,
+  "created_at": "2026-09-29T10:45:31",
+  "updated_at": "2026-09-29T10:45:31",
+  "raw": {
+    "fetched_at": "2026-09-29T10:45:31",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/ad/",
+    "summary": "Array Digital Infrastructure, Inc. owns and operates shared wireless communications infrastructure in the United States. The company deploys 5G and other wireless technologies through its 4,400 cell towers. It also leases tower space to tenants. In addition, the company offers ancillary services. It serves organizations, wireless carriers, government agencies, municipalities, wireless internet service providers, and broadband providers. The company was formerly known as United States Cellular Corporation and changed its name to Array Digital In...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "ARRAY DIGITAL INFRASTRUCTURE, INC.",
+      "sic": "4812",
+      "industry": "Radiotelephone Communications",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "821130"
+    },
+    "content_hash": "b2fb8698d931"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

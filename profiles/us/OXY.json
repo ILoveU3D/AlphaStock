@@ -1,0 +1,38 @@
+{
+  "id": "US:OXY",
+  "market": "US",
+  "code": "OXY",
+  "name": "西方石油",
+  "version": 1,
+  "created_at": "2026-09-29T11:20:13",
+  "updated_at": "2026-09-29T11:20:13",
+  "raw": {
+    "fetched_at": "2026-09-29T11:20:13",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/oxy/",
+    "summary": "Occidental Petroleum Corporation, together with its subsidiaries, engages in the acquisition, exploration, and development of oil and gas properties in the United States and internationally. It operates through Oil and Gas and Midstream and Marketing. The Oil and Gas segment explores for, develops, and produces oil and condensate, natural gas liquids (NGLs), and natural gas. This segment also optimizes its transportation and storage capacity and invests in entities. The Midstream and Marketing segment purchases, markets, gathers, processes, tra...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "OCCIDENTAL PETROLEUM CORP /DE/",
+      "sic": "1311",
+      "industry": "Crude Petroleum & Natural Gas",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "797468"
+    },
+    "content_hash": "02fb03942e2d"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

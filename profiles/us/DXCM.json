@@ -1,0 +1,38 @@
+{
+  "id": "US:DXCM",
+  "market": "US",
+  "code": "DXCM",
+  "name": "德康医疗",
+  "version": 1,
+  "created_at": "2026-09-29T11:03:49",
+  "updated_at": "2026-09-29T11:03:49",
+  "raw": {
+    "fetched_at": "2026-09-29T11:03:49",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/dxcm/",
+    "summary": "DexCom, Inc., a medical device company, focuses on the design, development, and commercialization of continuous glucose monitoring (CGM) systems for the management of diabetes and metabolic health in the United States and internationally. The company offers Dexcom G7 and G7 15 Day, an integrated continuous glucose monitoring system; Dexcom G6, a CGM system; Dexcom ONE+ to replace fingerstick blood glucose testing for diabetes treatment decisions; Stelo, a biosensor designed for adults with prediabetes and Type 2 diabetes who do not use insulin;...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "DEXCOM INC",
+      "sic": "3841",
+      "industry": "Surgical & Medical Instruments & Apparatus",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "1093557"
+    },
+    "content_hash": "fc2ae96daa08"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

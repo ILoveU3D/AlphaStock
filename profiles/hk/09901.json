@@ -1,0 +1,41 @@
+{
+  "id": "HK:09901",
+  "market": "HK",
+  "code": "09901",
+  "name": "新东方-S",
+  "version": 1,
+  "created_at": "2026-09-29T10:44:26",
+  "updated_at": "2026-09-29T10:44:26",
+  "raw": {
+    "fetched_at": "2026-09-29T10:44:26",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "新东方教育科技集团定位于以学生全面成长为核心,以科技为驱动力的综合性教育集团。\n集团由1993年成立的北京新东方学校发展壮大而来,拥有短期培训系统、文化传播系统、咨询服务系统、科技产业系统等多个发展平台,打造了新东方学习成长中心、新东方国际教育、新东方大学生学习与发展中心、新东方在线、新东方前途出国、新东方国际游学、新东方满天星、新东方大愚文化等诸多知名教育品牌。\n作为中国著名私立教育机构,新东方教育科技集团于2006年9月7日在美国纽约证券交易所成功上市,2020年11月9日在香港联合交易所成功二次上市。",
+    "main_business": "主要通过其遍布全中国的学校、学习中心和书店实体网络以及纯在线学习平台,为学生提供全面的教育计划、服务和产品。该公司主要通过四个部门运营。教育服务和备考课程部门主要提供K-12课后培训(AST)、备考等课程。在线教育及其他服务部门主要提供在线教育服务。留学咨询服务部门主要提供留学咨询服务。教材及分销部门主要通过其分销渠道,包括该公司经营的书店和第三方分销商,分销及销售书籍及其他教材。",
+    "vision": "",
+    "meta": {
+      "org_name": "新东方教育科技集团",
+      "org_name_en": "NEW ORIENTAL EDUCATION & TECHNOLOGY GROUP INC.",
+      "chairman": "俞敏洪",
+      "founded": "2006-03-16",
+      "listed": "2020-11-09 00:00:00",
+      "website": "www.neworiental.org",
+      "address": "北京市海淀区海淀中街6号,香港湾仔皇后大道东248号大新金融中心40楼",
+      "employees": "81054",
+      "industry": "支援服务",
+      "auditor": "德勤华永会计师事务所(特殊普通合伙),德勤·关黄陈方会计师行",
+      "org_form": "一般企业"
+    },
+    "content_hash": "ff6e6df2cab9"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

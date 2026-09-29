@@ -1,0 +1,37 @@
+{
+  "id": "US:SBH",
+  "market": "US",
+  "code": "SBH",
+  "name": "莎莉美容",
+  "version": 1,
+  "created_at": "2026-09-29T11:27:26",
+  "updated_at": "2026-09-29T11:27:26",
+  "raw": {
+    "fetched_at": "2026-09-29T11:27:26",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/sbh/",
+    "summary": "Sally Beauty Holdings, Inc. operates as a specialty retailer and distributor of professional beauty supplies. The company operates through two segments, Sally Beauty Supply and Beauty Systems Group. The Sally Beauty Supply segment offers beauty products, including hair color and care products, skin and nail care products, styling tools, and other beauty products for retail customers, salons, and salon professionals. This segment also provides products under Wella and L'Oreal brands, as well as Clairol, OPI, Wahl, and BaByliss Pro. The Beauty Sy...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Sally Beauty Holdings, Inc.",
+      "sic": "5990",
+      "industry": "Retail-Retail Stores, NEC",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "0930",
+      "cik": "1368458"
+    },
+    "content_hash": "e50391ccef20"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

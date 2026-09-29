@@ -1,0 +1,38 @@
+{
+  "id": "US:LIF",
+  "market": "US",
+  "code": "LIF",
+  "name": "Life360 Inc",
+  "version": 1,
+  "created_at": "2026-09-29T11:14:50",
+  "updated_at": "2026-09-29T11:14:50",
+  "raw": {
+    "fetched_at": "2026-09-29T11:14:50",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/lif/",
+    "summary": "Life360, Inc. operates a technology platform to locate people, pets, and things in North America, Europe, the Middle East, Africa, and internationally. The company provides Life360 mobile application under the freemium model that offers communications, driving safety, digital safety, and location sharing; Life360 Platform that provides location coordination and safety, driving safety, digital safety, and emergency assistance services; and mobile-first technology platform that protects members data and ensures integrity, security, and performanc...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Life360, Inc.",
+      "sic": "7374",
+      "industry": "Services-Computer Processing & Data Preparation",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "1581760"
+    },
+    "content_hash": "26f0f88ab2da"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

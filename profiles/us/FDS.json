@@ -1,0 +1,38 @@
+{
+  "id": "US:FDS",
+  "market": "US",
+  "code": "FDS",
+  "name": "辉盛研究系统",
+  "version": 1,
+  "created_at": "2026-09-29T11:06:09",
+  "updated_at": "2026-09-29T11:06:09",
+  "raw": {
+    "fetched_at": "2026-09-29T11:06:09",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/fds/",
+    "summary": "FactSet Research Systems Inc., together with its subsidiaries, operates as a financial digital platform and enterprise solutions provider for the investment community. It offers data, products, and analytical applications; and workstations, portfolio analytics, and enterprise data solutions, as well as managed services for supporting data, performance, risk, and reporting workflows. The company also provides subscription-based financial data and market intelligence on securities, companies, industries, and people that enable clients to research...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "FACTSET RESEARCH SYSTEMS INC",
+      "sic": "7370",
+      "industry": "Services-Computer Programming, Data Processing, Etc.",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "0831",
+      "state_of_incorporation": "DE",
+      "cik": "1013237"
+    },
+    "content_hash": "196ca45fb78d"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

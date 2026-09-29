@@ -1,0 +1,50 @@
+{
+  "id": "A:301358",
+  "market": "A",
+  "code": "301358",
+  "name": "湖南裕能",
+  "version": 1,
+  "created_at": "2026-09-29T10:42:41",
+  "updated_at": "2026-09-29T10:42:41",
+  "raw": {
+    "fetched_at": "2026-09-29T10:42:41",
+    "source": "eastmoney_f10_org_basicinfo",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "湖南裕能新能源电池材料股份有限公司是国内主要的锂离子电池正极材料供应商,专注于锂离子电池正极材料研发、生产和销售。公司的主要产品包括磷酸铁锂、三元材料等锂离子电池正极材料,目前以磷酸铁锂为主,主要应用于动力电池、储能电池等锂离子电池的制造,最终应用于新能源汽车、储能等领域。目前,公司在湖南省湘潭市、广西壮族自治区靖西市、四川省遂宁市、贵州省福泉市、云南省安宁市设有五个生产基地。",
+    "main_business": "锂离子电池正极材料研发、生产和销售",
+    "vision": "",
+    "meta": {
+      "org_name": "湖南裕能新能源电池材料股份有限公司",
+      "chairman": "谭新乔",
+      "president": "谭新乔",
+      "secretary": "胡德波",
+      "founded": "2016-06-23 00:00:00",
+      "listed": "2023-02-09 00:00:00",
+      "website": "www.hunanyuneng.com",
+      "address": "湖南省湘潭市雨湖区鹤岭镇日丽路18号",
+      "control_holder": "无",
+      "real_controller": "无",
+      "independent_directors": "夏云峰,钟超凡,戴静,王付国",
+      "employees": "8726",
+      "industry": "有色金属-金属非金属新材料-电池材料",
+      "org_form": "地方国有企业",
+      "top_profit_product": "磷酸铁锂",
+      "income_structure": "磷酸铁锂、其他业务、其他主营业务",
+      "income_structure_ratio": "98.26%、1.24%、0.50%",
+      "auditor": "天健会计师事务所(特殊普通合伙)",
+      "concepts": "锂电池概念,固态电池,钠离子电池,储能概念,磷化工,动力电池回收,电池技术,深成500,融资融券,创业成份,中证500,深股通,MSCI中国,创业板综,中盘股,中盘价值,破增发价股,先进制造风格,股权分散",
+      "business_scope": "一般项目:电子专用材料研发;电子专用材料制造;电子专用材料销售;货物进出口(除依法须经批准的项目外,凭营业执照依法自主开展经营活动)。"
+    },
+    "content_hash": "bac66649fc51"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

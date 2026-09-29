@@ -1,0 +1,42 @@
+{
+  "id": "HK:02319",
+  "market": "HK",
+  "code": "02319",
+  "name": "蒙牛乳业",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:58",
+  "updated_at": "2026-09-29T10:43:58",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:58",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "中国蒙牛乳业有限公司为中国乳业龙头,专注于为中国和全球消费者提供更加营养、健康、美味的乳制品,形成了包括液态奶、冰淇淋、奶粉、奶酪等品类在内的丰富产品矩阵;拥有特仑苏、纯甄、冠益乳、优益C、每日鲜语、随变、绿色心情、瑞哺恩、贝拉米等明星品牌。在高端纯牛奶、低温酸奶、高端鲜奶、奶酪等领域,市场份额处于领先地位。蒙牛在国内建立41座生产基地,在新西兰、印度尼西亚、澳大利亚建立3座海外基地,全球工厂总数达68座,年产能合计超1200万吨。同时积极布局海外高品质奶源,在澳大利亚拥有原料乳加工商Burra Foods、有机婴幼儿食品商贝拉米。",
+    "main_business": "主要从事生产及销售乳制品业务。该公司通过五个分部运营业务。液态奶业务分部主要从事生产及经销超高温灭菌奶、乳饮料、酸奶及鲜奶。冰淇淋业务分部主要从事生产及经销含乳冰淇淋。奶酪业务分部主要从事生产及经销奶酪。奶粉业务分部主要从事生产及经销奶粉。其他分部主要从事乳制品原料的生产及贸易业务。",
+    "vision": "",
+    "meta": {
+      "org_name": "中国蒙牛乳业有限公司",
+      "org_name_en": "China Mengniu Dairy Company Limited",
+      "chairman": "庆立军",
+      "secretary": "郭伟昌",
+      "founded": "2004-02-16",
+      "listed": "2004-06-10 00:00:00",
+      "website": "www.mengniuir.com",
+      "address": "香港铜锣湾告士打道262号中粮大厦32楼",
+      "employees": "38000",
+      "industry": "食物饮品",
+      "auditor": "毕马威会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "cbffcaa92712"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "id": "A:002946",
+  "market": "A",
+  "code": "002946",
+  "name": "新乳业",
+  "version": 1,
+  "created_at": "2026-09-29T10:42:31",
+  "updated_at": "2026-09-29T10:42:31",
+  "raw": {
+    "fetched_at": "2026-09-29T10:42:31",
+    "source": "eastmoney_f10_org_basicinfo",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "新希望乳业股份有限公司,中国最具有活力与创新的企业之一,短短十几年,立足西南,并在华东、华中、华北、西北深度布局,逐步深化全国,构建了以“鲜战略”为核心价值的城市型乳企联合舰队。2019年1月25日,新希望乳业股份有限公司(新乳业股票代码002946)在深交所正式挂牌上市。",
+    "main_business": "奶牛养殖,乳制品及含乳饮料的研发、生产和销售。",
+    "vision": "",
+    "meta": {
+      "org_name": "新希望乳业股份有限公司",
+      "chairman": "席刚",
+      "president": "朱川",
+      "secretary": "郑世锋",
+      "founded": "2006-07-05 00:00:00",
+      "listed": "2019-01-25 00:00:00",
+      "website": "www.newhopedairy.cn",
+      "address": "四川省成都市锦江区金石路366号新希望中鼎国际2栋8楼2号",
+      "control_holder": "Universal Dairy",
+      "real_controller": "刘永好、Liu Chang",
+      "independent_directors": "杨志清,陈碧,卢华基",
+      "employees": "8274",
+      "industry": "食品饮料-食品-乳制品",
+      "org_form": "中外合资企业",
+      "top_profit_product": "液体乳",
+      "income_structure": "液体乳、其他业务、奶粉",
+      "income_structure_ratio": "95.36%、3.94%、0.70%",
+      "auditor": "毕马威华振会计师事务所(特殊普通合伙)",
+      "concepts": "西部大开发,新零售,乳业,味蕾经济,转债标的,融资融券,深股通,小盘股,小盘价值",
+      "business_scope": "乳及乳制品、饮料和冷冻食品的经营、社会经济咨询【包括投资咨询服务(不得从事非法集资、吸收公众资金等金融活动)】;牲畜的饲养;乳及乳制品、饮料、冷冻食品的研发;预包装食品、乳制品(凭许可证经营)、农畜产品的批发;奶业基地的建设与经营。(不涉及国营贸易管理商品,涉及配额、许可证管理商品的,按国家有关规定办理申请;以上经营范围不含国家法律法规限制或禁止的项目,涉及国家规定实施准入特别管理措施的除外,涉及许可证的凭相关许可证方可开展经营活动)"
+    },
+    "content_hash": "debe117338c8"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

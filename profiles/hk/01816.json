@@ -1,0 +1,42 @@
+{
+  "id": "HK:01816",
+  "market": "HK",
+  "code": "01816",
+  "name": "中广核电力",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:49",
+  "updated_at": "2026-09-29T10:43:49",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:49",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "中国广核电力股份有限公司(中广核电力)控股股东为国务院国资委监管的中国广核集团有限公司(中国广核集团),公司于2014年3月25日成立,2014年12月10日于香港联交所主板上市(代码1816.HK),2019年8月26日在深圳证券交易所上市(代码003816.SZ)。中广核电力是中国广核集团核能发电的唯一平台,业务主要包括:建设、运营及管理核电站,销售该等核电站所发电力,组织开发核电站的设计及科研工作。我们致力于核能发电为主的电力供应和服务,以安全第一、质量第一、追求卓越为基本原则,为客户、股东、员工和社会创造最佳利益,努力成为具有国际竞争力的世界一流核能企业。",
+    "main_business": "建设、运营及管理核电站,销售该等核电站所发电力,组织开发核电站的设计及科研工作。",
+    "vision": "",
+    "meta": {
+      "org_name": "中国广核电力股份有限公司",
+      "org_name_en": "CGN Power Co., Ltd.",
+      "chairman": "杨长利",
+      "secretary": "尹恩刚,胡倩铷",
+      "founded": "2014-03-25",
+      "listed": "2014-12-10 00:00:00",
+      "website": "www.cgnp.com.cn",
+      "address": "中国广东省深圳市福田区深南大道2002号中广核大厦南楼",
+      "employees": "215600",
+      "industry": "公用事业",
+      "auditor": "毕马威华振会计师事务所(特殊普通合伙),德勤华永会计师事务所(特殊普通合伙),德勤·关黄陈方会计师行",
+      "org_form": "一般企业"
+    },
+    "content_hash": "fe2b9611bb63"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "id": "US:PCG",
+  "market": "US",
+  "code": "PCG",
+  "name": "太平洋煤气电力",
+  "version": 1,
+  "created_at": "2026-09-29T11:20:33",
+  "updated_at": "2026-09-29T11:20:33",
+  "raw": {
+    "fetched_at": "2026-09-29T11:20:33",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/pcg/",
+    "summary": "PG&E Corporation, through its subsidiary, Pacific Gas and Electric Company, engages in the sale and delivery of electricity and natural gas to customers in northern and central California, the United States. It generates electricity using nuclear, hydroelectric, fossil fuel-fired, fuel cells, and photovoltaic sources. The company owns and operates interconnected transmission lines; electric transmission substations, distribution lines, switching and distribution substations; and natural gas transmission, storage, and distribution systems consis...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "PG&E Corp",
+      "sic": "4931",
+      "industry": "Electric & Other Services Combined",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "CA",
+      "cik": "1004980"
+    },
+    "content_hash": "dd70f6bc9b7c"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

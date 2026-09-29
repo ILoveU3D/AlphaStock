@@ -1,0 +1,38 @@
+{
+  "id": "US:CRK",
+  "market": "US",
+  "code": "CRK",
+  "name": "康斯托克能源",
+  "version": 1,
+  "created_at": "2026-09-29T11:01:00",
+  "updated_at": "2026-09-29T11:01:00",
+  "raw": {
+    "fetched_at": "2026-09-29T11:01:00",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/crk/",
+    "summary": "Comstock Resources, Inc., an independent energy company, engages in the acquisition, exploration, development, and production of natural gas and oil properties in the United States. Its assets covering an area of approximately 1,069,991 acres are located in the Haynesville and Bossier shales located in North Louisiana and East Texas. The company was incorporated in 1919 and is headquartered in Frisco, Texas.",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "COMSTOCK RESOURCES INC",
+      "sic": "1311",
+      "industry": "Crude Petroleum & Natural Gas",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "NV",
+      "cik": "23194"
+    },
+    "content_hash": "03e2a25ee108"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

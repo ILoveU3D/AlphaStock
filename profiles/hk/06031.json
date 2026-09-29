@@ -1,0 +1,42 @@
+{
+  "id": "HK:06031",
+  "market": "HK",
+  "code": "06031",
+  "name": "三一重工",
+  "version": 1,
+  "created_at": "2026-09-29T10:44:20",
+  "updated_at": "2026-09-29T10:44:20",
+  "raw": {
+    "fetched_at": "2026-09-29T10:44:20",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "三一重工股份有限公司(600031.SH)于2003年7月3日上市,是中国股权分置改革首家成功并实现全流通的企业。2011年7月,三一重工首次入围FT全球市值500强,是唯一上榜的中国工程机械企业。2012年,三一重工跨国并购“全球混凝土机械第一品牌”德国普茨迈斯特、持股“全球随车起重机械巨头”奥地利帕尔菲格。“2021年首次跻身福布斯全球企业500强”。三一重工股份有限公司拥有业内领先的多元化产品矩阵覆盖混凝土机械、挖掘机械、起重机械、筑路机械、桩工机械等主要品类。秉承“品质改变世界”的使命,三一持续投入大量资源用于研发,致力打造世界一流的产品。凭借技术创新实力,三一先后四次荣获“国家科技进步奖”。近年,三一重工相继在印度、美国、德国、印度尼西亚投资建设研发和制造基地。",
+    "main_business": "主要从事工程机械的研发、制造、销售和服务",
+    "vision": "",
+    "meta": {
+      "org_name": "三一重工股份有限公司",
+      "org_name_en": "SANY HEAVY INDUSTRY CO.,LTD",
+      "chairman": "向文波",
+      "secretary": "黎少娟,秦致妤",
+      "founded": "1994-11-22",
+      "listed": "2025-10-28 00:00:00",
+      "website": "www.sany.com.cn",
+      "address": "北京市昌平区北清路8号",
+      "employees": "28469",
+      "industry": "工业工程",
+      "auditor": "安永会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "ec1c2d81bbef"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

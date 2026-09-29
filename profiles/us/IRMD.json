@@ -1,0 +1,38 @@
+{
+  "id": "US:IRMD",
+  "market": "US",
+  "code": "IRMD",
+  "name": "iRadimed Corp",
+  "version": 1,
+  "created_at": "2026-09-29T11:14:25",
+  "updated_at": "2026-09-29T11:14:25",
+  "raw": {
+    "fetched_at": "2026-09-29T11:14:25",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/irmd/",
+    "summary": "IRADIMED CORPORATION develops, manufactures, markets, and distributes magnetic resonance imaging (MRI) compatible intravenous infusion pump systems and MRI compatible patient vital signs monitoring systems and related accessories. The company offers MRidium 3870 and 3860+ MRI Compatible IV Infusion Pump System with associated disposable IV tubing sets; 3880 MRI compatible patient vital signs monitoring system; and 3600 FMD1 with remote alarm logging unit ferromagnetic detection device. It also provides non-magnetic IV poles, wireless remote dis...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "IRADIMED CORP",
+      "sic": "3841",
+      "industry": "Surgical & Medical Instruments & Apparatus",
+      "entity_type": "operating",
+      "filer_category": "Non-accelerated filer<br>Smaller reporting company",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "1325618"
+    },
+    "content_hash": "88aa34296e74"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

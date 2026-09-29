@@ -1,0 +1,38 @@
+{
+  "id": "US:FAF",
+  "market": "US",
+  "code": "FAF",
+  "name": "第一美国",
+  "version": 1,
+  "created_at": "2026-09-29T11:05:49",
+  "updated_at": "2026-09-29T11:05:49",
+  "raw": {
+    "fetched_at": "2026-09-29T11:05:49",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/faf/",
+    "summary": "First American Financial Corporation, through its subsidiaries, provides financial services. It operates through Title Insurance and Services, and Home Warranty segments. The Title Insurance and Services segment issues title insurance policies on residential and commercial property, as well as offers related products and services internationally. This segment also provides closing and/or escrow services; products, services, and solutions to mitigate risk or otherwise facilitate real estate transactions; appraisals and other valuation-related pr...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "First American Financial Corp",
+      "sic": "6361",
+      "industry": "Title Insurance",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "1472787"
+    },
+    "content_hash": "b2b1723cd7d6"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

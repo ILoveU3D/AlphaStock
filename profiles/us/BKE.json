@@ -1,0 +1,38 @@
+{
+  "id": "US:BKE",
+  "market": "US",
+  "code": "BKE",
+  "name": "巴克尔",
+  "version": 1,
+  "created_at": "2026-09-29T10:50:25",
+  "updated_at": "2026-09-29T10:50:25",
+  "raw": {
+    "fetched_at": "2026-09-29T10:50:25",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/bke/",
+    "summary": "The Buckle, Inc. operates as a retailer of casual apparel, footwear, and accessories for men, women, and kids under the Buckle and Buckle Youth brands in the United States. The company markets a selection of brand name casual apparel, including denims, other casual bottoms, tops, sportswear, outerwear, accessories, and footwear, as well as private label merchandise comprising the BKE, Buckle Black, Ace High, Daytrip, Departwest, FITZ + EDDI, Freshwear, Gentry Country, Gilded Intent, Gimmicks, J.B. Holt, Maven Co-op, Modish Rebel, Nova Industrie...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "BUCKLE INC",
+      "sic": "5651",
+      "industry": "Retail-Family Clothing Stores",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "0130",
+      "state_of_incorporation": "NE",
+      "cik": "885245"
+    },
+    "content_hash": "f8636f1d62b0"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

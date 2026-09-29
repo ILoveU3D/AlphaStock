@@ -1,0 +1,50 @@
+{
+  "id": "A:688795",
+  "market": "A",
+  "code": "688795",
+  "name": "摩尔线程-U",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:16",
+  "updated_at": "2026-09-29T10:43:16",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:16",
+    "source": "eastmoney_f10_org_basicinfo",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "摩尔线程智能科技(北京)股份有限公司成立于2020年6月,以全功能GPU为核心,致力于向全球提供加速计算的基础设施和一站式解决方案,为各行各业的数智化转型提供强大的AI计算支持。\n    我们的目标是成为具备国际竞争力的GPU领军企业,为融合人工智能和数字孪生的数智世界打造先进的加速计算平台。我们的愿景是为美好世界加速。",
+    "main_business": "GPU及相关产品的研发、设计和销售",
+    "vision": "",
+    "meta": {
+      "org_name": "摩尔线程智能科技(北京)股份有限公司",
+      "chairman": "张建中",
+      "president": "张建中",
+      "secretary": "薛岩松",
+      "founded": "2020-06-11 00:00:00",
+      "listed": "2025-12-05 00:00:00",
+      "website": "www.mthreads.com",
+      "address": "北京市朝阳区东湖街道望京国际研发园I座3层",
+      "control_holder": "无",
+      "real_controller": "张建中",
+      "independent_directors": "房巧玲,汪国平,武永卫",
+      "employees": "1274",
+      "industry": "电子设备-半导体-集成电路",
+      "org_form": "大型民企",
+      "top_profit_product": "云端产品",
+      "income_structure": "云端产品、边缘与终端产品、其他主营业务",
+      "income_structure_ratio": "97.49%、2.33%、0.18%",
+      "auditor": "安永华明会计师事务所(特殊普通合伙)",
+      "concepts": "次新股,国产芯片,半导体概念,AI芯片,算力概念,人形机器人,融资融券,百元股,权重股,大盘股,大盘成长,科技风格,高市净率",
+      "business_scope": "一般项目:集成电路设计;技术服务、技术开发、技术咨询、技术交流、技术转让、技术推广;集成电路芯片设计及服务;集成电路芯片及产品销售;集成电路销售;信息系统集成服务;计算机系统服务;软件开发;信息咨询服务(不含许可类信息咨询服务);计算机软硬件及辅助设备零售;电子产品销售;货物进出口;技术进出口;进出口代理;企业管理;集成电路制造。(除依法须经批准的项目外,凭营业执照依法自主开展经营活动)(不得从事国家和本市产业政策禁止和限制类项目的经营活动。)"
+    },
+    "content_hash": "82e1272734f7"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

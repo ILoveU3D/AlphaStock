@@ -1,0 +1,37 @@
+{
+  "id": "US:PYPL",
+  "market": "US",
+  "code": "PYPL",
+  "name": "PayPal Holdings Inc",
+  "version": 1,
+  "created_at": "2026-09-29T11:25:44",
+  "updated_at": "2026-09-29T11:25:44",
+  "raw": {
+    "fetched_at": "2026-09-29T11:25:44",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/pypl/",
+    "summary": "PayPal Holdings, Inc. operates a technology platform that enables digital payments for merchants and consumers worldwide. The company operates a two-sided network at scale that connects merchants and consumers that enables its customers to connect, transact, and send and receive payments through online and in person, as well as transfer and withdraw funds using various funding sources, such as bank accounts, PayPal or Venmo account balance, consumer credit and debit products, credit and debit cards, and cryptocurrencies, as well as other stored...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "PayPal Holdings, Inc.",
+      "sic": "7389",
+      "industry": "Services-Business Services, NEC",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "cik": "1633917"
+    },
+    "content_hash": "815d56a160dc"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "US:LMAT",
+  "market": "US",
+  "code": "LMAT",
+  "name": "勒梅特微管医疗",
+  "version": 1,
+  "created_at": "2026-09-29T11:14:54",
+  "updated_at": "2026-09-29T11:14:54",
+  "raw": {
+    "fetched_at": "2026-09-29T11:14:54",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/lmat/",
+    "summary": "LeMaitre Vascular, Inc. develops, manufactures, and markets medical devices and implants used in the field of vascular surgery in the Americas, Europe, the Middle Esat, Africa, and the Asia Pacific. The company offers allografts, which are cryopreserved human tissue grafts used in vascular reconstruction, and cardiac repair and reconstruction; embolectomy catheters to remove blood clots from arteries; thrombectomy catheters for removing thrombi in the venous system; occlusion catheters that temporarily occlude blood flow; and perfusion catheter...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "LEMAITRE VASCULAR INC",
+      "sic": "3841",
+      "industry": "Surgical & Medical Instruments & Apparatus",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "cik": "1158895"
+    },
+    "content_hash": "b3deca2015b1"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

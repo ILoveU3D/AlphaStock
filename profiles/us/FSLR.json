@@ -1,0 +1,38 @@
+{
+  "id": "US:FSLR",
+  "market": "US",
+  "code": "FSLR",
+  "name": "第一太阳能",
+  "version": 1,
+  "created_at": "2026-09-29T11:07:52",
+  "updated_at": "2026-09-29T11:07:52",
+  "raw": {
+    "fetched_at": "2026-09-29T11:07:52",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/fslr/",
+    "summary": "First Solar, Inc., a solar technology company, provides photovoltaic (PV) solar energy solutions in the United States, France, India, Chile, and internationally. The company manufactures and sells PV solar modules with thin film semiconductor technology that provides conventional crystalline silicon PV solar modules. It also designs, manufactures, and sells cadmium telluride solar modules that convert sunlight into electricity. The company serves system developers, independent power producers, utilities, commercial and industrial companies, lar...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "FIRST SOLAR, INC.",
+      "sic": "3674",
+      "industry": "Semiconductors & Related Devices",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "1274494"
+    },
+    "content_hash": "48ab4e2db181"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

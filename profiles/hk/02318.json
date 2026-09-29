@@ -1,0 +1,42 @@
+{
+  "id": "HK:02318",
+  "market": "HK",
+  "code": "02318",
+  "name": "中国平安",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:58",
+  "updated_at": "2026-09-29T10:43:58",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:58",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "中国平安保险(集团)股份有限公司于1988年诞生于深圳蛇口,是中国第一家股份制保险企业,在各级政府及监管部门、广大客户和社会各界的支持下,中国平安成长为国内金融牌照最齐全、业务范围最广泛的综合金融集团之一,致力于成为国际领先的综合金融、医疗养老服务提供商。中国平安在香港联合交易所主板(2318.HK)及上海证券交易所(601318.SH)两地上市。平安集团旗下专业公司主要包括以保险、银行、资管为代表的综合金融业务和以平安健康、北大国际医院为代表的的医疗健康业务,涵盖金融、医疗、养老的各个领域。中国平安深化“综合金融+医疗养老”服务体系,提供专业的“金融顾问、家庭医生、养老管家”服务,让客户享有“省心、省时、又省钱”的综合金融、医疗养老消费体验。",
+    "main_business": "从事金融业,提供多元化的金融产品及服务",
+    "vision": "",
+    "meta": {
+      "org_name": "中国平安保险(集团)股份有限公司",
+      "org_name_en": "Ping An Insurance (Group) Company of China, Ltd.",
+      "chairman": "马明哲",
+      "secretary": "盛瑞生",
+      "founded": "1988-03-21",
+      "listed": "2004-06-24 00:00:00",
+      "website": "www.pingan.cn",
+      "address": "深圳市福田区益田路5033号平安金融中心47、48、108、109、110、111、112层",
+      "employees": "258806",
+      "industry": "保险",
+      "auditor": "安永华明会计师事务所(特殊普通合伙),安永会计师事务所",
+      "org_form": "保险"
+    },
+    "content_hash": "6e00de2b349d"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

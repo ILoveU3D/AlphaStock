@@ -1,0 +1,38 @@
+{
+  "id": "US:NFG",
+  "market": "US",
+  "code": "NFG",
+  "name": "National Fuel Gas Co",
+  "version": 1,
+  "created_at": "2026-09-29T11:17:57",
+  "updated_at": "2026-09-29T11:17:57",
+  "raw": {
+    "fetched_at": "2026-09-29T11:17:57",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/nfg/",
+    "summary": "National Fuel Gas Company operates as a diversified energy company. It operates through Integrated Upstream and Gathering, Pipeline and Storage, and Utility segments. The Integrated Upstream and Gathering segment explores for, develops, and produces natural gas and oil. It also builds, owns, and operates gathering facilities in the Appalachian region, as well as provides gathering services to Seneca. The Pipeline and Storage segment provides interstate natural gas transportation services through an integrated gas pipeline system in Pennsylvania...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "NATIONAL FUEL GAS CO",
+      "sic": "4924",
+      "industry": "Natural Gas Distribution",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "0930",
+      "state_of_incorporation": "NJ",
+      "cik": "70145"
+    },
+    "content_hash": "4441d6aa61b6"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

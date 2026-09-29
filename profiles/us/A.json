@@ -1,0 +1,38 @@
+{
+  "id": "US:A",
+  "market": "US",
+  "code": "A",
+  "name": "安捷伦",
+  "version": 1,
+  "created_at": "2026-09-29T10:44:56",
+  "updated_at": "2026-09-29T10:44:56",
+  "raw": {
+    "fetched_at": "2026-09-29T10:44:56",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/a/",
+    "summary": "Agilent Technologies, Inc. provides application focused solutions to the life sciences, diagnostics, and applied chemical markets worldwide. The company operates through three segments: Life Sciences and Diagnostics Markets, Agilent CrossLab, and Applied Markets. The Life Sciences and Diagnostics Markets segment offers liquid chromatography systems and components; and liquid chromatography mass spectrometry systems. This segment is also involved in the genomics, contract development and manufacturing organization, pathology, companion diagnosti...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "AGILENT TECHNOLOGIES, INC.",
+      "sic": "3826",
+      "industry": "Laboratory Analytical Instruments",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1031",
+      "state_of_incorporation": "DE",
+      "cik": "1090872"
+    },
+    "content_hash": "99048b52f15b"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

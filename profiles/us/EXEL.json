@@ -1,0 +1,38 @@
+{
+  "id": "US:EXEL",
+  "market": "US",
+  "code": "EXEL",
+  "name": "伊克力西斯",
+  "version": 1,
+  "created_at": "2026-09-29T11:05:37",
+  "updated_at": "2026-09-29T11:05:37",
+  "raw": {
+    "fetched_at": "2026-09-29T11:05:37",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/exel/",
+    "summary": "Exelixis, Inc., an oncology company, focuses on the discovery, development, and commercialization of new medicines for difficult-to-treat cancers in the United States. The company offers CABOMETYX tablets for the treatment of patients with advanced renal cell carcinoma who received prior anti-angiogenic therapy; and COMETRIQ capsules for the treatment of progressive and metastatic medullary thyroid cancer. Its CABOMETYX and COMETRIQ are derived from cabozantinib, an inhibitor of multiple tyrosine kinases, including MET, AXL, RET, and VEGF recep...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "EXELIXIS, INC.",
+      "sic": "2836",
+      "industry": "Biological Products, (No Diagnostic Substances)",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "0101",
+      "state_of_incorporation": "DE",
+      "cik": "939767"
+    },
+    "content_hash": "e88e1fdcc860"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "id": "US:PRDO",
+  "market": "US",
+  "code": "PRDO",
+  "name": "Perdoceo Education Corp",
+  "version": 1,
+  "created_at": "2026-09-29T11:22:54",
+  "updated_at": "2026-09-29T11:22:54",
+  "raw": {
+    "fetched_at": "2026-09-29T11:22:54",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/prdo/",
+    "summary": "Perdoceo Education Corporation provides postsecondary education through online, campus-based, and blended learning programs in the United States. It operates through three segments: Colorado Technical University (CTU), The American InterContinental University System (AIUS), and University of St. Augustine for Health Sciences (USAHS). The CTU segment offers academic programs in the career-oriented disciplines of business and management, nursing, healthcare management, computer science, engineering, information systems and technology, project man...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "PERDOCEO EDUCATION Corp",
+      "sic": "8200",
+      "industry": "Services-Educational Services",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "1046568"
+    },
+    "content_hash": "8ac0d847c1a0"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

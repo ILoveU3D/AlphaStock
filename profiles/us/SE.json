@@ -1,0 +1,38 @@
+{
+  "id": "US:SE",
+  "market": "US",
+  "code": "SE",
+  "name": "Sea Ltd ADR",
+  "version": 1,
+  "created_at": "2026-09-29T11:27:30",
+  "updated_at": "2026-09-29T11:27:30",
+  "raw": {
+    "fetched_at": "2026-09-29T11:27:30",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/se/",
+    "summary": "Sea Limited, through its subsidiaries, operates as a technology company in Southeast Asia, Latin America, the rest of Asia, and internationally. The company operates through E-commerce, Digital Financial Services, and Digital Entertainment segments. It offers Garena, a digital entertainment platform for users to access mobile and PC online games, as well as promotes eSports operations and develops games. The company also operates the Shopee e-commerce platform, a mobile-centric marketplace that provides integrated payments, logistics and fulfil...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Sea Ltd",
+      "sic": "7380",
+      "industry": "Services-Miscellaneous Business Services",
+      "entity_type": "other",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "E9",
+      "cik": "1703399"
+    },
+    "content_hash": "559f055be84f"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

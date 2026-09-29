@@ -1,0 +1,38 @@
+{
+  "id": "US:FISV",
+  "market": "US",
+  "code": "FISV",
+  "name": "费哲金融服务",
+  "version": 1,
+  "created_at": "2026-09-29T11:06:59",
+  "updated_at": "2026-09-29T11:06:59",
+  "raw": {
+    "fetched_at": "2026-09-29T11:06:59",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/fisv/",
+    "summary": "Fiserv, Inc. provides payments and financial services technology solutions in the United States, Europe, the Middle East and Africa, Latin America, the Asia-Pacific, and internationally. It operates through the Merchant Solutions and Financial Solutions segments. The Merchant Solutions segment offers merchant acquiring and digital commerce services; mobile payment services; security and fraud protection solutions; stored-value solutions; software-as-a-service; POS devices; and pay-by-bank solutions. Its Financial Solutions segment provides digi...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "FISERV INC",
+      "sic": "7389",
+      "industry": "Services-Business Services, NEC",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "WI",
+      "cik": "798354"
+    },
+    "content_hash": "1034d151e0fe"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

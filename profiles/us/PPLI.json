@@ -1,0 +1,38 @@
+{
+  "id": "US:PPLI",
+  "market": "US",
+  "code": "PPLI",
+  "name": "People Inc",
+  "version": 1,
+  "created_at": "2026-09-29T11:22:51",
+  "updated_at": "2026-09-29T11:22:51",
+  "raw": {
+    "fetched_at": "2026-09-29T11:22:51",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/ppli/",
+    "summary": "People Incorporated, together with its subsidiaries, operates as a media and internet company worldwide. The company publishes original and engaging digital content in the form of articles, illustrations, and videos and images; and magazines related to women and lifestyle under the media platforms and formats, such as People, Entertainment Weekly, People en EspaÃ±ol, Allrecipes, Food & Wine, Simply Recipes, Serious Eats, EatingWell, The Spruce Eats, Liquor.com, MyRecipes, Feedfeed, Better Homes & Gardens, The Spruce, REAL SIMPLE, Southern Living...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "People Inc",
+      "sic": "7370",
+      "industry": "Services-Computer Programming, Data Processing, Etc.",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "1800227"
+    },
+    "content_hash": "d4d7384fe13f"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "id": "US:MSFT",
+  "market": "US",
+  "code": "MSFT",
+  "name": "微软",
+  "version": 1,
+  "created_at": "2026-09-29T11:17:15",
+  "updated_at": "2026-09-29T11:17:15",
+  "raw": {
+    "fetched_at": "2026-09-29T11:17:15",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/msft/",
+    "summary": "Microsoft Corporation, a technology company, develops and supports a portfolio of technology solutions for individuals and businesses worldwide. Its products include operating systems, server applications, business solution applications, software development tools, desktop and server management tools, and video games; and devices, such as PCs, tablets, gaming and entertainment consoles, other intelligent devices, and related accessories. The company's Productivity and Business Processes segment offers Microsoft 365 Commercial, Enterprise Mobili...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "MICROSOFT CORP",
+      "sic": "7372",
+      "industry": "Services-Prepackaged Software",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "0630",
+      "state_of_incorporation": "WA",
+      "cik": "789019"
+    },
+    "content_hash": "72d2d9879429"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

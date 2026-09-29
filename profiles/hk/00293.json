@@ -1,0 +1,42 @@
+{
+  "id": "HK:00293",
+  "market": "HK",
+  "code": "00293",
+  "name": "国泰航空",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:25",
+  "updated_at": "2026-09-29T10:43:25",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:25",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "国泰航空有限公司是一家主要从事航空及相关业务的香港投资控股公司。该公司通过两个业务部门运营。航空业务部门从事客运及货运业务。非航空业务部门提供航空饮食、地勤及停机坪服务以及运营货运站经营。该公司主要在亚洲、欧洲及北美的国家开展业务。",
+    "main_business": "国泰航空有限公司是一家主要提供国际空中客运及货运服务的公司。该公司连同其附属公司通过四个分部经营。国泰航空及国泰港龙航空分部以其品牌提供全面的国际客运及货运服务。华民航空分部在亚洲区内提供定期航班的航空货运速递服务。香港快运分部在亚洲区内提供定期航班的廉价航空客运服务。航空服务分部提供包括航空饮食、货运站、地勤服务及商业洗衣等支援航空公司的服务。",
+    "vision": "",
+    "meta": {
+      "org_name": "国泰航空有限公司",
+      "org_name_en": "Cathay Pacific Airways Ltd.",
+      "chairman": "白德利",
+      "secretary": "黎颖懿",
+      "founded": "1948-10-18",
+      "listed": "1986-05-15 00:00:00",
+      "website": "www.cathaypacific.com",
+      "address": "香港金钟道88号太古广场一座33楼",
+      "employees": "33000",
+      "industry": "旅游及消闲设施",
+      "auditor": "毕马威会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "ac20569c23c4"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

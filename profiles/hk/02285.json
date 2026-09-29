@@ -1,0 +1,42 @@
+{
+  "id": "HK:02285",
+  "market": "HK",
+  "code": "02285",
+  "name": "泉峰控股",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:57",
+  "updated_at": "2026-09-29T10:43:57",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:57",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "泉峰控股有限公司是一家主要从事电动工具和户外动力设备(OPE)的中国供应商。该公司经营三个分部。电动工具分部主要向消费者、专业人士及工业用户销售电动工具及其配件,产品包括“FLEX”、“大有SKIL”和“小强”品牌的电动工具。户外动力设备分部主要想大众市场用户销售OPE及其配件,产品包括“EGO”和“SKIL”系列。其他分部主要从事零部件的销售。该公司的产品包括圆锯、石材切割机等切削类工具、冲击钻和冲击扳手等紧固类工具、角磨机和砂光机等表面处理类工具等。该公司的产品主要应用于制造、施工、造船、家装、木材和技术架构等领域。",
+    "main_business": "是一家主要从事电动工具和户外动力设备(OPE)的中国供应商。该公司经营三个分部。电动工具分部主要向消费者、专业人士及工业用户销售电动工具及其配件,产品包括“FLEX”、“大有SKIL”和“小强”品牌的电动工具。户外动力设备分部主要想大众市场用户销售OPE及其配件,产品包括“EGO”和“SKIL”系列。其他分部主要从事零部件的销售。该公司的产品包括圆锯、石材切割机等切削类工具、冲击钻和冲击扳手等紧固类工具、角磨机和砂光机等表面处理类工具等。该公司的产品主要应用於制造、施工、造船、家装、木材和技术架构等领域。",
+    "vision": "",
+    "meta": {
+      "org_name": "泉峰控股有限公司",
+      "org_name_en": "Chervon Holdings Limited",
+      "chairman": "潘龙泉",
+      "secretary": "胡以安,马海琪",
+      "founded": "1999-02-19",
+      "listed": "2021-12-30 00:00:00",
+      "website": "global.chervongroup.com",
+      "address": "香港九龙荔枝角长顺街7号西顿中心22楼04室,中国南京市江宁经济技术开发区天元西路99号",
+      "employees": "6667",
+      "industry": "家庭电器及用品",
+      "auditor": "毕马威会计师事务所",
+      "org_form": "一般企业"
+    },
+    "content_hash": "b677c1f0bb2f"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

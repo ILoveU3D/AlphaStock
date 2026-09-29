@@ -1,0 +1,38 @@
+{
+  "id": "US:PFS",
+  "market": "US",
+  "code": "PFS",
+  "name": "Provident Financial Services In",
+  "version": 1,
+  "created_at": "2026-09-29T11:22:26",
+  "updated_at": "2026-09-29T11:22:26",
+  "raw": {
+    "fetched_at": "2026-09-29T11:22:26",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/pfs/",
+    "summary": "Provident Financial Services, Inc. operates as the bank holding company for Provident Bank that provides various banking products and services to individuals, families, and businesses in the United States. Its deposit products include savings, checking, interest-bearing checking, money market deposit, and certificate of deposit accounts, as well as IRA products. The companyâs loan portfolio comprises commercial real estate loans that are secured by properties, such as multi-family apartment buildings, retail and industrial properties, and offic...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "PROVIDENT FINANCIAL SERVICES INC",
+      "sic": "6035",
+      "industry": "Savings Institution, Federally Chartered",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "1178970"
+    },
+    "content_hash": "90b286b6e3fe"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

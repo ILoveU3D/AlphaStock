@@ -1,0 +1,42 @@
+{
+  "id": "HK:00991",
+  "market": "HK",
+  "code": "00991",
+  "name": "大唐发电",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:34",
+  "updated_at": "2026-09-29T10:43:34",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:34",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "大唐国际发电股份有限公司是由中国大唐集团公司控股的中外合资企业。公司成立于1994年,是第一家在伦敦上市的中国企业、第一家在香港上市的中国电力企业,第一家同时在香港、伦敦、上海三地上市的中国企业。大唐国际是中国最大的独立发电公司之一,历经30年,所属运营企业及在建项目遍及全国20个省区,经营产业以火电、水电、风电、光伏为主的发电业务,公司正逐步发展成为绿色低碳、多能互补、高效协同的大型综合能源上市公司。大唐国际践行“双碳”目标要求,以实现绿色低碳转型为发展方向,大力发展新能源等战略性新兴产业,有序推进存量煤电转型升级和重点保供煤电项目建设,统筹打好新能源提速增效、煤电提质增效和新产业开发拓展攻坚战。大唐国际始终胸怀“国之大者”,认真落实国家保供要求,以“时时放心不下”的责任感扛好保供重任,全力以赴保安全、除隐患、稳发电,充分彰显“顶梁柱”“顶得住”的央企担当。",
+    "main_business": "以火电为主的发电业务及水电、风电和其他能源发电业务,并涉及煤炭、交通、循环经济等领域。",
+    "vision": "",
+    "meta": {
+      "org_name": "大唐国际发电股份有限公司",
+      "org_name_en": "Datang International Power Generation Co., Ltd.",
+      "chairman": "宋波",
+      "secretary": "孙延文,朱卓婷",
+      "founded": "1994-12-13",
+      "listed": "1997-03-21 00:00:00",
+      "website": "www.dtpower.com",
+      "address": "北京市西城区广宁伯街9号",
+      "employees": "27149",
+      "industry": "公用事业",
+      "auditor": "天职国际会计师事务所(特殊普通合伙),天职香港会计师事务所有限公司",
+      "org_form": "一般企业"
+    },
+    "content_hash": "234d4f0cea77"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

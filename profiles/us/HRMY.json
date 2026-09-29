@@ -1,0 +1,46 @@
+{
+  "id": "US:HRMY",
+  "market": "US",
+  "code": "HRMY",
+  "name": "Harmony Biosciences Holdings In",
+  "version": 2,
+  "created_at": "2026-09-29T11:12:49",
+  "updated_at": "2026-09-29T12:10:34",
+  "raw": {
+    "fetched_at": "2026-09-29T11:12:49",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/hrmy/",
+    "summary": "Harmony Biosciences Holdings, Inc., a commercial-stage pharmaceutical company, focuses on developing and commercializing therapies for patients with rare neurological diseases in the United States. The company offers WAKIX (pitolisant), a molecule with a novel mechanism of action for the treatment of excessive daytime sleepiness in adult patients with narcolepsy. It also develops Pitolisant that is in Phase 3 clinical trial for the treatment of Prader-Willi Syndrome (PWS); in Phase 2 clinical trial to treat Myotonic Dystrophy (DM1); and is in P...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Harmony Biosciences Holdings, Inc.",
+      "sic": "2834",
+      "industry": "Pharmaceutical Preparations",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "DE",
+      "cik": "1802665"
+    },
+    "content_hash": "e95167b49466"
+  },
+  "assessment": {
+    "assessed_at": "2026-09-29T12:10:34",
+    "raw_fetched_at": "2026-09-29T11:12:49",
+    "raw_hash": "e95167b49466",
+    "agent": null,
+    "business": {
+      "score": 82.0,
+      "argument": "WAKIX(pitolisant)是唯一非管制类嗜睡症药物,差异化机制(H3受体)+孤儿药独占:ANDA诉讼已和解6/7家,仿制药不早于2030-03(PWS三期读出后儿科独占到位);GR/HD剂型+2042非晶专利将franchise延展至2040年代,专利悬崖有可见桥梁;2026指引.0-1.04B(重磅级),连续6年增长,盈利自筹型biotech;扣分项=单分子集中度(WAKIX占收入~100%),由5个三期+orex in-2激动剂管线对冲但未兑现;护城河=孤儿药独占+REMS渠道+专利丛林,非网络效应"
+    },
+    "culture": {
+      "score": 70.0,
+      "argument": "非创始人驱动(Paragon Biosciences孵化,CEO Dayno为职业经理人);行为级证据:①IP防御纪律强(6/7 ANDA和解+主动起诉Sandoz侵权)②ZYN002三期失败后果断终止=愿认错止损的本分③自筹资金无稀释式融资④Q1 market access逆风下仍重申全年指引=管理层沟通可信;无创始人长期绑定,扣分;无内部人减持红旗(intel_red无)"
+    },
+    "dcf": {
+      "argument": "reverse-DCF(r=10%,tg=2.5%,10y fade)隐含g=-5.0%/yr,而实际FY25营收+21.5%(.5M)+FY26指引+15~19%(.0-1.04B);市场定价=2030专利悬崖后终值归零且不计管线;情景:基准(70%)WAKIX达+GR/HD接续,公允PE 15-18x;悲观(20%)GR/HD失败+2030仿制药侵蚀,PE 8-10x有FCF14.9%托底;乐观(10%)PWS/EPX-100兑现打开第二曲线;概率加权明显低估,管线=免费期权"
+    },
+    "verdict": ""
+  }
+}

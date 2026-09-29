@@ -1,0 +1,38 @@
+{
+  "id": "US:PRU",
+  "market": "US",
+  "code": "PRU",
+  "name": "保德信金融",
+  "version": 1,
+  "created_at": "2026-09-29T11:23:01",
+  "updated_at": "2026-09-29T11:23:01",
+  "raw": {
+    "fetched_at": "2026-09-29T11:23:01",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/pru/",
+    "summary": "Prudential Financial, Inc., together with its subsidiaries, provides financial products and services in the United States, Japan and internationally. It operates through PGIM, Retirement Strategies, Group Insurance, Individual Life, and International Businesses segments. The PGIM segment offers investment management services and solutions related to public fixed income, public equity, real estate debt and equity, private credit and other alternatives, and multi-asset class strategies to institutional and retail clients, as well as its insurance...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "PRUDENTIAL FINANCIAL INC",
+      "sic": "6311",
+      "industry": "Life Insurance",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "NJ",
+      "cik": "1137774"
+    },
+    "content_hash": "34c3c7b0af46"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

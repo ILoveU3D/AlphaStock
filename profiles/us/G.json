@@ -1,0 +1,38 @@
+{
+  "id": "US:G",
+  "market": "US",
+  "code": "G",
+  "name": "简柏特",
+  "version": 1,
+  "created_at": "2026-09-29T11:09:03",
+  "updated_at": "2026-09-29T11:09:03",
+  "raw": {
+    "fetched_at": "2026-09-29T11:09:03",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/g/",
+    "summary": "Genpact Limited, an agentic and advanced technology solutions company, provides digital transformation, business process management, technology, data, analytics, and artificial intelligence (AI) services to enterprises in India, the rest of Asia, North and Latin America, and Europe. Its Financial Services segment offers customer onboarding, customer service, collections, retail and commercial loan operations, payment operations, mortgage origination and servicing, compliance, wealth management, capital market operations support, financial crime...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "Genpact LTD",
+      "sic": "8742",
+      "industry": "Services-Management Consulting Services",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1231",
+      "state_of_incorporation": "D0",
+      "cik": "1398659"
+    },
+    "content_hash": "b24f5d9dd4b8"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

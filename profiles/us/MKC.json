@@ -1,0 +1,38 @@
+{
+  "id": "US:MKC",
+  "market": "US",
+  "code": "MKC",
+  "name": "味好美",
+  "version": 1,
+  "created_at": "2026-09-29T11:16:47",
+  "updated_at": "2026-09-29T11:16:47",
+  "raw": {
+    "fetched_at": "2026-09-29T11:16:47",
+    "source": "stockanalysis+sec_submissions",
+    "source_url": "https://stockanalysis.com/stocks/mkc/",
+    "summary": "McCormick & Company, Incorporated manufactures, markets, and distributes herbs, spices, seasoning mixes, condiments, and other flavorful products to the food industry. It operates in two segments, Consumer and Flavor Solutions. The Consumer segment offers spices, herbs, and seasonings, as well as condiments, sauces, and desserts. This segment markets its products under the McCormick, Frenchâs, Frankâs RedHot, Lawryâs, Cholula Hot Sauce, Club House, Gourmet Garden, and OLD BAY brands in the Americas; Ducros, Schwartz, Kamis, LA Drogheria, and Va...",
+    "main_business": "",
+    "vision": "",
+    "meta": {
+      "org_name": "MCCORMICK & CO INC",
+      "sic": "2090",
+      "industry": "Miscellaneous Food Preparations & Kindred Products",
+      "entity_type": "operating",
+      "filer_category": "Large accelerated filer",
+      "fiscal_year_end": "1130",
+      "state_of_incorporation": "MD",
+      "cik": "63754"
+    },
+    "content_hash": "7661b847f597"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}

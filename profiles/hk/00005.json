@@ -1,0 +1,41 @@
+{
+  "id": "HK:00005",
+  "market": "HK",
+  "code": "00005",
+  "name": "汇丰控股",
+  "version": 1,
+  "created_at": "2026-09-29T10:43:18",
+  "updated_at": "2026-09-29T10:43:18",
+  "raw": {
+    "fetched_at": "2026-09-29T10:43:18",
+    "source": "eastmoney_hk_f10_orgprofile",
+    "source_url": "https://datacenter.eastmoney.com/securities/api/data/v1/get",
+    "summary": "汇丰控股有限公司设于伦敦,汇丰集团是全球最大规模的银行及金融服务机构之一,在欧洲、亚太区、美洲、中东及非洲等87个国家和地区设有约8,000个办事处。集团透过四个客户群及环球业务提供全面的金融服务,计有:零售银行及财富管理业务、工商业务、企业银行、投资银行及资本市场,以及私人银行。香港上海汇丰银行是汇丰集团的始创成员,于1865年3月及4月先后在香港和上海成立。该行是汇丰集团在亚太区的旗舰,也是香港最大的本地注册银行。",
+    "main_business": "HSBC HOLDINGS PLC是一家银行和金融服务公司。该公司通过四个分部开展业务。该公司的香港业务包括HSBC Hong Kong和恒生银行的零售银行及财富管理和商业银行业务。该公司的英国业务包括英国零售银行及财富管理(包括first direct和M&S Bank)以及英国商业银行,HSBC Innovation Bank。企业及机构银行(CIB)分部由该公司的商业银行业务(英国和香港以外)与其全球银行及市场业务整合而成。国际财富及卓越理财(IWPB)分部包括香港和英国以外的卓越银行业务、该公司的私人银行业务以及该公司的资产管理和保险的财富制造业务。该公司通过覆盖56个国家和地区的网络爲全球客户提供服务。该公司的客户范围从个人银行及财富客户到大型企业、机构和政府。",
+    "vision": "",
+    "meta": {
+      "org_name": "汇丰控股有限公司",
+      "org_name_en": "HSBC Holdings Plc",
+      "secretary": "麦安琦",
+      "founded": "1959-01-01",
+      "listed": "1980-01-02 00:00:00",
+      "website": "www.hsbc.com.hk",
+      "address": "42nd Floor, 8 Canada Square, London United Kingdom,香港中环皇后大道中1号",
+      "employees": "206161",
+      "industry": "银行",
+      "auditor": "PricewaterhouseCoopers LLP",
+      "org_form": "银行"
+    },
+    "content_hash": "4c59bd26ceba"
+  },
+  "assessment": {
+    "assessed_at": null,
+    "raw_fetched_at": null,
+    "raw_hash": null,
+    "agent": null,
+    "business": {},
+    "culture": {},
+    "dcf": {},
+    "verdict": ""
+  }
+}
