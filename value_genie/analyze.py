@@ -436,10 +436,32 @@ def analyze_stock(match: Match, snapshot_dir=None, live: bool = True,
     result["horizon_profile"] = prof if snap is not None else {}
     result["verdict"] = verdict_band(composite_pct)
     # Three cores (2026-09-29 redesign): absolute anchors, computable
-    # from the target row alone — no peer frame needed.
+    # from the target row alone — no peer frame needed. Blend the
+    # target's profile assessment live when one exists (fetch-time
+    # blend covers master.csv; ask should not wait for the next fetch
+    # after a `profile assess` write-back).
     core_row = _flat_row(result)
     core_row.update(result.get("intel") or {})
-    cr = cores.add_core_scores(pd.DataFrame([core_row])).iloc[0]
+    # the assessments key-mapping needs market/code on the frame
+    core_row.setdefault("market", match.market)
+    core_row.setdefault("code", match.code)
+    assessments, stale_keys = None, None
+    try:
+        from . import profile as _pm
+        _p = _pm.load_profile(match.market, match.code)
+        if _p.assessment.assessed_at:
+            if _pm.assessment_is_stale(_p):
+                stale_keys = {(match.market, match.code)}
+            else:
+                assessments = pd.DataFrame([{
+                    "market": match.market, "code": match.code,
+                    "a_business": _p.assessment.business.get("score"),
+                    "a_culture": _p.assessment.culture.get("score")}])
+    except FileNotFoundError:
+        pass
+    cr = cores.add_core_scores(pd.DataFrame([core_row]),
+                               assessments=assessments,
+                               stale_keys=stale_keys).iloc[0]
     result["cores"] = {
         "business": _core_val(cr.get("core_business")),
         "culture": _core_val(cr.get("core_culture")),

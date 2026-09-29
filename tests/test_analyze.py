@@ -338,3 +338,56 @@ class TestPeerSetMasterFallback:
         snap.mkdir(exist_ok=True)
         with pytest.raises(FileNotFoundError):
             az.build_peer_set(snap, "HK")
+
+
+# ---------------------------------------------------------------------------
+# ask blends the target's profile assessment live (write-back -> immediate)
+# ---------------------------------------------------------------------------
+class TestAskProfileBlend:
+    def _run(self, snap, tmp_path, monkeypatch):
+        from value_genie import config as _cfg
+        monkeypatch.setattr(_cfg, "PROFILES_DIR", tmp_path / "profiles")
+        monkeypatch.setattr(
+            az, "fetch_quotes_by_secids",
+            lambda secids: pd.DataFrame([{
+                "market": "HK", "code": "00001", "name": "HK Alpha",
+                "market_id": "116", "price": 101.0, "pct_chg": 0.5,
+                "pe_ttm": 10.0, "pb": 1.0, "market_cap": 5e10}]))
+        monkeypatch.setattr(az, "fetch_kline_any", lambda *a, **k: None)
+        return az.analyze_stock(Match("HK", "00001", "HK Alpha", 100.0,
+                                      "116"), snapshot_dir=snap)
+
+    def _assess(self, tmp_path, stale=False):
+        from value_genie import profile as pm
+        p = pm.Profile(id="HK:00001", market="HK", code="00001",
+                       name="HK Alpha")
+        pm.set_raw(p, {"summary": "老牌综合企业", "source": "test"})
+        pm.set_assessment(p, business={"score": 80.0},
+                          culture={"score": 60.0})
+        if stale:
+            pm.set_raw(p, {"summary": "年报更新后的新简介",
+                           "source": "test"})
+        pm.save_profile(p)
+
+    def test_blend_applies_when_assessed(self, tmp_path, monkeypatch):
+        snap = make_hk_snapshot(tmp_path)
+        proxy = self._run(snap, tmp_path, monkeypatch)["cores"]
+        self._assess(tmp_path)
+        blended = self._run(snap, tmp_path, monkeypatch)["cores"]
+        # blend rule: 0.5×proxy + 0.5×AI; proxy NaN -> AI stands alone
+        exp_bus = (0.5 * proxy["business"] + 0.5 * 80.0
+                   if proxy["business"] is not None else 80.0)
+        exp_cul = (0.5 * proxy["culture"] + 0.5 * 60.0
+                   if proxy["culture"] is not None else 60.0)
+        assert blended["business"] == pytest.approx(exp_bus, abs=0.2)
+        assert blended["culture"] == pytest.approx(exp_cul, abs=0.2)
+        assert "stale" not in (blended["gaps"] or "")
+
+    def test_stale_cores_equal_proxy(self, tmp_path, monkeypatch):
+        snap = make_hk_snapshot(tmp_path)
+        proxy = self._run(snap, tmp_path, monkeypatch)["cores"]
+        self._assess(tmp_path, stale=True)
+        stale = self._run(snap, tmp_path, monkeypatch)["cores"]
+        assert stale["business"] == proxy["business"]
+        assert stale["culture"] == proxy["culture"]
+        assert "AI assessment stale" in (stale["gaps"] or "")
