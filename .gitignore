@@ -12,6 +12,10 @@ venv/
 data/
 output/
 
+# Company profile assessments are LOCAL-ONLY (user mandate 2026-09-29):
+# never pushed to any remote; raw fetches live under the cleanable data/
+profiles/
+
 # Skill edit backups (skills.py keeps last 10 versions at runtime)
 skills/.backup/
 

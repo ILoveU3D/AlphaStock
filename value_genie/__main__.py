@@ -207,6 +207,11 @@ def cmd_masters_vote(args) -> int:
     if "core_score" not in master.columns:
         master = _cores.add_core_scores(master)
     df = cs.add_snapshot_flags(cs.masters_vote(master, markets=markets))
+    # D3 hook: distilled culture scores (Phase 5 profiles) re-activate
+    # the culture core for those rows only; everything else stays
+    # veto-only (no proxy scoring)
+    from . import profile as _prof
+    df, n_distilled = _prof.apply_distilled_culture(df)
     if thesis_infos:
         tcol = df.get("thesis")
         for ti in thesis_infos:
@@ -226,7 +231,31 @@ def cmd_masters_vote(args) -> int:
     pool = df[(df["vote_count"] >= 1) & (~df["veto_hard"])]
     if pool.empty:
         raise SystemExit("no stocks passed any master's gates")
-    top = cs.rank_consensus(pool, top_n=args.top)
+
+    # D4 tactical mode (short/ultrashort): floor verifies a REAL business
+    # and an intact weekly uptrend, never the price; DCF display-only.
+    horizon = getattr(args, "horizon", None)
+    if horizon:
+        pool = _annotate_short_floor(pool)
+
+    # v2 (2026-09-29, D1): the pool itself is the deliverable — wide and
+    # veto-annotated, never truncated by a quant ranking; selection is the
+    # AI's job at L3.  --top N keeps the legacy ranked shortlist with the
+    # live pass; --check runs the live pass on an AI-chosen shortlist.
+    if args.check:
+        return _masters_live_check(args, cs, pool)
+
+    if args.top is not None:
+        top = cs.rank_consensus(pool, top_n=args.top)
+    elif horizon:
+        keys = [c for c in ("short_floor", "pullback_sweet", "ret_60d")
+                if c in pool.columns]
+        top = pool.sort_values(
+            keys, ascending=[False] * len(keys),
+            na_position="last").reset_index(drop=True)
+    else:
+        top = pool.sort_values("core_score", ascending=False,
+                               na_position="last").reset_index(drop=True)
 
     # L2 live pass: forward-PE divergence (A-shares only — the only
     # market with a consensus-EPS source; HK/US gaps declared)
@@ -235,9 +264,14 @@ def cmd_masters_vote(args) -> int:
     top["cycle_warn"] = False
     top["data_gap"] = ""
     for idx, row in top.iterrows():
-        if args.no_live or str(row.get("market")) != "A":
-            if str(row.get("market")) != "A":
-                top.at[idx, "data_gap"] = "no consensus-EPS source (HK/US)"
+        if str(row.get("market")) != "A":
+            top.at[idx, "data_gap"] = "no consensus-EPS source (HK/US)"
+            continue
+        if args.no_live:
+            continue
+        if args.top is None:
+            # wide mode: network pass deferred to the AI shortlist
+            top.at[idx, "data_gap"] = "live pass pending (--check)"
             continue
         div = cs.forward_pe_divergence(row)
         if div is None:
@@ -250,7 +284,8 @@ def cmd_masters_vote(args) -> int:
             top.at[idx, "cycle_warn"] = True
 
     # cycle_trap is a hard veto (2026-09-29 redesign): excluded after the
-    # live pass; cycle_warn stays display-only
+    # live pass; cycle_warn stays display-only.  Wide mode defers the live
+    # pass, so nothing is excluded there — declared via data_gap instead.
     cycle_trapped = top[top["cycle_trap"]]
     if not cycle_trapped.empty:
         top = top[~top["cycle_trap"]].reset_index(drop=True)
@@ -258,7 +293,12 @@ def cmd_masters_vote(args) -> int:
     if args.json:
         meta = {"snapshot": snap_dir.name, "masters": masters,
                 "markets": markets or list(config.MARKETS),
-                "ranking": "core_score (three-core equal weight)",
+                "pool_mode": "legacy_top" if args.top is not None
+                             else "wide",
+                "rows": int(len(top)),
+                "ranking": "none (wide pool; selection is L3 AI judgment) "
+                           if args.top is None else
+                           "core_score (three-core equal weight)",
                 "veto_excluded": {"count": int(len(vetoed)),
                                   **veto_sources},
                 "cycle_trap_excluded": [
@@ -267,6 +307,18 @@ def cmd_masters_vote(args) -> int:
                 "cycle_trap_ratio": cs.CYCLE_TRAP_RATIO,
                 "cycle_warn_ratio": cs.CYCLE_WARN_RATIO,
                 "profit_spike_pct": cs.PROFIT_SPIKE_PCT}
+        if horizon:
+            meta["horizon"] = horizon
+            meta["ranking"] = ("tactical (short_floor > pullback_sweet > "
+                               "ret_60d) — DCF display-only, NOT "
+                               "investment merit")
+            meta["short_floor"] = {
+                "business_min": config.SHORT_FLOOR_BUSINESS,
+                "weekly_uptrend_required": True,
+                "pullback_sweet_pct": list(config.PULLBACK_SWEET)}
+            meta["discipline"] = _horizon_discipline(horizon)
+        if n_distilled:
+            meta["culture_distilled"] = n_distilled
         if thesis_infos:
             meta["theses"] = thesis_infos
         print(report.to_json(top, meta))
@@ -291,6 +343,9 @@ def cmd_masters_vote(args) -> int:
           f"profit_spike={veto_sources['profit_spike']})"
           + (f"; cycle_trap: {len(cycle_trapped)}"
              if not cycle_trapped.empty else ""))
+    if n_distilled:
+        print(f"culture  : {n_distilled} row(s) carry a distilled "
+              f"culture score (profiles; D3 hook active)")
     print()
     print(f"{'rank':>4} {'market':>6} {'code':>8} {'name':<14} "
           f"{'price':>8} {'votes':>5} {'core':>5} {'dcf_g':>6} "
@@ -299,6 +354,10 @@ def cmd_masters_vote(args) -> int:
         flags = []
         if r.get("thesis"):
             flags.append(f"thesis:{r['thesis']}")
+        if horizon:
+            flags.append("floor" if r.get("short_floor") else "NO-floor")
+            if r.get("pullback_sweet"):
+                flags.append("sweet")
         if r.get("cycle_warn"):
             flags.append("cycle_warn")
         if r.get("data_gap"):
@@ -316,10 +375,119 @@ def cmd_masters_vote(args) -> int:
               f"{r['mean_composite']:>9.1f} "
               f"{div_s:>6}  {', '.join(flags)}")
         print(f"{'':>4} masters: {r['masters_passed']}")
+    if args.top is None:
+        print(f"\nwide pool: {len(top)} rows (veto-annotated, NOT ranked — "
+              f"selection is L3 AI judgment). Live cycle-trap pass: "
+              f"`masters-vote --check MARKET:CODE ...` on your shortlist.")
+    if horizon:
+        d = _horizon_discipline(horizon)
+        print(f"\n{d['warning']}")
+        print(d["rules"])
     print("\nL1 = veto filter (gates + red flags can only EXCLUDE, never "
           "rank); ranking = three-core equal weight (core_score); "
           "L3/L4 (qualitative + fused verdict) run per "
           "skills/18-fused-quant-master.md")
+    return 0
+
+
+def _annotate_short_floor(pool: pd.DataFrame) -> pd.DataFrame:
+    """D4 tactical floor for short/ultrashort: verifies a real business
+    (core_business >= config.SHORT_FLOOR_BUSINESS) plus an intact weekly
+    uptrend — never the price. Fails closed when kline factors are
+    missing (old snapshots): no weekly data, no floor."""
+    def _col(name):
+        s = pool.get(name)
+        if s is None:
+            return pd.Series(float("nan"), index=pool.index)
+        return pd.to_numeric(s, errors="coerce")
+
+    out = pool.copy()
+    cb, wu, pb = (_col("core_business"), _col("weekly_uptrend"),
+                  _col("pullback_from_high"))
+    lo, hi = config.PULLBACK_SWEET
+    out["short_floor"] = (cb >= config.SHORT_FLOOR_BUSINESS) & (wu == 1)
+    out["pullback_sweet"] = pb.between(lo, hi)
+    return out
+
+
+def _horizon_discipline(horizon: str) -> dict:
+    """Mandatory caution block for tactical horizons (skills/14)."""
+    time_stop = ("次日收盘前 (ultrashort: 不过夜到次日收盘)"
+                 if horizon == "ultrashort"
+                 else "1个月内兑现或止损 (short)")
+    return {
+        "warning": "短炒警示 (skills/14): 超短线/短线是战术仓，不是投资 — "
+                   "floor = 真生意(core_business≥"
+                   f"{config.SHORT_FLOOR_BUSINESS:g}) + 周K上升趋势 + "
+                   "无否决；DCF 仅为'失败变持有'备注，不作买入论证",
+        "rules": f"纪律: -7% 硬止损 | 时间止损 {time_stop} | "
+                 "单票仓位 ≤ 5% NAV",
+    }
+
+
+def _masters_live_check(args, cs, pool) -> int:
+    """Live cycle-trap pass on an AI-chosen shortlist (v2, D1).
+
+    The wide pool carries no per-row network checks; once L3 picks the
+    deep-review names, this runs the forward-PE divergence on exactly
+    those (A-shares; HK/US gaps declared)."""
+    rows = []
+    for token in args.check:
+        tok = str(token).strip().upper()
+        mkt, _, code = tok.partition(":")
+        hit = pool
+        if code:
+            hit = hit[hit["market"].astype(str).str.upper() == mkt]
+            hit = hit[hit["code"].astype(str).str.upper() == code]
+        else:
+            hit = hit[hit["code"].astype(str).str.upper() == mkt]
+        if hit.empty:
+            rows.append({"query": token, "error": "not in pool"})
+            continue
+        r = hit.iloc[0]
+        item = {"market": r.get("market"), "code": r.get("code"),
+                "name": r.get("name"),
+                "core_score": r.get("core_score"),
+                "pe_divergence": None, "cycle_trap": False,
+                "cycle_warn": False, "data_gap": ""}
+        if str(r.get("market")) != "A":
+            item["data_gap"] = "no consensus-EPS source (HK/US)"
+        elif args.no_live:
+            item["data_gap"] = "live pass skipped (--no-live)"
+        else:
+            div = cs.forward_pe_divergence(r)
+            if div is None:
+                item["data_gap"] = "consensus EPS unavailable"
+            else:
+                item["pe_divergence"] = round(div, 2)
+                if div >= cs.CYCLE_TRAP_RATIO:
+                    item["cycle_trap"] = True
+                elif div >= cs.CYCLE_WARN_RATIO:
+                    item["cycle_warn"] = True
+        rows.append(item)
+    if args.json:
+        print(report.to_json(pd.DataFrame(rows),
+                             {"mode": "live_check",
+                              "cycle_trap_ratio": cs.CYCLE_TRAP_RATIO,
+                              "cycle_warn_ratio": cs.CYCLE_WARN_RATIO}))
+        return 0
+    print("== masters-vote live check (cycle-trap pass) ==")
+    for it in rows:
+        if "error" in it:
+            print(f"  {it['query']}: {it['error']}")
+            continue
+        flags = []
+        if it["cycle_trap"]:
+            flags.append("CYCLE_TRAP (hard veto)")
+        if it["cycle_warn"]:
+            flags.append("cycle_warn")
+        if it["data_gap"]:
+            flags.append(f"gap:{it['data_gap']}")
+        div = it["pe_divergence"]
+        print(f"  {it['market']}:{it['code']} {it['name']} — "
+              f"pe_div={div if div is not None else '-'} "
+              f"core={it['core_score'] if pd.notna(it['core_score']) else '-'}"
+              f"  {', '.join(flags)}")
     return 0
 
 
@@ -1274,6 +1442,146 @@ def cmd_thesis(args) -> int:
     return 0
 
 
+def cmd_profile(args) -> int:
+    """Company profiles (Phase 5): raw source text under data/ (cleanable)
+    + AI-distilled assessments under profiles/ (LOCAL-ONLY, untracked).
+
+    Not freshness-gated (same contract as tower/thesis): the registry
+    depends on no market snapshot; `show/fetch/assess` resolve the stock
+    through the normal chain (exact code forms need no snapshot).
+    """
+    import sys as _sys
+
+    from . import profile as prof
+
+    try:
+        if args.profile_cmd == "list":
+            rows = prof.list_assessments()
+            if args.json:
+                print(json.dumps(rows, ensure_ascii=False, indent=2,
+                                 default=str))
+                return 0
+            if not rows:
+                print(f"no assessments under {prof.profiles_dir()}")
+                return 1
+            for a in rows:
+                b = (a.get("business") or {}).get("score")
+                c = (a.get("culture") or {}).get("score")
+                stale = " STALE(raw changed)" if a.get("raw_stale") else ""
+                print(f"{a['id']:<14} {str(a.get('name') or ''):<16} "
+                      f"business={b if b is not None else '-':>5} "
+                      f"culture={c if c is not None else '-':>5} "
+                      f"{a.get('assessed_at', '')[:10]}{stale}")
+            return 0
+
+        if args.profile_cmd == "show":
+            m = _resolve_stock_or_exit(args.stock)
+            raw = prof.load_raw(m.market, m.code)
+            a = prof.load_assessment(m.market, m.code)
+            if args.json:
+                print(json.dumps({
+                    "id": f"{m.market}:{m.code}", "name": m.name,
+                    "raw": raw, "assessment": a,
+                    "raw_stale": prof.is_stale(a, raw)},
+                    ensure_ascii=False, indent=2, default=str))
+                return 0
+            if raw is None and a is None:
+                print(f"no profile for {m.label()} yet — fetch one with "
+                      f"`profile fetch {m.market}:{m.code}`")
+                return 1
+            if raw:
+                print(f"== raw ({raw.get('source')}, fetched "
+                      f"{str(raw.get('fetched_at'))[:10]}, hash "
+                      f"{raw.get('content_hash')}) ==")
+                if raw.get("summary"):
+                    print(raw["summary"][:600])
+                if raw.get("main_business"):
+                    print(f"\n主营业务: {raw['main_business']}")
+                if raw.get("vision"):
+                    print(f"愿景: {raw['vision']}")
+            else:
+                print("(no raw fetched)")
+            print()
+            if a:
+                b, c = a.get("business") or {}, a.get("culture") or {}
+                print(f"== assessment ({a.get('assessed_at', '')[:10]}, "
+                      f"agent={a.get('agent')}"
+                      + (" STALE" if prof.is_stale(a, raw) else "")
+                      + ") ==")
+                print(f"business {b.get('score')}: {b.get('argument')}")
+                print(f"culture  {c.get('score')}: {c.get('argument')}")
+                if (a.get("dcf") or {}).get("argument"):
+                    print(f"dcf      : {a['dcf']['argument']}")
+                if a.get("verdict"):
+                    print(f"verdict  : {a['verdict']}")
+            else:
+                print("(not assessed yet — distill with `profile assess`)")
+            return 0
+
+        if args.profile_cmd == "fetch":
+            m = _resolve_stock_or_exit(args.stock)
+            from .fetch import profiles as pf
+            raw = pf.update_raw(m.market, m.code)
+            if raw is None:
+                print(f"profile fetch failed for {m.label()} "
+                      f"(source unavailable; existing raw untouched)",
+                      file=_sys.stderr)
+                return 1
+            print(f"fetched {raw['id']} <- {raw['source']} "
+                  f"(hash {raw['content_hash']}, "
+                  f"summary {len(raw.get('summary') or '')} chars)")
+            return 0
+
+        if args.profile_cmd == "assess":
+            m = _resolve_stock_or_exit(args.stock)
+            founder_led = None
+            if args.founder_led is not None:
+                founder_led = args.founder_led == "yes"
+            a = prof.assess(
+                m.market, m.code, name=m.name,
+                business_score=args.business_score,
+                culture_score=args.culture_score,
+                moat_type=args.moat_type or "",
+                machine_lifecycle=args.lifecycle or "",
+                founder_led=founder_led,
+                benfen=args.benfen or [],
+                business_arg=args.business_arg or "",
+                culture_arg=args.culture_arg or "",
+                dcf_arg=args.dcf_arg or "",
+                verdict=args.verdict or "",
+                agent=args.agent)
+            if args.json:
+                print(json.dumps(a, ensure_ascii=False, default=str))
+            else:
+                print(f"assessed {a['id']} "
+                      f"(business={a['business']['score']}, "
+                      f"culture={a['culture']['score']}; raw_hash "
+                      f"{a.get('raw_hash') or 'none'})")
+            return 0
+
+        if args.profile_cmd == "status":
+            rows = prof.list_assessments()
+            stale = [a for a in rows if a.get("raw_stale")]
+            out = {"assessments": len(rows), "stale": len(stale),
+                   "stale_ids": [a["id"] for a in stale],
+                   "profiles_dir": str(prof.profiles_dir()),
+                   "raw_dir": str(prof.raw_dir())}
+            if args.json:
+                print(json.dumps(out, ensure_ascii=False, indent=2))
+            else:
+                print(f"assessments: {out['assessments']} "
+                      f"(stale: {out['stale']}"
+                      + (f" — {', '.join(out['stale_ids'])}"
+                         if stale else "") + ")")
+                print(f"dirs       : {out['profiles_dir']} (untracked) | "
+                      f"{out['raw_dir']} (cleanable)")
+            return 0
+    except (ValueError, FileNotFoundError) as exc:
+        print(exc, file=_sys.stderr)
+        return 1
+    return 0
+
+
 # ---------------------------------------------------------------------------
 # Parser
 # ---------------------------------------------------------------------------
@@ -1328,11 +1636,18 @@ def build_parser() -> argparse.ArgumentParser:
 
     pmv = sub.add_parser(
         "masters-vote",
-        help="QMF L1/L2: master-gate vote consensus + cycle-trap flags")
+        help="QMF L1/L2: wide candidate pool + veto annotations (v2); "
+             "quant vetoes, AI selects")
     pmv.add_argument("--snapshot", default=None, metavar="YYYYMMDD",
                      help="snapshot date (default: latest)")
-    pmv.add_argument("--top", type=int, default=config.DEFAULT_TOP_N,
-                     help=f"result count (default: {config.DEFAULT_TOP_N})")
+    pmv.add_argument("--top", type=int, default=None, metavar="N",
+                     help="legacy ranked shortlist of N with the live "
+                          "consensus-EPS pass (default: wide pool, live "
+                          "pass pending)")
+    pmv.add_argument("--check", nargs="+", default=None,
+                     metavar="MARKET:CODE",
+                     help="run the live cycle-trap pass on an AI-chosen "
+                          "shortlist (e.g. --check A:600519 HK:00998)")
     pmv.add_argument("--markets", default=None, metavar="A,HK,US",
                      help="markets to include (default: all)")
     pmv.add_argument("--no-live", action="store_true",
@@ -1341,6 +1656,12 @@ def build_parser() -> argparse.ArgumentParser:
                      help="inject a thesis registry pool (repeatable); "
                           "members are marked thesis:<id>, gates "
                           "unchanged — see `thesis list`")
+    pmv.add_argument("--horizon", choices=["short", "ultrashort"],
+                     default=None,
+                     help="tactical mode (D4): floor = real business "
+                          "(core_business >= 50) + weekly uptrend + no "
+                          "veto; pullback sweet spot annotated; DCF "
+                          "display-only with mandatory discipline lines")
     pmv.add_argument("--data-dir", default=None, help="data directory")
     pmv.add_argument("--no-check", action="store_true",
                      help="skip the freshness gate (testing only)")
@@ -1758,6 +2079,45 @@ def build_parser() -> argparse.ArgumentParser:
                                                "theses use `retire`)")
     pth_rm.add_argument("thesis_id")
     pth.set_defaults(func=cmd_thesis)
+
+    ppf = sub.add_parser(
+        "profile", help="company profiles (Phase 5): raw source text "
+                        "(data/, cleanable) + AI-distilled assessments "
+                        "(profiles/, LOCAL-ONLY — never pushed)")
+    ppf_sub = ppf.add_subparsers(dest="profile_cmd", required=True)
+    ppf_list = ppf_sub.add_parser("list", help="list distilled assessments")
+    ppf_list.add_argument("--json", action="store_true")
+    ppf_show = ppf_sub.add_parser(
+        "show", help="show raw source text + assessment (L3 read entry)")
+    ppf_show.add_argument("stock")
+    ppf_show.add_argument("--json", action="store_true")
+    ppf_fetch = ppf_sub.add_parser(
+        "fetch", help="fetch the raw profile for one stock (on-demand)")
+    ppf_fetch.add_argument("stock")
+    ppf_assess = ppf_sub.add_parser(
+        "assess", help="write the AI distillation (the only writer; "
+                       "feeds the culture core via the D3 hook)")
+    ppf_assess.add_argument("stock")
+    ppf_assess.add_argument("--business-score", type=float, default=None)
+    ppf_assess.add_argument("--culture-score", type=float, default=None)
+    ppf_assess.add_argument("--moat-type", default=None)
+    ppf_assess.add_argument("--lifecycle", default=None,
+                            help="machine lifecycle stage")
+    ppf_assess.add_argument("--founder-led", choices=["yes", "no"],
+                            default=None)
+    ppf_assess.add_argument("--benfen", action="append", default=None,
+                            metavar="E", help="behavior-level 本分证据 "
+                                              "(repeatable)")
+    ppf_assess.add_argument("--business-arg", default=None)
+    ppf_assess.add_argument("--culture-arg", default=None)
+    ppf_assess.add_argument("--dcf-arg", default=None)
+    ppf_assess.add_argument("--verdict", default=None)
+    ppf_assess.add_argument("--agent", default=None,
+                            help="distilling agent id (e.g. kimi-k3)")
+    ppf_assess.add_argument("--json", action="store_true")
+    ppf_status = ppf_sub.add_parser("status", help="coverage + staleness")
+    ppf_status.add_argument("--json", action="store_true")
+    ppf.set_defaults(func=cmd_profile)
     return parser
 
 

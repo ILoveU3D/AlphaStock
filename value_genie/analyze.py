@@ -427,7 +427,15 @@ def analyze_stock(match: Match, snapshot_dir=None, live: bool = True,
     # from the target row alone — no peer frame needed.
     core_row = _flat_row(result)
     core_row.update(result.get("intel") or {})
-    cr = cores.add_core_scores(pd.DataFrame([core_row])).iloc[0]
+    # D3 hook: a distilled culture score (Phase 5 profiles) re-activates
+    # the culture core for this stock; otherwise veto-only.
+    from . import profile as _prof
+    _culture = _prof.load_culture_scores().get(
+        f"{match.market}:{match.code}")
+    cr = cores.add_core_scores(
+        pd.DataFrame([core_row]),
+        culture=pd.Series([_culture]) if _culture is not None
+        else None).iloc[0]
     result["cores"] = {
         "business": _core_val(cr.get("core_business")),
         "culture": _core_val(cr.get("core_culture")),
