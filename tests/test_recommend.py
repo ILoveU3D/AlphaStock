@@ -72,6 +72,8 @@ def fake_live(monkeypatch):
         return {"price": price, "name": match.name, "code": match.code}
 
     monkeypatch.setattr(rec, "live_quote", _fake)
+    # keep tests hermetic: no real Tencent fallback calls
+    monkeypatch.setattr(rec, "fetch_quote_any", lambda *a, **k: None)
     return quotes
 
 
@@ -115,6 +117,7 @@ def test_holdings_health_off_master_and_snapshot_fallback(
                     qty=200, cost=9.5)
     # kill live for HK -> fallback to snapshot price (none for HK) -> None
     monkeypatch.setattr(rec, "live_quote", lambda m: None)
+    monkeypatch.setattr(rec, "fetch_quote_any", lambda *a, **k: None)
     health = rec.holdings_health(u, snap)
     r = health["rows"][0]
     assert r["price"] is None
@@ -159,9 +162,32 @@ def test_holdings_health_snapshot_price_fallback(data_dir, fake_live,
     snap = data_dir / "snapshots" / "20260201"
     u = _user_with_holdings()
     monkeypatch.setattr(rec, "live_quote", lambda m: None)
+    monkeypatch.setattr(rec, "fetch_quote_any", lambda *a, **k: None)
     health = rec.holdings_health(u, snap)
     r = health["rows"][0]
     assert r["price"] == 1500.0 and r["price_src"] == "snapshot"
+
+
+def test_live_price_tencent_fallback(monkeypatch):
+    """EM ulist down (live_quote None / no US market_id map) -> Tencent
+    realtime quote prices the symbol, marked 'live-tx'."""
+    monkeypatch.setattr(rec, "live_quote", lambda m: None)
+    monkeypatch.setattr(rec, "fetch_quote_any",
+                        lambda market, code, mid="": {"price": 88.5})
+    price, src = rec.live_price("US", "ZM", "Zoom", None, {})
+    assert price == 88.5 and src == "live-tx"
+    # no US market_id map (EM-down + no snapshot) still reaches Tencent
+    monkeypatch.setattr(rec, "fetch_quote_any", lambda *a, **k: None)
+    assert rec.live_price("US", "ZM", "Zoom", None, {}) == (None, "")
+
+
+def test_live_price_prefers_em_over_tencent(monkeypatch):
+    monkeypatch.setattr(rec, "live_quote",
+                        lambda m: {"price": 90.0})
+    monkeypatch.setattr(rec, "fetch_quote_any",
+                        lambda *a, **k: {"price": 88.5})
+    price, src = rec.live_price("US", "ZM", "Zoom", None, {"ZM": "105"})
+    assert price == 90.0 and src == "live"
 
 
 def test_holdings_health_uses_watchlist_fallback(data_dir, fake_live,
