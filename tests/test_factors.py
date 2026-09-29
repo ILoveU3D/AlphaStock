@@ -61,6 +61,53 @@ class TestKlineMetrics:
         assert f._interval_return(closes, 60) == pytest.approx(10.0)
 
 
+def _dated_kline(closes, start="2025-01-01"):
+    """Kline with a real business-day index (weekly resampling needs it)."""
+    n = len(closes)
+    dates = pd.bdate_range(start=start, periods=n).strftime("%Y-%m-%d")
+    return pd.DataFrame({
+        "date": dates, "open": closes, "close": closes,
+        "high": [c * 1.01 for c in closes],
+        "low": [c * 0.99 for c in closes],
+        "volume": [1e6] * n, "amount": [1e7] * n,
+    })
+
+
+class TestTacticalPair:
+    """weekly_uptrend + pullback_from_high (tower brick
+    weekly-trend-daily-pullback): macro trend intact, micro drawdown."""
+
+    def test_rising_ramp_is_uptrend_at_high(self):
+        closes = list(np.linspace(10.0, 20.0, 300))
+        m = f.kline_metrics(_dated_kline(closes))
+        assert m["weekly_uptrend"] == 1.0
+        # high column is close*1.01, so the last close sits ~1% under it
+        assert m["pullback_from_high"] == pytest.approx(-1.0, abs=0.3)
+
+    def test_pullback_inside_intact_uptrend(self):
+        # 290-bar ramp, then an 8% dip off the high in the last 10 bars
+        peak = 20.0
+        closes = list(np.linspace(10.0, peak, 290))
+        closes += list(np.linspace(peak, peak * 0.92, 10))
+        m = f.kline_metrics(_dated_kline(closes))
+        assert m["weekly_uptrend"] == 1.0        # macro trend survives
+        lo, hi = -15.0, -5.0                      # config.PULLBACK_SWEET
+        assert lo < m["pullback_from_high"] < hi
+
+    def test_falling_ramp_is_not_uptrend(self):
+        closes = list(np.linspace(20.0, 10.0, 300))
+        m = f.kline_metrics(_dated_kline(closes))
+        assert m["weekly_uptrend"] == 0.0
+        assert m["pullback_from_high"] < -15.0   # deep, but NO trend
+
+    def test_short_history_omits_weekly(self):
+        closes = list(np.linspace(10.0, 15.0, 100))
+        m = f.kline_metrics(_dated_kline(closes))
+        assert "weekly_uptrend" not in m          # fail-closed: no signal
+        assert "pullback_from_high" in m          # 60-bar window exists
+
+
+
 class TestAddPillarScores:
     def _frame(self):
         return pd.DataFrame({

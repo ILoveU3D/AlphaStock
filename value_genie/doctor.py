@@ -113,6 +113,33 @@ def run_checks(data_dir=None) -> list:
             out.append(("PASS", "-", f"watchlist rows: {n}"))
         except (OSError, pd.errors.ParserError, ValueError):
             out.append(("WARN", "-", "watchlist.csv unreadable"))
+    # three-core missing rates per market (D2, 2026-09-29): imputed cells
+    # are still missing DATA — the market mean only patches the ranking,
+    # so high rates here mean "go repair the source" (e.g. annual FCF
+    # coverage), not that the problem is solved.
+    mp_csv = snap / "master.csv"
+    if mp_csv.exists():
+        try:
+            m = pd.read_csv(mp_csv, dtype={"code": str})
+        except (OSError, pd.errors.ParserError, ValueError):
+            m = None
+        if m is not None and "core_gaps" in m.columns \
+                and "market" in m.columns:
+            gaps = m["core_gaps"].fillna("")
+            biz_miss = gaps.str.contains(
+                "core_business imputed|business inputs missing")
+            dcf_miss = gaps.str.contains(
+                "core_dcf imputed|no annual FCF")
+            for mk, idx in m.groupby("market").groups.items():
+                n = len(idx)
+                if not n:
+                    continue
+                biz = biz_miss.loc[idx].mean() * 100.0
+                dcf = dcf_miss.loc[idx].mean() * 100.0
+                status = ("WARN" if max(biz, dcf) > 25.0 else "PASS")
+                out.append((status, str(mk),
+                            f"core gaps: business {biz:.0f}% / dcf "
+                            f"{dcf:.0f}% missing (market-mean imputed)"))
     # intel radar: missing -> WARN (舆情缺失允许降级运行, design §8),
     # never FAIL — the screener stays usable, only intel-gated screens
     # degrade (their gates skip with a WARN, see evaluate_gates).

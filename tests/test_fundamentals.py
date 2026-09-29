@@ -24,6 +24,62 @@ class TestCandidateReportDates:
         assert len(f.candidate_report_dates(date(2026, 8, 31), lookback=2)) == 2
 
 
+class TestHkMainindicatorBatch:
+    """Market-wide HK main indicators (RPT_HKF10_FN_MAININDICATOR
+    filtered by REPORT_DATE) — stage-1 enrichment for lane B."""
+
+    @staticmethod
+    def _row(code, roe="25.0", gm="50.0", debt="30.0", pyoy="10.0"):
+        return {"SECURITY_CODE": code,
+                "REPORT_DATE": "2026-06-30 00:00:00",
+                "ROE_AVG": roe, "GROSS_PROFIT_RATIO": gm,
+                "DEBT_ASSET_RATIO": debt, "HOLDER_PROFIT_YOY": pyoy}
+
+    def test_pagination_and_normalization(self, monkeypatch):
+        pages = {
+            1: {"result": {"data": [self._row("9999")], "pages": 2}},
+            2: {"result": {"data": [self._row("700", roe="18.5")],
+                           "pages": 2}},
+        }
+        monkeypatch.setattr(f, "DC", SimpleNamespace(
+            get_json=lambda url, params=None, **kw:
+                pages[params["pageNumber"]]))
+        df = f.fetch_hk_mainindicator_batch(report_date="2026-06-30",
+                                            quiet=True)
+        assert len(df) == 2
+        assert list(df["code"]) == ["09999", "00700"]   # zfilled
+        assert df["roe"].tolist() == [25.0, 18.5]       # numeric
+        assert set(df["report_date"]) == {"2026-06-30"}  # sliced
+
+    def test_empty_when_no_rows(self, monkeypatch):
+        monkeypatch.setattr(f, "DC", SimpleNamespace(
+            get_json=lambda url, params=None, **kw: {"result": None}))
+        assert f.fetch_hk_mainindicator_batch(report_date="2026-06-30",
+                                              quiet=True) is None
+
+    def test_no_broad_report_date_returns_none(self, monkeypatch):
+        monkeypatch.setattr(f, "_hk_batch_count", lambda rd: 0)
+        assert f.fetch_hk_mainindicator_batch(quiet=True) is None
+
+
+class TestLatestHkReportDate:
+    def test_picks_latest_broad_half_year(self, monkeypatch):
+        counts = {"2026-06-30": 2185, "2025-12-31": 2400,
+                  "2025-06-30": 2300, "2024-12-31": 2200}
+        monkeypatch.setattr(f, "_hk_batch_count", counts.get)
+        assert f.latest_hk_report_date(date(2026, 9, 29)) == "2026-06-30"
+
+    def test_skips_thin_coverage(self, monkeypatch):
+        counts = {"2026-06-30": 120, "2025-12-31": 2400}
+        monkeypatch.setattr(f, "_hk_batch_count",
+                            lambda rd: counts.get(rd, 0))
+        assert f.latest_hk_report_date(date(2026, 9, 29)) == "2025-12-31"
+
+    def test_none_when_everything_thin(self, monkeypatch):
+        monkeypatch.setattr(f, "_hk_batch_count", lambda rd: 0)
+        assert f.latest_hk_report_date(date(2026, 9, 29)) is None
+
+
 class TestMergeAPeriods:
     def _df(self, codes, revs):
         return pd.DataFrame({"code": codes, "revenue": revs,
