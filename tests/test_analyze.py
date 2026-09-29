@@ -3,6 +3,7 @@
 from pathlib import Path
 
 import pandas as pd
+import pytest
 
 from value_genie import analyze as az
 from value_genie.resolve import Match
@@ -302,3 +303,38 @@ class TestHKPeerSet:
         assert r["scores"]["quality"] is not None
         assert r["scores"]["quality"] < 50.0
         assert r["percentiles"]["roe"] < 50.0
+
+
+# ---------------------------------------------------------------------------
+# Degraded-snapshot peer fallback (EM outage: partial quotes never persist)
+# ---------------------------------------------------------------------------
+class TestPeerSetMasterFallback:
+    def _snap_without_quotes(self, tmp_path: Path) -> Path:
+        snap = tmp_path / "20260929"
+        snap.mkdir(exist_ok=True)
+        pd.DataFrame({
+            "market": ["HK", "HK", "A"],
+            "code": ["00001", "00002", "600519"],
+            "name": ["HK Alpha", "HK Beta", "Moutai"],
+            "pe_ttm": [10.0, 20.0, 25.0], "roe": [12.0, 18.0, 30.0],
+        }).to_csv(snap / "master.csv", index=False)
+        return snap
+
+    def test_master_fallback_when_quotes_missing(self, tmp_path):
+        snap = self._snap_without_quotes(tmp_path)
+        peers = az.build_peer_set(snap, "HK")
+        assert peers.attrs.get("peer_basis") == "master_fallback"
+        assert set(peers["code"]) == {"00001", "00002"}  # HK rows only
+
+    def test_no_fallback_when_quotes_present(self, tmp_path):
+        snap = make_hk_snapshot(tmp_path)
+        peers = az.build_peer_set(snap, "HK")
+        assert peers.attrs.get("peer_basis") != "master_fallback"
+
+    def test_empty_when_neither_file(self, tmp_path):
+        """Fully empty snapshot: explicit FileNotFoundError, not phantom
+        percentiles against an empty universe (honesty over silence)."""
+        snap = tmp_path / "20260929"
+        snap.mkdir(exist_ok=True)
+        with pytest.raises(FileNotFoundError):
+            az.build_peer_set(snap, "HK")

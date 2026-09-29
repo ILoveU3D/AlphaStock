@@ -16,8 +16,8 @@ commands:
   - ask X --evidence
   - intel X
   - recommend --user me
-version: 20
-updated_at: 2026-09-29T03:43:41
+version: 21
+updated_at: 2026-09-29T12:14:47
 ---
 
 # Playbook
@@ -175,3 +175,4 @@ Output shape (hard rules):
 - [2026-09-28 11:35] (ai) DCF第一原则（user mandate 2026-09-28）：L4融合层荐股以reverse DCF显形化市场隐含预期为起点，情景×概率代替点估计；相对估值（对标/PS/PB互证）只作参照不作买入论证；塔砖dcf-growth-three-laws
 - [2026-09-29 02:14] (ai) three-core redesign (user mandate 2026-09-29, commit 4c796ff): business/culture/dcf equal-weight cores (core_score, absolute anchors) are the ONLY ranking keys; vote_count/mean_composite/pillar scores demoted to veto+display. L1 pool = vote_count>=1 & ~veto_hard (intel_red|borrowed_dividend|profit_spike), cycle_trap excluded post-live-pass; funnel now dual-lane so NVDA-type premium compounders enter via lane B and are judged by the cores, not filtered by multiples
 - [2026-09-29 03:43] (ai) profile registry live: L3 reads raw source text via profile show X (A=东财F10 ORG_PROFIE typo列长文, HK=HKF10 ORGPROFILE, US=SEC+stockanalysis), writes three-core scores+arguments back via profile assess X (raw必须非空, 0-100校验); cores blend PROFILE_BLEND=0.5 quant×AI, stale(hash-keyed)只声明不融合
+- [2026-09-29 12:14] (ai) 东财push2故障期quotes不持久化导致ask崩溃——build_peer_set已加master.csv回退(降级快照下分位数基准=候选池,需声明);腾讯全市场回退依赖前序universe,连日故障+data日清时链断,master.csv是唯一可靠对等框架

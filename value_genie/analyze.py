@@ -217,8 +217,20 @@ def risk_flags(result: dict) -> list:
 def build_peer_set(snapshot_dir, market: str) -> pd.DataFrame:
     """The gated universe for a market, rebuilt from snapshot files."""
     snap = Path(snapshot_dir)
-    quotes = pd.read_csv(snap / f"{market.lower()}_quotes.csv",
-                         dtype={"code": str})
+    qpath = snap / f"{market.lower()}_quotes.csv"
+    if not qpath.exists():
+        # EM outage degraded run: partial quotes are never persisted, so
+        # fall back to the scored master.csv universe (already merged,
+        # gated and kline-backfilled). Percentile basis narrows to the
+        # candidate universe — callers declare the degraded basis.
+        mpath = snap / "master.csv"
+        if mpath.exists():
+            m = pd.read_csv(mpath, dtype={"code": str})
+            peers = m[m["market"] == market].copy()
+            if not peers.empty:
+                peers.attrs["peer_basis"] = "master_fallback"
+                return peers
+    quotes = pd.read_csv(qpath, dtype={"code": str})
     if market == "A":
         fin = None
         if (snap / "a_financials.csv").exists():
