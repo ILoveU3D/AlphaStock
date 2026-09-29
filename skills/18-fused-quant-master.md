@@ -12,12 +12,13 @@ triggers:
   - 融合推荐
   - 值得买
 commands:
-  - masters-vote [--top N] [--json]
+  - "masters-vote [--check MARKET:CODE ...] [--horizon short|ultrashort] [--thesis ID] [--json]"
+  - profile fetch|show|assess|list|status
   - ask X --evidence
   - intel X
   - recommend --user me
-version: 19
-updated_at: 2026-09-29T02:14:54
+version: 21
+updated_at: 2026-09-30T00:43:01
 ---
 
 # Playbook
@@ -39,10 +40,15 @@ DCF 估值是等价的三个核心，是对候选股票排序的**唯一**依据
 
 ## The four layers (L1/L2 code-enforced, L3/L4 AI-run)
 
-### L1 — 否决过滤层（代码，`masters-vote`）
+### L1 — 宽池层（代码，`masters-vote`）
 
-`python -m value_genie masters-vote --top 15 [--json]`
+`python -m value_genie masters-vote [--json]`
 
+- Default output is the **wide pool** (D1, user mandate 2026-09-29:
+  量化只否决、AI 做选择）: every stock with ≥1 master vote and no
+  hard veto, ranked by `core_score` only. L1 does NOT pre-screen a
+  top-N — the AI reads the whole pool and chooses the L3 deep-review
+  list. The selection responsibility is the AI's, not the code's.
 - Each stock is voted against all 7 masters' hard gates:
   `vote_count` (0-7) + `masters_passed` + `mean_composite`.
   **These can EXCLUDE, never rank.**
@@ -52,12 +58,21 @@ DCF 估值是等价的三个核心，是对候选股票排序的**唯一**依据
   出局；单个大师不过仅在展示层呈现，不构成否决。
 - **Ranking = `core_score` only** — equal-weight mean of the three
   cores (business / culture / dcf), each scored on absolute anchors
-  (no percentiles; see `value_genie/strategy/cores.py`). Stocks whose
-  core_score is entirely NaN fail the data-sufficiency veto.
+  (no percentiles; see `value_genie/strategy/cores.py`). A missing
+  core is imputed to the market mean and declared loudly in
+  `core_gaps` (D2); a stock whose cores are entirely NaN fails the
+  data-sufficiency veto. The culture core is veto-only until a
+  profiles distillation activates it (D3 — see the L3 loop below).
 - The funnel itself is dual-lane: lane A (错杀: cheap on pe/pb/ps) ∪
   lane B (复利机器: roe≥15 & gm≥40 & debt≤60, no cheapness gate) — so
   NVDA-type premium compounders reach the pool and are judged by the
   three cores, not filtered out by multiples.
+- `--check MARKET:CODE ...` runs the live consensus-EPS cycle-trap
+  pass on the AI-chosen shortlist (A-share consensus source; HK/US
+  declare the gap). `--no-live` skips it (testing only). `--top N`
+  is a legacy ranked shortlist — never use it as the selection
+  mechanism. `--thesis <id>` injects a thesis pool (seat, not a
+  vote).
 - **Never recommend from a single strategy's top rank** — and never
   read vote_count as a quality ordering.
 
@@ -79,6 +94,34 @@ DCF 估值是等价的三个核心，是对候选股票排序的**唯一**依据
   信号、借钱分红 are vetoes per the 舆情铁律 (2026-09-09). Insider
   synchronized selling + high profit growth = classic sell signal.
 
+### 短线/超短线路径（D4，`--horizon short|ultrashort`）
+
+`python -m value_genie masters-vote --horizon short [--json]`
+
+Tactical mode runs the **full L1-L4 fusion** — a short-horizon pick
+is still a fused pick, never a momentum screen. The floor verifies a
+**real business**, not a price (D4: 短线地板验证生意真实性，不验证
+价格）:
+
+- `short_floor` = `core_business ≥ 50` AND `weekly_uptrend` AND no
+  veto flags. `weekly_uptrend` is a **structure** condition: MA10W >
+  MA20W and 26-week gain > 0. Close above MA20W is deliberately NOT
+  required — on a steep climb a -8% pullback breaks MA20W, and that
+  pullback is exactly the entry.
+- `pullback_sweet`: pullback from the 60-day high inside
+  (-15%, -5%) — the user's tactical pattern (2026-09-29): 宏观
+  （周K）明显增长 + 微观（日K）回撤 = 短线买点 (tower brick
+  weekly-trend-daily-pullback).
+- Tactical ranking: `short_floor` > `pullback_sweet` > `ret_60d` —
+  a tactical ordering, not a valuation claim.
+- The DCF core is downgraded to an honest **"失败变持有"** note: if
+  the trade fails, is this a business you can hold? State it
+  verbatim; never dress a trade up as an investment.
+- Mandatory discipline block on every tactical answer (skills/14):
+  短炒警示 + position ≤5% NAV + -7% hard stop + holding-window
+  declaration (ultrashort <1天, short 1天-1月） + 止损日纪律
+  （止损当日不开新注，跨窗口执行）.
+
 ### L3 — 三核深评层（AI，书面论证义务）
 
 For each L2 survivor, run the three-core deep review — this is where
@@ -93,6 +136,44 @@ receipt; the AI must supply the argument behind each core:
 - **DCF 估值**: reverse DCF 显形化市场隐含预期（`dcf_implied_g`
   是起点："现价隐含什么路径，我信不信"），情景×概率代替点估计；
   相对估值只作参照，不作买入论证。
+
+#### Profiles 蒸馏闭环（Phase 5，本地-only）
+
+The culture core is veto-only until the AI distills an assessment
+(D3). The loop — run it for every stock that reaches the L3
+deep-review list:
+
+1. `python -m value_genie profile fetch X` — pull raw source text
+   into `data/profiles/raw/` (cleanable, regenerable): A = 东财 F10
+   机构概况， HK = 东财 HKF10 公司概况， US = SEC submissions meta +
+   stockanalysis 简介.
+2. `python -m value_genie profile show X` — read the raw text
+   **plus** `intel X` （财报速读 / 公告含义 / 新闻热度）. This is
+   the L3 read entry for business model and culture.
+3. Run the three-core argumentation to the standards above —
+   culture evidence is behavior-level only （说过 vs 做到 / 资本
+   配置 / 拒绝过什么 / 压力期选择）, no adjectives.
+4. `python -m value_genie profile assess X --business-score N \
+   --culture-score N --moat-type ... --lifecycle ... --benfen "..." \
+   --business-arg "..." --culture-arg "..." --dcf-arg "..." \
+   --verdict "..."` — write the distillation.
+5. The D3 hook (`profile.apply_distilled_culture`) re-activates the
+   culture core on the next `masters-vote` / `ask` run:
+   `core_culture` = distilled score, `core_score` recomputed, and
+   `core_gaps` carries `CULTURE_DISTILLED`.
+
+Hard rules:
+
+- `profiles/` is **LOCAL-ONLY** (user mandate 2026-09-29):
+  gitignored, never pushed to any remote. Raw fetches live under the
+  cleanable `data/` — only the distillation is the asset.
+- No distillation → culture core veto-only (D3): never improvise a
+  culture score from pillar data or proxy metrics.
+- Staleness: the assessment pins the raw content hash; a refetched
+  or changed raw marks it STALE and it drops out of scoring until
+  re-distilled. `profile status` lists coverage and staleness.
+- Scores ∈ [0,100]; a scoreless note belongs in the analysis prose,
+  not in the profile store.
 
 Then the 7-master qualitative vote runs **on top of** the three-core
 review — each master votes from their own playbook lens (business
@@ -132,7 +213,10 @@ Output shape (hard rules):
 4. Position discipline per Duan: -50% drawdown tolerance sizing;
    keyhole compatibility check (分红收回路径 for 分红舱 candidates).
 5. Data-as-of line + declared gaps verbatim.
-6. 短炒警示 if the horizon is ultrashort/short.
+6. Time passport （维度声明 / 论点-时间匹配 / 退出触发 / 换舱信号）
+   — mandatory per 2026-09-26. Tactical picks additionally carry
+   the D4 discipline block: 短炒警示 + ≤5% NAV + -7% 硬止损 +
+   持有窗口 + 止损日纪律.
 
 ## Worked example (2026-09-15, the calibration case)
 
@@ -174,3 +258,5 @@ Output shape (hard rules):
 - [2026-09-26 18:14] (ai) thesis 喂池机制已落地(2026-09-26): masters-vote --thesis <id> 把 theses/<id>.json 的成员注入 L1 池(funnel∪members, 池外成员经门控宇宙重建+实时kline/HK F10回填带完整pillar分); seat-not-a-vote——注入只买席位, 七大师gates/L2/L3/L4照旧, 成员0票是合法结果; 每个thesis必须有brick谱系+三特征+证伪集, 证伪触发即 thesis retire --reason; 工作流: 塔砖断言机器→thesis add(成员逐名论证)→masters-vote --thesis→L3/L4照旧; 种子: memory-supercycle(brick=trailing-gates-are-procyclical, 6成员: MU/603986 funnel内, 688008注入, SNDK被宇宙门挡excluded)
 - [2026-09-28 11:35] (ai) DCF第一原则（user mandate 2026-09-28）：L4融合层荐股以reverse DCF显形化市场隐含预期为起点，情景×概率代替点估计；相对估值（对标/PS/PB互证）只作参照不作买入论证；塔砖dcf-growth-three-laws
 - [2026-09-29 02:14] (ai) three-core redesign (user mandate 2026-09-29, commit 4c796ff): business/culture/dcf equal-weight cores (core_score, absolute anchors) are the ONLY ranking keys; vote_count/mean_composite/pillar scores demoted to veto+display. L1 pool = vote_count>=1 & ~veto_hard (intel_red|borrowed_dividend|profit_spike), cycle_trap excluded post-live-pass; funnel now dual-lane so NVDA-type premium compounders enter via lane B and are judged by the cores, not filtered by multiples
+- [2026-09-29 12:00] (ai) recommendation-v2 Phase 1-5 落地（user mandates D1-D5 + 2026-09-29 两条追加，v20）: ①L1 宽池化——masters-vote 默认输出全池（vote_count>=1 & ~veto_hard, core_score 排序），--top N 降级为遗留短名单、--check 对 AI 自选名单跑 live cycle-trap，深评名单选择责任移交 AI；②缺核插市场均值（D2）+ core_gaps 大声声明 + doctor 缺核率；③文化核退化（D3）——无蒸馏只否决不打分，profile.apply_distilled_culture 为唯一对接面（CULTURE_DISTILLED 标记）；④D4 短线融合路径——--horizon short|ultrashort：floor=真生意（core_business≥50）+周K结构上行（MA10W>MA20W 且 26周涨幅>0；刻意不要求 close>MA20W——陡坡中 -8% 回撤破线正是买点）+无否决，甜点区 pullback_from_high∈(-15%,-5%)（用户战术原话：宏观周K明显增长+微观日K回撤=短线买点，塔砖 weekly-trend-daily-pullback），战术排序 short_floor>pullback_sweet>ret_60d，DCF 降级为'失败变持有'诚实备注；⑤profiles 本地原型——raw→data/profiles/raw/（可再生），assessment→profiles/（gitignored LOCAL-ONLY 永不推送，user mandate 2026-09-29），profile fetch/show/assess/list/status 闭环，stale=raw content_hash 漂移自动踢出打分；迁移旧蒸馏 10 份（A:600900, HK:00991/01378/03306/03998, US:HRMY/NVDA/PTC/TCOM/ZM）pinned hash 无 stale；端到端验证 masters-vote 宽池 107 行 culture_distilled=7；727 测试全绿
+- [2026-09-30 00:43] (ai) 2026-09-29 profiles 三源探针 quirk（Phase 5）：A股 RPT_F10_ORG_BASICINFO 长简介列名是 ORG_PROFIE（官方拼写如此——愿景一句话才在 ORG_PROFILE）；港股 RPT_HKF10_INFO_ORGPROFILE 长简介恰好在 ORG_PROFILE（与A股列名相反，勿混）；US 简介走 stockanalysis 主页 flight blob 正则 description:「...」（json.loads 解码转义），SEC submissions URL 的 cik 必须 int 格式化（format(cik=int) 非 str）。filter DSL 老规矩：日期单引号、字符串双引号。
