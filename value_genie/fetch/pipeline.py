@@ -29,6 +29,7 @@ from .fundamentals import (fetch_a_balance, fetch_a_cashflow,
                            fetch_a_cashflow_annual, fetch_a_dividends,
                            fetch_a_financials, fetch_a_financials_one,
                            fetch_fx_hkdcny, fetch_hk_cashflow, fetch_hk_f10,
+                           fetch_hk_mainindicator_batch,
                            fetch_us_financials,
                            fetch_us_financials_one, frames_year_context)
 from .kline import (fetch_kline_any, kline_cache_path, kline_is_fresh,
@@ -44,7 +45,7 @@ MASTER_COLUMNS = [
     "ocf_yield", "cash_conversion",
     "fcf_yield", "borrowed_dividend", "capex_to_ocf",
     "pos_52w", "drawdown_52w", "ret_250d", "ret_60d", "volatility",
-    "ret_5d", "ret_20d", "vol_20d",
+    "ret_5d", "ret_20d", "vol_20d", "weekly_uptrend", "pullback_from_high",
     "report_date", "value_score", "growth_score", "quality_score",
     "safety_score", "momentum_score", "cashflow_score", "data_completeness",
     # three-core redesign (2026-09-29): recall lane + the only ranking keys
@@ -53,7 +54,8 @@ MASTER_COLUMNS = [
 ] + list(RADAR_COLUMNS)
 
 KLINE_FEATURES = ("pos_52w", "drawdown_52w", "ret_250d", "ret_60d",
-                  "volatility", "ret_5d", "ret_20d", "vol_20d")
+                  "volatility", "ret_5d", "ret_20d", "vol_20d",
+                  "weekly_uptrend", "pullback_from_high")
 
 
 # ---------------------------------------------------------------------------
@@ -1018,6 +1020,23 @@ def run_fetch(markets=None, data_dir=None, refresh: bool = False,
             df = merge_a_financials(quotes, a_fin, a_cf, a_bal)
         elif market == "US":
             df = merge_us_financials(quotes, us_fin)
+        elif market == "HK":
+            # stage-1 batch fundamentals (2026-09-29 v2): lane B was
+            # structurally 0 for HK because quotes carry no fundamentals.
+            # Fail-closed: lane A still works on quotes-only data.
+            try:
+                hk_batch = fetch_hk_mainindicator_batch(quiet=quiet)
+            except Exception:
+                hk_batch = None
+            if hk_batch is not None:
+                df = quotes.merge(
+                    hk_batch.drop(columns=["report_date"]),
+                    on="code", how="left")
+                manifest["datasets"]["hk_batch"] = len(hk_batch)
+            else:
+                manifest["failures"].append(
+                    "HK: batch fundamentals unavailable (lane B disabled)")
+                df = quotes
         else:
             df = quotes
         df = apply_gates(df, market)
@@ -1028,7 +1047,6 @@ def run_fetch(markets=None, data_dir=None, refresh: bool = False,
                        if "lane" in df.columns else {})
         manifest["datasets"][market] = {
             "quotes": len(quotes), "gated": gated, "candidates": len(df),
-            # HK stage-1 carries no fundamentals: lane_b is honestly 0 there
             "lane_a": int(lane_counts.get("A", 0)),
             "lane_b": int(lane_counts.get("B", 0))}
         log(f"    [{market}] quotes={len(quotes)} gated={gated} "

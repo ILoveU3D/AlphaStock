@@ -235,6 +235,13 @@ LANE_A_GATES = {"pe_ttm": 30.0, "pb": 4.0, "ps": 6.0}        # any <=
 LANE_B_GATES = {"roe": 15.0, "gross_margin": 40.0,
                 "debt_ratio": 60.0}                           # roe/gm >=, debt <=
 
+# Short/ultrashort tactical floor (2026-09-29, D4 + tower brick
+# weekly-trend-daily-pullback): the floor verifies a REAL business and an
+# intact weekly uptrend, never the price — DCF stays display-only as the
+# "if the trade fails, could you hold at this implied growth?" note.
+SHORT_FLOOR_BUSINESS = 50.0       # core_business absolute anchor
+PULLBACK_SWEET = (-15.0, -5.0)    # % from the 60-bar high (sweet spot)
+
 # ---------------------------------------------------------------------------
 # Data freshness rules (incremental mode)
 # ---------------------------------------------------------------------------
@@ -280,6 +287,19 @@ US_PLATFORM_CAP = 0.015
 
 # HK F10 organization profile (board lot / TRADE_UNIT lookup).
 HK_ORGPROFILE_REPORT = "RPT_HKF10_INFO_ORGPROFILE"
+
+# ---------------------------------------------------------------------------
+# Company profiles (Phase 5, user mandate 2026-09-29): AI reads filings +
+# intel and distills business model / corporate culture assessments.
+# LOCAL-ONLY: PROFILES_DIR is gitignored and NEVER pushed (company data
+# stays on this machine); raw fetches live under the cleanable data/ tree.
+# Schema is stable (source / raw_hash / scores / argument text) so the
+# directory can later be packaged into a portable dataset.
+# ---------------------------------------------------------------------------
+PROFILES_DIR = BASE_DIR / "profiles"              # assessments, untracked
+PROFILE_RAW_DIR = DATA_DIR / "profiles" / "raw"   # regenerable, cleanable
+A_ORG_BASICINFO_REPORT = "RPT_F10_ORG_BASICINFO"  # A 股公司概况（探针定稿）
+SA_PROFILE_URL_TMPL = "https://stockanalysis.com/stocks/{slug}/"
 
 # ---------------------------------------------------------------------------
 # Intel event radar (P1: A-share batch event tables, design 2026-09-08)

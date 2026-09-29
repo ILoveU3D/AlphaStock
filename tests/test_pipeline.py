@@ -198,6 +198,10 @@ def patched_fetchers(monkeypatch, counters):
     monkeypatch.setattr(pl, "fetch_a_cashflow", lambda quiet=False: None)
     monkeypatch.setattr(pl, "fetch_us_financials", lambda quiet=False: us_fins())
     monkeypatch.setattr(pl, "fetch_hk_f10", fake_f10)
+    # default: HK batch fundamentals unavailable (fail-closed path);
+    # lane-B tests override this with a compounder payload
+    monkeypatch.setattr(pl, "fetch_hk_mainindicator_batch",
+                        lambda quiet=False: None)
     monkeypatch.setattr(pl, "fetch_fx_hkdcny", lambda: 0.92)
     monkeypatch.setattr(pl, "fetch_kline_any", fake_kline)
     # keep run_fetch hermetic: real user holdings would hit the network
@@ -332,6 +336,48 @@ def test_candidate_cap(patched_fetchers, tmp_path, monkeypatch):
 def test_unknown_market_raises(tmp_path):
     with pytest.raises(ValueError, match="unknown market"):
         pl.run_fetch(markets=["XX"], data_dir=tmp_path, quiet=True)
+
+
+def test_hk_lane_b_fires_with_batch_fundamentals(patched_fetchers,
+                                                 tmp_path, monkeypatch):
+    """Stage-1 batch mainindicators let a premium HK compounder enter
+    lane B (quotes-only data structurally zeroed that lane)."""
+    batch = pd.DataFrame([{"code": "09999", "report_date": "2026-06-30",
+                           "roe": 25.0, "gross_margin": 50.0,
+                           "debt_ratio": 30.0, "profit_yoy": 10.0}])
+    monkeypatch.setattr(pl, "fetch_hk_mainindicator_batch",
+                        lambda quiet=False: batch)
+
+    def fake_quotes(market):
+        df = hk_quotes()
+        extra = _quotes([
+            {"market": "HK", "code": "09999", "name": "Premium Compound",
+             "industry": "Software", "market_id": "116", "price": 400.0,
+             "pe_ttm": 45.0, "pb": 8.0, "market_cap": 1.0e11,
+             "amount": 1.0e9}])   # pe/pb/ps all fail lane A gates
+        return pd.concat([df, extra], ignore_index=True)
+
+    monkeypatch.setattr(pl, "fetch_market_quotes", fake_quotes)
+    snap = pl.run_fetch(markets=["HK"], data_dir=tmp_path, quiet=True)
+    manifest = json.loads((snap / "manifest.json").read_text())
+    assert manifest["datasets"]["hk_batch"] == 1
+    assert manifest["datasets"]["HK"]["lane_b"] == 1
+    master = pd.read_csv(snap / "master.csv", dtype={"code": str})
+    row = master[master["code"] == "09999"]
+    assert len(row) == 1
+    assert row.iloc[0]["lane"] == "B"
+
+
+def test_hk_batch_failure_fails_closed(patched_fetchers, tmp_path):
+    """Batch unavailable (fixture default None): lane A still works on
+    quotes-only data, lane B is honestly 0 and the gap is declared."""
+    snap = pl.run_fetch(markets=["HK"], data_dir=tmp_path, quiet=True)
+    manifest = json.loads((snap / "manifest.json").read_text())
+    assert manifest["datasets"]["HK"]["lane_b"] == 0
+    assert manifest["datasets"]["HK"]["lane_a"] > 0
+    assert any("lane B disabled" in f for f in manifest["failures"])
+    master = pd.read_csv(snap / "master.csv", dtype={"code": str})
+    assert (master["lane"] == "A").all()
 
 
 def test_apply_gates_drops_st_and_small_cap():

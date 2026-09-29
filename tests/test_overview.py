@@ -137,6 +137,28 @@ class TestDoctor:
         kline_checks = [c for c in checks if "klines" in c[2]]
         assert kline_checks and kline_checks[0][0] in ("WARN", "FAIL")
 
+    def test_core_gap_rates_reported(self, tmp_path):
+        """D2: per-market three-core missing rates; >25% warns so the
+        source gets repaired (imputation patches rankings, not data)."""
+        snap = make_snap(tmp_path)
+        m = pd.read_csv(snap / "master.csv")
+        gaps = ["core_dcf imputed = A market mean (no annual FCF)"
+                if i < 2 else None for i in range(6)] + [None] * 4
+        m["core_gaps"] = gaps
+        m.to_csv(snap / "master.csv", index=False)
+        checks = dr.run_checks(data_dir=tmp_path)
+        cg = [c for c in checks if "core gaps" in c[2]]
+        assert len(cg) == 2                       # A and HK only
+        a = next(c for c in cg if c[1] == "A")
+        hk = next(c for c in cg if c[1] == "HK")
+        assert a[0] == "WARN" and "dcf 33%" in a[2]      # 2/6 = 33%
+        assert hk[0] == "PASS" and "dcf 0%" in hk[2]
+
+    def test_core_gaps_skipped_without_columns(self, tmp_path):
+        make_snap(tmp_path)      # master.csv has no core_gaps column
+        checks = dr.run_checks(data_dir=tmp_path)
+        assert not [c for c in checks if "core gaps" in c[2]]
+
     def test_render_includes_action_line(self, tmp_path):
         checks = dr.run_checks(data_dir=tmp_path)
         text = dr.render_checks(checks)

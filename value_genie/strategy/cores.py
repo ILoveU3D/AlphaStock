@@ -7,8 +7,18 @@ composites, master votes) is veto/display-only.
 Scores are ABSOLUTE anchor mappings (economic thresholds in
 config.CORE_ANCHORS), never percentiles — ordinal percentile blending was
 retired with the old funnel because it pretended to rank investment merit.
-Missing inputs stay NaN and are declared in ``core_gaps`` — honesty over
-fabrication.
+
+v2 rulings (2026-09-29):
+- D2 (missing cores): a NaN core is filled with the per-market mean of
+  that core and the imputation is declared loudly in ``core_gaps``
+  (plus the doctor missing-rate report) — a stock must not top a ranking
+  just because its missing core was skipped, nor vanish because of it.
+  Rows with no donor in their market stay NaN.
+- D3 (culture): without profile distillation (Phase 5), culture is
+  VETO-ONLY — the proxies (borrowed dividend, intel red, insider cuts)
+  live in the L2 veto flags (strategy/consensus.py); ``core_culture``
+  stays NaN and never enters the ranking. Pass a distilled score series
+  via ``add_core_scores(..., culture=...)`` to re-activate the third core.
 """
 from __future__ import annotations
 
@@ -45,52 +55,6 @@ def business_score(df: pd.DataFrame) -> pd.Series:
     parts = [_anchor(_num(df, c), *config.CORE_ANCHORS[c])
              for c in BUSINESS_PARTS]
     return _mean_available(parts)
-
-
-# ---------------------------------------------------------------------------
-# Core 2: culture — does management treat outside shareholders' cash as
-# their own? Proxies only; A-share insider/buyback data, all markets get
-# dividend honesty + book honesty. Gaps are declared per row.
-# ---------------------------------------------------------------------------
-def culture_score(df: pd.DataFrame) -> tuple[pd.Series, pd.Series]:
-    # dividend honesty: borrowing to pay dividends is a confession
-    bd = _num(df, "borrowed_dividend")
-    s_div = (1.0 - bd) * 100.0
-
-    # insider alignment (A-share radar columns only)
-    hc = _num(df, "holder_cut_flag")
-    dl = _num(df, "dilution_flag")
-    bb = _num(df, "buyback_active")
-    have_ins = hc.notna() | dl.notna() | bb.notna()
-    cut = (hc == 1) | (dl == 1)
-    s_ins = pd.Series(np.nan, index=df.index, dtype=float)
-    s_ins[have_ins & cut] = 0.0
-    s_ins[have_ins & ~cut & (bb == 1)] = 100.0
-    s_ins[have_ins & ~cut & (bb != 1)] = 60.0   # no harm, no return
-
-    # book honesty: earnings-quality flags; intel_red overrides to 0
-    eq = _num(df, "eq_flags")
-    red = _num(df, "intel_red")
-    s_book = pd.Series(np.nan, index=df.index, dtype=float)
-    s_book[eq == 0] = 100.0
-    s_book[eq == 1] = 70.0
-    s_book[eq == 2] = 40.0
-    s_book[eq >= 3] = 0.0
-    s_book[red == 1] = 0.0
-
-    score = _mean_available([s_div, s_ins, s_book])
-
-    gaps = []
-    for idx in df.index:
-        g = []
-        if pd.isna(s_div.at[idx]):
-            g.append("dividend-honesty unknown")
-        if pd.isna(s_ins.at[idx]):
-            g.append("insider/buyback data A-only")
-        if pd.isna(s_book.at[idx]):
-            g.append("eq data missing")
-        gaps.append("; ".join(g))
-    return score, pd.Series(gaps, index=df.index)
 
 
 # ---------------------------------------------------------------------------
@@ -153,28 +117,77 @@ def dcf_score(df: pd.DataFrame) -> pd.DataFrame:
 CORE_COLUMNS = ("core_business", "core_culture", "core_dcf",
                 "dcf_implied_g", "core_score", "core_gaps")
 
+CULTURE_UNSCORED = "culture unscored (veto-only until profile " \
+                   "distillation, D3)"
 
-def add_core_scores(df: pd.DataFrame) -> pd.DataFrame:
+
+def _impute_market_mean(df: pd.DataFrame, col: str) -> tuple:
+    """D2: fill NaN values of `col` with the per-market mean (NaN donors
+    excluded). Returns (filled series, imputed mask). Falls back to the
+    whole-frame mean without a market column; NaN stays when no donor
+    exists in the row's market."""
+    s = df[col]
+    if "market" in df.columns:
+        means = s.groupby(df["market"]).transform("mean")
+    else:
+        means = pd.Series(s.mean(), index=df.index, dtype=float)
+    mask = s.isna() & means.notna()
+    return s.fillna(means), mask
+
+
+def add_core_scores(df: pd.DataFrame,
+                    culture: pd.Series | None = None) -> pd.DataFrame:
     """Append the six core columns; pure function, no IO — safe to backfill
-    old snapshots on demand."""
+    old snapshots on demand.
+
+    `culture`: optional distilled culture scores (Phase 5 profiles)
+    aligned to df.index; when omitted the culture core is veto-only (D3)
+    and excluded from the ranking.
+    """
     out = df.copy()
     out["core_business"] = business_score(out)
-    culture, culture_gaps = culture_score(out)
-    out["core_culture"] = culture
+    if culture is not None:
+        out["core_culture"] = pd.to_numeric(
+            pd.Series(culture, index=out.index), errors="coerce")
+    else:
+        out["core_culture"] = np.nan
     d = dcf_score(out)
     out["core_dcf"] = d["core_dcf"]
     out["dcf_implied_g"] = d["dcf_implied_g"]
-    cores = out[["core_business", "core_culture", "core_dcf"]]
-    out["core_score"] = cores.mean(axis=1, skipna=True)
+
+    # D2: impute missing cores with the per-market mean, keeping the raw
+    # NaN pattern so every imputation is declared in core_gaps
+    raw = {c: out[c].copy()
+           for c in ("core_business", "core_culture", "core_dcf")}
+    imputed = {}
+    for c in raw:
+        if c == "core_culture" and culture is None:
+            imputed[c] = pd.Series(False, index=out.index)
+            continue
+        out[c], imputed[c] = _impute_market_mean(out, c)
+
+    cols = ["core_business", "core_culture", "core_dcf"]
+    out["core_score"] = out[cols].mean(axis=1, skipna=True)
+
     gaps = []
     for idx in out.index:
+        mkt = (str(out.at[idx, "market"])
+               if "market" in out.columns else "pool")
         g = []
-        if pd.isna(out.at[idx, "core_business"]):
-            g.append("business inputs missing")
-        if culture_gaps.at[idx]:
-            g.append(culture_gaps.at[idx])
-        if pd.isna(out.at[idx, "core_dcf"]):
-            g.append("no annual FCF")
+        if pd.isna(raw["core_business"].at[idx]):
+            g.append(f"core_business imputed = {mkt} market mean "
+                     f"(inputs missing)" if imputed["core_business"].at[idx]
+                     else "business inputs missing")
+        if culture is None:
+            g.append(CULTURE_UNSCORED)
+        elif pd.isna(raw["core_culture"].at[idx]):
+            g.append(f"core_culture imputed = {mkt} market mean "
+                     f"(no profile)" if imputed["core_culture"].at[idx]
+                     else "no culture profile")
+        if pd.isna(raw["core_dcf"].at[idx]):
+            g.append(f"core_dcf imputed = {mkt} market mean "
+                     f"(no annual FCF)" if imputed["core_dcf"].at[idx]
+                     else "no annual FCF")
         gaps.append("; ".join(g) or None)
     out["core_gaps"] = gaps
     return out

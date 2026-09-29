@@ -1,7 +1,9 @@
-"""Three-core scoring tests (2026-09-29 redesign).
+"""Three-core scoring tests (2026-09-29 redesign, v2 rulings).
 
-Cores rank by ABSOLUTE anchors, never percentiles; missing inputs stay
-NaN and are declared in core_gaps.
+Cores rank by ABSOLUTE anchors, never percentiles. D2: a missing core is
+imputed with the per-market mean and loudly declared in core_gaps. D3:
+without profile distillation the culture core is veto-only — NaN, never
+in the ranking.
 """
 import numpy as np
 import pandas as pd
@@ -50,42 +52,6 @@ def test_business_score_all_missing():
 
 
 # ---------------------------------------------------------------------------
-# culture
-# ---------------------------------------------------------------------------
-def test_culture_a_share_insider_cut():
-    df = _df(borrowed_dividend=0, holder_cut_flag=1, dilution_flag=0,
-             buyback_active=0, eq_flags=0, intel_red=0)
-    score, gaps = cores.culture_score(df)
-    # (div 100 + insider 0 + book 100) / 3
-    assert score.iloc[0] == pytest.approx(200.0 / 3, abs=0.01)
-    assert gaps.iloc[0] == ""
-
-
-def test_culture_intel_red_overrides_book():
-    df = _df(borrowed_dividend=0, holder_cut_flag=0, dilution_flag=0,
-             buyback_active=1, eq_flags=0, intel_red=1)
-    score, _ = cores.culture_score(df)
-    # (100 + 100 + 0) / 3
-    assert score.iloc[0] == pytest.approx(200.0 / 3, abs=0.01)
-
-
-def test_culture_hk_us_gap_declared():
-    # no radar columns at all -> only dividend honesty measurable
-    df = _df(borrowed_dividend=0)
-    score, gaps = cores.culture_score(df)
-    assert score.iloc[0] == 100.0
-    assert "insider/buyback data A-only" in gaps.iloc[0]
-    assert "eq data missing" in gaps.iloc[0]
-
-
-def test_culture_borrowed_dividend_confession():
-    df = _df(borrowed_dividend=1, eq_flags=0)
-    score, _ = cores.culture_score(df)
-    # (0 + 100) / 2
-    assert score.iloc[0] == 50.0
-
-
-# ---------------------------------------------------------------------------
 # reverse DCF
 # ---------------------------------------------------------------------------
 def test_implied_growth_perpetuity_sanity():
@@ -121,10 +87,12 @@ def test_add_core_scores_columns_and_renorm():
     for c in cores.CORE_COLUMNS:
         assert c in out.columns
     row = out.iloc[0]
-    # business 100, culture 100 (div only), dcf NaN -> core = 100
+    # business 100; culture veto-only (D3) and dcf unimputable (no donor)
+    # -> core = mean of business alone
     assert row["core_score"] == 100.0
+    assert pd.isna(row["core_culture"])
     assert "no annual FCF" in row["core_gaps"]
-    assert "insider/buyback data A-only" in row["core_gaps"]
+    assert cores.CULTURE_UNSCORED in row["core_gaps"]
 
 
 def test_add_core_scores_all_missing():
@@ -132,3 +100,76 @@ def test_add_core_scores_all_missing():
     out = cores.add_core_scores(df)
     assert pd.isna(out.iloc[0]["core_score"])
     assert "business inputs missing" in out.iloc[0]["core_gaps"]
+
+
+# ---------------------------------------------------------------------------
+# D2: market-mean imputation of missing cores
+# ---------------------------------------------------------------------------
+def _pool():
+    """Two A rows (one with FCF, one without) + one HK row without."""
+    return pd.DataFrame([
+        {"market": "A", "code": "000001", "gross_margin": 60.0,
+         "roe": 25.0, "fcf_yield": 8.0},
+        {"market": "A", "code": "000002", "gross_margin": 60.0,
+         "roe": 25.0, "fcf_yield": None},
+        {"market": "HK", "code": "00700", "gross_margin": 60.0,
+         "roe": 25.0, "fcf_yield": None},
+    ])
+
+
+def test_missing_core_imputed_with_own_market_mean():
+    out = cores.add_core_scores(_pool())
+    a_dcf = out.loc[0, "core_dcf"]              # the only A donor
+    assert pd.notna(a_dcf)
+    # the FCF-less A row inherits the A market mean, loudly declared
+    assert out.loc[1, "core_dcf"] == pytest.approx(a_dcf)
+    assert "core_dcf imputed = A market mean (no annual FCF)" \
+        in out.loc[1, "core_gaps"]
+    # the donor row itself carries no imputation note
+    assert "imputed" not in (out.loc[0, "core_gaps"] or "")
+
+
+def test_no_donor_in_market_stays_nan():
+    out = cores.add_core_scores(_pool())
+    # HK has zero FCF donors -> the HK row is NOT patched across markets
+    assert pd.isna(out.loc[2, "core_dcf"])
+    assert "no annual FCF" in out.loc[2, "core_gaps"]
+    assert "imputed" not in out.loc[2, "core_gaps"]
+    # ... and its core_score is the mean of what remains (business only)
+    assert out.loc[2, "core_score"] == pytest.approx(
+        out.loc[2, "core_business"])
+
+
+def test_imputation_feeds_core_score():
+    out = cores.add_core_scores(_pool())
+    # imputed row: mean(business 100, imputed dcf) — not business alone
+    expected = (100.0 + out.loc[1, "core_dcf"]) / 2.0
+    assert out.loc[1, "core_score"] == pytest.approx(expected)
+
+
+# ---------------------------------------------------------------------------
+# D3: culture core re-activates only via distilled scores
+# ---------------------------------------------------------------------------
+def test_culture_param_enters_ranking():
+    pool = _pool()
+    culture = pd.Series([80.0, 40.0, 60.0], index=pool.index)
+    out = cores.add_core_scores(pool, culture=culture)
+    assert out["core_culture"].tolist() == [80.0, 40.0, 60.0]
+    # three cores now averaged: row 0 = mean(business 100, culture 80, dcf)
+    expected = (100.0 + 80.0 + out.loc[0, "core_dcf"]) / 3.0
+    assert out.loc[0, "core_score"] == pytest.approx(expected)
+    gap0 = out.loc[0, "core_gaps"]
+    assert pd.isna(gap0) or cores.CULTURE_UNSCORED not in gap0
+
+
+def test_culture_param_partial_missing_imputed():
+    pool = _pool()
+    culture = pd.Series([80.0, None, None], index=pool.index)
+    out = cores.add_core_scores(pool, culture=culture)
+    # A row without a profile inherits the A culture mean (= 80, one donor)
+    assert out.loc[1, "core_culture"] == pytest.approx(80.0)
+    assert "core_culture imputed = A market mean (no profile)" \
+        in out.loc[1, "core_gaps"]
+    # HK has no culture donor at all
+    assert pd.isna(out.loc[2, "core_culture"])
+    assert "no culture profile" in out.loc[2, "core_gaps"]

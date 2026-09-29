@@ -854,6 +854,86 @@ def fetch_hk_lot(code5: str) -> int | None:
 
 
 # ---------------------------------------------------------------------------
+# HK market-wide main indicators (batch, one report date) — stage-1
+# enrichment so the compounder lane can fire for HK (was structurally 0
+# because HK quotes carry no fundamentals).  Same report as fetch_hk_f10,
+# filtered by REPORT_DATE instead of SECUCODE; units identical, verified
+# against the per-stock fetch 2026-09-29 (probe_hk_scale).
+# ---------------------------------------------------------------------------
+HK_BATCH_MAP = {
+    "SECURITY_CODE": "code",
+    "REPORT_DATE": "report_date",
+    "ROE_AVG": "roe",
+    "GROSS_PROFIT_RATIO": "gross_margin",
+    "DEBT_ASSET_RATIO": "debt_ratio",
+    "HOLDER_PROFIT_YOY": "profit_yoy",
+}
+
+
+def _hk_batch_count(report_date: str) -> int:
+    d = DC.get_json(config.DC_SEC_URL, params={
+        "reportName": config.HK_REPORT_NAME, "columns": "ALL",
+        "filter": f"(REPORT_DATE='{report_date}')",
+        "pageNumber": 1, "pageSize": 1,
+        "source": "F10", "client": "PC"})
+    return int((((d or {}).get("result") or {}).get("count")) or 0)
+
+
+def latest_hk_report_date(today: date | None = None) -> str | None:
+    """Latest half-year end with broad HK coverage (>=500 rows)."""
+    t = today or date.today()
+    cands = []
+    for y in (t.year, t.year - 1):
+        cands += [f"{y}-06-30", f"{y - 1}-12-31"]
+    cands = sorted(set(c for c in cands if c <= t.isoformat()),
+                   reverse=True)
+    for rd in cands[:4]:
+        if _hk_batch_count(rd) >= 500:
+            return rd
+    return None
+
+
+def fetch_hk_mainindicator_batch(report_date: str | None = None,
+                                 quiet: bool = False) -> pd.DataFrame | None:
+    """All HK main-indicator rows for one report date (paged, 500/page)."""
+    if report_date is None:
+        report_date = latest_hk_report_date()
+        if report_date is None:
+            return None
+    frames = []
+    page = 1
+    while True:
+        d = DC.get_json(config.DC_SEC_URL, params={
+            "reportName": config.HK_REPORT_NAME, "columns": "ALL",
+            "filter": f"(REPORT_DATE='{report_date}')",
+            "pageNumber": page, "pageSize": 500,
+            "sortColumns": "SECURITY_CODE", "sortTypes": "1",
+            "source": "F10", "client": "PC"})
+        res = (d or {}).get("result") or {}
+        rows = res.get("data") or []
+        if not rows:
+            break
+        frames.append(pd.DataFrame(rows))
+        if page >= int(res.get("pages") or 1):
+            break
+        page += 1
+    if not frames:
+        return None
+    df = pd.concat(frames, ignore_index=True)
+    df = df[[c for c in HK_BATCH_MAP if c in df.columns]].rename(
+        columns=HK_BATCH_MAP)
+    for col in ("roe", "gross_margin", "debt_ratio", "profit_yoy"):
+        if col in df.columns:
+            df[col] = df[col].map(num)
+    df["report_date"] = df["report_date"].astype(str).str.slice(0, 10)
+    df["code"] = df["code"].astype(str).str.zfill(5)
+    if not quiet:
+        print(f"    [HK] stage-1 batch fundamentals {report_date}: "
+              f"{len(df)} rows")
+    return df
+
+
+# ---------------------------------------------------------------------------
 # HK F10 cashflow statement (annual row) — CNY amounts
 # ---------------------------------------------------------------------------
 HK_CASHFLOW_ITEMS = {
