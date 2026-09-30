@@ -9,8 +9,8 @@ triggers:
 commands:
   - doctor
   - fetch
-version: 28
-updated_at: 2026-09-29T02:15:07
+version: 29
+updated_at: 2026-09-30T21:40:42
 ---
 
 # Playbook
@@ -67,3 +67,4 @@ known snapshot is older than one trading day:
 - [2026-09-25 14:14] (ai) 2026-09-25 腾讯重建HK/US行情配方(EM封禁延续): HK字段 idx3价/idx32涨跌/idx44流通/idx45总市值(亿)/idx58PB(与EM按价折算偏差<1%), PE腾讯用年报EPS口径与EM TTM差达7%→用0922 EM基准×价格比缩放; US字段 idx3价(昨收,美股闭市)/idx38换手/idx44/45市值(亿), PB无干净字段(AAPL idx41疑似但MSFT对不上)→PE+PB全缩放; US代码含'_'类股(BRK_B)需同时试us{code}与us{code替换'_'为'.'}; 0922 us_quotes含NaN代码行需drop。HK 14725/14725全活, US 12859近乎全活。
 - [2026-09-26 00:27] (ai) tests/conftest.py 有 autouse _no_sleep fixture 全局中和 time.sleep；写节流行为测试时必须在测试内重新 patch time.sleep 为记录函数（见 test_fundamentals.test_companyconcept_requests_throttled）
 - [2026-09-29 02:15] (ai) fetch funnel is dual-lane since 2026-09-29 (commit 4c796ff): lane A (cheap on pe/pb/ps) + lane B (compounder quality roe>=15/gm>=40/debt<=60, no cheapness gate), A120+B80 caps with lane-A backfill; manifest now records lane_a/lane_b counts per market; master.csv carries core_business/core_culture/core_dcf/dcf_implied_g/core_score/core_gaps columns, recomputed post-radar
+- [2026-09-30 21:40] (ai) 20260930 EM outage lessons (all fixed in code): (1) quotes CSVs are same-day scratch, so _prev_universe_quotes now stands in with us_financials tickers (US) / latest master slice (HK,A) - else TX fallback has no universe exactly when needed; (2) Tencent idx37 amount = raw local currency for HK/US (A stays 10k-CNY x1e4) - without it the HK liquidity gate zeroes TX frames (gated=0); (3) EM all-mirror failure signature = IP-level block, em_push2_get now fails fast to Tencent and EM_HOST_COOLDOWN=3600 stops re-admitting dead hosts into every request cycle (~20s/kline burn -> 0)
