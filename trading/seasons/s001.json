@@ -14,7 +14,7 @@
   "cash": {
     "CNY": 0.0,
     "HKD": 0.0,
-    "USD": 2675.56
+    "USD": 1247.27
   },
   "settling": [],
   "positions": [
@@ -22,30 +22,20 @@
       "market": "US",
       "code": "ZM",
       "name": "Zoom通讯",
-      "qty": 12.0,
-      "avg_cost": 90.3183,
+      "qty": 16.0,
+      "avg_cost": 89.7381,
       "currency": "USD",
-      "last_buy_date": "2026-09-21",
+      "last_buy_date": "2026-09-29",
       "lot": 1
     },
     {
       "market": "US",
       "code": "PTC",
       "name": "PTC Inc",
-      "qty": 8.0,
-      "avg_cost": 135.1425,
+      "qty": 12.0,
+      "avg_cost": 136.2833,
       "currency": "USD",
-      "last_buy_date": "2026-09-21",
-      "lot": 1
-    },
-    {
-      "market": "US",
-      "code": "DUOL",
-      "name": "多邻国",
-      "qty": 5.0,
-      "avg_cost": 142.298,
-      "currency": "USD",
-      "last_buy_date": "2026-09-21",
+      "last_buy_date": "2026-09-30",
       "lot": 1
     },
     {
@@ -56,6 +46,26 @@
       "avg_cost": 40.6998,
       "currency": "USD",
       "last_buy_date": "2026-09-24",
+      "lot": 1
+    },
+    {
+      "market": "US",
+      "code": "NVDA",
+      "name": "NVDA",
+      "qty": 3.0,
+      "avg_cost": 229.9633,
+      "currency": "USD",
+      "last_buy_date": "2026-09-30",
+      "lot": 1
+    },
+    {
+      "market": "US",
+      "code": "HRMY",
+      "name": "HRMY",
+      "qty": 13.0,
+      "avg_cost": 39.5431,
+      "currency": "USD",
+      "last_buy_date": "2026-09-30",
       "lot": 1
     }
   ],
@@ -185,6 +195,135 @@
       "note": "QMF: L1四票(buffett/munger/graham/duan,PE7.4/PB1.1/PE*PB8.1) L2无否决(intel全绿,无profit_spike,+103.7%未达200%线) 两层时机:错杀池(-48.5%回撤+营收22%/净利104%双增)+企稳扳机(r5+4.3,前低38.67六日不破低点抬升) L3中国OTA收租+梁建章+出境游复苏 L4 s001添中国消费分散叙事; 一致目标58.34(+43%)",
       "settle_amount": 0.0,
       "seq": 6
+    },
+    {
+      "ts": "2026-09-29T00:10:34",
+      "date": "2026-09-29",
+      "action": "sell",
+      "market": "US",
+      "code": "DUOL",
+      "name": "DUOL",
+      "qty": 5.0,
+      "price": 136.78,
+      "gross": 683.9,
+      "fees": {
+        "platform": 1.99
+      },
+      "fees_total": 1.99,
+      "cash_delta": 0.0,
+      "settle_amount": 681.91,
+      "available_date": "2026-09-30",
+      "fx_date": "2026-09-30",
+      "realized_pnl": -29.58,
+      "currency": "USD",
+      "session": "in",
+      "note": "QMF红旗否决执行(20260929盘中,腾讯实时价): CEO von Ahn 9/16清空直接持有全部A类股28292股@150.22(430万美元,10b5-1今年6月设立)+9/21-22第二轮行权即卖560万美元, 近3月内部人卖出1396万/买入0, 空头16.5%流通盘, 一致Hold目标124-134低于现价; 0921买入时该Form4已存在被中性标签掩盖(0925代码级下钻规则前的流程缺口); 按今日L2标准此仓入场即否决(同BZ案), 创始人文化支柱受损=论点降解非机械止损; DAU+23%业务粘性仍在是事实, 但红旗仓位不等反弹",
+      "seq": 7
+    },
+    {
+      "ts": "2026-09-29T00:11:07",
+      "date": "2026-09-29",
+      "action": "buy",
+      "market": "US",
+      "code": "ZM",
+      "name": "ZM",
+      "qty": 4.0,
+      "price": 87.5,
+      "gross": 350.0,
+      "fees": {
+        "platform": 1.99
+      },
+      "fees_total": 1.99,
+      "cash_delta": -351.99,
+      "currency": "USD",
+      "session": "in",
+      "note": "QMF加仓(20260929盘中,腾讯实时价,0918规训:论点仍成立加仓无需新论点): L1四票(buffett/munger/graham/sheng,0921口径)零旗标; L2 0928 Form4代码级下钻=CEO行权即卖约115万美元级例行SBC变现非红旗; L3企业通信捆绑平台切换成本+Eric Yuan文化+AI Companion, 净现金占市值28%+FCF yield7%+; L4今日-2.4%普跌日跟跌=错杀形态(ret_20d<=-3用户gate满足), mid85.7/long97.6分位建仓逻辑未变; -50%测试通过(0921); 加仓后约20%NAV达单仓上限; 卖出触发不变(净扩张率<95%/FCF指引转负/收入连续两季负增)",
+      "settle_amount": 0.0,
+      "seq": 8
+    },
+    {
+      "ts": "2026-09-29T00:11:36",
+      "date": "2026-09-29",
+      "action": "buy",
+      "market": "US",
+      "code": "PTC",
+      "name": "PTC",
+      "qty": 2.0,
+      "price": 139.55,
+      "gross": 279.1,
+      "fees": {
+        "platform": 1.99
+      },
+      "fees_total": 1.99,
+      "cash_delta": -281.09,
+      "currency": "USD",
+      "session": "in",
+      "note": "QMF加仓(20260929盘中,腾讯实时价,0918规训:论点仍成立加仓无需新论点): L1三票(buffett/munger/duan,0916口径); L2 intel零红旗(0928复查:近90天5条披露无诉讼无解禁); L3工业CAD/PLM订阅软件Onshape/Creo/Windchill切换成本深,制造业数字化长周期,dd52约-35%属杀估值非杀生意; L4 20家一致Buy目标173.35(+25%),OCF/净利1.18利润质量四仓最硬,mid89.3/long98.0分位; -50%测试通过(0921); 加仓后约19.6%NAV; 卖出触发不变(ARR增速持续放缓至个位数/收入负增两季/SBC稀释失控)",
+      "settle_amount": 0.0,
+      "seq": 9
+    },
+    {
+      "ts": "2026-09-30T01:12:29",
+      "date": "2026-09-30",
+      "action": "buy",
+      "market": "US",
+      "code": "PTC",
+      "name": "PTC",
+      "qty": 2.0,
+      "price": 135.59,
+      "gross": 271.18,
+      "fees": {
+        "platform": 1.99
+      },
+      "fees_total": 1.99,
+      "cash_delta": -273.17,
+      "currency": "USD",
+      "session": "in",
+      "note": "QMF加仓(20260930盘外,最新收盘135.52,0918规训:论点成立加仓无需新论点): L1三票(buffett/munger/duan)+蒸馏文化68入池; L2零旗标,0928-0930两次intel复查无新红旗; L3工业CAD/PLM订阅(Onshape/Creo/Windchill)切换成本深,制造业数字化长周期,杀估值非杀生意;OCF/净利1.18四仓最硬利润质量; L4 20家一致Buy目标173.35(+28%); 维度=mid(1月-1年),退出触发=ARR增速持续个位数/收入负增两季/SBC稀释失控; -50%测试通过; 加仓后PTC约1570USD≈22%NAV(无硬cap,AI判断:利润质量最高仓给最重)",
+      "settle_amount": 0.0,
+      "seq": 10
+    },
+    {
+      "ts": "2026-09-30T01:13:01",
+      "date": "2026-09-30",
+      "action": "buy",
+      "market": "US",
+      "code": "NVDA",
+      "name": "NVDA",
+      "qty": 3.0,
+      "price": 229.3,
+      "gross": 687.9,
+      "fees": {
+        "platform": 1.99
+      },
+      "fees_total": 1.99,
+      "cash_delta": -689.89,
+      "currency": "USD",
+      "session": "in",
+      "note": "QMF新开仓(20260930,质量部署非错杀,0918规训②:无急跌时用高质量+合理估值补足仓位): L1三票+蒸馏文化90(池内最高),core 84.3; L2零旗标,Form4下钻=全部10b5-1计划内卖出+税扣(Stevens董事/Teter/Kress F码),非信号; L3 CUDA平台收租机器,图形+计算全功能GPU护城河,ROE101.5毛利率71.1,OCF/净利0.86,2025年报营收+65.5%净利+64.7%; reverse DCF: 229 vs 61家Strong Buy一致目标327.70,隐含增长已被连续beat验证; L4 pos_52w=90高位入场自认回撤风险,仓位限定~10%NAV; 单一叙事gate通过(组合无AI算力重叠); 维度=mid,退出触发=大客户capex指引拐点/毛利率跌破65%/MUSA类生态颠覆出现; -50%测试通过(3股344USD敞口=4.9%NAV)",
+      "settle_amount": 0.0,
+      "seq": 11
+    },
+    {
+      "ts": "2026-09-30T01:13:39",
+      "date": "2026-09-30",
+      "action": "buy",
+      "market": "US",
+      "code": "HRMY",
+      "name": "HRMY",
+      "qty": 13.0,
+      "price": 39.39,
+      "gross": 512.07,
+      "fees": {
+        "platform": 1.99
+      },
+      "fees_total": 1.99,
+      "cash_delta": -514.06,
+      "currency": "USD",
+      "session": "in",
+      "note": "QMF新开仓(20260930,融合榜首+小幅回撤入场): L1四票池内最高(蒸馏文化70后core 88.6); L2零旗标,Form4下钻=单一高管Budur Kumar例行M+S(9/9卖5500@42+9/18卖900,合计约23万美元),规模小非同向簇集,非DUOL式红旗; L3 Wakix(pitolisant)发作性睡病1型孤儿药,唯一非管制类一线用药=定价权垄断,新适应症(特发性嗜睡IH)扩展生命周期; 2025年报营收+21.5%净利+9.1%,ROE20.8毛利率77.2,OCF/净利2.19利润含金量高,PE(TTM)12.85; L4 ret_5d-4.96小幅回撤给入场折扣,pos_52w 83; 维度=mid,退出触发=Wakix仿制药/专利挑战败诉/IH适应症失败/内部人卖出升级为多高管簇集; -50%测试通过(13股256USD敞口=3.6%NAV)",
+      "settle_amount": 0.0,
+      "seq": 12
     }
   ],
   "nav_history": [
@@ -628,8 +767,105 @@
       ],
       "fx": {
         "CNY": 1.0,
-        "HKD": 0.8563,
-        "USD": 6.7166
+        "USD": 7.2
+      }
+    },
+    {
+      "date": "2026-09-29",
+      "nav": 7114.09,
+      "cash_total": 2042.48,
+      "settling_total": 681.91,
+      "positions": [
+        {
+          "market": "US",
+          "code": "ZM",
+          "name": "Zoom通讯",
+          "qty": 16.0,
+          "price": 87.3,
+          "currency": "USD",
+          "value_base": 1396.8
+        },
+        {
+          "market": "US",
+          "code": "PTC",
+          "name": "PTC Inc",
+          "qty": 10.0,
+          "price": 139.69,
+          "currency": "USD",
+          "value_base": 1396.9
+        },
+        {
+          "market": "US",
+          "code": "TCOM",
+          "name": "携程",
+          "qty": 40.0,
+          "price": 39.9,
+          "currency": "USD",
+          "value_base": 1596.0
+        }
+      ],
+      "fx": {
+        "CNY": 1.0,
+        "HKD": 0.8552,
+        "USD": 6.7089
+      }
+    },
+    {
+      "date": "2026-09-30",
+      "nav": 7003.85,
+      "cash_total": 1247.27,
+      "settling_total": 0,
+      "positions": [
+        {
+          "market": "US",
+          "code": "ZM",
+          "name": "Zoom通讯",
+          "qty": 16.0,
+          "price": 87.58,
+          "currency": "USD",
+          "value_base": 1401.28
+        },
+        {
+          "market": "US",
+          "code": "PTC",
+          "name": "PTC Inc",
+          "qty": 12.0,
+          "price": 134.54,
+          "currency": "USD",
+          "value_base": 1614.48
+        },
+        {
+          "market": "US",
+          "code": "TCOM",
+          "name": "携程",
+          "qty": 40.0,
+          "price": 38.59,
+          "currency": "USD",
+          "value_base": 1543.6
+        },
+        {
+          "market": "US",
+          "code": "NVDA",
+          "name": "NVDA",
+          "qty": 3.0,
+          "price": 228.86,
+          "currency": "USD",
+          "value_base": 686.58
+        },
+        {
+          "market": "US",
+          "code": "HRMY",
+          "name": "HRMY",
+          "qty": 13.0,
+          "price": 39.28,
+          "currency": "USD",
+          "value_base": 510.64
+        }
+      ],
+      "fx": {
+        "CNY": 1.0,
+        "HKD": 0.8552,
+        "USD": 6.7089
       }
     }
   ],
@@ -661,6 +897,34 @@
       "nav": 7181.69,
       "day_pnl": -40.01,
       "text": "20260925 美股盘中(10:10 ET) abstain: 全候选L2否决链。①TCOM 2nd hand扳机未触发(-1.69%仍下跌,企稳确认不存在,首手40@40.70按兵不动); ②HRMY: 10天内2笔内部人Form4卖出→否决; ③BZ(新面孔,三票buffett/graham/sheng,PE9.9+FCF9.5%+rev+17.3%完美错杀壳): OpenInsider实查=CEO赵鹏9月两笔S卖出合计~1.16亿美元(09-21 1517万股@7.25+09-10 74万股@8.23)+CMO减仓54%+董事-30%——急跌是内部人派发不是错杀→否决; ④LPG: 周期顶否决继续兑现(-1.22%); ⑤GPOR/TGTX/CARG: profit_spike(+264%/+1811%/+643%)→否决,TGTX且OCF为负(纸面利润砖); ⑥ZM/PTC/DUOL论点完好无卖出触发。教训: US事件雷达不覆盖Form4交易代码,XS法4仅显示'内部人交易'中性标签——必须下钻代码级(S=卖出/A=授予/F=税扣),www.sec.gov档案被IP封时用openinsider.com。"
+    },
+    {
+      "date": "2026-09-28",
+      "ts": "2026-09-28T21:16:16",
+      "nav": 7151.79,
+      "day_pnl": 0.0,
+      "text": "20260928复盘(EM断供日): 东财push2连接被重置=网络层封锁(沙箱内外同败), data/日清后无持久宇宙→TX回退死→快照重建失败, 今日评价基于周五0925收盘价+EDGAR实时intel. NAV 7151.79(net -0.39%, 期初7180), 全期摩擦11.94占净亏42%. 持仓: ZM-0.67%/PTC+2.20%/DUOL+0.85%/TCOM-3.12%. Form4代码级下钻: ZM=CEO Eric Yuan 9/1-2行权即卖约12100股x2@95-96+工程总裁M/F/S=例行SBC变现非红旗(维持观察项); DUOL=CEO von Ahn 9/16+9/21-22两轮行权即卖约1000万美元@150-152+GC+董事同向=簇集卖出, 叠加24家一致Hold/目标134.29低于现价143.51+自动续费投诉新闻, 定性层走弱列首要监控(论点未破: DAU/订阅粘性未证伪); TCOM Strong Buy目标58.34+国庆出行升温催化, 二手扳机仍未触发; PTC零红旗目标173.35. TCOM仓位22.1%超单仓20%框架上限=集中度观察项如实记录. 部署率62.6%仍低于0918规训80%目标."
+    },
+    {
+      "date": "2026-09-28",
+      "ts": "2026-09-28T22:20:52",
+      "nav": 7151.79,
+      "day_pnl": 0.0,
+      "text": "20260928晚间补记(美股盘中10:20 ET, 腾讯实时口径): EM部分恢复(clist通/kline仍断), 快照重建中. 盘中NAV约7117.68(-0.87% net), 日跌-0.48%. 大盘QQQ-1.02%/SPY-0.45%普跌日. 四仓: TCOM 40.16(+1.84%, 国庆催化兑现中, 浮亏收窄至-1.33%)/PTC 137.05(-0.77%, 浮盈+1.41%)/ZM 87.36(-2.62%, 浮亏-3.28%)/DUOL 138.20(-3.70%, 转浮亏-2.88%). DUOL跑输QQQ 2.7个点=上午定性层走弱判断被日内市场验证(簇集卖出+Hold共识在red tape日放大), 无新增个股催化, 维持监控级别最高+反弹至150 CEO卖出区且10-Q DAU无惊喜则按中线兑现纪律减仓."
+    },
+    {
+      "date": "2026-09-29",
+      "ts": "2026-09-29T00:12:51",
+      "nav": 7113.73,
+      "day_pnl": -38.06,
+      "text": "20260929凌晨(美股0928盘中)授权窗口执行: ①卖DUOL 5@136.78(realized -29.58USD)=红旗否决执行: CEO清空直接A类股+两轮行权即卖约1000万美元+内部人3月卖1396万买0+空头16.5%+Hold目标价低于现价, 按0925代码级下钻标准此仓入场即否决, 定性论点降解非机械止损(止损日不开新注不适用, 但新开仓举证责任加重); ②加ZM 4@87.50(总16股=19.7%NAV达上限)+PTC 2@139.55(总10股=19.6%): 0918规训论点成立加仓无需新论点, ZM今日-2.4%普跌跟跌=错杀形态; ③TCOM二手未加: 22.4%已超单仓20%上限, 集中度纪律优先于扳机; ④新候选部署结构性受阻: EM push2全天网络层封锁(fetch 8次重试全败), masters-vote L1池不可用=结构性abstain非判断性, 部署率61.7%未达80%的举证=东财断供; ⑤工程修复: recommend.live_price接入fetch_quote_any腾讯实时回退(EM ulist→腾讯→快照), 655测试全绿, 今晚3笔成交全走live-tx通道——EM断供日首次完成盘中实时成交"
+    },
+    {
+      "date": "2026-09-30",
+      "ts": "2026-09-30T01:14:13",
+      "nav": 7010.7,
+      "day_pnl": -103.39,
+      "text": "20260930授权窗口三笔部署(PTC+2/NVDA+3/HRMY+13,合计1477USD,部署率61→82%): ①今日最大校准=BZ否决案——3大师票+ret_20d-20%深回撤+PE9.92+ROE16+用户gate全过,形态=教科书错杀,但Form4代码级下钻抓出CEO赵鹏9/14+9/21两轮卖出(含445万股@7.25)+副CFO 9/18+CMO 9/9+9/11四人九月同步卖出,股价-20%正发生在内部人卖出窗口,GSL陷阱的ADR变体;教训:深回撤+低PE+多大师票的ADR必须先过Form4簇集检查再进L3,ret_20d<=-3的内部人卖出窗口=下跌有知情人解释,不是错杀是出货 ②FUTU触发器纪律守住(ret_5d-1.56未转正不进场) ③NVDA高位入场(pos_52w90)用0918规训②质量部署正当化,仓位限定10%NAV,Form4全10b5-1非信号 ④HRMY=首个蒸馏文化分(70)参与core排序后入选的融合榜首,profiles闭环首战 ⑤EM断供第二日:定价腾讯回退正常,L1池靠昨日快照,DCF核缺失40%插值声明"
     }
   ],
   "totals": {
