@@ -14,7 +14,7 @@
   "cash": {
     "CNY": 0.0,
     "HKD": 0.0,
-    "USD": 1247.27
+    "USD": 1006.35
   },
   "settling": [],
   "positions": [
@@ -64,6 +64,16 @@
       "name": "HRMY",
       "qty": 13.0,
       "avg_cost": 39.5431,
+      "currency": "USD",
+      "last_buy_date": "2026-09-30",
+      "lot": 1
+    },
+    {
+      "market": "US",
+      "code": "ADBE",
+      "name": "Adobe Inc.",
+      "qty": 1.0,
+      "avg_cost": 240.92,
       "currency": "USD",
       "last_buy_date": "2026-09-30",
       "lot": 1
@@ -324,6 +334,27 @@
       "note": "QMF新开仓(20260930,融合榜首+小幅回撤入场): L1四票池内最高(蒸馏文化70后core 88.6); L2零旗标,Form4下钻=单一高管Budur Kumar例行M+S(9/9卖5500@42+9/18卖900,合计约23万美元),规模小非同向簇集,非DUOL式红旗; L3 Wakix(pitolisant)发作性睡病1型孤儿药,唯一非管制类一线用药=定价权垄断,新适应症(特发性嗜睡IH)扩展生命周期; 2025年报营收+21.5%净利+9.1%,ROE20.8毛利率77.2,OCF/净利2.19利润含金量高,PE(TTM)12.85; L4 ret_5d-4.96小幅回撤给入场折扣,pos_52w 83; 维度=mid,退出触发=Wakix仿制药/专利挑战败诉/IH适应症失败/内部人卖出升级为多高管簇集; -50%测试通过(13股256USD敞口=3.6%NAV)",
       "settle_amount": 0.0,
       "seq": 12
+    },
+    {
+      "ts": "2026-09-30T22:36:20",
+      "date": "2026-09-30",
+      "action": "buy",
+      "market": "US",
+      "code": "ADBE",
+      "name": "Adobe Inc.",
+      "qty": 1.0,
+      "price": 238.93,
+      "gross": 238.93,
+      "fees": {
+        "platform": 1.99
+      },
+      "fees_total": 1.99,
+      "cash_delta": -240.92,
+      "currency": "USD",
+      "session": "in",
+      "note": "中线论点仓首笔: 创意标准+AI变现拐点, reverse DCF隐含g=-3.15% vs 现实rev+13%/OCF/NI 1.41; 三核 商业96/文化78(已蒸馏)/隐含-3.15%; 扳机未亮故分批, 首笔3.3%NAV<=5%上限, r5翻正或Q4验证后加至<=10%; -50%测试; 退出=Q4净新增ARR无拐点, 兑现=+",
+      "settle_amount": 0.0,
+      "seq": 13
     }
   ],
   "nav_history": [
@@ -812,8 +843,8 @@
     },
     {
       "date": "2026-09-30",
-      "nav": 7003.85,
-      "cash_total": 1247.27,
+      "nav": 7118.38,
+      "cash_total": 1006.35,
       "settling_total": 0,
       "positions": [
         {
@@ -821,51 +852,60 @@
           "code": "ZM",
           "name": "Zoom通讯",
           "qty": 16.0,
-          "price": 87.58,
+          "price": 90.2,
           "currency": "USD",
-          "value_base": 1401.28
+          "value_base": 1443.2
         },
         {
           "market": "US",
           "code": "PTC",
           "name": "PTC Inc",
           "qty": 12.0,
-          "price": 134.54,
+          "price": 139.01,
           "currency": "USD",
-          "value_base": 1614.48
+          "value_base": 1668.12
         },
         {
           "market": "US",
           "code": "TCOM",
           "name": "携程",
           "qty": 40.0,
-          "price": 38.59,
+          "price": 39.06,
           "currency": "USD",
-          "value_base": 1543.6
+          "value_base": 1562.4
         },
         {
           "market": "US",
           "code": "NVDA",
           "name": "NVDA",
           "qty": 3.0,
-          "price": 228.86,
+          "price": 230.66,
           "currency": "USD",
-          "value_base": 686.58
+          "value_base": 691.98
         },
         {
           "market": "US",
           "code": "HRMY",
           "name": "HRMY",
           "qty": 13.0,
-          "price": 39.28,
+          "price": 39.02,
           "currency": "USD",
-          "value_base": 510.64
+          "value_base": 507.26
+        },
+        {
+          "market": "US",
+          "code": "ADBE",
+          "name": "Adobe Inc.",
+          "qty": 1.0,
+          "price": 239.07,
+          "currency": "USD",
+          "value_base": 239.07
         }
       ],
       "fx": {
         "CNY": 1.0,
-        "HKD": 0.8552,
-        "USD": 6.7089
+        "HKD": 0.92,
+        "USD": 7.2
       }
     }
   ],
