@@ -24,9 +24,11 @@ needed-by-cycle / skill-or-attention arbitrage) and ``falsification``
 (the kill set).  A thesis whose falsifier triggers is retired
 (``thesis retire``), never silently deleted — errors are assets.
 
-Files live under ``theses/<id>.json`` (top-level, git-tracked — never
+Files live under ``tower/theses/<id>.json`` (git-tracked — never
 inside the cleanable ``data/`` tree), one file per thesis, atomic
-writes; same persistence contract as ``users.py``.
+writes; same persistence contract as ``users.py``. Merged under
+``tower/`` 2026-09-30: a thesis is a tower artifact (brick lineage),
+so it lives where its lineage lives.
 """
 
 import json
