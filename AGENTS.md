@@ -184,8 +184,10 @@ Theses are the tower→L1 pipeline: a brick's assertion about a
 money-printing machine (e.g. "memory is being repriced from cyclical
 to compute-input") becomes a named, member-carrying pool that
 `masters-vote --thesis <id>` injects into the L1 candidate universe.
-They live in the git-tracked top-level `theses/` dir (one JSON per
-thesis, CLI-maintained, atomic writes — never inside `data/`).
+They live in the git-tracked `tower/theses/` dir (one JSON per
+thesis, CLI-maintained, atomic writes — never inside `data/`); a
+thesis is a tower artifact, so it lives where its brick lineage lives
+(merged 2026-09-30).
 
 A thesis carries: `brick` (tower lineage — the falsification trail
 that motivated it), `statement`, `reason`, `features` (the three
