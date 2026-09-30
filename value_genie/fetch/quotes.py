@@ -124,11 +124,14 @@ TX_BATCH_SLEEP = 0.25
 
 
 def _prev_universe_quotes(market: str) -> pd.DataFrame:
-    """Most recent persisted quotes CSV for the market (any snapshot date).
+    """Universe for the Tencent fallback: most recent persisted quotes CSV,
+    else a degraded stand-in (US = us_financials tickers, the same universe
+    the SEC operating-company gate screens; other markets = latest
+    master.csv slice).
 
-    The fallback inherits its universe list + static columns (industry,
-    market_id) from it — listings churn slowly enough that a day-old
-    universe is safe for one degraded run.
+    Quotes CSVs are same-day scratch — a completed run persists none, so
+    without the stand-ins an EM outage day finds no universe exactly when
+    the fallback is needed (2026-09-30 outage: US silently dropped).
     """
     root = config.SNAPSHOTS_DIR
     if not root.exists():
@@ -145,6 +148,39 @@ def _prev_universe_quotes(market: str) -> pd.DataFrame:
             continue
         if not df.empty and "code" in df.columns:
             return df
+    # quotes CSVs are same-day scratch (a completed run keeps none), so a
+    # same-day EM outage finds no persisted universe exactly when the TX
+    # fallback is needed. Degraded universes: US screens the SEC-frames
+    # universe anyway (operating-company gate), so the us_financials
+    # ticker list is the complete candidate set; other markets fall back
+    # to the latest master.csv slice (funnel survivors — new entrants are
+    # missed, declared via the fallback attr downstream).
+    if market == "US":
+        for d in dirs:
+            p = d / "us_financials.csv"
+            if not p.exists():
+                continue
+            try:
+                fin = pd.read_csv(p, dtype={"ticker": str})
+            except (OSError, pd.errors.ParserError, ValueError):
+                continue
+            if not fin.empty and "ticker" in fin.columns:
+                codes = fin["ticker"].dropna().astype(str).unique()
+                return pd.DataFrame({"code": codes, "industry": ""})
+    for d in dirs:
+        p = d / "master.csv"
+        if not p.exists():
+            continue
+        try:
+            m = pd.read_csv(p, dtype={"code": str})
+        except (OSError, pd.errors.ParserError, ValueError):
+            continue
+        if not m.empty and "market" in m.columns and "code" in m.columns:
+            m = m[m["market"].astype(str) == market]
+            keep = [c for c in ("code", "name", "industry", "market_id")
+                    if c in m.columns]
+            if not m.empty:
+                return m[keep].reset_index(drop=True)
     return pd.DataFrame()
 
 
@@ -152,10 +188,12 @@ def fetch_market_quotes_tx(market: str,
                            universe: pd.DataFrame | None = None) -> pd.DataFrame:
     """Full-market quotes via Tencent's batch endpoint (EM push2 fallback).
 
-    Field basis (probed 2026-09-28): idx1 name, idx2 code (US carries the
+    Field basis (probed 2026-09-28; HK/US idx37 re-probed 2026-09-30):
+    idx1 name, idx2 code (US carries the
     '.OQ'-style suffix — the request-symbol map is authoritative), idx3
-    price, idx4 prev close, idx6 volume, idx37 amount in 10k CNY (A only),
-    idx38 turnover (A only), idx39 PE (Tencent dynamic basis — NOT EM
+    price, idx4 prev close, idx6 volume, idx37 amount (A: 10k CNY units;
+    HK/US: raw local currency), idx38 turnover (A only),
+    idx39 PE (Tencent dynamic basis — NOT EM
     pe_ttm), idx44/45 float/total market cap in 100M local currency,
     idx46 PB (A only; HK/US carry a string there -> None). industry and
     market_id are inherited from the latest persisted universe. pe_dyn /
@@ -195,7 +233,15 @@ def fetch_market_quotes_tx(market: str,
             price, prev = num(parts[3]), num(parts[4])
             if price is None:
                 continue
-            amount = num(parts[37]) if market == "A" else None
+            # idx37 turnover: A = 万元 (×1e4); HK/US = raw local currency
+            # (probed 2026-09-30: hk00700 idx37 == volume×price exactly,
+            # usNVDA likewise) — without it the HK liquidity gate
+            # (amount >= MIN_HK_DAILY_AMOUNT) zeroes the whole TX frame
+            amount_raw = num(parts[37])
+            if market == "A":
+                amount = amount_raw * 1e4 if amount_raw is not None else None
+            else:
+                amount = amount_raw
             mcap, fcap = num(parts[45]), num(parts[44])
             rows.append({
                 "code": sym2code.get(sym, parts[2].split(".")[0]),
@@ -204,7 +250,7 @@ def fetch_market_quotes_tx(market: str,
                 "pct_chg": ((price / prev - 1.0) * 100.0
                             if prev is not None and prev > 0 else None),
                 "volume": num(parts[6]),
-                "amount": amount * 1e4 if amount is not None else None,
+                "amount": amount,
                 "turnover": num(parts[38]) if market == "A" else None,
                 "pe_dyn": None,
                 "pe_static": None,

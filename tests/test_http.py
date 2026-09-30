@@ -146,8 +146,15 @@ def test_em_push2_get_all_hosts_failed():
             patch.object(http.config, "EM_PUSH2_HOSTS", ["h1", "h2"]):
         assert http.em_push2_get("/api/x") is None
         assert set(http._em_host_fail) == {"h1", "h2"}
-        # every host cooling down -> the least-recently-failed one is
-        # retried (rotation always makes progress), and can recover
+        # every host cooling down -> fail fast (all-mirror failure is a
+        # client-side block signature, not a single-host blip) so the
+        # Tencent fallback runs instead of burning a timeout per request
+        with patch.object(http.EM, "get_json", return_value={"ok": 1}) as em:
+            assert http.em_push2_get("/api/x") is None
+            em.assert_not_called()
+        # after the cooldown expires the hosts are retried and can recover
+        for h in ("h1", "h2"):
+            http._em_host_fail[h] -= http.config.EM_HOST_COOLDOWN + 1
         with patch.object(http.EM, "get_json", return_value={"ok": 1}) as em:
             assert http.em_push2_get("/api/x") == {"ok": 1}
             em.assert_called_once()

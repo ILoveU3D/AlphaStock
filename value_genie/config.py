@@ -50,8 +50,11 @@ EM_UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
 EM_PUSH2_HOSTS = ["push2delay.eastmoney.com", "push2.eastmoney.com",
                   "33.push2.eastmoney.com", "17.push2.eastmoney.com",
                   "88.push2.eastmoney.com"]
-# Skip a mirror for this many seconds after it fails once.
-EM_HOST_COOLDOWN = 60.0
+# Skip a mirror for this many seconds after it fails once. Process-lifetime
+# scale: when the client IP is blocked every mirror fails together, and a
+# short cooldown re-admits dead hosts into every single request cycle
+# (2026-09-30 outage: ~20s burned per kline per re-admitted host).
+EM_HOST_COOLDOWN = 3600.0
 # Retries for a single clist page before continuing with partial data.
 QUOTE_PAGE_RETRIES = 3
 

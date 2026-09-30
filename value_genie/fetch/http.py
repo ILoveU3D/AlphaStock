@@ -157,15 +157,19 @@ def em_push2_get(path: str, params: dict | None = None, timeout: int = 20):
     """GET a push2 API path, rotating across mirror hosts on failure.
 
     Returns parsed JSON from the first healthy host, or None when every
-    mirror fails. When all mirrors are in cooldown the one that failed
-    longest ago is retried, so the rotation always makes progress.
+    mirror fails. When all mirrors are in cooldown the call fails fast
+    (an all-mirror failure signature is a client-side block, not a
+    single-host blip) so the Tencent fallback runs instead.
     """
     now = time.monotonic()
     healthy = [h for h in config.EM_PUSH2_HOSTS
                if now - _em_host_fail.get(h, -1e9) >= config.EM_HOST_COOLDOWN]
     if not healthy:
-        healthy = [min(config.EM_PUSH2_HOSTS,
-                       key=lambda h: _em_host_fail.get(h, -1e9))]
+        # every mirror failed within the cooldown window — that signature
+        # means a client-side block (IP rate-limit), not a single-host
+        # blip; fail fast so the caller's Tencent fallback runs instead
+        # of burning one full timeout per request for the whole run
+        return None
     for host in healthy:
         d = EM.get_json(f"http://{host}{path}", params=params,
                         timeout=timeout, retries=0)
