@@ -1,0 +1,82 @@
+{
+  "id": "cloud-utility-transition",
+  "name": "云公用事业化转型",
+  "brick": "cloud-utility-transition",
+  "statement": "带数据引力的算力地主（超级云+国资云）将在AI圈地周期见顶后从成长股重定价为永续收租的公用事业，转型错杀窗口值得钥匙孔级观察仓",
+  "reason": "圈地高潮期（2026年六大巨头capex 7700亿刀同比+74%、backlog 2万亿刀）不是买点，但观察池必须提前备好——五信号触发时错杀窗口很短；成员入池让每次masters-vote自动体检这些地主的三核，信号与基本面双轨跟踪",
+  "features": [
+    "新/未定价：市场按成长股给云定价（全球云支出+43%、capex+74%），公用事业化重定价未被计入；错杀窗口开在成长股资金撤离与价值资金未至之间",
+    "被周期需要：AI资本开支周期必然走向租金化——铁路1840s狂热、光纤2000圈地、电网建设的历史剧本重演，活下来的地主收一个世纪租",
+    "技能-注意力套利：工具箱机械跟踪五信号（capex占比/实例价格/旧卡残值/backlog兑现/利用率），比人脑盯盘牢靠；信号触发前不建仓"
+  ],
+  "falsification": [
+    "推理去中心化（端侧/模型效率革命）被证明是趋势而非DeepSeek式抖动，地租从云端漏出",
+    "循环交易断裂且真实需求无法接续：英伟达-OpenAI-Oracle-CoreWeave循环爆雷，2万亿backlog大面积无法兑现",
+    "capex见顶后GPU实例价格仍持续通缩——证明算力永远是大宗商品，永续租金形状不成立"
+  ],
+  "members": [
+    {
+      "market": "US",
+      "code": "AMZN",
+      "name": "亚马逊(AWS)",
+      "note": ""
+    },
+    {
+      "market": "US",
+      "code": "MSFT",
+      "name": "微软(Azure)",
+      "note": ""
+    },
+    {
+      "market": "US",
+      "code": "GOOGL",
+      "name": "谷歌(GCP)",
+      "note": ""
+    },
+    {
+      "market": "US",
+      "code": "ORCL",
+      "name": "甲骨文(OCI)",
+      "note": ""
+    },
+    {
+      "market": "HK",
+      "code": "09988",
+      "name": "阿里巴巴(阿里云)",
+      "note": ""
+    },
+    {
+      "market": "A",
+      "code": "601728",
+      "name": "中国电信(天翼云)",
+      "note": ""
+    },
+    {
+      "market": "A",
+      "code": "600941",
+      "name": "中国移动(移动云)",
+      "note": ""
+    },
+    {
+      "market": "HK",
+      "code": "00700",
+      "name": "腾讯控股(腾讯云/微信数据引力)",
+      "note": ""
+    }
+  ],
+  "industry_hints": {
+    "US": [
+      "云计算"
+    ],
+    "A": [
+      "云计算"
+    ],
+    "HK": [
+      "云计算"
+    ]
+  },
+  "status": "active",
+  "created_at": "2026-10-01T00:08:19",
+  "updated_at": "2026-10-01T11:02:26",
+  "retired_reason": ""
+}
