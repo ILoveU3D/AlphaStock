@@ -17,8 +17,8 @@ commands:
   - ask X --evidence
   - intel X
   - recommend --user me
-version: 22
-updated_at: 2026-09-30T21:06:59
+version: 23
+updated_at: 2026-10-01T19:38:54
 ---
 
 # Playbook
@@ -261,3 +261,4 @@ Output shape (hard rules):
 - [2026-09-29 12:00] (ai) recommendation-v2 Phase 1-5 落地（user mandates D1-D5 + 2026-09-29 两条追加，v20）: ①L1 宽池化——masters-vote 默认输出全池（vote_count>=1 & ~veto_hard, core_score 排序），--top N 降级为遗留短名单、--check 对 AI 自选名单跑 live cycle-trap，深评名单选择责任移交 AI；②缺核插市场均值（D2）+ core_gaps 大声声明 + doctor 缺核率；③文化核退化（D3）——无蒸馏只否决不打分，profile.apply_distilled_culture 为唯一对接面（CULTURE_DISTILLED 标记）；④D4 短线融合路径——--horizon short|ultrashort：floor=真生意（core_business≥50）+周K结构上行（MA10W>MA20W 且 26周涨幅>0；刻意不要求 close>MA20W——陡坡中 -8% 回撤破线正是买点）+无否决，甜点区 pullback_from_high∈(-15%,-5%)（用户战术原话：宏观周K明显增长+微观日K回撤=短线买点，塔砖 weekly-trend-daily-pullback），战术排序 short_floor>pullback_sweet>ret_60d，DCF 降级为'失败变持有'诚实备注；⑤profiles 本地原型——raw→data/profiles/raw/（可再生），assessment→profiles/（gitignored LOCAL-ONLY 永不推送，user mandate 2026-09-29），profile fetch/show/assess/list/status 闭环，stale=raw content_hash 漂移自动踢出打分；迁移旧蒸馏 10 份（A:600900, HK:00991/01378/03306/03998, US:HRMY/NVDA/PTC/TCOM/ZM）pinned hash 无 stale；端到端验证 masters-vote 宽池 107 行 culture_distilled=7；727 测试全绿
 - [2026-09-30 00:43] (ai) 2026-09-29 profiles 三源探针 quirk（Phase 5）：A股 RPT_F10_ORG_BASICINFO 长简介列名是 ORG_PROFIE（官方拼写如此——愿景一句话才在 ORG_PROFILE）；港股 RPT_HKF10_INFO_ORGPROFILE 长简介恰好在 ORG_PROFILE（与A股列名相反，勿混）；US 简介走 stockanalysis 主页 flight blob 正则 description:「...」（json.loads 解码转义），SEC submissions URL 的 cik 必须 int 格式化（format(cik=int) 非 str）。filter DSL 老规矩：日期单引号、字符串双引号。
 - [2026-09-30 21:06] (ai) 20260930 quirk: masters-vote trusts baked core columns when core_score exists in master.csv (__main__.py:207) - snapshots built before the D3 culture veto-only hardening (cores.py ea07bb6, 2026-09-30 11:56) carry placeholder core_culture=100.0 for every non-distilled row with NO CULTURE_UNSCORED gap, inflating core_score (PYPL 96.47 baked vs 94.71 fresh) and hiding the D3 declaration; on old snapshots always recompute: drop CORE_COLUMNS -> add_core_scores -> apply_distilled_culture, then re-rank by fresh core_score before choosing the L3 list
+- [2026-10-01 19:38] (ai) 换仓/推荐流程教训：先探测用户对该标的的回撤承受深度，再定仓位结构与节奏——承受度决定结构（一把/分批/放弃），估值只决定方向。案例 2026-10-01 KO→HSBC 换仓：论证四轮全部通过，因用户承受度（-30%不可接受）最后才暴露，方案两度缩减仍被否决。顺序反了：先问睡得着多少，再谈买多少
