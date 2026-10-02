@@ -1,6 +1,7 @@
 """Multi-year statement history, per stock, on demand (L3 modeling only).
 
-- US: SEC companyconcept (multi-year XBRL), CIK via the existing ticker map
+- US: SEC companyfacts (one request carries every XBRL tag), CIK via
+  the existing ticker map
 - A:  Eastmoney datacenter F10 statement reports (probe-finalized)
 - HK: Eastmoney HKF10 main indicators (probe-finalized)
 
@@ -38,16 +39,19 @@ def _us_cik(code: str) -> int | None:
     return load_sec_cik_map().get(normalize_us_ticker(code))
 
 
-def _us_concept(cik: int, concept: str) -> dict | None:
-    return SEC.get_json(
-        config.SEC_CONCEPT_URL.format(cik=cik, concept=concept))
+def _us_facts(cik: int) -> dict | None:
+    """One companyfacts request carries every tag — the per-concept
+    companyconcept endpoint intermittently serves empty/stale payloads
+    (observed 2026-10-02: PYPL 'Revenues' empty via companyconcept while
+    companyfacts had FY2022-2025), which silently truncated histories."""
+    return SEC.get_json(config.SEC_COMPANYFACTS_URL.format(cik=cik))
 
 
-def _us_annual(payload: dict | None) -> dict:
-    """companyconcept payload -> {fy: val}; annual FY rows only, latest
-    filed wins on duplicates."""
+def _us_annual(payload: dict | None, unit: str = "USD") -> dict:
+    """tag payload ({units: {<unit>: [...]}}) -> {fy: val}; annual FY rows
+    only, latest filed wins on duplicates."""
     out = {}
-    for e in ((payload or {}).get("units") or {}).get("USD", []):
+    for e in ((payload or {}).get("units") or {}).get(unit, []):
         if e.get("form") not in ("10-K", "20-F") or e.get("fp") != "FY":
             continue
         start, end = e.get("start"), e.get("end")
@@ -71,16 +75,29 @@ def fetch_history_us(code: str) -> dict | None:
     cik = _us_cik(code)
     if cik is None:
         return None
-    series, name = {}, ""
+    facts = _us_facts(cik)
+    if not facts:
+        return None
+    # tags live under us-gaap, except EntityCommonStockSharesOutstanding
+    # which is dei; share counts use unit "shares", money uses "USD".
+    by_ns = facts.get("facts") or {}
+    namespaces = [by_ns.get("us-gaap") or {}, by_ns.get("dei") or {}]
+    name = facts.get("entityName") or ""
+    series = {}
     for field, concepts in _US_CONCEPTS.items():
+        unit = "shares" if field == "shares" else "USD"
+        # merge ALL fallback tags: filers switch XBRL tags over time
+        # (e.g. "Revenues" stops at 2019, RevenueFromContract... covers
+        # 2020+) — first-hit-wins would silently truncate history.
+        # later tags override shared fiscal years.
+        merged = {}
         for concept in concepts:
-            payload = _us_concept(cik, concept)
-            if payload:
-                name = name or payload.get("entityName") or ""
-                s = _us_annual(payload)
-                if s:
-                    series[field] = s
-                    break
+            for ns in namespaces:
+                payload = ns.get(concept)
+                if payload:
+                    merged.update(_us_annual(payload, unit=unit))
+        if merged:
+            series[field] = merged
     if "revenue" not in series:
         return None
     fys = sorted({fy for s in series.values() for fy in s})
@@ -91,7 +108,7 @@ def fetch_history_us(code: str) -> dict | None:
     gaps = [f"no us xbrl history for {f}"
             for f in _US_CONCEPTS if f not in series]
     return store.new_history("US", code, name=name,
-                             source="sec_companyconcept",
+                             source="sec_companyfacts",
                              currency="USD", years=years, gaps=gaps)
 
 

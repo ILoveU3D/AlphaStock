@@ -89,6 +89,8 @@ HK_REPORT_NAME = "RPT_HKF10_FN_MAININDICATOR"
 SEC_FRAMES_URL = "https://data.sec.gov/api/xbrl/frames/us-gaap/{concept}/{unit}/{frame}.json"
 SEC_CONCEPT_URL = ("https://data.sec.gov/api/xbrl/companyconcept/"
                    "CIK{cik:010d}/us-gaap/{concept}.json")
+SEC_COMPANYFACTS_URL = ("https://data.sec.gov/api/xbrl/companyfacts/"
+                        "CIK{cik:010d}.json")
 SEC_TICKERS_URL = "https://www.sec.gov/files/company_tickers.json"
 # SEC requires a declared automated-tool UA with contact info:
 # https://www.sec.gov/os/accessing-edgar-data
