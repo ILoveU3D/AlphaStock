@@ -1582,6 +1582,196 @@ def cmd_profile(args) -> int:
     return 0
 
 
+def _model_master(args):
+    """Latest snapshot master frame for comps; None when unavailable."""
+    try:
+        snap = report.resolve_snapshot(getattr(args, "data_dir", None))
+    except FileNotFoundError:
+        return None
+    from .report import load_master
+    try:
+        return load_master(snap)
+    except Exception:
+        return None
+
+
+def _model_price(m, args) -> float | None:
+    """Live quote first, snapshot price fallback (same contract as ask)."""
+    from . import analyze as az
+    try:
+        q = az.live_quote(m)
+        if q and q.get("price"):
+            return float(q["price"])
+    except Exception:
+        pass
+    master = _model_master(args)
+    if master is not None:
+        row = master[(master["market"].astype(str) == m.market)
+                     & (master["code"].astype(str) == str(m.code))]
+        if len(row):
+            from .fetch.http import num
+            return num(row.iloc[0].get("price"))
+    return None
+
+
+def cmd_model(args) -> int:
+    """Financial models (2026-10-02 design): driver-based FCFF DCF +
+    comps, AI-triggered at L3. models/ is LOCAL-ONLY (never pushed).
+    `build` is price-sensitive -> freshness-gated like ask; fetch/show/
+    set/list are not gated (historical statements / local registry)."""
+    from .model import store as mst
+
+    if args.model_cmd == "list":
+        rows = mst.list_models()
+        if args.json:
+            print(json.dumps(rows, ensure_ascii=False, indent=2,
+                             default=str))
+            return 0
+        if not rows:
+            print(f"no models under {mst.models_dir()}")
+            return 1
+        for r in rows:
+            stale = " STALE(history changed)" if r["stale"] else ""
+            print(f"{r['id']:<14} weighted={r['weighted_per_share']} "
+                  f"upside={r['upside_pct']}% "
+                  f"{str(r.get('built_at'))[:10]}{stale}")
+        return 0
+
+    # build is price-sensitive -> freshness-gated BEFORE any resolution
+    # (same order as cmd_ask: a FAIL gate emits nothing on stdout).
+    if args.model_cmd == "build" and not _check_freshness(args):
+        return 1
+
+    m = _resolve_stock_or_exit(args.stock)
+
+    if args.model_cmd == "fetch":
+        from .model import history as mh
+        if mst.load_history(m.market, m.code) and not args.force:
+            print(f"history exists for {m.label()} (--force to refetch)")
+            return 0
+        h = mh.fetch_history(m.market, m.code)
+        if h is None:
+            print(f"history fetch failed for {m.label()} "
+                  f"(source returned nothing; fail-closed)",
+                  file=sys.stderr)
+            return 1
+        p = mst.save_history(h)
+        if args.json:
+            print(json.dumps(h, ensure_ascii=False, indent=2,
+                             default=str))
+        else:
+            print(f"wrote {p}")
+            print(f"{h['id']} {h.get('name')}: "
+                  f"{len(h['years'])} years "
+                  f"({h['years'][0]['fy']}..{h['years'][-1]['fy']}) "
+                  f"{h['currency']}")
+            for g in h.get("gaps") or []:
+                print(f"  gap: {g}")
+        return 0
+
+    if args.model_cmd == "set":
+        updates = {}
+        for pair in args.sets:
+            if "=" not in pair:
+                raise SystemExit(f"bad set pair {pair!r}; want key=value")
+            k, v = pair.split("=", 1)
+            v = v.strip()
+            updates[k.strip()] = (
+                [float(x) for x in v.split(",")] if "," in v
+                else float(v))
+        try:
+            a = mst.set_assumptions(m.market, m.code, updates,
+                                    reason=args.reason or "")
+        except ValueError as exc:
+            print(str(exc), file=sys.stderr)
+            return 1
+        if args.json:
+            print(json.dumps(a, ensure_ascii=False, indent=2,
+                             default=str))
+        else:
+            print(f"assumptions updated for {m.label()}: "
+                  f"{', '.join(updates)}")
+        return 0
+
+    if args.model_cmd == "show":
+        r = mst.load_result(m.market, m.code)
+        if r is None:
+            print(f"no model for {m.label()} — build one with "
+                  f"`model build {m.market}:{m.code}`")
+            return 1
+        h = mst.load_history(m.market, m.code)
+        stale = mst.is_stale(r, h)
+        if args.json:
+            out = dict(r)
+            out["stale"] = stale
+            print(json.dumps(out, ensure_ascii=False, indent=2,
+                             default=str))
+            return 0
+        cur = r.get("currency") or ""
+        print(f"{r['id']} model ({str(r.get('built_at'))[:10]}"
+              + (" STALE — history changed, rebuild" if stale else "")
+              + ")")
+        print(f"price {r.get('price')} {cur} | weighted "
+              f"{r.get('weighted_per_share')} {cur} | upside "
+              f"{r.get('upside_pct')}%")
+        for name, s in (r.get("scenarios") or {}).items():
+            print(f"  {name:<5} p={s.get('prob')}: "
+                  f"{s.get('per_share')} {cur}")
+        for g in r.get("gaps") or []:
+            print(f"  gap: {g}")
+        return 0
+
+    if args.model_cmd == "build":
+        h = mst.load_history(m.market, m.code)
+        if h is None:
+            print(f"no history for {m.label()} — run "
+                  f"`model fetch {m.market}:{m.code}` first",
+                  file=sys.stderr)
+            return 1
+        a = mst.load_assumptions(m.market, m.code)
+        if a is None:
+            a = mst.default_assumptions(m.market, m.code)
+            mst.save_assumptions(a)
+        from .model import engine, comps as mcomps
+        price = _model_price(m, args)
+        r = engine.run_model(h, a, price=price)
+        r["comps"] = None
+        master = _model_master(args)
+        if master is not None:
+            row = master[(master["market"].astype(str) == m.market)
+                         & (master["code"].astype(str) == str(m.code))]
+            if len(row):
+                industry = row.iloc[0].get("industry")
+                peers = mcomps.select_peers(master, m.market, m.code,
+                                            industry)
+                table = mcomps.comps_table(peers)
+                r["comps"] = {**table,
+                              "implied": mcomps.implied_range(
+                                  row.iloc[0], table["medians"])}
+        mst.save_result(r)
+        if args.json:
+            print(json.dumps(r, ensure_ascii=False, indent=2,
+                             default=str))
+            return 0
+        cur = r.get("currency") or ""
+        print(f"{r['id']} 模型 ({str(r.get('built_at'))[:10]}, "
+              f"data-as-of history {h['years'][-1]['fy']})")
+        print(f"加权内在价值 {r.get('weighted_per_share')} {cur} vs "
+              f"现价 {price} {cur} -> upside {r.get('upside_pct')}%")
+        for name, s in (r.get("scenarios") or {}).items():
+            print(f"  {name:<5} p={s.get('prob')}: "
+                  f"{s.get('per_share')} {cur}")
+        if r.get("comps") and r["comps"].get("implied"):
+            imp = r["comps"]["implied"]
+            print(f"comps 隐含区间 [{imp.get('low')}, "
+                  f"{imp.get('high')}] {cur} (中位 {imp.get('mid')})")
+        for g in r.get("gaps") or []:
+            print(f"  gap: {g}")
+        return 0
+
+    raise SystemExit(f"unknown model subcommand {args.model_cmd}")
+
+
 # ---------------------------------------------------------------------------
 # Parser
 # ---------------------------------------------------------------------------
@@ -2118,6 +2308,39 @@ def build_parser() -> argparse.ArgumentParser:
     ppf_status = ppf_sub.add_parser("status", help="coverage + staleness")
     ppf_status.add_argument("--json", action="store_true")
     ppf.set_defaults(func=cmd_profile)
+
+    pmo = sub.add_parser(
+        "model", help="financial models: driver-based FCFF DCF + comps "
+                      "(models/, LOCAL-ONLY — never pushed; AI-triggered "
+                      "at L3 per skills/19)")
+    pmo_sub = pmo.add_subparsers(dest="model_cmd", required=True)
+    pmo_fetch = pmo_sub.add_parser(
+        "fetch", help="fetch multi-year statement history (on-demand)")
+    pmo_fetch.add_argument("stock")
+    pmo_fetch.add_argument("--force", action="store_true",
+                           help="refetch even if history exists")
+    pmo_fetch.add_argument("--json", action="store_true")
+    pmo_build = pmo_sub.add_parser(
+        "build", help="run the model: scenarios + sensitivity + comps "
+                      "(freshness-gated, price-sensitive)")
+    pmo_build.add_argument("stock")
+    pmo_build.add_argument("--data-dir", default=None)
+    pmo_build.add_argument("--no-check", action="store_true")
+    pmo_build.add_argument("--json", action="store_true")
+    pmo_show = pmo_sub.add_parser("show", help="show the last result")
+    pmo_show.add_argument("stock")
+    pmo_show.add_argument("--json", action="store_true")
+    pmo_set = pmo_sub.add_parser(
+        "set", help="adjust assumptions (dotted key=value, repeatable)")
+    pmo_set.add_argument("stock")
+    pmo_set.add_argument("sets", nargs="+", metavar="KEY=VALUE",
+                         help="e.g. base.revenue_growth=0.2,0.18 wacc=0.11")
+    pmo_set.add_argument("--reason", default=None,
+                         help="mandatory: why this change (changelog)")
+    pmo_set.add_argument("--json", action="store_true")
+    pmo_list = pmo_sub.add_parser("list", help="coverage + staleness")
+    pmo_list.add_argument("--json", action="store_true")
+    pmo.set_defaults(func=cmd_model)
     return parser
 
 
