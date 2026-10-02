@@ -435,7 +435,12 @@ def analyze_stock(match: Match, snapshot_dir=None, live: bool = True,
     cr = cores.add_core_scores(
         pd.DataFrame([core_row]),
         culture=pd.Series([_culture]) if _culture is not None
-        else None).iloc[0]
+        else None)
+    # DCF hook (D3-parallel): a built, non-stale model replaces the
+    # reverse-DCF anchor with the modeled probability-weighted upside.
+    from .model import store as _mst
+    cr, _n_modeled = _mst.apply_modeled_dcf(cr)
+    cr = cr.iloc[0]
     result["cores"] = {
         "business": _core_val(cr.get("core_business")),
         "culture": _core_val(cr.get("core_culture")),
@@ -444,6 +449,7 @@ def analyze_stock(match: Match, snapshot_dir=None, live: bool = True,
         "core_score": _core_val(cr.get("core_score")),
         "gaps": str(cr.get("core_gaps") or ""),
     }
+    result["model"] = model_summary(match.market, match.code)
     result["risk_flags"] = risk_flags(result)
     return result
 
@@ -453,6 +459,28 @@ def _core_val(v):
     if v is None or (isinstance(v, float) and pd.isna(v)):
         return None
     return round(float(v), 1)
+
+
+def model_summary(market: str, code: str) -> dict | None:
+    """Built-model summary for the ask output; None when no model exists.
+    Staleness is declared, never hidden (history hash pin, D3-parallel)."""
+    from .model import store as mst
+    r = mst.load_result(market, code)
+    if r is None:
+        return None
+    h = mst.load_history(market, code)
+    return {
+        "weighted_per_share": r.get("weighted_per_share"),
+        "upside_pct": r.get("upside_pct"),
+        "price": r.get("price"), "currency": r.get("currency"),
+        "scenarios": {k: {"prob": v.get("prob"),
+                          "per_share": v.get("per_share")}
+                      for k, v in (r.get("scenarios") or {}).items()},
+        "comps_implied": ((r.get("comps") or {}).get("implied")
+                          if r.get("comps") else None),
+        "built_at": r.get("built_at"),
+        "stale": mst.is_stale(r, h),
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -496,6 +524,40 @@ def _horizon_lines(result: dict) -> list[str]:
     return lines
 
 
+def _model_lines(result: dict) -> list[str]:
+    """Built-model summary block (DCF hook); empty when no model exists.
+    Staleness is declared inline, never hidden."""
+    m = result.get("model")
+    if not m or m.get("weighted_per_share") is None:
+        return []
+    cur = m.get("currency") or ""
+    parts = [f"weighted {m['weighted_per_share']:,.1f} {cur}".rstrip()]
+    if m.get("price") is not None:
+        parts.append(f"vs price {m['price']:,.1f}")
+    if m.get("upside_pct") is not None:
+        parts.append(f"-> upside {m['upside_pct']:+.1f}%")
+    built = str(m.get("built_at") or "")[:10]
+    if built:
+        parts.append(f"(built {built})")
+    if m.get("stale"):
+        parts.append("STALE — rebuild with model build")
+    lines = ["model    : " + " ".join(parts)]
+    sc = m.get("scenarios") or {}
+    order = [k for k in ("bear", "base", "bull") if k in sc]
+    if order:
+        def _ps(k):
+            v = sc[k].get("per_share")
+            return f"{v:,.1f}" if v is not None else "-"
+        line2 = (f"           {'/'.join(order)}: "
+                 f"{' / '.join(_ps(k) for k in order)} {cur}".rstrip())
+        comps = m.get("comps_implied") or {}
+        if comps.get("low") is not None and comps.get("high") is not None:
+            line2 += (f"; comps implied "
+                      f"[{comps['low']:,.1f}, {comps['high']:,.1f}]")
+        lines.append(line2)
+    return lines
+
+
 def render_brief(result: dict) -> str:
     m = result["match"]
     q = result.get("quote") or {}
@@ -529,6 +591,7 @@ def render_brief(result: dict) -> str:
                          f"{config.DCF_FADE_YEARS}y fade)")
         if c.get("gaps"):
             lines.append(f"  core gaps: {c['gaps']}")
+    lines += _model_lines(result)
     for col, label in (("pe_ttm", "PE"), ("rev_yoy", "rev YoY"),
                        ("roe", "ROE"), ("fcf_yield", "FCF yield"),
                        ("capex_to_ocf", "capex/ocf")):
@@ -593,6 +656,7 @@ def to_json(result: dict) -> str:
         "horizon_profile": result.get("horizon_profile"),
         "scores": result.get("scores"),
         "cores": result.get("cores"),
+        "model": result.get("model"),
         "percentiles": result.get("percentiles"),
         "metrics": {k: v for k, v in _flat_row(result).items()
                     if isinstance(v, (int, float, str))
