@@ -76,3 +76,61 @@ class TestParseHelpers:
         assert mh._num("1234.5") == 1234.5
         assert mh._num("-") is None
         assert mh._num(None) is None
+
+
+class TestA:
+    def test_parse_from_rows(self, monkeypatch):
+        # 字段名以探针定稿为准; fixture 用映射常量的值构造, 不硬编码
+        income = [{"REPORTDATE": "2024-12-31",
+                   "SECURITY_NAME_ABBR": "测试电力",
+                   mh.A_INCOME_FIELDS["revenue"]: 8.0e10,
+                   mh.A_INCOME_FIELDS["net_income"]: 2.6e10}]
+        cashflow = [{"REPORT_DATE": "2024-12-31",
+                     mh.A_CASHFLOW_FIELDS["ocf"]: 4.0e10,
+                     mh.A_CASHFLOW_FIELDS["capex"]: 6.0e9}]
+        balance = [{"REPORT_DATE": "2024-12-31",
+                    mh.A_BALANCE_FIELDS["cash"]: 5.0e10,
+                    mh.A_BALANCE_FIELDS["debt"]: 1.0e10}]
+        monkeypatch.setattr(mh, "_a_report",
+                            lambda report, secucode, rd:
+                            {"RPT_LICO_FN_CPD": income,
+                             "RPT_DMSK_FN_CASHFLOW": cashflow,
+                             "RPT_DMSK_FN_BALANCE": balance}.get(report))
+        h = mh.fetch_history_a("600900")
+        assert h is not None and h["currency"] == "CNY"
+        assert h["source"] == "eastmoney_datacenter_f10"
+        y = h["years"][-1]
+        assert y["revenue"] == 8.0e10
+        assert y["net_income"] == 2.6e10
+        assert y["ocf"] == 4.0e10
+        assert y["capex"] == 6.0e9
+        assert y["cash"] == 5.0e10
+        assert y["debt"] == 1.0e10
+        assert any("ebit" in g or "shares" in g for g in h["gaps"])
+
+    def test_empty_report_is_legal(self, monkeypatch):
+        monkeypatch.setattr(mh, "_a_report",
+                            lambda report, secucode, rd: None)
+        assert mh.fetch_history_a("600900") is None
+
+
+class TestHK:
+    def test_parse_mainindicator(self, monkeypatch):
+        rows = [{"REPORT_DATE": "2024-12-31 00:00:00",
+                 "SECURITY_NAME_ABBR": "测试银行",
+                 mh.HK_MAIN_FIELDS["revenue"]: 2.0e11,
+                 mh.HK_MAIN_FIELDS["net_income"]: 7.0e10},
+                {"REPORT_DATE": "2024-06-30 00:00:00",  # 中报必须被跳过
+                 mh.HK_MAIN_FIELDS["revenue"]: 9.0e10}]
+        monkeypatch.setattr(mh, "_hk_main", lambda secucode: rows)
+        h = mh.fetch_history_hk("00998")
+        assert h is not None and h["currency"] == "CNY"
+        assert h["source"] == "eastmoney_hkf10_mainindicator"
+        assert len(h["years"]) == 1
+        assert h["years"][-1]["revenue"] == 2.0e11
+        assert h["years"][-1]["net_income"] == 7.0e10
+        assert any("capex" in g for g in h["gaps"])
+
+    def test_empty_is_fail_closed(self, monkeypatch):
+        monkeypatch.setattr(mh, "_hk_main", lambda secucode: None)
+        assert mh.fetch_history_hk("00998") is None
