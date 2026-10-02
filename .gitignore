@@ -16,6 +16,10 @@ output/
 # never pushed to any remote; raw fetches live under the cleanable data/
 profiles/
 
+# Financial models are LOCAL-ONLY (2026-10-02 design): assumptions +
+# valuation results are proprietary judgment — never pushed to any remote
+models/
+
 # Skill edit backups (skills.py keeps last 10 versions at runtime)
 skills/.backup/
 

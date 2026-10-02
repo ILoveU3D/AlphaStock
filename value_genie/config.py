@@ -306,6 +306,24 @@ A_ORG_BASICINFO_REPORT = "RPT_F10_ORG_BASICINFO"  # A 股公司概况（探针�
 SA_PROFILE_URL_TMPL = "https://stockanalysis.com/stocks/{slug}/"
 
 # ---------------------------------------------------------------------------
+# Financial models (2026-10-02 design): driver-based FCFF DCF + comps,
+# AI-triggered at L3 (skills/19). LOCAL-ONLY: MODELS_DIR is gitignored and
+# NEVER pushed — the model is the user's proprietary judgment (same rule
+# as PROFILES_DIR).
+# ---------------------------------------------------------------------------
+MODELS_DIR = BASE_DIR / "models"                 # assumptions/results, untracked
+MODEL_HISTORY_YEARS = 5                          # annual statements per stock
+MODEL_SCENARIOS = ("bear", "base", "bull")
+MODEL_DEFAULT_PROBS = {"bear": 0.25, "base": 0.50, "bull": 0.25}
+MODEL_SENSITIVITY_WACC = (0.08, 0.09, 0.10, 0.11, 0.12)
+MODEL_SENSITIVITY_TG = (0.015, 0.02, 0.025, 0.03, 0.035)
+# fallback driver ratios when history lacks the field (declared in gaps)
+MODEL_FALLBACK_DA_PCT = 0.03
+MODEL_FALLBACK_CAPEX_PCT = 0.05
+MODEL_FALLBACK_NWC_PCT = 0.10
+CORE_ANCHORS["model_upside"] = (-30.0, 50.0)     # model upside % -> 0..100
+
+# ---------------------------------------------------------------------------
 # Intel event radar (P1: A-share batch event tables, design 2026-09-08)
 # ---------------------------------------------------------------------------
 A_UNLOCK_REPORT_NAME = "RPT_LIFT_STAGE"             # 解禁时间表
