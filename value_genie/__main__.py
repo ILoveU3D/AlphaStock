@@ -212,6 +212,10 @@ def cmd_masters_vote(args) -> int:
     # veto-only (no proxy scoring)
     from . import profile as _prof
     df, n_distilled = _prof.apply_distilled_culture(df)
+    # DCF hook (D3-parallel, 2026-10-02): built models replace the
+    # reverse-DCF anchor with modeled upside for those rows only
+    from .model import store as _mstore
+    df, n_modeled = _mstore.apply_modeled_dcf(df)
     if thesis_infos:
         tcol = df.get("thesis")
         for ti in thesis_infos:
@@ -319,6 +323,8 @@ def cmd_masters_vote(args) -> int:
             meta["discipline"] = _horizon_discipline(horizon)
         if n_distilled:
             meta["culture_distilled"] = n_distilled
+        if n_modeled:
+            meta["dcf_modeled"] = n_modeled
         if thesis_infos:
             meta["theses"] = thesis_infos
         print(report.to_json(top, meta))
@@ -346,6 +352,9 @@ def cmd_masters_vote(args) -> int:
     if n_distilled:
         print(f"culture  : {n_distilled} row(s) carry a distilled "
               f"culture score (profiles; D3 hook active)")
+    if n_modeled:
+        print(f"  dcf core: {n_modeled} stock(s) modeled "
+              f"(models/; DCF hook active)")
     print()
     print(f"{'rank':>4} {'market':>6} {'code':>8} {'name':<14} "
           f"{'price':>8} {'votes':>5} {'core':>5} {'dcf_g':>6} "
