@@ -9,8 +9,8 @@ triggers:
 commands:
   - doctor
   - fetch
-version: 30
-updated_at: 2026-10-01T18:39:19
+version: 31
+updated_at: 2026-10-02T19:16:31
 ---
 
 # Playbook
@@ -69,3 +69,4 @@ known snapshot is older than one trading day:
 - [2026-09-29 02:15] (ai) fetch funnel is dual-lane since 2026-09-29 (commit 4c796ff): lane A (cheap on pe/pb/ps) + lane B (compounder quality roe>=15/gm>=40/debt<=60, no cheapness gate), A120+B80 caps with lane-A backfill; manifest now records lane_a/lane_b counts per market; master.csv carries core_business/core_culture/core_dcf/dcf_implied_g/core_score/core_gaps columns, recomputed post-radar
 - [2026-09-30 21:40] (ai) 20260930 EM outage lessons (all fixed in code): (1) quotes CSVs are same-day scratch, so _prev_universe_quotes now stands in with us_financials tickers (US) / latest master slice (HK,A) - else TX fallback has no universe exactly when needed; (2) Tencent idx37 amount = raw local currency for HK/US (A stays 10k-CNY x1e4) - without it the HK liquidity gate zeroes TX frames (gated=0); (3) EM all-mirror failure signature = IP-level block, em_push2_get now fails fast to Tencent and EM_HOST_COOLDOWN=3600 stops re-admitting dead hosts into every request cycle (~20s/kline burn -> 0)
 - [2026-10-01 18:39] (ai) KO/BRK_B kline cache had only 1 bar in snapshot 20261001 (ZM had 320) — US names reached via watchlist fallback may fetch single-day klines only; verify kline depth before citing long-window returns for US holdings
+- [2026-10-02 19:16] (ai) model history 探针定稿(2026-10-02): A利润表RPT_LICO_FN_CPD键REPORTDATE(无营业利润,ebit入gaps); A现金流/资产负债RPT_DMSK_FN_*键REPORT_DATE(ocf=NETCASH_OPERATE,capex=CONSTRUCT_LONG_ASSET,cash=MONETARYFUNDS,debt=TOTAL_LIABILITIES); HK主指标RPT_HKF10_FN_MAININDICATOR需sortColumns=REPORT_DATE&sortTypes=-1否则升序,金额为报告币种(非必HKD); da两市场均无源
