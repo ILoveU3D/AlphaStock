@@ -114,6 +114,7 @@ excluded when no USD rate, concentration observations verbatim).
 | "短线/超短线有什么机会" | fused-quant-master | `python -m value_genie masters-vote --horizon short|ultrashort`（D4 战术模式：floor=真生意 core_business≥50 + 周K结构上行 + 无否决，甜点区=60日高点回撤 5-15%，同一融合管道 + 纪律块；塔砖 weekly-trend-daily-pullback） |
 | "把塔砖断言的机器注入候选池 / 管理产业论点" | fused-quant-master | `python -m value_genie masters-vote --thesis <id>` + `thesis list|show|add|amend|retire`（见 Thesis pools 节） |
 | "读公司原文 / 蒸馏商业模式与文化" | fused-quant-master | `python -m value_genie profile fetch|show|assess|list|status`（见 Company profiles 节——蒸馏回写后文化核恢复打分，profiles/ 本地-only 永不推送） |
+| "建财务模型 / DCF估值 / 可比公司" | fused-quant-master | `python -m value_genie model fetch|build|show|set|list X`（L3 建模：多年三表 + 驱动因子FCFF三情景概率加权 + 敏感性 + comps；触发条件见 skills/19；DCF 钩平行 D3 进 core_dcf；models/ 本地-only 永不推送） |
 | "设置/修改我的投资风格" | user-profile | `python -m value_genie user set-style me --base buffett --weight value=0.3` |
 | "录入/修改/查看我的持仓" | user-portfolio | `python -m value_genie holding add|update|remove|list` |
 | "审视我的持仓 / 深度分析持仓" | holding-deep-review | `holding list` 先看体检，再 `ask X --evidence` per holding + `screen --strategy <master>` (business model, moat, culture, earn/lose paths, two master frameworks) |
@@ -243,6 +244,31 @@ veto-only until a distillation activates it.
   until re-distilled. `profile status` lists coverage + staleness.
 - Never improvise a culture score from pillar data — no distillation
   means the culture core stays veto-only.
+
+## Financial models (财务模型, 本地-only)
+
+Models are the L3 valuation store: multi-year statement history on one
+side, the AI's adjustable driver assumptions + scenario DCF result on the
+other. They close the DCF loop — the reverse-DCF anchor in `core_dcf` is
+the default; a built, non-stale model's probability-weighted upside
+replaces it (D3-parallel hook, `core_gaps` marks `DCF_MODELED`).
+
+- **Storage**: `models/<market>/<code>/` — history.json /
+  assumptions.json (changelog mandatory) / result.json / raw/ (audit
+  opinions, DD material). **gitignored LOCAL-ONLY — never pushed**
+  (user mandate 2026-10-02: the model is proprietary judgment).
+- Commands: `python -m value_genie model fetch|build|show|set|list` —
+  all `--json`-capable. Only `build` runs the freshness gate
+  (price-sensitive: comps + upside); fetch/show/set/list do not.
+- **Trigger conditions (AI-decided, skills/19)**: mandatory before L4
+  verdicts on L3 shortlists, on holdings with thesis drift, and for
+  keyhole quarterly falsification checks; never for funnel-wide scans
+  or D4 tactical mode.
+- **Staleness**: the result pins the history hash; a refetched history
+  (new reporting period) marks it STALE and it drops out of scoring
+  until rebuilt.
+- Never fabricate missing statement fields (A shares count, HK capex) —
+  declare gaps; say per-share is untrustworthy when it is.
 
 ## Investment masters
 
