@@ -14,7 +14,7 @@
   "cash": {
     "CNY": 0.0,
     "HKD": 0.0,
-    "USD": 523.48
+    "USD": 5.25
   },
   "settling": [],
   "positions": [
@@ -74,6 +74,16 @@
       "name": "Adobe Inc.",
       "qty": 3.0,
       "avg_cost": 241.2633,
+      "currency": "USD",
+      "last_buy_date": "2026-10-02",
+      "lot": 1
+    },
+    {
+      "market": "US",
+      "code": "BKE",
+      "name": "巴克尔",
+      "qty": 12.0,
+      "avg_cost": 43.1858,
       "currency": "USD",
       "last_buy_date": "2026-10-02",
       "lot": 1
@@ -376,6 +386,27 @@
       "note": "QMF扳机加仓(20261001美股盘中): 0930首笔时预置触发器'r5翻正或Q4验证后加至<=10%', 今日r5=+0.6%(240.41 vs 09/24收238.93)翻正+09/28盘中低224.67后连续3日企稳238上方=扳机亮, 按计划执行加仓非临时起意; L1池外(master.csv因kline/SEC缺口挤出, ask单股链路复核verdict=outstanding, 三核business100/culture78蒸馏/dcf缺口声明); L2 Form4代码级下钻: CEO Narayen 9/16-17卖125k股@246-253约3130万美元, footnote F1='tax and estate planning'无10b5-1, 保留23.9万股约5800万USD未清仓, 单一内部人+其余三高管(CLO/CAO/CFO)全为M+F税扣例行=非簇集非DUOL式否决, 定级=观察项(文化腿小减分, 已在仓位上限10%而非15-20%定价); L3 创意标准垄断(商业核100)+AI变现拐点, Q3 rev+13%/MAU10亿/OCF净利1.41, reverse DCF隐含g-3.15%仍深度悲观, CEO卖出发生在250高于现价4%=对论点无损; L4 mid92/long98分位, -50%测试通过(3股总敞口722USD=10%NAV); 维度=mid(1月-1年), 退出触发=Q4净新增ARR无拐点/AI变现证伪; 加仓后部署率约93%留7%弹药",
       "settle_amount": 0.0,
       "seq": 14
+    },
+    {
+      "ts": "2026-10-02T21:39:18",
+      "date": "2026-10-02",
+      "action": "buy",
+      "market": "US",
+      "code": "BKE",
+      "name": "巴克尔",
+      "qty": 12.0,
+      "price": 43.02,
+      "gross": 516.24,
+      "fees": {
+        "platform": 1.99
+      },
+      "fees_total": 1.99,
+      "cash_delta": -518.23,
+      "currency": "USD",
+      "session": "in",
+      "note": "中线首选:三核89.6(商86.7/文82/DCF100),加权公允73.76=+71.7%,bear+35%;3大师(buffett/duan/散户乙),零有息负债,ROE49%,TTM股息10.2%,pos52w=17贴底;兑现触发:FCF yield<6%或特别股息取消/同店连续负",
+      "settle_amount": 0.0,
+      "seq": 15
     }
   ],
   "nav_history": [
@@ -931,8 +962,8 @@
     },
     {
       "date": "2026-10-02",
-      "nav": 7238.78,
-      "cash_total": 523.48,
+      "nav": 7259.38,
+      "cash_total": 5.25,
       "settling_total": 0,
       "positions": [
         {
@@ -940,60 +971,69 @@
           "code": "ZM",
           "name": "Zoom通讯",
           "qty": 16.0,
-          "price": 92.78,
+          "price": 94.3,
           "currency": "USD",
-          "value_base": 1484.48
+          "value_base": 1508.8
         },
         {
           "market": "US",
           "code": "PTC",
           "name": "PTC Inc",
           "qty": 12.0,
-          "price": 146.07,
+          "price": 146.03,
           "currency": "USD",
-          "value_base": 1752.84
+          "value_base": 1752.36
         },
         {
           "market": "US",
           "code": "TCOM",
           "name": "携程",
           "qty": 40.0,
-          "price": 38.73,
+          "price": 38.17,
           "currency": "USD",
-          "value_base": 1549.2
+          "value_base": 1526.8
         },
         {
           "market": "US",
           "code": "NVDA",
           "name": "NVDA",
           "qty": 3.0,
-          "price": 230.58,
+          "price": 236.49,
           "currency": "USD",
-          "value_base": 691.74
+          "value_base": 709.47
         },
         {
           "market": "US",
           "code": "HRMY",
           "name": "HRMY",
           "qty": 13.0,
-          "price": 39.68,
+          "price": 39.95,
           "currency": "USD",
-          "value_base": 515.84
+          "value_base": 519.35
         },
         {
           "market": "US",
           "code": "ADBE",
           "name": "Adobe Inc.",
           "qty": 3.0,
-          "price": 240.4,
+          "price": 240.37,
           "currency": "USD",
-          "value_base": 721.2
+          "value_base": 721.11
+        },
+        {
+          "market": "US",
+          "code": "BKE",
+          "name": "巴克尔",
+          "qty": 12.0,
+          "price": 43.02,
+          "currency": "USD",
+          "value_base": 516.24
         }
       ],
       "fx": {
         "CNY": 1.0,
-        "HKD": 0.92,
-        "USD": 7.2
+        "HKD": 0.8543,
+        "USD": 6.7039
       }
     }
   ],
