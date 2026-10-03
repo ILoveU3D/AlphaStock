@@ -11,7 +11,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"      # regenerable run-time state, cleanable
 SNAPSHOTS_DIR = DATA_DIR / "snapshots"
-USERS_DIR = BASE_DIR / "users"    # durable state, never inside cleanable data/
+USERS_DIR = BASE_DIR / "users"    # local-only user territory, never pushed
 OUTPUT_DIR = BASE_DIR / "output"
 SKILLS_DIR = BASE_DIR / "skills"
 TOWER_DIR = BASE_DIR / "tower"   # cognitive-tower bricks, git-tracked;
