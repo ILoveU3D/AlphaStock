@@ -337,3 +337,30 @@ def test_current_user_garbage_pointer(users_dir):
     users_dir.mkdir(parents=True, exist_ok=True)
     (users_dir / ".session").write_text("NOT A SLUG!!", encoding="utf-8")
     assert usr.current_user() is None
+
+
+# ---------------------------------------------------------------------------
+# CLI: login / logout / whoami
+# ---------------------------------------------------------------------------
+def test_cli_login_whoami_logout(users_dir, capsys):
+    from value_genie.__main__ import main
+    assert main(["user", "whoami"]) == 1       # no session yet
+    assert main(["user", "create", "me"]) == 0  # create auto-logs-in
+    assert usr.current_user() == "me"
+    assert main(["user", "whoami"]) == 0
+    assert "me" in capsys.readouterr().out
+    assert main(["user", "logout"]) == 0
+    assert usr.current_user() is None
+    assert main(["user", "login", "me"]) == 0
+    assert usr.current_user() == "me"
+    with pytest.raises(SystemExit):
+        main(["user", "login", "ghost"])
+
+
+def test_cli_whoami_json(users_dir, capsys):
+    from value_genie.__main__ import main
+    main(["user", "create", "me"])
+    capsys.readouterr()
+    assert main(["user", "whoami", "--json"]) == 0
+    data = json.loads(capsys.readouterr().out)
+    assert data == {"current": "me", "users": ["me"]}
