@@ -364,3 +364,34 @@ def test_cli_whoami_json(users_dir, capsys):
     assert main(["user", "whoami", "--json"]) == 0
     data = json.loads(capsys.readouterr().out)
     assert data == {"current": "me", "users": ["me"]}
+
+
+# ---------------------------------------------------------------------------
+# CLI: session-default user resolution
+# ---------------------------------------------------------------------------
+def test_cli_user_show_defaults_to_session(users_dir, capsys):
+    from value_genie.__main__ import main
+    main(["user", "create", "me"])
+    capsys.readouterr()
+    assert main(["user", "show"]) == 0         # no id arg, uses session
+    assert "== user me ==" in capsys.readouterr().out
+
+
+def test_cli_no_session_no_user_errors(users_dir):
+    from value_genie.__main__ import main
+    with pytest.raises(SystemExit):
+        main(["user", "show"])                 # nothing to fall back on
+
+
+def test_cli_holding_add_defaults_to_session(users_dir, monkeypatch, capsys):
+    from value_genie import __main__ as cli
+    monkeypatch.setattr(cli, "_resolve_stock_or_exit",
+                        lambda q: _match())
+    usr.create_user("me")
+    usr.login("me")
+    # no positional id — resolved from the session
+    assert cli.main(["holding", "add", "贵州茅台",
+                     "--qty", "100", "--cost", "1500"]) == 0
+    u = usr.load_user("me")
+    assert len(u.holdings) == 1
+    assert u.holdings[0].name == "Moutai"
