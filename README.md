@@ -6,11 +6,9 @@
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Markets](https://img.shields.io/badge/Markets-A%E8%82%A1%20%7C%20%E6%B8%AF%E8%82%A1%20%7C%20%E7%BE%8E%E8%82%A1-orange)
 
-```math
-V_0 = \sum_{t=1}^{n} \frac{CF_t}{(1+r)^t} + \frac{TV}{(1+r)^n}, \qquad TV = \frac{CF_{n+1}}{r-g}
-```
-
-> 一切价值皆是未来现金流的折现——股票如此，职业如此，时间亦如此。
+> 欢迎来到北极星。
+> 这里不预测涨跌，这里修炼判断力。
+> 你一生只有 20 个钥匙孔——说「导航」，开始探索。
 
 ## 核心哲学
 
