@@ -42,7 +42,7 @@ you found it.
 ## Freshness contract (code-enforced)
 
 - `ask`, `compare`, `overview`, `recommend`, `holding list`, and
-  `trade buy/sell/fx/cash/nav/journal/status/dashboard` run a
+  `trade buy/sell/fx/cash/nav/journal/status` run a
   **freshness gate** before any output. The gate calls
   `doctor.run_checks()` internally:
   - **FAIL** (no snapshot / ancient data >7 days) → command prints
@@ -81,8 +81,10 @@ you found it.
 
 ## Users, styles and holdings (per-user state)
 
-Users live in `users/<id>.json` (top-level git-tracked dir, one file
-per user; human-readable, CLI-maintained, atomic writes). A user
+Users live in `users/<id>.json` (top-level LOCAL-ONLY dir — gitignored
+and never pushed to any remote, user mandate 2026-10-03; one file per
+user, human-readable, CLI-maintained, atomic writes). The session
+pointer `users/.session` records who the AI is talking to. A user
 carries:
 
 - **style**: six-pillar weights + optional hard gates (registry DSL:
@@ -93,14 +95,25 @@ carries:
 - **holdings**: full positions (market/code in master.csv form, qty,
   per-share cost, currency, opened date).
 
-Commands: `user create|list|show|set-style` (style can start from an
+Commands: `user create|list|show|set-style|login|logout|whoami`
+(`create` auto-logs-in; `show`/`set-style` accept an optional id —
+default is the session's current user; style can start from an
 existing strategy via `--base buffett`), `holding add|update|remove|
 list` (the stock argument goes through the normal resolve chain — any
-name/code/ticker form works), and `recommend --user <id>` (freshness-
+name/code/ticker form works; the user id is optional and defaults to
+the session user), and `recommend [--user <id>]` (freshness-
 gated): screens the latest snapshot under the user's style, **excludes
 stocks already held**, and prints a holdings health report (live P&L,
 position weights in CNY via manifest FX — gaps stated, US positions
 excluded when no USD rate, concentration observations verbatim).
+
+**Multi-user house rule (2026-10-03):** before any personal operation
+(holdings / recommend / set-style), run `user whoami` to confirm who
+you are talking to; when the human states their identity, `user login
+<id>` first. Asset boundary: shared North-Star value (code / skills /
+tower / theses / trading seasons / docs) is pushed to the remote;
+user territory (`users/`) and AI judgment (`profiles/`, `models/`)
+never leave the machine.
 
 ## Routing table
 
@@ -109,7 +122,7 @@ excluded when no USD rate, concentration observations verbatim).
 | "你怎么看待X / what do you think of X" | single-stock-analysis | `python -m value_genie ask X` |
 | "...but why / 证据" | single-stock-analysis | `python -m value_genie ask X --evidence` |
 | "X和Y哪个好 / X vs Y" | compare-stocks | `python -m value_genie compare X Y` |
-| "今天给我推荐股票（按我的风格、结合我的持仓）" | user-recommend | `python -m value_genie recommend --user me` |
+| "今天给我推荐股票（按我的风格、结合我的持仓）" | user-recommend | `python -m value_genie recommend`（缺省取 session 当前用户） |
 | "推荐/最被低估/量化+大师最优" | fused-quant-master | `python -m value_genie masters-vote`（L1 宽池=量化只否决、AI 从全池选深评名单 + core_score 唯一排序）+ L2 红旗 + L3 三核深评与大师定性 + L4 融合裁决，per skills/18 — user mandate 2026-09-15: 融合，不分情况讨论；2026-09-29: 三核（商业模式/企业文化/DCF）为唯一排序键，量化只否决 AI 做选择 |
 | "短线/超短线有什么机会" | fused-quant-master | `python -m value_genie masters-vote --horizon short|ultrashort`（D4 战术模式：floor=真生意 core_business≥50 + 周K结构上行 + 无否决，甜点区=60日高点回撤 5-15%，同一融合管道 + 纪律块；塔砖 weekly-trend-daily-pullback） |
 | "把塔砖断言的机器注入候选池 / 管理产业论点" | fused-quant-master | `python -m value_genie masters-vote --thesis <id>` + `thesis list|show|add|amend|retire`（见 Thesis pools 节） |
@@ -132,11 +145,12 @@ excluded when no USD rate, concentration observations verbatim).
 | "你的虚拟盘怎么样 / 你的资产情况" | trading | `python -m value_genie trade status` |
 | "虚拟盘买入/卖出 X" | trading | `python -m value_genie trade buy/sell <season> X --qty N --note 理由` |
 | "复盘虚拟盘 / 记教训" | trading | `python -m value_genie trade journal <season> --text ...` + `skill note trading "..."` |
-| "看看你的战绩 / 更新看板" | trading | `python -m value_genie trade dashboard <season>` (writes `trading/dashboards/<id>.md`, commit it) |
+| "看看你的战绩 / 总结赛季" | trading | `python -m value_genie trade status/nav/journal --json` → AI 成文总结（无 dashboard，AI 即看板；赛季全员共享） |
 | "短期内最推荐/最被低估的股票" | horizon-framework | `python -m value_genie screen --horizon short` |
 | "超短线/短线有什么机会" | horizon-framework | `python -m value_genie screen --horizon ultrashort`（必须附短炒警示） |
 | "X适合中长期持有吗" | horizon-framework | `python -m value_genie ask X`（四周期剖面）+ 14 号 playbook 质性层 |
 | Philosophy / 处世 / 人生问题 / how to value | cognitive-tower | `python -m value_genie tower search <query>` 查塔作答（见 Cognitive tower 节家规） |
+| "新手 / 导航 / 这是什么 / 带我去X / 参观" | navigation | 无专用命令——按 skills/20-navigation 渐进讲解（AI 即导览，一次只讲一层，无状态） |
 
 ## Cognitive tower (认知巴别塔)
 
@@ -380,6 +394,6 @@ system trustworthy.
 - Data lives in `data/snapshots/YYYYMMDD/`; never edit snapshot files.
   `data/` as a whole is **regenerable run-time state — safe to wipe
   daily** (user-mandated policy; `fetch` rebuilds it). Per-user
-  profiles live in the top-level git-tracked `users/` dir — modify
-  them only through the `user` / `holding` CLI commands, never by
-  hand.
+  profiles live in the top-level LOCAL-ONLY `users/` dir (gitignored,
+  never pushed) — modify them only through the `user` / `holding`
+  CLI commands, never by hand.
