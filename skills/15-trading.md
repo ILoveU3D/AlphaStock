@@ -14,8 +14,8 @@ commands:
   - trade sell
   - trade nav
   - trade journal
-version: 44
-updated_at: 2026-10-03T13:32:49
+version: 46
+updated_at: 2026-10-03T17:55:59
 ---
 
 # Playbook
@@ -57,6 +57,16 @@ stream** (提款率 = 累计提款/初始资金 — the happiness metric).
 - NOT simulated: dividends, slippage, margin. Withdrawals ARE the
   dividend proxy: `trade cash <id> withdraw --amount N --currency C
   --note living costs` — pursue raising 提款率 without eating capital.
+
+## Season summaries (AI is the scoreboard)
+
+trade dashboard 命令已移除（2026-10-03 用户决定）：不再生成任何
+Markdown 看板。被问「战绩怎么样 / 总结赛季」时，取
+`trade status --json`（持仓+现金+提款率）+ `trade nav <id> --json`
+（净值曲线/回撤）+ `trade journal <id> --show --json`（复盘蒸馏），
+由 AI 成文总结——结论先行（NAV + 当日盈亏 + 净收益 + 提款率），
+再持仓表，再一句话仓位意图，引用 nav-as-of 日期。赛季为全体用户
+共享的公共账本，不属于任何单个用户。
 
 ## Answer shape for "你的盘怎么样"
 
@@ -108,3 +118,4 @@ for. Cite the nav-as-of date. Never soften risk observations.
 - [2026-09-30 01:14] (ai) 20260930 BZ否决案(ADR深回撤陷阱识别规则): 3大师票+ret_20d-20.3%+PE9.92+ROE16+用户gate全过的教科书错杀形态, Form4代码级下钻抓出CEO赵鹏9/14(74万股@8.2)+9/21(445万股@7.25)两轮卖出+副CFO+CMO四人九月同步卖出=GSL陷阱ADR变体,否决; 规则: ret_20d<=-3的深回撤ADR必须先过Form4簇集检查(多高管同月同向卖出)再进L3——内部人卖出窗口的深跌=下跌有知情人解释,是出货不是错杀; 单一高管小额M+S(如HRMY Budur Kumar约23万美元)=例行SBC变现不否决; 区分标准=簇集人数(≥2高管)+规模+是否含CEO/CFO; SEC解析quirk: primaryDocument带xslF345X06/前缀的是HTML渲染版,取文件名部分直接拼accession路径才是XML
 - [2026-10-02 00:41] (ai) Form4内否人卖出分级标准(20261002 ADBE案例补完): 否决级(DUOL式)=CEO清仓直接持股+>=2高管同月同向簇集+卖出价<=现价+空头高+一致目标价低于现价; 观察项级(ADBE式)=单一内部人大额卖出+footnote解释(estate/tax planning)+保留大头未清仓+卖出价高于现价+其余高管仅M+F税扣例行——观察项不否仓但要在仓位上限上减分(ADBE按10%而非15-20%封顶); 首个预置扳机到点执行案例同日落地: 0930预置'r5翻正加仓'触发器, 1001盘中r5+0.6%翻正即执行ADBE+2, 触发器亮了就打=纪律闭环, 不再临场重新论证
 - [2026-10-03 13:32] (ai) 止盈止损双线制(2026-10-03固化,s001/s002已执行):价格线从快照K线实算(ATR14/MA20/60/52周高低/吊灯=入场后最高收-3ATR,移动线只上不下)+生意证伪线独立触发不问价格;修复仓止盈=公允价/一致目标兑现(中线护照),趋势仓无固定止盈用trail;HK无研报源时止盈锚=结构位+PE/股息率估值带;组合层加总全触发最坏回撤对照NAV风险预算(两季均约-7~-8%);钥匙孔仓位禁用价格线只给证伪监控盘
+- [2026-10-03 17:55] (user) MANDATE 2026-10-03 (user): trade dashboard command removed; season summaries are AI-composed from status/nav/journal --json - never regenerate Markdown dashboards; seasons are shared across all users
