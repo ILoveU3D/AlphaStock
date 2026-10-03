@@ -7,10 +7,13 @@ kind="user" (see ``register_user_strategies``), so ``screen --strategy
 <user_id>``, gate evaluation and horizon combination all work with
 zero extra plumbing.
 
-Files live under ``users/<user_id>.json`` (top-level, git-tracked,
-durable — deliberately NOT under the cleanable ``data/`` tree) and
-stay human-readable; all writes are atomic (tmp file + rename), the
-same contract as skills persistence.
+Files live under ``users/<user_id>.json`` (top-level, LOCAL-ONLY —
+gitignored and never pushed to any remote, user mandate 2026-10-03;
+deliberately NOT under the cleanable ``data/`` tree) and stay
+human-readable; all writes are atomic (tmp file + rename), the
+same contract as skills persistence. The session pointer
+``users/.session`` (plain-text current user id) shares the same
+local-only boundary.
 """
 
 import json
@@ -358,3 +361,51 @@ def remove_holding(profile: UserProfile, market: str, code: str) -> Holding:
             f"no holding {market}/{code}; current: {held}")
     profile.holdings.remove(h)
     return h
+
+
+# ---------------------------------------------------------------------------
+# Session pointer (who is the AI talking to)
+# ---------------------------------------------------------------------------
+SESSION_FILE = ".session"
+
+
+def session_path() -> Path:
+    return users_dir() / SESSION_FILE
+
+
+def current_user():
+    """Logged-in user id; None when no session / stale / garbage pointer.
+
+    Never raises: the session file is a hint, not a lock — command
+    layers decide how to ask the human to log in again."""
+    try:
+        uid = session_path().read_text(encoding="utf-8").strip()
+    except OSError:
+        return None
+    if not uid or not USER_ID_RE.match(uid):
+        return None
+    try:
+        if not user_path(uid).exists():
+            return None
+    except ValueError:
+        return None
+    return uid
+
+
+def login(user_id: str) -> str:
+    """Point the session at an existing user; FileNotFoundError if unknown."""
+    load_user(user_id)  # validates existence + readability
+    p = session_path()
+    p.parent.mkdir(parents=True, exist_ok=True)
+    tmp = p.with_suffix(".session.tmp")
+    tmp.write_text(user_id, encoding="utf-8")
+    tmp.replace(p)
+    return user_id
+
+
+def logout() -> None:
+    """Drop the session pointer; idempotent."""
+    try:
+        session_path().unlink()
+    except FileNotFoundError:
+        pass

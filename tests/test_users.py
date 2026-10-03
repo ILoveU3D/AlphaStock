@@ -307,3 +307,33 @@ def test_cli_holding_add_requires_user(users_dir, monkeypatch, capsys):
     u = usr.load_user("me")
     assert len(u.holdings) == 1
     assert u.holdings[0].name == "Moutai"
+
+
+# ---------------------------------------------------------------------------
+# Session pointer (multi-user login)
+# ---------------------------------------------------------------------------
+def test_session_login_logout_cycle(users_dir):
+    usr.create_user("me")
+    assert usr.current_user() is None          # no session yet
+    usr.login("me")
+    assert usr.current_user() == "me"
+    assert (users_dir / ".session").read_text(encoding="utf-8") == "me"
+    usr.logout()
+    assert usr.current_user() is None
+
+
+def test_login_requires_existing_user(users_dir):
+    with pytest.raises(FileNotFoundError):
+        usr.login("ghost")
+
+
+def test_current_user_stale_pointer(users_dir):
+    users_dir.mkdir(parents=True, exist_ok=True)
+    (users_dir / ".session").write_text("ghost", encoding="utf-8")
+    assert usr.current_user() is None          # pointer w/o user file
+
+
+def test_current_user_garbage_pointer(users_dir):
+    users_dir.mkdir(parents=True, exist_ok=True)
+    (users_dir / ".session").write_text("NOT A SLUG!!", encoding="utf-8")
+    assert usr.current_user() is None
