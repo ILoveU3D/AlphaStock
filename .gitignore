@@ -8,9 +8,15 @@ venv/
 .pytest_cache/
 
 # data/ is regenerable run-time state (snapshots, kline cache) — safe to
-# wipe daily; per-user profiles live in the top-level tracked users/ dir
+# wipe daily
 data/
 output/
+
+# User territory is LOCAL-ONLY (user mandate 2026-10-03): styles,
+# holdings and the session pointer are private — never pushed to any
+# remote. Multi-user boundary: shared = code/skills/tower/trading;
+# personal = users/.
+users/
 
 # Company profile assessments are LOCAL-ONLY (user mandate 2026-09-29):
 # never pushed to any remote; raw fetches live under the cleanable data/
