@@ -17,8 +17,8 @@ commands:
   - ask X --evidence
   - intel X
   - recommend --user me
-version: 23
-updated_at: 2026-10-01T19:38:54
+version: 25
+updated_at: 2026-10-03T13:32:45
 ---
 
 # Playbook
@@ -262,3 +262,5 @@ Output shape (hard rules):
 - [2026-09-30 00:43] (ai) 2026-09-29 profiles 三源探针 quirk（Phase 5）：A股 RPT_F10_ORG_BASICINFO 长简介列名是 ORG_PROFIE（官方拼写如此——愿景一句话才在 ORG_PROFILE）；港股 RPT_HKF10_INFO_ORGPROFILE 长简介恰好在 ORG_PROFILE（与A股列名相反，勿混）；US 简介走 stockanalysis 主页 flight blob 正则 description:「...」（json.loads 解码转义），SEC submissions URL 的 cik 必须 int 格式化（format(cik=int) 非 str）。filter DSL 老规矩：日期单引号、字符串双引号。
 - [2026-09-30 21:06] (ai) 20260930 quirk: masters-vote trusts baked core columns when core_score exists in master.csv (__main__.py:207) - snapshots built before the D3 culture veto-only hardening (cores.py ea07bb6, 2026-09-30 11:56) carry placeholder core_culture=100.0 for every non-distilled row with NO CULTURE_UNSCORED gap, inflating core_score (PYPL 96.47 baked vs 94.71 fresh) and hiding the D3 declaration; on old snapshots always recompute: drop CORE_COLUMNS -> add_core_scores -> apply_distilled_culture, then re-rank by fresh core_score before choosing the L3 list
 - [2026-10-01 19:38] (ai) 换仓/推荐流程教训：先探测用户对该标的的回撤承受深度，再定仓位结构与节奏——承受度决定结构（一把/分批/放弃），估值只决定方向。案例 2026-10-01 KO→HSBC 换仓：论证四轮全部通过，因用户承受度（-30%不可接受）最后才暴露，方案两度缩减仍被否决。顺序反了：先问睡得着多少，再谈买多少
+- [2026-10-02 23:18] (ai) 2026-10-02 用户规则: 融合推荐不得因已持仓或曾推荐而静默排除候选; 霸榜持久性(连续多日在池顶)=误价真实性的正向信号须显式呈现; 正确输出格式=霸榜股(持有即推荐,标注折扣收敛状态)+新首选双列
+- [2026-10-03 13:32] (ai) 宽池vote_count>=1机制边界(2026-10-03实测):PYPL core_score 88.1升至95.7仍掉出宽池——唯一一票来自sheng,波动率分位跌破60闸门即归零;高三核名字会因交易型大师技术门槛失席位,推荐后次日掉池不代表论点破坏,复盘须查master.csv core_score区分技术掉池与基本面掉池
