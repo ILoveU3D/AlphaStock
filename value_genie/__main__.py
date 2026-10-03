@@ -566,6 +566,21 @@ def _load_user_or_exit(user_id):
         raise SystemExit(str(exc)) from None
 
 
+def _resolve_user_id_or_exit(args, attr="user_id"):
+    """Explicit --user/id wins; else the session's current user."""
+    from . import users as usr
+    uid = getattr(args, attr, None)
+    if uid:
+        return uid
+    cur = usr.current_user()
+    if cur is None:
+        raise SystemExit(
+            "no user specified and no active session; "
+            "`user login <id>` / `user create <id>` first, "
+            "or pass the user id explicitly")
+    return cur
+
+
 def cmd_user(args) -> int:
     from . import users as usr
     if args.user_cmd == "create":
@@ -627,7 +642,7 @@ def cmd_user(args) -> int:
         return 0
 
     if args.user_cmd == "show":
-        u, _ = _load_user_or_exit(args.user_id)
+        u, _ = _load_user_or_exit(_resolve_user_id_or_exit(args))
         print(f"== user {u.id} ==")
         print(f"name      : {u.name}")
         print(f"created   : {u.created_at}")
@@ -661,7 +676,8 @@ def cmd_user(args) -> int:
                 raise SystemExit(str(exc)) from None
         horizon = "" if getattr(args, "clear_horizon", False) else args.horizon
         try:
-            u = usr.set_style(args.user_id, weights=weights, gates=gates,
+            u = usr.set_style(_resolve_user_id_or_exit(args),
+                              weights=weights, gates=gates,
                               clear_gates=args.clear_gates,
                               horizon=horizon, base=args.base)
         except (FileNotFoundError, ValueError) as exc:
@@ -701,15 +717,28 @@ def _resolve_stock_or_exit(query):
 
 def cmd_holding(args) -> int:
     from . import users as usr
+    # `holding add [user] stock` — a single positional is the STOCK,
+    # with the user coming from the session; two positionals keep the
+    # legacy `<user> <stock>` order.
+    if args.holding_cmd in ("add", "update", "remove"):
+        if args.stock is None:
+            args.user_id, args.stock = None, args.user_id
+        if args.stock is None:
+            raise SystemExit(
+                f"missing stock; `holding {args.holding_cmd} "
+                f"[user_id] <stock> ...`")
     if args.holding_cmd == "add":
+        user_id = _resolve_user_id_or_exit(args)
         try:
-            user = usr.load_user(args.user_id)
+            user = usr.load_user(user_id)
         except FileNotFoundError:
             try:
-                user = usr.create_user(args.user_id, name=args.user_id)
+                user = usr.create_user(user_id, name=user_id)
             except ValueError as exc:
                 raise SystemExit(str(exc)) from None
-            print(f"created user {user.id} ({usr.user_path(user.id)})")
+            usr.login(user.id)
+            print(f"created user {user.id} ({usr.user_path(user.id)}); "
+                  f"logged in as {user.id}")
         except ValueError as exc:
             raise SystemExit(str(exc)) from None
         m = _resolve_stock_or_exit(args.stock)
@@ -725,7 +754,7 @@ def cmd_holding(args) -> int:
         return 0
 
     if args.holding_cmd == "update":
-        user, _ = _load_user_or_exit(args.user_id)
+        user, _ = _load_user_or_exit(_resolve_user_id_or_exit(args))
         m = _resolve_stock_or_exit(args.stock)
         try:
             h = usr.update_holding(user, m.market, m.code, qty=args.qty,
@@ -740,7 +769,7 @@ def cmd_holding(args) -> int:
         return 0
 
     if args.holding_cmd == "remove":
-        user, _ = _load_user_or_exit(args.user_id)
+        user, _ = _load_user_or_exit(_resolve_user_id_or_exit(args))
         m = _resolve_stock_or_exit(args.stock)
         try:
             h = usr.remove_holding(user, m.market, m.code)
@@ -754,7 +783,7 @@ def cmd_holding(args) -> int:
     if args.holding_cmd == "list":
         if not _check_freshness(args):
             return 1
-        user, _ = _load_user_or_exit(args.user_id)
+        user, _ = _load_user_or_exit(_resolve_user_id_or_exit(args))
         from . import recommend as rec
         try:
             snap = report.resolve_snapshot(args.data_dir, args.snapshot)
@@ -777,7 +806,8 @@ def cmd_recommend(args) -> int:
     markets = _parse_markets(args.markets)
     try:
         result = rec.build_recommendation(
-            args.user, data_dir=args.data_dir, snapshot=args.snapshot,
+            _resolve_user_id_or_exit(args, "user"),
+            data_dir=args.data_dir, snapshot=args.snapshot,
             strategy=args.strategy, horizon=args.horizon,
             top_n=args.top, markets=markets)
     except FileNotFoundError as exc:
@@ -1935,9 +1965,11 @@ def build_parser() -> argparse.ArgumentParser:
                            help="machine-readable JSON output")
     pu_sub.add_parser("list", help="list all users")
     pu_show = pu_sub.add_parser("show", help="show one user's profile")
-    pu_show.add_argument("user_id")
+    pu_show.add_argument("user_id", nargs="?", default=None,
+                         help="default: session current user")
     pu_style = pu_sub.add_parser("set-style", help="set the user's style")
-    pu_style.add_argument("user_id")
+    pu_style.add_argument("user_id", nargs="?", default=None,
+                          help="default: session current user")
     pu_style.add_argument("--weight", action="append", default=None,
                           metavar="PILLAR=W",
                           help="pillar weight, e.g. value=0.4 (repeatable; "
@@ -1961,15 +1993,18 @@ def build_parser() -> argparse.ArgumentParser:
     ph = sub.add_parser("holding", help="manage holdings for a user")
     ph_sub = ph.add_subparsers(dest="holding_cmd", required=True)
     ph_add = ph_sub.add_parser("add", help="add a position")
-    ph_add.add_argument("user_id")
-    ph_add.add_argument("stock", help="stock name/code/ticker to resolve")
+    ph_add.add_argument("user_id", nargs="?", default=None,
+                        help="default: session current user")
+    ph_add.add_argument("stock", nargs="?", default=None,
+                        help="stock name/code/ticker to resolve")
     ph_add.add_argument("--qty", type=float, required=True)
     ph_add.add_argument("--cost", type=float, required=True,
                         help="per-share cost")
     ph_add.add_argument("--opened", default=None, metavar="YYYY-MM-DD")
     ph_upd = ph_sub.add_parser("update", help="update a position")
-    ph_upd.add_argument("user_id")
-    ph_upd.add_argument("stock")
+    ph_upd.add_argument("user_id", nargs="?", default=None,
+                        help="default: session current user")
+    ph_upd.add_argument("stock", nargs="?", default=None)
     ph_upd.add_argument("--qty", type=float, default=None)
     ph_upd.add_argument("--cost", type=float, default=None)
     ph_upd.add_argument("--name", default=None,
@@ -1978,10 +2013,12 @@ def build_parser() -> argparse.ArgumentParser:
     ph_upd.add_argument("--opened", default=None, metavar="YYYY-MM-DD",
                         help="set/clear the opened date ('' clears)")
     ph_rm = ph_sub.add_parser("remove", help="remove a position")
-    ph_rm.add_argument("user_id")
-    ph_rm.add_argument("stock")
+    ph_rm.add_argument("user_id", nargs="?", default=None,
+                       help="default: session current user")
+    ph_rm.add_argument("stock", nargs="?", default=None)
     ph_ls = ph_sub.add_parser("list", help="holdings with live P&L")
-    ph_ls.add_argument("user_id", nargs="?", default="me")
+    ph_ls.add_argument("user_id", nargs="?", default=None,
+                       help="default: session current user")
     ph_ls.add_argument("--snapshot", default=None, metavar="YYYYMMDD")
     ph_ls.add_argument("--data-dir", default=None, help="data directory")
     ph_ls.add_argument("--no-check", action="store_true",
@@ -1992,7 +2029,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     pr = sub.add_parser(
         "recommend", help="daily picks under user style + holdings health")
-    pr.add_argument("--user", default="me", help="user id (default: me)")
+    pr.add_argument("--user", default=None,
+                    help="user id (default: session current user)")
     pr.add_argument("--strategy", default=None, choices=strategy_ids,
                     help="override the user's style (default: user style)")
     pr.add_argument("--horizon", default=None, choices=horizon_ids,

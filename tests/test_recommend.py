@@ -288,3 +288,15 @@ def test_cli_holding_list(data_dir, fake_live, capsys):
     assert rc == 0
     out = capsys.readouterr().out
     assert "Moutai" in out and "持仓体检" in out
+
+
+def test_cli_recommend_defaults_to_session_user(data_dir, fake_live, capsys):
+    from value_genie.__main__ import main
+    _user_with_holdings()
+    usr.login("me")
+    # no --user — resolved from the session pointer
+    rc = main(["recommend", "--data-dir", str(data_dir),
+               "--no-check", "--top", "5"])
+    assert rc == 0
+    out = capsys.readouterr().out
+    assert "recommend" in out and "Moutai" in out
