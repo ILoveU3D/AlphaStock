@@ -574,8 +574,40 @@ def cmd_user(args) -> int:
                                 horizon=args.horizon or "")
         except ValueError as exc:
             raise SystemExit(str(exc)) from None
-        print(f"created user {u.id} ({u.name}) -> {usr.user_path(u.id)}")
+        usr.login(u.id)
+        print(f"created user {u.id} ({u.name}) -> {usr.user_path(u.id)}; "
+              f"logged in as {u.id}")
         return 0
+
+    if args.user_cmd == "login":
+        try:
+            usr.login(args.user_id)
+        except (FileNotFoundError, ValueError) as exc:
+            raise SystemExit(str(exc)) from None
+        print(f"logged in as {args.user_id}")
+        return 0
+
+    if args.user_cmd == "logout":
+        usr.logout()
+        print("logged out")
+        return 0
+
+    if args.user_cmd == "whoami":
+        cur = usr.current_user()
+        items = usr.list_users()
+        if args.json:
+            print(json.dumps({"current": cur,
+                              "users": [u.id for u in items]},
+                             ensure_ascii=False))
+            return 0 if cur else 1
+        if cur is None:
+            print("no active session; `user login <id>` or "
+                  "`user create <id>`")
+        else:
+            print(f"current user: {cur}")
+        if items:
+            print("users: " + ", ".join(u.id for u in items))
+        return 0 if cur else 1
 
     if args.user_cmd == "list":
         items = usr.list_users()
@@ -1890,8 +1922,17 @@ def build_parser() -> argparse.ArgumentParser:
     pu_create = pu_sub.add_parser("create", help="create a user")
     pu_create.add_argument("user_id")
     pu_create.add_argument("--name", default="", help="display name")
-    pu_create.add_argument("--horizon", default=None, choices=horizon_ids,
+    pu_create.add_argument("--horizon", default="",
+                           choices=horizon_ids,
                            help="preferred holding period")
+    pu_login = pu_sub.add_parser("login",
+                                 help="point the session at a user")
+    pu_login.add_argument("user_id")
+    pu_sub.add_parser("logout", help="drop the session pointer")
+    pu_whoami = pu_sub.add_parser(
+        "whoami", help="current session user + all users")
+    pu_whoami.add_argument("--json", action="store_true",
+                           help="machine-readable JSON output")
     pu_sub.add_parser("list", help="list all users")
     pu_show = pu_sub.add_parser("show", help="show one user's profile")
     pu_show.add_argument("user_id")
