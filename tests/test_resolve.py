@@ -163,3 +163,58 @@ class TestResolve:
         snap.mkdir()
         out = rs.resolve("AAPL", snapshot_dir=snap, live=False)
         assert out and out[0].market == "US" and out[0].code == "AAPL"
+
+
+class TestMarketPrefixForm:
+    """``A:688795 / HK:02555 / US:AAPL`` — the master-id form must
+    resolve (user-reported gap 2026-10-03: it matched nothing)."""
+
+    def _snap(self, tmp_path, with_moore=True):
+        snap = tmp_path / "20260901"
+        snap.mkdir()
+        fr = frames()
+        if not with_moore:
+            fr = {k: df[df["code"] != "688795"] for k, df in fr.items()}
+        for mk, df in fr.items():
+            df.to_csv(snap / f"{mk.lower()}_quotes.csv", index=False)
+        return snap
+
+    def test_a_prefix(self, tmp_path):
+        out = rs.resolve("A:688795", snapshot_dir=self._snap(tmp_path),
+                         live=False)
+        assert out and out[0].market == "A" and out[0].code == "688795"
+        assert out[0].name == "摩尔线程"
+
+    def test_hk_prefix(self, tmp_path):
+        out = rs.resolve("HK:02555", snapshot_dir=self._snap(tmp_path),
+                         live=False)
+        assert out and out[0].market == "HK" and out[0].code == "02555"
+
+    def test_us_prefix(self, tmp_path):
+        out = rs.resolve("US:AAPL", snapshot_dir=self._snap(tmp_path),
+                         live=False)
+        assert out and out[0].market == "US" and out[0].code == "AAPL"
+
+    def test_fullwidth_colon(self, tmp_path):
+        out = rs.resolve("A：688795", snapshot_dir=self._snap(tmp_path),
+                         live=False)
+        assert out and out[0].market == "A" and out[0].code == "688795"
+
+    def test_prefix_filters_other_markets(self, tmp_path):
+        """HK:600519 declares HK but the code is A-only — no HK match
+        survives the filter (fallback returns the unfiltered list)."""
+        out = rs.resolve("HK:600519", snapshot_dir=self._snap(tmp_path),
+                         live=False)
+        assert out and all(m.code == "600519" for m in out)
+
+    def test_prefix_new_listing_outside_snapshot(self, tmp_path,
+                                                 monkeypatch):
+        """Out-of-universe new listing (the original 摩尔线程 case):
+        not in the snapshot universe, smartbox supplies the name."""
+        snap = self._snap(tmp_path, with_moore=False)
+        d = {"QuotationCodeTable": {"Data": [
+            {"Code": "688795", "Name": "摩尔线程", "MktNum": "1"}]}}
+        monkeypatch.setattr(rs.SB, "get_json", lambda *a, **k: d)
+        out = rs.resolve("A:688795", snapshot_dir=snap, live=True)
+        assert out and out[0].market == "A" and out[0].code == "688795"
+        assert out[0].name == "摩尔线程"

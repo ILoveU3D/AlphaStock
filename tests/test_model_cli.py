@@ -76,6 +76,72 @@ def test_list_json(capsys, mdir):
     assert json.loads(capsys.readouterr().out) == []
 
 
+def test_gather_json(capsys, mdir, monkeypatch):
+    from value_genie.model import gather as mg
+    monkeypatch.setattr(cli, "_resolve_stock_or_exit",
+                        lambda q: _FakeMatch())
+    monkeypatch.setattr(mg, "gather",
+                        lambda m, c, force=False, peers=None:
+                        {"id": f"{m}:{c}", "raw_dir": "/x",
+                         "gathered": {"history": "/x/history.json"},
+                         "gaps": []})
+    rc = cli.main(["model", "gather", "US:TEST", "--json"])
+    assert rc == 0
+    out = json.loads(capsys.readouterr().out)
+    assert out["gathered"]["history"] == "/x/history.json"
+
+
+def test_write_requires_reason(capsys, mdir, monkeypatch):
+    monkeypatch.setattr(cli, "_resolve_stock_or_exit",
+                        lambda q: _FakeMatch())
+    rc = cli.main(["model", "write", "US:TEST",
+                   "business_flywheel.text=飞轮", "--json"])
+    assert rc == 1
+    rc = cli.main(["model", "write", "US:TEST",
+                   "business_flywheel.text=飞轮",
+                   "--reason", "初稿", "--json"])
+    assert rc == 0
+    out = json.loads(capsys.readouterr().out)
+    assert out["business_flywheel"]["text"] == "飞轮"
+
+
+def test_lint_exit_codes(capsys, mdir, monkeypatch):
+    monkeypatch.setattr(cli, "_resolve_stock_or_exit",
+                        lambda q: _FakeMatch())
+    # no dossier -> 1
+    assert cli.main(["model", "lint", "US:TEST", "--json"]) == 1
+    from value_genie.model import archive as marc
+    marc.save_archive(marc.new_archive("US", "TEST"))
+    rc = cli.main(["model", "lint", "US:TEST", "--json"])
+    assert rc == 1                            # empty dossier INCOMPLETE
+    out = json.loads(capsys.readouterr().out)
+    assert out["complete"] is False
+
+
+def test_status_json(capsys, mdir):
+    rc = cli.main(["model", "status", "--json"])
+    assert rc == 0
+    assert json.loads(capsys.readouterr().out) == []
+    from value_genie.model import archive as marc
+    marc.save_archive(marc.new_archive("US", "TEST", name="T"))
+    rc = cli.main(["model", "status", "--json"])
+    out = json.loads(capsys.readouterr().out)
+    assert out[0]["id"] == "US:TEST" and out[0]["complete"] is False
+
+
+def test_show_json_wraps_dossier_and_valuation(capsys, mdir, monkeypatch):
+    monkeypatch.setattr(cli, "_resolve_stock_or_exit",
+                        lambda q: _FakeMatch())
+    from value_genie.model import archive as marc
+    marc.save_archive(marc.new_archive("US", "TEST", name="T"))
+    rc = cli.main(["model", "show", "US:TEST", "--json"])
+    assert rc == 0
+    out = json.loads(capsys.readouterr().out)
+    assert out["dossier"]["id"] == "US:TEST"
+    assert out["lint"]["complete"] is False
+    assert out["valuation"] is None
+
+
 class _FakeMatch:
     market, code, name = "US", "TEST", "Test Co"
 

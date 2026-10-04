@@ -101,3 +101,26 @@ class TestRunModel:
             assert all(v is not None for v in row)
         col0 = [row[0] for row in vals]
         assert col0 == sorted(col0, reverse=True)   # wacc 升 → 价值降
+
+    def test_tax_rate_zero_is_respected(self):
+        # 股息贴现翻译：tax=0（现金流已税后）。`or` 默认值曾把 0 静默
+        # 替换成 0.15，导致全线 0.85 缩放——0 是合法税率输入。
+        a = self._assumptions()
+        a["tax_rate"] = 0.0
+        r = engine.run_model(self._history(), a, price=20.0)
+        base_rows = engine.fcff_path(100.0, _scenario(0.10, 0.20), 5, 0.0)
+        ev = engine.dcf_value([x["fcff"] for x in base_rows], 0.10, 0.025)
+        assert r["scenarios"]["base"]["per_share"] == \
+            pytest.approx((ev + 10.0) / 10.0)
+
+    def test_terminal_g_zero_is_respected(self):
+        # BKE 校准案：档案论点是 g≈0 带宽震荡，`or` 默认值曾把 0.0 静默
+        # 替换成 0.025，终值虚增——0 是合法终值增速输入。
+        a = self._assumptions()
+        a["terminal_g"] = 0.0
+        r = engine.run_model(self._history(), a, price=20.0)
+        assert r["terminal_g"] == 0.0
+        base_rows = engine.fcff_path(100.0, _scenario(0.10, 0.20), 5, 0.15)
+        ev = engine.dcf_value([x["fcff"] for x in base_rows], 0.10, 0.0)
+        assert r["scenarios"]["base"]["per_share"] == \
+            pytest.approx((ev + 10.0) / 10.0)

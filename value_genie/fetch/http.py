@@ -98,6 +98,43 @@ class Fetcher:
                  cooldown_after=5, cooldown_sec=75, total_timeout=None):
         """GET a URL and return the body as text (for HTML pages).
         None on persistent failure; 404 counts as no data."""
+        body = self._fetch("GET", url, params=params, timeout=timeout,
+                           retries=retries, cooldown_after=cooldown_after,
+                           cooldown_sec=cooldown_sec,
+                           total_timeout=total_timeout)
+        if body is None:
+            return None
+        enc = getattr(self, "_last_encoding", None)
+        return body.decode(enc or "utf-8", errors="replace")
+
+    def get_bytes(self, url, params=None, timeout=60, retries=1,
+                  cooldown_after=5, cooldown_sec=75, total_timeout=None):
+        """GET a URL and return raw bytes (PDFs etc.).
+        None on persistent failure; 404 counts as no data."""
+        return self._fetch("GET", url, params=params, timeout=timeout,
+                           retries=retries, cooldown_after=cooldown_after,
+                           cooldown_sec=cooldown_sec,
+                           total_timeout=total_timeout)
+
+    def post_json(self, url, data=None, timeout=20, retries=2,
+                  cooldown_after=5, cooldown_sec=75, total_timeout=None):
+        """POST form data and parse JSON (cninfo disclosure APIs).
+        None on persistent failure; 404 counts as no data."""
+        body = self._fetch("POST", url, data=data, timeout=timeout,
+                           retries=retries, cooldown_after=cooldown_after,
+                           cooldown_sec=cooldown_sec,
+                           total_timeout=total_timeout)
+        if body is None:
+            return None
+        try:
+            return json.loads(body)
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            return None
+
+    def _fetch(self, method, url, params=None, data=None, timeout=20,
+               retries=2, cooldown_after=5, cooldown_sec=75,
+               total_timeout=None):
+        """Shared retry/backoff core: returns raw body bytes or None."""
         total_timeout = total_timeout or max(45, timeout * 3)
         last_err = None
         attempt = 0
@@ -106,8 +143,14 @@ class Fetcher:
             attempt += 1
             try:
                 deadline = time.monotonic() + total_timeout
-                with self.session.get(url, params=params, timeout=timeout,
-                                      stream=True) as r:
+                req = (self.session.post if method == "POST"
+                       else self.session.get)
+                kwargs = {"timeout": timeout, "stream": True}
+                if method == "POST":
+                    kwargs["data"] = data
+                else:
+                    kwargs["params"] = params
+                with req(url, **kwargs) as r:
                     chunks = []
                     for chunk in r.iter_content(chunk_size=65536):
                         chunks.append(chunk)
@@ -116,10 +159,12 @@ class Fetcher:
                                 f"download exceeded {total_timeout}s")
                     body = b"".join(chunks)
                     status = r.status_code
-                    enc = r.encoding if isinstance(r.encoding, str) else None
+                    self._last_encoding = (r.encoding
+                                           if isinstance(r.encoding, str)
+                                           else None)
                 if status == 200:
                     self.consecutive_fail = 0
-                    return body.decode(enc or "utf-8", errors="replace")
+                    return body
                 if status == 404:
                     self.consecutive_fail = 0
                     return None

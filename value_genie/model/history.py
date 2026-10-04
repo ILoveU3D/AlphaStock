@@ -49,7 +49,10 @@ def _us_facts(cik: int) -> dict | None:
 
 def _us_annual(payload: dict | None, unit: str = "USD") -> dict:
     """tag payload ({units: {<unit>: [...]}}) -> {fy: val}; annual FY rows
-    only, latest filed wins on duplicates."""
+    only, latest filed wins on duplicates. On equal filed dates the primary
+    year and its comparatives share one filing — the LATER period end wins
+    that tie (companyfacts serves entries oldest-period-first; first-wins
+    silently resolved each fy to the oldest comparative, ZM 2026-10-04)."""
     out = {}
     for e in ((payload or {}).get("units") or {}).get(unit, []):
         if e.get("form") not in ("10-K", "20-F") or e.get("fp") != "FY":
@@ -66,12 +69,13 @@ def _us_annual(payload: dict | None, unit: str = "USD") -> dict:
         fy, val, filed = e.get("fy"), e.get("val"), e.get("filed", "")
         if fy is None or val is None:
             continue
-        if fy not in out or filed > out[fy][0]:
-            out[fy] = (filed, float(val))
+        key = (filed, end or "")
+        if fy not in out or key > out[fy][0]:
+            out[fy] = (key, float(val))
     return {fy: v for fy, (_, v) in out.items()}
 
 
-def fetch_history_us(code: str) -> dict | None:
+def fetch_history_us(code: str, limit: int | None = None) -> dict | None:
     cik = _us_cik(code)
     if cik is None:
         return None
@@ -101,7 +105,7 @@ def fetch_history_us(code: str) -> dict | None:
     if "revenue" not in series:
         return None
     fys = sorted({fy for s in series.values() for fy in s})
-    fys = fys[-config.MODEL_HISTORY_YEARS:]
+    fys = fys[-(limit or config.MODEL_HISTORY_YEARS):]
     years = [{"fy": fy,
               **{f: series.get(f, {}).get(fy) for f in _US_CONCEPTS}}
              for fy in fys]
@@ -112,12 +116,12 @@ def fetch_history_us(code: str) -> dict | None:
                              currency="USD", years=years, gaps=gaps)
 
 
-def fetch_history_a(code: str) -> dict | None:
-    return _fetch_history_a_probe(code)
+def fetch_history_a(code: str, limit: int | None = None) -> dict | None:
+    return _fetch_history_a_probe(code, limit=limit)
 
 
-def fetch_history_hk(code: str) -> dict | None:
-    return _fetch_history_hk_probe(code)
+def fetch_history_hk(code: str, limit: int | None = None) -> dict | None:
+    return _fetch_history_hk_probe(code, limit=limit)
 
 
 # --- A-share: per-stock annual rows from the pipeline-proven reports -------
@@ -144,13 +148,14 @@ def _a_report(report: str, secucode: str, rd: str) -> list | None:
     return ((d or {}).get("result") or {}).get("data") or None
 
 
-def _fetch_history_a_probe(code: str) -> dict | None:
+def _fetch_history_a_probe(code: str, limit: int | None = None) -> dict | None:
     from ..fetch.profiles import _a_secucode
     secucode = _a_secucode(code)
     this_year = date.today().year
+    n = limit or config.MODEL_HISTORY_YEARS
     # 最近的候选年报期 (当年年报可能尚未披露, 9201 空窗口合法跳过)
     rds = [f"{y}-12-31" for y in range(this_year - 1,
-                                       this_year - 1 - config.MODEL_HISTORY_YEARS - 1, -1)]
+                                       this_year - 1 - n - 1, -1)]
     by_fy: dict = {}
     name = ""
     for rd in rds:
@@ -173,7 +178,7 @@ def _fetch_history_a_probe(code: str) -> dict | None:
                 y[f] = _num(bs[0].get(col))
     if not by_fy:
         return None
-    years = [by_fy[fy] for fy in sorted(by_fy)][-config.MODEL_HISTORY_YEARS:]
+    years = [by_fy[fy] for fy in sorted(by_fy)][-n:]
     gaps = ["a-share income report has no ebit field; "
             "statements carry no da/shares — set assumptions.shares "
             "manually (F10 股本) before trusting per-share output"]
@@ -183,7 +188,11 @@ def _fetch_history_a_probe(code: str) -> dict | None:
 
 
 # --- HK: HKF10 main indicators, per stock, desc by REPORT_DATE -------------
-# 字段名探针定稿 (2026-10-02, 00998 实测, 年报/中报混合返回, 只留 12-31).
+# 字段名探针定稿 (2026-10-02, 00998 实测, 年报/中报混合返回)。
+# 选行规则改判 (2026-10-04, 03306/03998/00991/01378 四股实测): 年报期止月份
+# 因公司而异 (6-30 江南布衣 / 3-31 波司登 / 12-31 内地 H 股), 旧版硬编码
+# "只留 12-31" 把 6-30 财年的中报行当年报吞入、把 3-31 财年饿成空史 —
+# 必须按 REPORT_TYPE 以 "年报" 结尾选行, fy = 年报期止年份。
 HK_MAIN_FIELDS = {"revenue": "OPERATE_INCOME",
                   "ebit": "OPERATE_PROFIT",
                   "net_income": "HOLDER_PROFIT",
@@ -201,19 +210,23 @@ def _hk_main(secucode: str) -> list | None:
     return ((d or {}).get("result") or {}).get("data") or None
 
 
-def _fetch_history_hk_probe(code: str) -> dict | None:
+def _fetch_history_hk_probe(code: str, limit: int | None = None) -> dict | None:
     secucode = code if "." in code else f"{code}.HK"
     rows = _hk_main(secucode)
     if not rows:
         return None
     annual = {}
     name = ""
+    fiscal_year = ""
     for r in rows:
+        if not str(r.get("REPORT_TYPE") or "").endswith("年报"):
+            continue
         rd = str(r.get("REPORT_DATE") or "")[:10]
-        if not rd.endswith("12-31"):
+        if len(rd) < 4 or not rd[:4].isdigit():
             continue
         fy = int(rd[:4])
         name = name or r.get("SECURITY_NAME_ABBR") or ""
+        fiscal_year = fiscal_year or str(r.get("FISCAL_YEAR") or "")
         y = annual.setdefault(fy, {"fy": fy})
         for f, col in HK_MAIN_FIELDS.items():
             v = _num(r.get(col))
@@ -221,19 +234,28 @@ def _fetch_history_hk_probe(code: str) -> dict | None:
                 y[f] = v
     if not annual:
         return None
-    years = [annual[fy] for fy in sorted(annual)][-config.MODEL_HISTORY_YEARS:]
+    years = [annual[fy] for fy in sorted(annual)][-(limit or config.MODEL_HISTORY_YEARS):]
     gaps = ["hk main indicators lack da/capex — engine falls back to "
             "ratios; ISSUED_COMMON_SHARES is a snapshot constant, not "
             "as-of-period, so set assumptions.shares manually",
             "amounts are reporting-currency (CNY for mainland reporters); "
-            "the CURRENCY field tags the listing currency, not the amounts"]
+            "the CURRENCY field tags the listing currency, not the amounts",
+            f"fiscal year ends {fiscal_year or '?'}; fy labels are annual "
+            f"period-end years (an annual ending 2026-06-30 is fy2026, "
+            f"though Eastmoney calls it the 2025 年报)"]
     return store.new_history("HK", code, name=name,
                              source="eastmoney_hkf10_mainindicator",
                              currency="CNY", years=years, gaps=gaps)
 
 
-def fetch_history(market: str, code: str) -> dict | None:
-    """Dispatch by market; None on source failure (fail-closed)."""
+def fetch_history(market: str, code: str,
+                  limit: int | None = None) -> dict | None:
+    """Dispatch by market; None on source failure (fail-closed).
+
+    ``limit`` caps annual rows (None = config.MODEL_HISTORY_YEARS);
+    pass a large number (e.g. 100) for full listing history — the
+    modeling workbench gathers every annual report since IPO
+    (user mandate 2026-10-03)."""
     fn = {"A": fetch_history_a, "HK": fetch_history_hk,
           "US": fetch_history_us}.get(market)
-    return fn(code) if fn else None
+    return fn(code, limit=limit) if fn else None
