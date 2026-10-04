@@ -37,6 +37,9 @@ pipcache/
 wheels/
 tmp/
 
+# AI workbench scratch (.trae/ loose dumps; documents/model_src stay local)
+.trae/
+
 # Misc
 *.log
 .DS_Store
