@@ -14,8 +14,8 @@ commands:
   - trade sell
   - trade nav
   - trade journal
-version: 46
-updated_at: 2026-10-03T17:55:59
+version: 47
+updated_at: 2026-10-04T20:29:21
 ---
 
 # Playbook
@@ -119,3 +119,4 @@ for. Cite the nav-as-of date. Never soften risk observations.
 - [2026-10-02 00:41] (ai) Form4内否人卖出分级标准(20261002 ADBE案例补完): 否决级(DUOL式)=CEO清仓直接持股+>=2高管同月同向簇集+卖出价<=现价+空头高+一致目标价低于现价; 观察项级(ADBE式)=单一内部人大额卖出+footnote解释(estate/tax planning)+保留大头未清仓+卖出价高于现价+其余高管仅M+F税扣例行——观察项不否仓但要在仓位上限上减分(ADBE按10%而非15-20%封顶); 首个预置扳机到点执行案例同日落地: 0930预置'r5翻正加仓'触发器, 1001盘中r5+0.6%翻正即执行ADBE+2, 触发器亮了就打=纪律闭环, 不再临场重新论证
 - [2026-10-03 13:32] (ai) 止盈止损双线制(2026-10-03固化,s001/s002已执行):价格线从快照K线实算(ATR14/MA20/60/52周高低/吊灯=入场后最高收-3ATR,移动线只上不下)+生意证伪线独立触发不问价格;修复仓止盈=公允价/一致目标兑现(中线护照),趋势仓无固定止盈用trail;HK无研报源时止盈锚=结构位+PE/股息率估值带;组合层加总全触发最坏回撤对照NAV风险预算(两季均约-7~-8%);钥匙孔仓位禁用价格线只给证伪监控盘
 - [2026-10-03 17:55] (user) MANDATE 2026-10-03 (user): trade dashboard command removed; season summaries are AI-composed from status/nav/journal --json - never regenerate Markdown dashboards; seasons are shared across all users
+- [2026-10-04 20:29] (ai) 买股票就是买公司(2026-10-04用户铁律): 交易决策与赛季复盘必须过模型层--model list upside与止损止盈线并列审视,journal引用模型数字时须核对估值层是否已重估(HRMY 113.54->63.17教训); 核心三核=商业模式/企业文化/DCF便宜度
