@@ -1664,6 +1664,20 @@ def _model_price(m, args) -> float | None:
         if len(row):
             from .fetch.http import num
             return num(row.iloc[0].get("price"))
+    # last resort: snapshot quotes row (watchlist/funnel quotes cover
+    # holdings and ex-funnel names that master.csv lacks, e.g. KO/ADBE)
+    try:
+        snap = report.resolve_snapshot(getattr(args, "data_dir", None))
+        qf = snap / f"{m.market.lower()}_quotes.csv"
+        if qf.exists():
+            import pandas as pd
+            qdf = pd.read_csv(qf, dtype={"code": str})
+            qrow = qdf[qdf["code"].astype(str) == str(m.code)]
+            if len(qrow):
+                from .fetch.http import num
+                return num(qrow.iloc[0].get("price"))
+    except Exception:
+        pass
     return None
 
 
@@ -1690,12 +1704,112 @@ def cmd_model(args) -> int:
                   f"{str(r.get('built_at'))[:10]}{stale}")
         return 0
 
+    if args.model_cmd == "status":
+        from .model import archive as marc
+        rows = marc.status()
+        if args.json:
+            print(json.dumps(rows, ensure_ascii=False, indent=2,
+                             default=str))
+            return 0
+        if not rows:
+            print(f"no dossiers under {marc.store.models_dir()} — the "
+                  f"modeling campaign starts with `model gather X`")
+            return 1
+        done = sum(1 for r in rows if r["complete"])
+        print(f"dossiers: {len(rows)} | qualified (lint pass): {done}")
+        for r in rows:
+            mark = "OK" if r["complete"] else "INCOMPLETE"
+            print(f"  {r['id']:<14} {mark:<10} {r.get('name') or ''} "
+                  f"{str(r.get('updated_at'))[:10]}")
+        return 0
+
     # build is price-sensitive -> freshness-gated BEFORE any resolution
     # (same order as cmd_ask: a FAIL gate emits nothing on stdout).
     if args.model_cmd == "build" and not _check_freshness(args):
         return 1
 
     m = _resolve_stock_or_exit(args.stock)
+
+    if args.model_cmd == "gather":
+        from .model import gather as mg
+        peers = ([x.strip() for x in args.peers.split(",") if x.strip()]
+                 if getattr(args, "peers", None) else None)
+        try:
+            rep = mg.gather(m.market, m.code,
+                            force=getattr(args, "force", False),
+                            peers=peers)
+        except FileNotFoundError as exc:
+            print(f"gather failed for {m.label()}: {exc}",
+                  file=sys.stderr)
+            return 1
+        if args.json:
+            print(json.dumps(rep, ensure_ascii=False, indent=2,
+                             default=str))
+            return 0
+        print(f"{rep['id']} raw material -> {rep['raw_dir']}")
+        for k, v in rep["gathered"].items():
+            if v:
+                print(f"  {k}: {v}")
+        for g in rep["gaps"]:
+            print(f"  gap: {g}")
+        print(f"next: read the material, then `model write {m.label()} "
+              f"...` — the understanding layer is yours, not the "
+              f"machine's")
+        return 0
+
+    if args.model_cmd == "write":
+        from .model import archive as marc
+        updates = {}
+        for pair in args.sets:
+            if "=" not in pair:
+                raise SystemExit(f"bad write pair {pair!r}; want "
+                                 f"key=value")
+            k, v = pair.split("=", 1)
+            updates[k.strip()] = v.strip()
+        try:
+            a = marc.write_fields(m.market, m.code, updates,
+                                  reason=args.reason or "")
+        except (ValueError, FileNotFoundError) as exc:
+            print(str(exc), file=sys.stderr)
+            return 1
+        if args.json:
+            print(json.dumps(a, ensure_ascii=False, indent=2,
+                             default=str))
+            return 0
+        lint = marc.lint(a)
+        if lint["complete"]:
+            state = "QUALIFIED"
+        else:
+            state = ("INCOMPLETE — " + "; ".join(
+                lint["missing"] + lint["weak_weights"]))
+        print(f"dossier updated for {m.label()}: {', '.join(updates)} "
+              f"({state})")
+        return 0
+
+    if args.model_cmd == "lint":
+        from .model import archive as marc
+        a = marc.load_archive(m.market, m.code)
+        if a is None:
+            print(f"no dossier for {m.label()} — `model gather` then "
+                  f"`model write`", file=sys.stderr)
+            return 1
+        lint = marc.lint(a)
+        if args.json:
+            print(json.dumps(lint, ensure_ascii=False, indent=2,
+                             default=str))
+            return 0 if lint["complete"] else 1
+        print(f"{m.label()} dossier quality bar "
+              f"(info content >= annual report): "
+              f"{'QUALIFIED' if lint['complete'] else 'INCOMPLETE'}")
+        print(f"  text volume {lint['text_volume']} vs raw "
+              f"{lint['raw_text_volume']} "
+              f"(ratio {lint['text_ratio'] and round(lint['text_ratio'], 3)}"
+              f", min {lint['min_ratio']})")
+        for x in lint["missing"]:
+            print(f"  missing: {x}")
+        for x in lint["weak_weights"]:
+            print(f"  weak: {x}")
+        return 0 if lint["complete"] else 1
 
     if args.model_cmd == "fetch":
         from .model import history as mh
@@ -1747,31 +1861,63 @@ def cmd_model(args) -> int:
         return 0
 
     if args.model_cmd == "show":
+        from .model import archive as marc
+        a = marc.load_archive(m.market, m.code)
         r = mst.load_result(m.market, m.code)
-        if r is None:
-            print(f"no model for {m.label()} — build one with "
-                  f"`model build {m.market}:{m.code}`")
+        if a is None and r is None:
+            print(f"no model for {m.label()} — `model gather` then "
+                  f"`model write` (dossier) or `model build` (valuation)")
             return 1
         h = mst.load_history(m.market, m.code)
-        stale = mst.is_stale(r, h)
+        stale = mst.is_stale(r, h) if r else False
+        lint = marc.lint(a) if a else None
         if args.json:
-            out = dict(r)
-            out["stale"] = stale
+            out = {"dossier": a, "lint": lint,
+                   "valuation": dict(r, stale=stale) if r else None}
             print(json.dumps(out, ensure_ascii=False, indent=2,
                              default=str))
             return 0
-        cur = r.get("currency") or ""
-        print(f"{r['id']} model ({str(r.get('built_at'))[:10]}"
-              + (" STALE — history changed, rebuild" if stale else "")
-              + ")")
-        print(f"price {r.get('price')} {cur} | weighted "
-              f"{r.get('weighted_per_share')} {cur} | upside "
-              f"{r.get('upside_pct')}%")
-        for name, s in (r.get("scenarios") or {}).items():
-            print(f"  {name:<5} p={s.get('prob')}: "
-                  f"{s.get('per_share')} {cur}")
-        for g in r.get("gaps") or []:
-            print(f"  gap: {g}")
+        if a is not None:
+            mark = "QUALIFIED" if lint["complete"] else "INCOMPLETE"
+            print(f"{a['id']} dossier ({str(a.get('updated_at'))[:10]}, "
+                  f"{mark}) — {a.get('name') or ''}")
+            fw = (a.get("business_flywheel") or {}).get("text") or ""
+            print(f"  flywheel: {fw[:400] or '(empty)'}")
+            cul = a.get("culture") or {}
+            print(f"  culture vision: "
+                  f"{(cul.get('vision') or '')[:200] or '(empty)'}")
+            rd = a.get("reverse_dcf") or {}
+            print(f"  reverse-DCF implied world: "
+                  f"{(rd.get('implied_world') or '')[:200] or '(empty)'}")
+            print(f"  my world: "
+                  f"{(rd.get('my_world') or '')[:200] or '(empty)'}")
+            for i, n in enumerate(a.get("world_narratives") or []):
+                basis = str(n.get("weight_basis") or "")
+                flag = "" if basis.strip() else " [weight NO BASIS]"
+                print(f"  world[{i}] {n.get('name') or ''} "
+                      f"w={n.get('weight')}: "
+                      f"{str(n.get('world') or '')[:150]}{flag}")
+            dims = a.get("dimensions") or {}
+            if dims:
+                print(f"  dimensions: {', '.join(dims)}")
+            for mon in a.get("falsification_monitor") or []:
+                print(f"  falsification [{mon.get('status', 'open')}]: "
+                      f"{mon.get('condition')}")
+            for x in lint["missing"] + lint["weak_weights"]:
+                print(f"  lint: {x}")
+        if r is not None:
+            cur = r.get("currency") or ""
+            print(f"valuation ({str(r.get('built_at'))[:10]}"
+                  + (" STALE — history changed, rebuild" if stale else "")
+                  + ")")
+            print(f"  price {r.get('price')} {cur} | weighted "
+                  f"{r.get('weighted_per_share')} {cur} | upside "
+                  f"{r.get('upside_pct')}%")
+            for name, s in (r.get("scenarios") or {}).items():
+                print(f"    {name:<5} p={s.get('prob')}: "
+                      f"{s.get('per_share')} {cur}")
+            for g in r.get("gaps") or []:
+                print(f"  gap: {g}")
         return 0
 
     if args.model_cmd == "build":
@@ -2404,6 +2550,39 @@ def build_parser() -> argparse.ArgumentParser:
     pmo_set.add_argument("--json", action="store_true")
     pmo_list = pmo_sub.add_parser("list", help="coverage + staleness")
     pmo_list.add_argument("--json", action="store_true")
+    # --- AI modeling workbench (2026-10-03): machine gathers, AI writes ---
+    pmo_gather = pmo_sub.add_parser(
+        "gather", help="gather raw material for one company into "
+                       "models/<mkt>/<code>/raw/ (full-history statements "
+                       "+ intel + profile text + peers)")
+    pmo_gather.add_argument("stock")
+    pmo_gather.add_argument("--force", action="store_true",
+                            help="regather even if raw exists")
+    pmo_gather.add_argument(
+        "--peers", default=None, metavar="CODES",
+        help="AI-chosen comparables, comma-separated (e.g. "
+             "688256,688041) — for targets absent from master.csv or "
+             "when the modeler knows the true peer set")
+    pmo_gather.add_argument("--json", action="store_true")
+    pmo_write = pmo_sub.add_parser(
+        "write", help="write the understanding layer (model.json): "
+                      "dotted key=value, repeatable; value '@file' loads a "
+                      "file (.json parsed) — --reason mandatory")
+    pmo_write.add_argument("stock")
+    pmo_write.add_argument("sets", nargs="+", metavar="KEY=VALUE",
+                           help="e.g. business_flywheel.text=@flywheel.md "
+                                "world_narratives=@worlds.json")
+    pmo_write.add_argument("--reason", default=None,
+                           help="mandatory: why this write (changelog)")
+    pmo_write.add_argument("--json", action="store_true")
+    pmo_lint = pmo_sub.add_parser(
+        "lint", help="quality bar: is the dossier's information content "
+                     ">= the annual report's?")
+    pmo_lint.add_argument("stock")
+    pmo_lint.add_argument("--json", action="store_true")
+    pmo_status = pmo_sub.add_parser(
+        "status", help="modeling coverage across the whole market")
+    pmo_status.add_argument("--json", action="store_true")
     pmo.set_defaults(func=cmd_model)
     return parser
 

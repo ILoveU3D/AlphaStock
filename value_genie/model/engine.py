@@ -49,17 +49,25 @@ def _per_share(ev: float | None, net_debt, shares) -> float | None:
     return (ev - nd) / shares
 
 
+def _or_default(val, default):
+    """Explicit None check — 0/0.0 are legitimate inputs, `or` eats them."""
+    return default if val is None else val
+
+
 def run_model(history: dict, assumptions: dict,
               price: float | None) -> dict:
     """Full model: scenarios + weighted value + sensitivity + gaps."""
     gaps = list(history.get("gaps") or []) + list(
         assumptions.get("gaps") or [])
     last_rev = history["years"][-1].get("revenue")
-    years = int(assumptions.get("horizon_years")
-                or config.MODEL_HISTORY_YEARS)
-    wacc = float(assumptions.get("wacc") or config.DCF_DISCOUNT)
-    tg = float(assumptions.get("terminal_g") or config.DCF_TERMINAL_G)
-    tax = float(assumptions.get("tax_rate") or 0.15)
+    years = int(_or_default(assumptions.get("horizon_years"),
+                            config.MODEL_HISTORY_YEARS))
+    wacc = float(_or_default(assumptions.get("wacc"),
+                             config.DCF_DISCOUNT))
+    tg = float(_or_default(assumptions.get("terminal_g"),
+                           config.DCF_TERMINAL_G))
+    tax_raw = assumptions.get("tax_rate")
+    tax = 0.15 if tax_raw is None else float(tax_raw)
     net_debt = assumptions.get("net_debt")
     shares = assumptions.get("shares")
     if last_rev in (None, 0):

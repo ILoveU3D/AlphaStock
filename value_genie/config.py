@@ -323,6 +323,13 @@ MODEL_SENSITIVITY_TG = (0.015, 0.02, 0.025, 0.03, 0.035)
 MODEL_FALLBACK_DA_PCT = 0.03
 MODEL_FALLBACK_CAPEX_PCT = 0.05
 MODEL_FALLBACK_NWC_PCT = 0.10
+# AI-written dossier (model.json) quality bar (user mandate 2026-10-03):
+# dossier text volume must be >= this ratio of the gathered raw material
+# — the model's information content must outweigh the annual report's.
+MODEL_LINT_MIN_TEXT_RATIO = 0.30
+# disclosure PDF full texts (fetch/filings.py): how many recent annual
+# reports to extract per company (prospectus is always included)
+FILINGS_MAX_REPORTS = 5
 CORE_ANCHORS["model_upside"] = (-30.0, 50.0)     # model upside % -> 0..100
 
 # ---------------------------------------------------------------------------

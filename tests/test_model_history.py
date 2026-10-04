@@ -99,6 +99,33 @@ class TestUS:
         assert [y["fy"] for y in h["years"]] == [2018, 2019, 2023, 2024]
         assert h["years"][-1]["revenue"] == 31e9
 
+    def test_same_fy_same_filed_latest_period_wins(self, monkeypatch):
+        # ZM case (2026-10-04): within one 10-K the primary year and its
+        # comparatives all carry the filing's fy + filed date; the units
+        # array serves them oldest-period-first. First-wins on filed ties
+        # resolved every fy to the OLDEST comparative, so the latest
+        # fiscal year went missing (history stuck at FYE 2024-01 while
+        # the FY2026 10-K was already filed). The later period end must
+        # win the tie.
+        rev = {"units": {"USD": [
+            {"fy": 2026, "fp": "FY", "form": "10-K",
+             "filed": "2026-02-27", "start": "2023-02-01",
+             "end": "2024-01-31", "val": 4527.2e6},
+            {"fy": 2026, "fp": "FY", "form": "10-K",
+             "filed": "2026-02-27", "start": "2024-02-01",
+             "end": "2025-01-31", "val": 4665.4e6},
+            {"fy": 2026, "fp": "FY", "form": "10-K",
+             "filed": "2026-02-27", "start": "2025-02-01",
+             "end": "2026-01-31", "val": 4868.8e6},
+        ]}}
+        monkeypatch.setattr(mh, "_us_facts",
+                            lambda cik: _facts_payload({"Revenues": rev}))
+        monkeypatch.setattr(mh, "_us_cik", lambda code: 12345)
+        h = mh.fetch_history_us("TEST")
+        assert h is not None
+        assert len(h["years"]) == 1
+        assert h["years"][-1]["revenue"] == 4868.8e6
+
 
 class TestParseHelpers:
     def test_num_and_report_date(self):
@@ -144,12 +171,15 @@ class TestA:
 
 
 class TestHK:
-    def test_parse_mainindicator(self, monkeypatch):
+    def test_parse_mainindicator_dec_fy(self, monkeypatch):
         rows = [{"REPORT_DATE": "2024-12-31 00:00:00",
+                 "REPORT_TYPE": "2024年年报",
+                 "FISCAL_YEAR": "12-31",
                  "SECURITY_NAME_ABBR": "测试银行",
                  mh.HK_MAIN_FIELDS["revenue"]: 2.0e11,
                  mh.HK_MAIN_FIELDS["net_income"]: 7.0e10},
                 {"REPORT_DATE": "2024-06-30 00:00:00",  # 中报必须被跳过
+                 "REPORT_TYPE": "2024年中报",
                  mh.HK_MAIN_FIELDS["revenue"]: 9.0e10}]
         monkeypatch.setattr(mh, "_hk_main", lambda secucode: rows)
         h = mh.fetch_history_hk("00998")
@@ -159,6 +189,42 @@ class TestHK:
         assert h["years"][-1]["revenue"] == 2.0e11
         assert h["years"][-1]["net_income"] == 7.0e10
         assert any("capex" in g for g in h["gaps"])
+
+    def test_jun_fy_interim_is_not_annual(self, monkeypatch):
+        # 03306 case (2026-10-04): 6-30 财年公司的 12-31 行是中报 —
+        # 旧 "只留 12-31" 过滤把它们当年报吞入。年报行必须按
+        # REPORT_TYPE 选出, fy 取年报期止年份。
+        rows = [{"REPORT_DATE": "2025-12-31 00:00:00",
+                 "REPORT_TYPE": "2025年中报",
+                 mh.HK_MAIN_FIELDS["revenue"]: 3.4e9},
+                {"REPORT_DATE": "2026-06-30 00:00:00",
+                 "REPORT_TYPE": "2025年年报",
+                 "FISCAL_YEAR": "6-30",
+                 mh.HK_MAIN_FIELDS["revenue"]: 6.0e9,
+                 mh.HK_MAIN_FIELDS["net_income"]: 1.0e9}]
+        monkeypatch.setattr(mh, "_hk_main", lambda secucode: rows)
+        h = mh.fetch_history_hk("03306")
+        assert h is not None
+        assert [y["fy"] for y in h["years"]] == [2026]
+        assert h["years"][-1]["revenue"] == 6.0e9
+        assert any("6-30" in g for g in h["gaps"])
+
+    def test_mar_fy_not_starved(self, monkeypatch):
+        # 03998 case (2026-10-04): 3-31 财年公司没有 12-31 行 —
+        # 旧过滤返回空史 (fail-closed 假阴性)。按 REPORT_TYPE 选行后可取。
+        rows = [{"REPORT_DATE": "2025-09-30 00:00:00",
+                 "REPORT_TYPE": "2025年中报",
+                 mh.HK_MAIN_FIELDS["revenue"]: 1.0e10},
+                {"REPORT_DATE": "2026-03-31 00:00:00",
+                 "REPORT_TYPE": "2025年年报",
+                 "FISCAL_YEAR": "3-31",
+                 mh.HK_MAIN_FIELDS["revenue"]: 2.3e10,
+                 mh.HK_MAIN_FIELDS["net_income"]: 3.0e9}]
+        monkeypatch.setattr(mh, "_hk_main", lambda secucode: rows)
+        h = mh.fetch_history_hk("03998")
+        assert h is not None
+        assert [y["fy"] for y in h["years"]] == [2026]
+        assert h["years"][-1]["revenue"] == 2.3e10
 
     def test_empty_is_fail_closed(self, monkeypatch):
         monkeypatch.setattr(mh, "_hk_main", lambda secucode: None)

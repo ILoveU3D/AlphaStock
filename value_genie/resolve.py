@@ -132,17 +132,29 @@ def _us_ticker_confirmed(code: str, frames: dict, matches: list) -> bool:
 
 
 def resolve(query: str, snapshot_dir=None, live: bool = True) -> list:
-    """All candidate matches for a query, best first."""
+    """All candidate matches for a query, best first.
+
+    Accepts the master-id prefix form ``A:688795 / HK:02555 / US:AAPL``
+    (user-reported gap 2026-10-03: the prefix form matched nothing
+    because parse_code_form only knows sh/sz/bj prefixes) — the prefix
+    declares the market, the remainder goes through the normal chain,
+    and results are filtered to the declared market."""
     out = []
-    form = parse_code_form(query)
+    q = query.strip()
+    forced = None
+    pm = re.fullmatch(r"(?i)(A|HK|US)[:：]\s*(.+)", q)
+    if pm:
+        forced = pm.group(1).upper()
+        q = pm.group(2).strip()
+    form = parse_code_form(q)
     try:
         frames = load_snapshot_frames(snapshot_dir)
     except FileNotFoundError:
         frames = {}
-    out += search_frames(query, frames)
+    out += search_frames(q, frames)
     if live and len(out) < 3:
         seen = {(m.market, m.code) for m in out}
-        out += [m for m in search_smartbox(query)
+        out += [m for m in search_smartbox(q)
                 if (m.market, m.code) not in seen]
     if form:
         score = 120.0
@@ -151,7 +163,7 @@ def resolve(query: str, snapshot_dir=None, live: bool = True) -> list:
             # an arbitrary English word parses as a US code form; keep
             # it only as a last resort below every confirmed match
             score = 10.0
-        out.append(Match(form[0], form[1], query.strip(), score, form[2]))
+        out.append(Match(form[0], form[1], q, score, form[2]))
     best = {}
     for m in out:
         key = (m.market, m.code)
@@ -168,12 +180,14 @@ def resolve(query: str, snapshot_dir=None, live: bool = True) -> list:
                 if not m.market_id and "market_id" in hit.columns:
                     m.market_id = str(hit.iloc[0].get("market_id") or "")
         # not in snapshot (ETF/new listing) -> smartbox knows the name
-        if m.name == m.code or m.name == query.strip():
+        if m.name == m.code or m.name == q:
             for cand in out:
                 if ((cand.market, cand.code) == (m.market, m.code)
-                        and cand.name not in (m.code, query.strip())):
+                        and cand.name not in (m.code, q)):
                     m.name = cand.name
                     if not m.market_id:
                         m.market_id = cand.market_id
                     break
+    if forced:
+        res = [m for m in res if m.market == forced] or res
     return res
