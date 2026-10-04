@@ -1111,6 +1111,82 @@
         "HKD": 0.8548,
         "USD": 6.7066
       }
+    },
+    {
+      "date": "2026-10-04",
+      "nav": 7188.33,
+      "cash_total": 5.25,
+      "settling_total": 0,
+      "positions": [
+        {
+          "market": "US",
+          "code": "ZM",
+          "name": "Zoom通讯",
+          "qty": 16.0,
+          "price": 92.88,
+          "currency": "USD",
+          "value_base": 1486.08
+        },
+        {
+          "market": "US",
+          "code": "PTC",
+          "name": "PTC Inc",
+          "qty": 12.0,
+          "price": 144.03,
+          "currency": "USD",
+          "value_base": 1728.36
+        },
+        {
+          "market": "US",
+          "code": "TCOM",
+          "name": "携程",
+          "qty": 40.0,
+          "price": 38.09,
+          "currency": "USD",
+          "value_base": 1523.6
+        },
+        {
+          "market": "US",
+          "code": "NVDA",
+          "name": "NVDA",
+          "qty": 3.0,
+          "price": 233.95,
+          "currency": "USD",
+          "value_base": 701.85
+        },
+        {
+          "market": "US",
+          "code": "HRMY",
+          "name": "HRMY",
+          "qty": 13.0,
+          "price": 39.64,
+          "currency": "USD",
+          "value_base": 515.32
+        },
+        {
+          "market": "US",
+          "code": "ADBE",
+          "name": "Adobe Inc.",
+          "qty": 3.0,
+          "price": 237.69,
+          "currency": "USD",
+          "value_base": 713.07
+        },
+        {
+          "market": "US",
+          "code": "BKE",
+          "name": "巴克尔",
+          "qty": 12.0,
+          "price": 42.9,
+          "currency": "USD",
+          "value_base": 514.8
+        }
+      ],
+      "fx": {
+        "CNY": 1.0,
+        "HKD": 0.8548,
+        "USD": 6.7066
+      }
     }
   ],
   "journal": [
@@ -1197,6 +1273,13 @@
       "nav": 7188.33,
       "day_pnl": -15.55,
       "text": "止盈止损线固化(基于20261003快照K线实算:MA/ATR14/60日低/入场后最高收+一致目标价): ZM止80.4(60日恐慌低83.33-1ATR,错杀证伪)/盈118(一致目标); PTC破MA60 138.9减半+吊灯132.7(146.47-3ATR)清/盈173一致价减半后trail; TCOM硬止37.85(-7%不动)+窗口10/24/盈43.2(MA60)减半46清; NVDA移动止221(吊灯=MA20区,只上不下)/无固定止盈,15%NAV再平衡上限,一致327.7参考; HRMY止37.4(MA60-1ATR)/盈43前高复核,站稳看50(模型bear),113.5为1-3年锚; ADBE止218(平台下沿)/盈275一致价复核; BKE止40(52周低破位)/盈52减半,73模型公允清。全触发最坏回撤约-7.2%NAV,组合风险预算内"
+    },
+    {
+      "date": "2026-10-03",
+      "ts": "2026-10-03T23:02:03",
+      "nav": 7188.33,
+      "day_pnl": -15.55,
+      "text": "20261003持仓审视(用户问询,周六无交易): 7仓intel全零红旗; 催化在途=TCOM国庆窗口(10-03旅游消费升温新闻持续,一致目标58.41=+53%)但现价38.09距硬止37.85仅0.24美元为全季最大单点风险,周一开盘纪律优先; 一致目标偏离: ZM 118.24(+27%)/PTC 174.21(+21%)/NVDA 327.70(61家StrongBuy); ADBE一致Hold 39家目标275.06+CEO卖出观察项未解除; NVDA新闻热度7天0->50条升温(拥挤度上升,移动止221守住即可); 集中度观察=软件类ZM+PTC+ADBE 54.6%+NVDA 9.8%=64%科技(赛季定位已知,最坏连环触发-7.2%NAV预算在); 弹药5.25=零,HRMY/PYPL候补在门口但需先卖; 判断:论点完好全员持有,下周一首盯TCOM硬线执行"
     }
   ],
   "totals": {
