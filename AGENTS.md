@@ -127,7 +127,7 @@ never leave the machine.
 | "短线/超短线有什么机会" | fused-quant-master | `python -m value_genie masters-vote --horizon short|ultrashort`（D4 战术模式：floor=真生意 core_business≥50 + 周K结构上行 + 无否决，甜点区=60日高点回撤 5-15%，同一融合管道 + 纪律块；塔砖 weekly-trend-daily-pullback） |
 | "把塔砖断言的机器注入候选池 / 管理产业论点" | fused-quant-master | `python -m value_genie masters-vote --thesis <id>` + `thesis list|show|add|amend|retire`（见 Thesis pools 节） |
 | "读公司原文 / 蒸馏商业模式与文化" | fused-quant-master | `python -m value_genie profile fetch|show|assess|list|status`（见 Company profiles 节——蒸馏回写后文化核恢复打分，profiles/ 本地-only 永不推送） |
-| "建财务模型 / DCF估值 / 可比公司" | fused-quant-master | `python -m value_genie model fetch|build|show|set|list X`（L3 建模：多年三表 + 驱动因子FCFF三情景概率加权 + 敏感性 + comps；触发条件见 skills/19；DCF 钩平行 D3 进 core_dcf；models/ 本地-only 永不推送） |
+| "建财务模型 / DCF估值 / 可比公司" | fused-quant-master | `python -m value_genie model gather|write|show|lint|status X`（AI 手工建模工作台：gather 聚合素材→AI 写理解层〔飞轮/文化/reverse-DCF 三件套+世界叙事+自由维度〕→lint 合格线〔信息量≥财报〕；估值层 fetch|build|set|list；触发条件见 skills/19；DCF 钩平行 D3 进 core_dcf；models/ 本地-only 永不推送） |
 | "设置/修改我的投资风格" | user-profile | `python -m value_genie user set-style me --base buffett --weight value=0.3` |
 | "录入/修改/查看我的持仓" | user-portfolio | `python -m value_genie holding add|update|remove|list` |
 | "审视我的持仓 / 深度分析持仓" | holding-deep-review | `holding list` 先看体检，再 `ask X --evidence` per holding + `screen --strategy <master>` (business model, moat, culture, earn/lose paths, two master frameworks) |
@@ -261,23 +261,43 @@ veto-only until a distillation activates it.
 
 ## Financial models (财务模型, 本地-only)
 
-Models are the L3 valuation store: multi-year statement history on one
-side, the AI's adjustable driver assumptions + scenario DCF result on the
-other. They close the DCF loop — the reverse-DCF anchor in `core_dcf` is
-the default; a built, non-stale model's probability-weighted upside
-replaces it (D3-parallel hook, `core_gaps` marks `DCF_MODELED`).
+Models are the AI's cognitive dossiers, one per company (user mandate
+2026-10-03): **AI models one company at a time — no batch pipeline;
+scripts are the hands, never the modeler.** The dossier (`model.json`)
+is the model's body: business flywheel / culture / reverse-DCF are the
+machine-enforced three-piece minimum; world narratives (weight =
+AI-estimated, `weight_basis` mandatory — a weight without its basis is
+a placeholder) and freeform dimensions are open-ended. Quality bar:
+information content >= the annual report's (`model lint`), else the
+dossier is unqualified and stays out of scoring. Missing tools are
+built as the campaign needs them; insights go straight into the tower
+— modeling the whole market is how the quant tools, the tower and the
+North-Star DCF get stronger.
 
-- **Storage**: `models/<market>/<code>/` — history.json /
-  assumptions.json (changelog mandatory) / result.json / raw/ (audit
-  opinions, DD material). **gitignored LOCAL-ONLY — never pushed**
-  (user mandate 2026-10-02: the model is proprietary judgment).
-- Commands: `python -m value_genie model fetch|build|show|set|list` —
-  all `--json`-capable. Only `build` runs the freshness gate
-  (price-sensitive: comps + upside); fetch/show/set/list do not.
+- **Storage**: `models/<market>/<code>/` — `raw/` (gathered material:
+  full listing-history statements, intel events, company profile text,
+  peers; regenerable) / `model.json` (the AI-written dossier, THE
+  asset) / history.json / assumptions.json / result.json (valuation
+  layer). **gitignored LOCAL-ONLY — never pushed** (user mandate
+  2026-10-02: the model is proprietary judgment).
+- Commands: `python -m value_genie model gather|write|show|lint|status`
+  (workbench) + `fetch|build|set|list` (valuation layer) — all
+  `--json`-capable. Only `build` runs the freshness gate. `gather`
+  aggregates raw material — full-history statements, annual-report
+  texts (A: MD&A review + segment breakdown + core themes + sell-side
+  consensus + exec bios; US: 10-K Item 1/7 slices; HK: PDF-only gap),
+  disclosure full texts (A: cninfo annual-report + prospectus PDFs via
+  pypdf — soft dependency, gap-declared when absent; HK/US gap),
+  intel events, profile text, peers (pass `--peers` with AI-chosen
+  comparables when the target is absent from master.csv); `write` records the
+  understanding layer (`key=@file`, `--reason` mandatory changelog);
+  `lint` enforces the quality bar (exit 1 when INCOMPLETE, `--json`
+  included); `status` reports whole-market coverage.
 - **Trigger conditions (AI-decided, skills/19)**: mandatory before L4
   verdicts on L3 shortlists, on holdings with thesis drift, and for
   keyhole quarterly falsification checks; never for funnel-wide scans
-  or D4 tactical mode.
+  or D4 tactical mode. Campaign order: keyholes/holdings → L3 →
+  funnel candidates → industry by industry.
 - **Staleness**: the result pins the history hash; a refetched history
   (new reporting period) marks it STALE and it drops out of scoring
   until rebuilt.
