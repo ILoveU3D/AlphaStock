@@ -48,12 +48,15 @@ def test_gather_aggregates_all_sources(mdir, snap, monkeypatch):
                         lambda m, c: {"id": f"{m}:{c}", "summary": "自述"})
     monkeypatch.setattr(mg, "gather_annual",
                         lambda m, c: ("/tmp/annual.json", None))
+    monkeypatch.setattr(mg, "gather_filings",
+                        lambda m, c: ("/tmp/filings.json", None))
     monkeypatch.setattr(mg, "gather_peers",
                         lambda m, c, s, explicit=None:
                         ("/tmp/peers.json", None))
     rep = mg.gather("A", "688795", snap_dir=snap)
     assert rep["gaps"] == []
     assert rep["gathered"]["annual"] == "/tmp/annual.json"
+    assert rep["gathered"]["filings"] == "/tmp/filings.json"
     raw = store.raw_dir("A", "688795")
     h = json.loads((raw / "history.json").read_text(encoding="utf-8"))
     assert len(h["years"]) == 3
@@ -70,6 +73,8 @@ def test_gather_fail_closed_per_source(mdir, snap, monkeypatch):
     monkeypatch.setattr(fp, "update_raw", lambda m, c: None)
     monkeypatch.setattr(mg, "gather_annual",
                         lambda m, c: (None, "annual down"))
+    monkeypatch.setattr(mg, "gather_filings",
+                        lambda m, c: (None, "filings down"))
     monkeypatch.setattr(mg, "gather_peers",
                         lambda m, c, s, explicit=None:
                         (None, "not in master"))
@@ -77,7 +82,7 @@ def test_gather_fail_closed_per_source(mdir, snap, monkeypatch):
     assert rep["gathered"]["history"] is None
     assert rep["gathered"]["profile_raw"] is None
     assert rep["gathered"]["annual"] is None
-    assert len(rep["gaps"]) == 4
+    assert len(rep["gaps"]) == 5
     # intel still gathered — one failure never blocks the others
     assert rep["gathered"]["intel"] is not None
 
@@ -89,6 +94,8 @@ def test_gather_skips_existing_unless_force(mdir, snap, monkeypatch):
                         lambda m, c: {"id": "x", "summary": "s"})
     monkeypatch.setattr(mg, "gather_annual",
                         lambda m, c: ("/tmp/a.json", None))
+    monkeypatch.setattr(mg, "gather_filings",
+                        lambda m, c: ("/tmp/f.json", None))
     monkeypatch.setattr(mg, "gather_peers",
                         lambda m, c, s, explicit=None:
                         ("/tmp/p.json", None))
@@ -133,6 +140,8 @@ def test_gather_intel_missing_radar_is_gap(mdir, tmp_path, monkeypatch):
                         lambda m, c: {"id": "x", "summary": "s"})
     monkeypatch.setattr(mg, "gather_annual",
                         lambda m, c: ("/tmp/a.json", None))
+    monkeypatch.setattr(mg, "gather_filings",
+                        lambda m, c: ("/tmp/f.json", None))
     monkeypatch.setattr(mg, "gather_peers",
                         lambda m, c, s, explicit=None:
                         ("/tmp/p.json", None))
