@@ -281,8 +281,12 @@ North-Star DCF get stronger.
   layer). **gitignored LOCAL-ONLY — never pushed** (user mandate
   2026-10-02: the model is proprietary judgment).
 - Commands: `python -m value_genie model gather|write|show|lint|status`
-  (workbench) + `fetch|build|set|list` (valuation layer) — all
-  `--json`-capable. Only `build` runs the freshness gate. `gather`
+  (workbench) + `fetch|build|set|list` (valuation layer) + `campaign
+  init|status|next|gather` (full-market campaign queue, user mandate
+  2026-10-04: tiered queue holdings→funnel→market in
+  `models/campaign.json`, gather-ahead monitor with backlog cap 300 and
+  fail-3 park; the dossier itself stays AI-only) — all `--json`-
+  capable. Only `build` runs the freshness gate. `gather`
   aggregates raw material — full-history statements, annual-report
   texts (A: MD&A review + segment breakdown + core themes + sell-side
   consensus + exec bios; US: 10-K Item 1/7 slices; HK: PDF-only gap),

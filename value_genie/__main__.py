@@ -1681,6 +1681,115 @@ def _model_price(m, args) -> float | None:
     return None
 
 
+def _model_campaign(args) -> int:
+    """Full-market modeling campaign (user mandate 2026-10-04): the
+    machine side — tiered queue, gather-ahead monitor, progress. The
+    understanding layer stays the AI's (red line, skills/19)."""
+    from .model import campaign as mc
+    cmd = args.campaign_cmd
+
+    if cmd == "init":
+        try:
+            mc.init(getattr(args, "data_dir", None))
+        except FileNotFoundError as exc:
+            print(f"campaign init failed: {exc}", file=sys.stderr)
+            return 1
+        p = mc.progress()
+        if args.json:
+            print(json.dumps(p, ensure_ascii=False, indent=2, default=str))
+            return 0
+        tiers = {t["tier"]: t for t in p["tiers"]}
+        print(f"campaign queue -> {mc.campaign_path()}")
+        print(f"  snapshot {p['snapshot']} | {p['queue_total']} targets "
+              f"(holdings {tiers[1]['total']} / funnel {tiers[2]['total']} "
+              f"/ market {tiers[3]['total']}) | {p['modeled']} already "
+              f"modeled")
+        for g in p["gaps"]:
+            print(f"  gap: {g}")
+        print("next: `model campaign gather -n 10` runs the machine side; "
+              "`model campaign next` is the AI work queue")
+        return 0
+
+    if cmd == "status":
+        p = mc.progress()
+        if args.json:
+            print(json.dumps(p, ensure_ascii=False, indent=2, default=str))
+            return 0
+        if not p.get("initialized"):
+            print("no campaign under models/ — run `model campaign init`",
+                  file=sys.stderr)
+            return 1
+        print(f"campaign @ {p['snapshot']} — {p['modeled']}/"
+              f"{p['queue_total']} modeled ({p['modeled_pct']}%) | "
+              f"{p['ready']} gathered-ready for the AI")
+        for t in p["tiers"]:
+            print(f"  tier {t['tier']} {t['label']:<9} {t['total']:>6} total"
+                  f" | {t['modeled']:>5} modeled | {t['ready']:>4} ready"
+                  f" | {t['pending']:>6} pending")
+        if p["incomplete_dossiers"]:
+            ids = p["incomplete_dossiers"]
+            print(f"  incomplete dossiers: {', '.join(ids[:8])}"
+                  + (" ..." if len(ids) > 8 else ""))
+        if p["parked"]:
+            print(f"  parked (gather failed x{mc.FAIL_MAX}): "
+                  f"{', '.join(list(p['parked'])[:8])}")
+        if p["next"]:
+            print(f"  queue head: {', '.join(p['next'][:8])}")
+        return 0
+
+    if cmd == "next":
+        rows = mc.next_targets(args.n)
+        if args.json:
+            print(json.dumps(rows, ensure_ascii=False, indent=2,
+                             default=str))
+            return 0
+        if not rows:
+            print("campaign queue empty (or every target modeled)")
+            return 0
+        for i, r in enumerate(rows, 1):
+            state = "ready" if r["gathered"] else "ungathered"
+            print(f"{i:>3}. [{state:<9}] {r['id']:<12} "
+                  f"{(r.get('name') or '')[:20]:<20} tier {r['tier']}")
+        print("gather an ungathered target with `model gather <id>`; "
+              "the dossier itself is the AI's to write")
+        return 0
+
+    if cmd == "gather":
+        rep = mc.gather_batch(args.n)
+        if args.json:
+            print(json.dumps(rep, ensure_ascii=False, indent=2,
+                             default=str))
+            return 0
+        if "error" in rep:
+            print(rep["error"], file=sys.stderr)
+            return 1
+        print(f"gathered {rep['ok']}/{rep['attempted']} "
+              f"(backlog {rep['backlog']}/{rep['backlog_cap']})")
+        for r in rep["results"]:
+            if r["ok"]:
+                detail = (f" | gaps: {'; '.join(r['gaps'])}"
+                          if r.get("gaps") else "")
+                print(f"  ok   {r['id']}{detail}")
+            else:
+                err = r.get("error") or "; ".join(r.get("gaps") or [])
+                print(f"  FAIL {r['id']}: {err}")
+        if rep["parked"]:
+            print(f"  parked (failed x{mc.FAIL_MAX}): "
+                  f"{', '.join(list(rep['parked'])[:8])}")
+        return 0
+
+    if cmd == "monitor":
+        rep = mc.monitor_pass(args.n)
+        if args.json:
+            print(json.dumps(rep, ensure_ascii=False, indent=2,
+                             default=str))
+        else:
+            print(rep.get("log") or rep.get("error", "monitor pass done"))
+        return 0 if rep.get("ok") else 1
+
+    raise SystemExit(f"unknown campaign subcommand {cmd}")
+
+
 def cmd_model(args) -> int:
     """Financial models (2026-10-02 design): driver-based FCFF DCF +
     comps, AI-triggered at L3. models/ is LOCAL-ONLY (never pushed).
@@ -1722,6 +1831,9 @@ def cmd_model(args) -> int:
             print(f"  {r['id']:<14} {mark:<10} {r.get('name') or ''} "
                   f"{str(r.get('updated_at'))[:10]}")
         return 0
+
+    if args.model_cmd == "campaign":
+        return _model_campaign(args)
 
     # build is price-sensitive -> freshness-gated BEFORE any resolution
     # (same order as cmd_ask: a FAIL gate emits nothing on stdout).
@@ -1939,10 +2051,42 @@ def cmd_model(args) -> int:
         if master is not None:
             row = master[(master["market"].astype(str) == m.market)
                          & (master["code"].astype(str) == str(m.code))]
-            if len(row):
-                industry = row.iloc[0].get("industry")
+            # AI-explicit peers (gather --peers -> raw/peers.json) come
+            # first: codes from the modeler's choice, values fresh from
+            # the snapshot. Master.csv industry is often empty for US
+            # rows, which silently degraded comps to market-cap
+            # neighbors (PYPL 2026-10-05).
+            peers = None
+            explicit_empty = False
+            pj = (mst._stock_dir(m.market, m.code) / "raw" / "peers.json")
+            if pj.exists():
+                try:
+                    pdata = json.loads(pj.read_text(encoding="utf-8"))
+                    pcodes = [str(p.get("code")) for p in
+                              pdata.get("peers") or [] if p.get("code")]
+                    if pdata.get("selection") == "ai-explicit" and not pcodes:
+                        # the modeler looked for true comparables and the
+                        # funnel universe lacks them — an empty comps table
+                        # is the honest result, not a cap-neighbor fallback
+                        explicit_empty = True
+                    elif pcodes:
+                        sel = master[(master["market"].astype(str)
+                                      == m.market)
+                                     & (master["code"].astype(str)
+                                        .isin(pcodes))].copy()
+                        if len(sel):
+                            sel["_ord"] = sel["code"].astype(str).map(
+                                {c: i for i, c in enumerate(pcodes)})
+                            peers = sel.sort_values("_ord").drop(
+                                columns=["_ord"])
+                except (ValueError, OSError, KeyError):
+                    peers = None
+            if peers is None and not explicit_empty:
+                industry = (row.iloc[0].get("industry")
+                            if len(row) else None)
                 peers = mcomps.select_peers(master, m.market, m.code,
                                             industry)
+            if len(row) and peers is not None:
                 table = mcomps.comps_table(peers)
                 r["comps"] = {**table,
                               "implied": mcomps.implied_range(
@@ -2583,6 +2727,37 @@ def build_parser() -> argparse.ArgumentParser:
     pmo_status = pmo_sub.add_parser(
         "status", help="modeling coverage across the whole market")
     pmo_status.add_argument("--json", action="store_true")
+    # --- full-market campaign (2026-10-04): queue + gather-ahead monitor ---
+    pmo_camp = pmo_sub.add_parser(
+        "campaign", help="full-market modeling campaign: tiered queue, "
+                         "gather-ahead monitor and progress — the machine "
+                         "side only (the dossier stays the AI's)")
+    pmo_camp_sub = pmo_camp.add_subparsers(dest="campaign_cmd",
+                                           required=True)
+    pc_init = pmo_camp_sub.add_parser(
+        "init", help="(re)build the tiered queue: holdings -> funnel -> "
+                     "market (industry by industry)")
+    pc_init.add_argument("--data-dir", default=None)
+    pc_init.add_argument("--json", action="store_true")
+    pc_status = pmo_camp_sub.add_parser(
+        "status", help="progress: modeled / gathered-ready / pending "
+                       "per tier")
+    pc_status.add_argument("--json", action="store_true")
+    pc_next = pmo_camp_sub.add_parser(
+        "next", help="the AI work queue: next N unmodeled targets")
+    pc_next.add_argument("-n", type=int, default=10)
+    pc_next.add_argument("--json", action="store_true")
+    pc_gather = pmo_camp_sub.add_parser(
+        "gather", help="batch-gather the next N unmodeled targets — the "
+                       "hourly monitor's job (hands, never the modeler)")
+    pc_gather.add_argument("-n", type=int, default=10)
+    pc_gather.add_argument("--json", action="store_true")
+    pc_monitor = pmo_camp_sub.add_parser(
+        "monitor", help="one unattended hourly pass: gather top-up + "
+                        "progress log + self-retire on completion (the "
+                        "scheduled-task entry point; hands only)")
+    pc_monitor.add_argument("-n", type=int, default=20)
+    pc_monitor.add_argument("--json", action="store_true")
     pmo.set_defaults(func=cmd_model)
     return parser
 

@@ -17,8 +17,8 @@ commands:
   - ask X --evidence
   - intel X
   - recommend --user me
-version: 25
-updated_at: 2026-10-03T13:32:45
+version: 31
+updated_at: 2026-10-06T00:18:13
 ---
 
 # Playbook
@@ -264,3 +264,9 @@ Output shape (hard rules):
 - [2026-10-01 19:38] (ai) 换仓/推荐流程教训：先探测用户对该标的的回撤承受深度，再定仓位结构与节奏——承受度决定结构（一把/分批/放弃），估值只决定方向。案例 2026-10-01 KO→HSBC 换仓：论证四轮全部通过，因用户承受度（-30%不可接受）最后才暴露，方案两度缩减仍被否决。顺序反了：先问睡得着多少，再谈买多少
 - [2026-10-02 23:18] (ai) 2026-10-02 用户规则: 融合推荐不得因已持仓或曾推荐而静默排除候选; 霸榜持久性(连续多日在池顶)=误价真实性的正向信号须显式呈现; 正确输出格式=霸榜股(持有即推荐,标注折扣收敛状态)+新首选双列
 - [2026-10-03 13:32] (ai) 宽池vote_count>=1机制边界(2026-10-03实测):PYPL core_score 88.1升至95.7仍掉出宽池——唯一一票来自sheng,波动率分位跌破60闸门即归零;高三核名字会因交易型大师技术门槛失席位,推荐后次日掉池不代表论点破坏,复盘须查master.csv core_score区分技术掉池与基本面掉池
+- [2026-10-04 22:41] (ai) INVA 建模沉淀：world_narratives 的机器校验字段是 world+weight_basis（UVE 已用 world，INVA 初稿误用 description 导致首写后 weak_weights 清空前需改名）——后续档案初稿直接用 world 字段名可省一轮返工
+- [2026-10-05 08:32] (ai) A股F10的debt字段在煤炭/有色等预收应付heavy行业里是总负债而非带息负债（神火000933案例：总负债206亿vs带息90亿，利息费用3.17亿反推校验3.5%利率闭环）——EV桥计算前必须用利息费用反推校验带息负债，口径差可达2倍；云南神火58.25%持股意味着少数股东每年分走12亿+，每股口径必须用归母，少数股东权益进EV桥（神火按账面36.8亿保守计）
+- [2026-10-05 22:34] (ai) US trailing financials lag up to 3 quarters (TTD 2026-10-05: snapshot rev_yoy +18.5% masked Q2-26 +3% and Q3 guide -12% - walled-garden share loss + AI take-rate pressure); before calling a deep-drawdown US name 错杀, web-verify current-quarter trajectory vs snapshot annual figures
+- [2026-10-05 22:34] (ai) US pe_ttm snapshot values can be data artifacts: TTD showed pe_ttm 0.14 at .95 (impossible vs Q2 adj EPS .34 - real forward ~10x); flag US multiples that imply EPS > 40% of price and verify against live sources before citing (倍数口径规则 extension)
+- [2026-10-05 22:34] (ai) v29 correction (PS ate dollar signs): TTD pe_ttm 0.14 at price 11.95 USD vs Q2 adj EPS 0.34 USD - real forward ~10x; the rule stands: verify impossible US multiples against live sources before citing
+- [2026-10-06 00:18] (ai) model set 的情景驱动参数一律小数口径：revenue_growth 传 2 意为 +200%（引擎按 1+g 复合）；美股 SEC companyfacts 的 revenue 字段可能错标为细项而非总营收——校准说明写进估值层 history.json 的 gaps，绝不要写进 raw/（raw 体积膨胀会抬高 lint 的 30% 文本率基数，导致 QUALIFIED 翻转为 INCOMPLETE）

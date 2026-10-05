@@ -76,10 +76,15 @@ def run_model(history: dict, assumptions: dict,
         gaps.append("shares missing -> per-share value unavailable")
 
     scenarios, weighted, psum = {}, 0.0, 0.0
+    # history currency -> quote currency (HK reporters in CNY/USD vs HKD
+    # price; manifest fx). Default 1.0 keeps existing models unchanged.
+    fx = float(_or_default(assumptions.get("price_fx"), 1.0))
     for name, sc in (assumptions.get("scenarios") or {}).items():
         rows = fcff_path(last_rev, sc, years, tax)
         ev = dcf_value([r["fcff"] for r in rows], wacc, tg)
         ps = _per_share(ev, net_debt, shares)
+        if ps is not None:
+            ps = ps * fx
         prob = float(sc.get("prob") or 0.0)
         scenarios[name] = {"prob": prob, "ev": ev, "per_share": ps,
                            "forecast": rows}
@@ -103,9 +108,10 @@ def run_model(history: dict, assumptions: dict,
                 row.append(None)
                 continue
             rows = fcff_path(last_rev, base, years, tax)
-            row.append(_per_share(
+            ps = _per_share(
                 dcf_value([r["fcff"] for r in rows], w, g),
-                net_debt, shares))
+                net_debt, shares)
+            row.append(ps * fx if ps is not None else None)
         sens_vals.append(row)
 
     return {
@@ -113,6 +119,7 @@ def run_model(history: dict, assumptions: dict,
         "code": history["code"], "history_hash": history["history_hash"],
         "currency": assumptions.get("currency") or history.get("currency"),
         "price": price, "wacc": wacc, "terminal_g": tg, "tax_rate": tax,
+        "price_fx": fx,
         "scenarios": scenarios, "weighted_per_share": weighted_ps,
         "upside_pct": upside,
         "sensitivity": {"wacc": list(config.MODEL_SENSITIVITY_WACC),
