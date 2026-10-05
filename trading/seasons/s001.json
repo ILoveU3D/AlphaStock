@@ -14,7 +14,7 @@
   "cash": {
     "CNY": 0.0,
     "HKD": 0.0,
-    "USD": 5.25
+    "USD": 811.52
   },
   "settling": [],
   "positions": [
@@ -26,16 +26,6 @@
       "avg_cost": 89.7381,
       "currency": "USD",
       "last_buy_date": "2026-09-29",
-      "lot": 1
-    },
-    {
-      "market": "US",
-      "code": "PTC",
-      "name": "PTC Inc",
-      "qty": 12.0,
-      "avg_cost": 136.2833,
-      "currency": "USD",
-      "last_buy_date": "2026-09-30",
       "lot": 1
     },
     {
@@ -62,10 +52,10 @@
       "market": "US",
       "code": "HRMY",
       "name": "HRMY",
-      "qty": 13.0,
-      "avg_cost": 39.5431,
+      "qty": 23.0,
+      "avg_cost": 40.0848,
       "currency": "USD",
-      "last_buy_date": "2026-09-30",
+      "last_buy_date": "2026-10-06",
       "lot": 1
     },
     {
@@ -86,6 +76,16 @@
       "avg_cost": 43.1858,
       "currency": "USD",
       "last_buy_date": "2026-10-02",
+      "lot": 1
+    },
+    {
+      "market": "US",
+      "code": "FUTU",
+      "name": "富途控股",
+      "qty": 10.0,
+      "avg_cost": 110.009,
+      "currency": "USD",
+      "last_buy_date": "2026-10-06",
       "lot": 1
     }
   ],
@@ -407,6 +407,72 @@
       "note": "中线首选:三核89.6(商86.7/文82/DCF100),加权公允73.76=+71.7%,bear+35%;3大师(buffett/duan/散户乙),零有息负债,ROE49%,TTM股息10.2%,pos52w=17贴底;兑现触发:FCF yield<6%或特别股息取消/同店连续负",
       "settle_amount": 0.0,
       "seq": 15
+    },
+    {
+      "ts": "2026-10-05T23:33:55",
+      "date": "2026-10-05",
+      "action": "sell",
+      "market": "US",
+      "code": "PTC",
+      "name": "Ptc Inc.",
+      "qty": 12.0,
+      "price": 193.02,
+      "gross": 2316.24,
+      "fees": {
+        "platform": 1.99
+      },
+      "fees_total": 1.99,
+      "cash_delta": 0.0,
+      "settle_amount": 2314.25,
+      "available_date": "2026-10-06",
+      "fx_date": "2026-10-06",
+      "realized_pnl": 678.85,
+      "currency": "USD",
+      "session": "in",
+      "note": "止盈纪律执行+事件跳空兑现: 10-03固化线盈173(一致价173.21), 今日施耐德拟200亿收购传闻单日+34%跳空至193.3, 超一致目标+11%/超传闻对价~167/股/超模型公允123(透支57%); 成本136.28 realized+41.8%(+683USD). 跳空价已高于传闻对价, 续持=赌竞购战属事件博弈非价值判断, 按中线护照兑现即离场全清",
+      "seq": 16
+    },
+    {
+      "ts": "2026-10-06T00:18:09",
+      "date": "2026-10-06",
+      "action": "buy",
+      "market": "US",
+      "code": "FUTU",
+      "name": "富途控股",
+      "qty": 10.0,
+      "price": 109.81,
+      "gross": 1098.1,
+      "fees": {
+        "platform": 1.99
+      },
+      "fees_total": 1.99,
+      "cash_delta": -1100.09,
+      "currency": "USD",
+      "session": "in",
+      "note": "QMF四层(PTC兑现资金再部署,r5扳机亮执行): L1池内(core77.8/biz100,drawdown-48.8%,pos_52w低) L2零红旗(Form4近90天无内部人交易仅1条6-K,BZ否决案后强化下钻通过) L3三核: 平台+浮存金机器(rev+74.6%/profit+107.9%/ROE33.3/OCF_NI3.6现金流极强),中概估值压缩下错杀非生意恶化 L4: 利润+108%vs价格-49%=教科书错杀,今日+8%反弹=r5翻正扳机亮按0910触发器规则执行非追高; 一致StrongBuy18家目标160.85=+45%空间; 10股约14%NAV,-50%测试亏约550=NAV-7%可承受",
+      "settle_amount": 0.0,
+      "seq": 17
+    },
+    {
+      "ts": "2026-10-06T00:18:40",
+      "date": "2026-10-06",
+      "action": "buy",
+      "market": "US",
+      "code": "HRMY",
+      "name": "Harmony Biosciences Holdings, Inc.",
+      "qty": 10.0,
+      "price": 40.59,
+      "gross": 405.9,
+      "fees": {
+        "platform": 1.99
+      },
+      "fees_total": 1.99,
+      "cash_delta": -407.89,
+      "currency": "USD",
+      "session": "in",
+      "note": "QMF加仓(池#3三核全,PTC兑现资金再部署第二笔): core90.3/votes4池内美股第3,文化75已蒸馏; 模型bear50.64=+25%/base113.54=+180%(10-02建模非stale); 现价40.43在10-03纪律43前高复核线下方,加仓窗口有效; 加10股至23股约11.9%NAV; Wakix发作性睡病 franchise 论点完好,零红旗",
+      "settle_amount": 0.0,
+      "seq": 18
     }
   ],
   "nav_history": [
@@ -1187,6 +1253,149 @@
         "HKD": 0.8548,
         "USD": 6.7066
       }
+    },
+    {
+      "date": "2026-10-05",
+      "nav": 7827.22,
+      "cash_total": 5.25,
+      "settling_total": 2314.25,
+      "positions": [
+        {
+          "market": "US",
+          "code": "ZM",
+          "name": "Zoom通讯",
+          "qty": 16.0,
+          "price": 93.67,
+          "currency": "USD",
+          "value_base": 1498.72
+        },
+        {
+          "market": "US",
+          "code": "TCOM",
+          "name": "携程",
+          "qty": 40.0,
+          "price": 38.72,
+          "currency": "USD",
+          "value_base": 1548.8
+        },
+        {
+          "market": "US",
+          "code": "NVDA",
+          "name": "NVDA",
+          "qty": 3.0,
+          "price": 236.79,
+          "currency": "USD",
+          "value_base": 710.37
+        },
+        {
+          "market": "US",
+          "code": "HRMY",
+          "name": "HRMY",
+          "qty": 13.0,
+          "price": 40.19,
+          "currency": "USD",
+          "value_base": 522.47
+        },
+        {
+          "market": "US",
+          "code": "ADBE",
+          "name": "Adobe Inc.",
+          "qty": 3.0,
+          "price": 237.48,
+          "currency": "USD",
+          "value_base": 712.44
+        },
+        {
+          "market": "US",
+          "code": "BKE",
+          "name": "巴克尔",
+          "qty": 12.0,
+          "price": 42.91,
+          "currency": "USD",
+          "value_base": 514.92
+        }
+      ],
+      "fx": {
+        "CNY": 1.0,
+        "HKD": 0.8545,
+        "USD": 6.7053
+      }
+    },
+    {
+      "date": "2026-10-06",
+      "nav": 7831.28,
+      "cash_total": 811.52,
+      "settling_total": 0,
+      "positions": [
+        {
+          "market": "US",
+          "code": "ZM",
+          "name": "Zoom通讯",
+          "qty": 16.0,
+          "price": 93.75,
+          "currency": "USD",
+          "value_base": 1500.0
+        },
+        {
+          "market": "US",
+          "code": "TCOM",
+          "name": "携程",
+          "qty": 40.0,
+          "price": 38.72,
+          "currency": "USD",
+          "value_base": 1548.8
+        },
+        {
+          "market": "US",
+          "code": "NVDA",
+          "name": "NVDA",
+          "qty": 3.0,
+          "price": 236.36,
+          "currency": "USD",
+          "value_base": 709.08
+        },
+        {
+          "market": "US",
+          "code": "HRMY",
+          "name": "HRMY",
+          "qty": 23.0,
+          "price": 40.7,
+          "currency": "USD",
+          "value_base": 936.1
+        },
+        {
+          "market": "US",
+          "code": "ADBE",
+          "name": "Adobe Inc.",
+          "qty": 3.0,
+          "price": 236.46,
+          "currency": "USD",
+          "value_base": 709.38
+        },
+        {
+          "market": "US",
+          "code": "BKE",
+          "name": "巴克尔",
+          "qty": 12.0,
+          "price": 42.95,
+          "currency": "USD",
+          "value_base": 515.4
+        },
+        {
+          "market": "US",
+          "code": "FUTU",
+          "name": "富途控股",
+          "qty": 10.0,
+          "price": 110.1,
+          "currency": "USD",
+          "value_base": 1101.0
+        }
+      ],
+      "fx": {
+        "CNY": 1.0,
+        "HKD": 0.8546,
+        "USD": 6.7059
+      }
     }
   ],
   "journal": [
@@ -1280,6 +1489,20 @@
       "nav": 7188.33,
       "day_pnl": -15.55,
       "text": "20261003持仓审视(用户问询,周六无交易): 7仓intel全零红旗; 催化在途=TCOM国庆窗口(10-03旅游消费升温新闻持续,一致目标58.41=+53%)但现价38.09距硬止37.85仅0.24美元为全季最大单点风险,周一开盘纪律优先; 一致目标偏离: ZM 118.24(+27%)/PTC 174.21(+21%)/NVDA 327.70(61家StrongBuy); ADBE一致Hold 39家目标275.06+CEO卖出观察项未解除; NVDA新闻热度7天0->50条升温(拥挤度上升,移动止221守住即可); 集中度观察=软件类ZM+PTC+ADBE 54.6%+NVDA 9.8%=64%科技(赛季定位已知,最坏连环触发-7.2%NAV预算在); 弹药5.25=零,HRMY/PYPL候补在门口但需先卖; 判断:论点完好全员持有,下周一首盯TCOM硬线执行"
+    },
+    {
+      "date": "2026-10-05",
+      "ts": "2026-10-05T23:35:13",
+      "nav": 7828.42,
+      "day_pnl": 640.09,
+      "text": "20261005裁决执行: ①PTC全清12@193.02(realized+678.85,+41.8%)——施耐德拟200亿收购传闻单日+34.2%跳空(144.03→193.3),破10-03止盈线173(一致价173.21)/超传闻对价~167每股/超模型公允123(透支57%);跳空价>对价即续持=赌竞购战属事件博弈非价值判断,按中线护照兑现即离场全清; ②买入计划(FUTU11+HRMY10)因T+1结算(settle10-06)今日不可执行,预置明日资金到账执行: FUTU11股@~102(首笔~14%NAV,Form4近90天零内部人交易下钻通过,rev+74.6%/profit+107.9%/ROE33.3/OCF_NI3.6,利润爆发vs价格-49%=错杀,一致StrongBuy18家目标160.85=+57%)+HRMY10股@~39.9(池#3三核全文75蒸馏,模型bear50.64=+27%/base113.54); ③其余6仓触发器零触发续持: ZM93.56(止80.4/盈118)/TCOM38.72(硬止37.85上方0.87,窗口10/24,国庆催化在途)/NVDA236.54(移动止221未破,无固定止盈,15%上限内)/HRMY39.89/ADBE237.56(止218)/BKE42.78(止40). 日盈+640(+8.9%),NAV约7824.84,PTC贡献+591"
+    },
+    {
+      "date": "2026-10-06",
+      "ts": "2026-10-06T00:19:14",
+      "nav": 7822.91,
+      "day_pnl": -4.31,
+      "text": "20261006盘中执行(用户授权在途资金交易): PTC兑现资金2314.25 T+1到账后两笔再部署完成——①FUTU 10@109.81(1098.10USD,14.1%NAV): r5翻正扳机亮按0910规则执行,Form4零红旗复查通过,利润+108%vs价-49%错杀,一致SB目标160.85=+45%; ②HRMY+10@40.59(总23股,11.9%NAV): 池#3三核全,模型bear50.64=+25%,43复核线下方窗口有效. 余现金811.52(10.4%机动). 组合7仓: TCOM19.8%/ZM19.1%/FUTU14.1%/HRMY11.9%/NVDA9.1%/ADBE9.1%/BKE6.6%. PTC收购正式公告仍未落地(10-06新闻0条),193.02卖出价vs传闻对价~167后验在途"
     }
   ],
   "totals": {

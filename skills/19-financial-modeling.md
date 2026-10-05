@@ -19,8 +19,8 @@ commands:
   - model build X
   - model set X
   - model list
-version: 7
-updated_at: 2026-10-04T18:15:32
+version: 30
+updated_at: 2026-10-05T22:52:37
 ---
 
 # 19 · Financial Modeling（财务建模）
@@ -62,6 +62,25 @@ Triggers: 建模 / 财务模型 / DCF / 估值模型 / comps / 可比公司 / mo
 5. `model build X`（估值层：情景×概率 FCFF + comps，旧机制）——
    世界叙事的 drivers 落到 assumptions 后跑；show 同时呈现档案+估值
 6. `model status` —— 全市场建模覆盖度
+
+## 全市场战役循环（campaign，2026-10-04）
+
+`model campaign` 是战役的机器侧：三层队列（tier1 持仓/钥匙孔 →
+tier2 漏斗候选 core_score 降序 → tier3 全市场按行业/市值，ST 沉底；
+HK 全名单来自 mainindicator batch），状态存 `models/campaign.json`
+（本地-only），每家公司的进度从不落盘——gathered = raw/history.json
+存在、modeled = lint 通过，全部从磁盘实时推导。
+
+- `model campaign init` —— 从最新快照+users 重建队列（幂等）
+- `model campaign status` —— 进度板：分层 modeled/ready/pending
+- `model campaign next [-n K]` —— **AI 工作队列**：下 K 家未建模
+  （标注 gathered/ungathered）
+- `model campaign gather [-n K]` —— 批量采集下 K 家素材：**监视
+  循环的活**。背压上限 300 家（不跑到 AI 前面太远）；连败 3 次的
+  目标 park 不再重试
+- 分工红线不变：campaign gather 是机器的手，model.json 永远 AI
+  一家一家写。无人值守调度（任务计划/cron）只准调 gather，不准
+  碰 write
 
 ## 何时建模（AI 自律触发条件）
 
@@ -110,3 +129,27 @@ Triggers: 建模 / 财务模型 / DCF / 估值模型 / comps / 可比公司 / mo
 - [2026-10-04 17:24] (ai) engine 的 terminal_g/wacc/horizon_years or-bug 已同 tax_rate 一并修复（_or_default 显式 None 检查 + 回归测试 test_terminal_g_zero_is_respected）：0.0 是合法终值增速——BKE 档案核心论点 g=0 带宽震荡曾被 or 静默换成默认 0.025，终值虚增约 20%
 - [2026-10-04 17:24] (ai) US 顶层 history.json 若 fetched_at 早于 2026-10-04 14:37 的 history.py 修复，companyfacts 财年帧错位两年且缺最新 10-K 年（BKE/HRMY 实证：10/2 拉取把 FY2023 标成 FY2025）——重建估值层前必须 model fetch --force 并与 raw/history.json 比对最后一年；另：理解层 10/4 重写而估值层仍停留在旧机制小 assumptions（<2KB）= 未重建信号
 - [2026-10-04 18:15] (ai) engine-fix rebuild acceptance: after fixing the or-default zero-swallowing bug, rebuilt all 15 valuation layers and verified anchors via weighted_per_share delta (<0.005%) + result.history_hash == history.json hash; deliberate zero-paradigm params (HK dividend-discount tax_rate=0, BKE terminal_g=0) survived the fix intact — anchor-diff + hash check is the acceptance procedure for any post-engine-fix rebuild
+- [2026-10-04 21:10] (ai) 全市场战役上线（model campaign，用户令 2026-10-04）：init 实测 13,755 目标（持仓 4 / 漏斗 453 / 全市场 13,298，HK batch 2,225 全名单）；两个契约坑——users.list_users() 返回 UserProfile 对象（不是 id，勿再 load_user 二次解析）；HK mainindicator batch 返回的已是清洗帧（小写 code 列，无名称列），不是原始 SECURITY_CODE 形态。进度状态全部磁盘实时推导（gathered=raw/history.json、modeled=lint 通过），campaign.json 只存队列与失败计数
+- [2026-10-04 21:11] (ai) 全市场战役上线 2026-10-04：model campaign init|status|next|gather——三层队列（持仓→漏斗 core_score→全市场行业/市值，ST 沉底，HK 用 mainindicator batch 全名单 2225 家）；进度从磁盘实时推导不落盘；gather 背压 300、连败 3 次 park。契约坑：users.list_users() 返回 UserProfile 对象；HK batch 已是清洗帧（小写 code 列）。无人值守调度只准调 gather，write 永远 AI 手写
+- [2026-10-04 22:00] (ai) lint 30% 线按 _text_volume 字符数计：中文 UTF-8 在磁盘上每字 3 字节，用文件大小估进度会高估 3 倍——写维度前先 python 实测 staging 总字符 vs raw_text_volume()*0.3 再决定补量；另：中文文本内嵌 ASCII 双引号会让 JSON 解析失败，统一用「」
+- [2026-10-04 22:25] (ai) model write 的 KEY=VALUE 必须带 @ 前缀加载文件；漏 @ 时路径被存成字面文本（text volume 骤降），且 world_narratives 块把路径字符串逐字符拆成 33 个非对象条目——lint 报 not an object 长串时先查 @
+- [2026-10-04 22:25] (ai) annual.py 切片上限迭代史：80k(SLDE 首采)→120k(SLDE 修复)→160k(UVE 修复，MD&A 真实长 131k)；i7 长度恰等于上限=截断信号，采集后必查 len==max_len 与尾部是否句中截断
+- [2026-10-04 23:25] (ai) 80k 截断签名：raw annual.json 的 item1/item7 恰好=80000字符=修复前旧代码残留（gather_batch 只抓未建模目标，永不刷新旧文件）；接手预抓取素材时先扫 cap 签名（len==80000），用 fetch_annual_us 现采覆写；已建模公司（KO/HRMY/INVA）素材被截断需重抓+补维度重 lint
+- [2026-10-05 01:06] (ai) US 10-K models: PowerShell file Length is BYTES not chars (Chinese ~3B/char) — estimate writing volume with len(text) in Python before merge; lint counts parsed JSON string leaves only (key names/JSON syntax in world_narratives/gaps/falsification_ledger drop ~25%), so merge-script volume checks must json.loads the block files; write temp scripts into models/<mkt>/<code>/raw/ (AppData temp blocks writes); SEC gather truncates item7 at 160K chars — check tenk dict sub-keys and declare missing sections (ERM/Capital&Liquidity/late segments) in gaps
+- [2026-10-05 02:13] (ai) model gather skips re-fetching files that already exist unless --force is passed — a failed 10-K slice (e.g. THG item7=0) will NOT self-heal on plain re-gather; always use model gather X --force when the stored copy carries a gap. Slice failures happen on all-caps headings glued to page numbers (THG: '0ITEM 7–MANAGEMENT'), which the line-anchor fallback still resolves
+- [2026-10-05 04:18] (ai) model build now prefers raw/peers.json AI-explicit peer codes over master.csv industry/cap proximity (US rows often have empty industry — PYPL comps silently degraded to cap-neighbors WAT/CRDO/ALL; fixed 2026-10-05 in __main__ build path: codes from peers.json, values fresh from master, falls back to select_peers when absent)
+- [2026-10-05 04:18] (ai) valuation-layer history.json fetched before the 2026-10-04 ZM fix carries silently shifted years (PYPL fy2025 held FY2023 comparatives — first-wins picked oldest period); after model gather, run model fetch --force to rebuild history with the fixed fetcher and verify last fy revenue against the 10-K text before building
+- [2026-10-05 05:37] (ai) BUG: model gather writes raw/history.json but model build/load_history reads <stock>/history.json at the stock-dir ROOT — when the two drift (TTD 2026-10-05: root stuck at a stale 2026-10-02 fetch with FY labels shifted +2y, last_rev off by 33%), build silently forecasts from the wrong base. Fix: compare root vs raw fetched_at + last-year revenue before every build; if root is stale, copy raw/history.json over it. Symptom to watch: engine per-share values 25-35% below hand-calc with identical assumptions.
+- [2026-10-05 05:57] (ai) US 建模数据陷阱2（DLX 案例）：SEC companyfacts 的 cash tag 会混入 restricted cash（DLX:  = cash .9M + settlement 受限 .1M）导致净债务低估 、EV 低估 13%、reverse-DCF 隐含增长率结论方向性错误（零增长 vs +1.4%）。建模前必须用 10-K MD&A 流动性段的官方 net debt 对账；重杠杆股此错会让 bear 世界股权残值虚高。
+- [2026-10-05 05:57] (ai) US建模陷阱2补正(DLX)：companyfacts cash tag 含 restricted cash 313=36.9+276.1(USD M)，净债务须以10-K MD&A官方net debt 1392.5为准，否则EV低估13%、隐含g方向反转
+- [2026-10-05 11:47] (ai) Windows shell 会把含 | 和 () 的中文 rg 正则拆散（cmd 层解析），从 raw 全文抽取锚点时改用一次性 Python 脚本；A 股 gather 不含年报后公告（如 H 股定增），写 reverse_dcf 估值锚前须搜公开公告核实资本动作（600030 案：定增 8.04 亿股@23.13 港元 2026-08-06 交割）
+- [2026-10-05 12:40] (ai) dossier density: lint raw_text_volume counts only raw/*.json narrative text (filings/ excluded) — write the first pass at >=31% of that figure; banks run ~12-17k raw so ~4.5-5.5k chars one-shot avoids the thickening round-trip
+- [2026-10-05 15:07] (ai) HK 次新股快照 PE_TTM 是滞后口径：东财港股主指标用上一年报净利、未含最新中报利润跳升（鸣鸣很忙 01768 案例：快照 29.08× vs 含 2026H1 的真实 TTM ≈18.7×，差 55%）——建模港股次新时必须用 TTM=FY-H1+H1 重算并声明口径
+- [2026-10-05 16:37] (ai) model set 的场景键(ebit_margin/revenue_growth)要求列表格式——传标量(如 bear.ebit_margin=0.42)会被接受并在 model build 时抛 TypeError(fcff_path len());正确格式为逗号分隔五期列表 bear.ebit_margin=0.42,0.42,0.42,0.42,0.42;券商估值口径模板:shares=年报总股本(A+H全口径)、net_debt=0(表观债务=经营杠杆)、tax_rate=0.25、margin按周期正常化ROE校准(bear≈ROE5.5%/base≈8.5%/bull≈11.5%),FY峰值税前率需刻意下修体现均值回归
+- [2026-10-05 18:39] (ai) US dossiers: annual.json embeds full 10-K text (~60k chars), so lint 30% requires an 18k+ char dossier — write all seven shards at roughly double the depth of an HK/A dossier; resolve code collisions with full ID (US:M matched MDB/MKTX)
+- [2026-10-05 19:17] (ai) US 10-K 合并标题切片失败：油气 MLP 常用『Items 1 and 2. Business and Properties』（S-K Item 1200 格式），fetch_annual_us 只认『Item 1.』——修复前的 workaround：手工下 10-K 全文按『Items 1 and 2』起、『Item 1A. Risk Factors』止切片存 raw/filings/*.txt（PAA 实测 140,581 字符含资产总表/竞争/人力资本，是 US 卷宗增厚的最佳素材源）
+- [2026-10-05 19:17] (ai) lint 体量估算纪律：raw_text_volume 只数 raw/*.json 根目录的字符串叶——增厚暂存件必须放 raw/_staging/ 子目录（放根目录会自我抬高 30% 线）；lint 同样只数卷宗 JSON 字符串叶，凭手感估中文字数普遍高估 30-50%，目标应设在线上方 ≥500 字符余量（PAA 实测：三轮增厚 14,667→20,879→25,441→27,870 才过 27,848 线）
+- [2026-10-05 19:17] (ai) 每小时监视已注册为 Windows 计划任务 ValueGenieCampaignMonitor（2026-10-05，schtasks /SC HOURLY 调 models/_monitor_task.cmd → 全局 Python『C:\Users\yukang.wang\AppData\Local\Python\bin\python.exe』跑 model campaign monitor -n 20）；沙箱 PATH 里的 python 是 TRAE VM 解释器，计划任务必须用用户全局 Python；任务在全部建模完成时自删（monitor_pass 内建 schtasks /Delete）；手动停用：schtasks /Delete /TN ValueGenieCampaignMonitor /F
+- [2026-10-05 20:24] (ai) A+H 双上市建模模式（2026-10-05，中铝/交行验证）：A 股卷宗承载完整理解层（年报素材厚），H 股卷宗浓缩移植飞轮/文化 + 全新入口层（H/A 价差、红利税地图、流动性贝塔、汇兑）——两份均过 lint，效率比双倍重写高一倍；模型 campaign 里 A/H 成对出现时按此模式处理
+- [2026-10-05 22:26] (ai) model write 的 KEY=VALUE 必须用 @file 载入长文本/JSON——漏 @ 会把路径字符串当值写入（list 字段被拆成单字符列表），lint 文本量骤降可立即发现；修复=同 key 用 @file 重写覆盖
+- [2026-10-05 22:52] (ai) HK dossiers pass lint trivially: raw text volume is ~1.4k chars (HKF10 main indicators only, no annual-report PDF channel) so the 30% ratio is meaningless for HK — quality bar must be enforced by content density vs official interim/annual results, and the data caliber break (Eastmoney continuing-ops vs official full IFRS) blocks valuation-layer build; declare and pause like HK:00001

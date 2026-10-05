@@ -173,7 +173,7 @@ def _strip_html(html: str) -> str:
 
 
 def _slice_item(text: str, start_pat: str, end_pats: list,
-                max_len: int = 80000) -> str:
+                max_len: int = 160000) -> str:
     """Slice a 10-K section: last occurrence of the item heading (the
     body, not the TOC) to the next item heading after it. Only
     line-anchored matches bound the slice when any exist — MD&A bodies
@@ -232,11 +232,11 @@ def fetch_annual_us(ticker: str) -> dict | None:
     if not html:
         return None
     text = _strip_html(html)
-    item1 = _slice_item(text, r"Item\s+1[\.\:\s—-]+Business",
-                        [r"Item\s+1A[\.\:\s—-]", r"Item\s+2[\.\:\s—-]"])
+    item1 = _slice_item(text, r"Item\s+1[\.\:\s—–-]+Business",
+                        [r"Item\s+1A[\.\:\s—–-]", r"Item\s+2[\.\:\s—–-]"])
     item7 = _slice_item(text,
-                        r"Item\s+7[\.\:\s—-]+Management",
-                        [r"Item\s+7A[\.\:\s—-]", r"Item\s+8[\.\:\s—-]"])
+                        r"Item\s+7[\.\:\s—–-]+Management",
+                        [r"Item\s+7A[\.\:\s—–-]", r"Item\s+8[\.\:\s—–-]"])
     gaps = []
     if not item1:
         gaps.append("Item 1 (Business) slice failed — 10-K layout "

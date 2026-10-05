@@ -22,7 +22,7 @@ DCF_MODELED = "dcf modeled (model build)"
 _SCENARIO_DRIVER_KEYS = ("revenue_growth", "ebit_margin", "da_pct_rev",
                          "capex_pct_rev", "nwc_pct_drev", "prob")
 _TOP_KEYS = ("version", "horizon_years", "wacc", "terminal_g", "tax_rate",
-             "net_debt", "shares", "currency")
+             "net_debt", "shares", "currency", "price_fx")
 
 
 def _now() -> str:
