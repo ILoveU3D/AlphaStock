@@ -9,8 +9,8 @@ triggers:
   - Is X a buy
 commands:
   - ask
-version: 23
-updated_at: 2026-10-05T22:48:57
+version: 25
+updated_at: 2026-10-06T11:09:52
 ---
 
 # Playbook
@@ -82,3 +82,5 @@ Answer "what do you think of X" with a verdict first, evidence later.
 - [2026-09-26 17:38] (ai) 20260926 现金流定位问（塔砖 class-map-2026-china 微观版）: ask评价任何公司时在商业模式段回答三问——①收租方还是被收租方（它向谁收租/谁向它收租: 向平台交佣金的=被收租方, 收佣金的=收租方）; ②租金定价权来源（产权/算法定价/生态锁定/牌照/网络效应, 决定租金可持续性）; ③所在机器阶段标注（增发期/收租期/停机期）, 与时间护照维度声明互补——阶段决定生意本身值不值得持有, 维度决定打算持有多久
 - [2026-10-04 00:22] (ai) out-of-universe 新股（如摩尔线程 A:688795）用代码形式 resolve 失败（不在快照宇宙），用中文名走 searchapi fallback 可解析——2026-10-03 model gather 实测
 - [2026-10-05 22:48] (ai) 20-F申报方(TSM/ASML等ADR)在SEC companyconcept管道fail-closed:无基本面无报价只有K线,ask返回insufficient data;需补20-F/年报替代源
+- [2026-10-06 01:03] (ai) 美股Form4内部人方向核查:Sandbox内python requests可直连sec.gov(带UA头)——company_tickers.json取CIK→data.sec.gov/submissions取accession→Archives index.json找raw XML→解transactionCode(P/S/A/F/M)+10b5-1标记;WebFetch被SEC/反爬全挡,此管道是ADR内部人核查唯一通道
+- [2026-10-06 11:09] (ai) HK ex-div day quirk (03306 2026-10-06): pool dcf core 88.9 @cum 23.10 vs ask dcf 95 @ex-div 21.44 with model fair unchanged at 32.6 - the dividend is not netted anywhere; rule: net the DPS out of model fair before citing upside or ranking on ex-div days ((32.6-1.81)/21.44=+44%, not 32.6/21.44=+52%)

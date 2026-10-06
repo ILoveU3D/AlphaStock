@@ -19,8 +19,8 @@ commands:
   - model build X
   - model set X
   - model list
-version: 30
-updated_at: 2026-10-05T22:52:37
+version: 32
+updated_at: 2026-10-06T07:26:11
 ---
 
 # 19 · Financial Modeling（财务建模）
@@ -153,3 +153,5 @@ HK 全名单来自 mainindicator batch），状态存 `models/campaign.json`
 - [2026-10-05 20:24] (ai) A+H 双上市建模模式（2026-10-05，中铝/交行验证）：A 股卷宗承载完整理解层（年报素材厚），H 股卷宗浓缩移植飞轮/文化 + 全新入口层（H/A 价差、红利税地图、流动性贝塔、汇兑）——两份均过 lint，效率比双倍重写高一倍；模型 campaign 里 A/H 成对出现时按此模式处理
 - [2026-10-05 22:26] (ai) model write 的 KEY=VALUE 必须用 @file 载入长文本/JSON——漏 @ 会把路径字符串当值写入（list 字段被拆成单字符列表），lint 文本量骤降可立即发现；修复=同 key 用 @file 重写覆盖
 - [2026-10-05 22:52] (ai) HK dossiers pass lint trivially: raw text volume is ~1.4k chars (HKF10 main indicators only, no annual-report PDF channel) so the 30% ratio is meaningless for HK — quality bar must be enforced by content density vs official interim/annual results, and the data caliber break (Eastmoney continuing-ops vs official full IFRS) blocks valuation-layer build; declare and pause like HK:00001
+- [2026-10-06 06:10] (ai) FUTU 案例三个口径陷阱（2026-10-06）：① 20-F 申报人无 annual.json 且 companyfacts 的 revenue 是 ASC 606 合同收入（不含利息收入）——净利率 107%/毛利率 188% 全是口径假象，必须用含利息的总收入口径（20-F/6-K）；② 券商 OCF 混入客户资金流（ocf_yield 33.8% 假象）且 debt_ratio 82% 是客户应付款——FCF/EV 类指标全部不可用；③ master.csv 价格（110.55）与 kline 收盘（102.17）冲突时，用 drawdown_52w×52 周高反推校验（-48.77%×.33 只有 102.17 自洽）再定价格锚
+- [2026-10-06 07:26] (ai) world_narratives 的世界描述字段名必须是 world（不是 description）——lint 报 'no world text' 即此因；另：lint 字符量计入 model.json 全部字符串叶子（含维度名、evidence 的 type/title/source、证伪监控各字段），规划补量时 evidence/falsification/gaps 每件约贡献 2-3.5K 字符

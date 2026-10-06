@@ -229,7 +229,7 @@ def set_assumptions(market: str, code: str, updates: dict,
             old = a["scenarios"][parts[0]][parts[1]]
             a["scenarios"][parts[0]][parts[1]] = val
         elif len(parts) == 1 and key in _TOP_KEYS and key != "version":
-            old = a[key]
+            old = a.get(key)
             a[key] = val
         else:
             raise ValueError(f"unknown assumption key: {key}")
