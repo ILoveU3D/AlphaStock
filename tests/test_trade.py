@@ -330,13 +330,13 @@ def test_sell_a_share_t_plus_1(trade_dir, snap, prices):
     assert s["positions"] == []
     e = s["settling"][0]
     assert e["currency"] == "CNY"
-    assert e["available_date"] == "2026-09-08"
-    assert e["fx_date"] == "2026-09-08"
+    assert e["available_date"] == "2026-09-07"   # T+0 same-market rebuy
+    assert e["fx_date"] == "2026-09-08"          # T+1 fx/cross-market
     # gross 150000 - fees (comm 37.5 + transfer 1.5 + stamp 75)
     assert e["amount"] == round(150000.0 - 114.0, 2)
 
 
-def test_sell_hk_t1_rebuy_t2_fx(trade_dir, snap, prices, hk_lot_100):
+def test_sell_hk_t0_rebuy_t2_fx(trade_dir, snap, prices, hk_lot_100):
     from value_genie import trade as tr
     tr.new_season("s001", base="HKD", capital=100000.0, markets=["HK"])
     tr.buy("s001", _match("HK", "00700", "Tencent"), qty=100,
@@ -345,11 +345,11 @@ def test_sell_hk_t1_rebuy_t2_fx(trade_dir, snap, prices, hk_lot_100):
             snap_dir=snap, today="2026-09-04")
     s = tr.load_season("s001")
     e = s["settling"][0]
-    assert e["available_date"] == "2026-09-07"   # T+1 same-market rebuy
+    assert e["available_date"] == "2026-09-04"   # T+0 same-market rebuy
     assert e["fx_date"] == "2026-09-08"          # T+2 cross-market/fx
-    # T+1: can rebuy HK with the settling proceeds
+    # T+0: can rebuy HK same day with the settling proceeds
     fill2 = tr.buy("s001", _match("HK", "00700", "Tencent"), qty=100,
-                   snap_dir=snap, today="2026-09-07")
+                   snap_dir=snap, today="2026-09-04")
     assert fill2["action"] == "buy"
     s = tr.load_season("s001")
     assert s["settling"][0]["amount"] > 0        # partially consumed

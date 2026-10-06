@@ -320,8 +320,9 @@ def settle_due(season: dict, today: str) -> list:
 def spendable_for_buy(season: dict, market: str, currency: str,
                       today: str) -> float:
     """Settled cash + same-market settling proceeds already available
-    (HK T+1 rebuy rule: yesterday's HK sale can rebuy HK today, but is
-    not yet usable for FX or other markets)."""
+    (T+0 same-market rebuy rule, user mandate 2026-10-06: today's sale
+    can rebuy the same market today, but is not yet usable for FX or
+    other markets — FX waits for fx_date: T+1 A/US, T+2 HK)."""
     total = season["cash"].get(currency, 0.0)
     for e in season["settling"]:
         if (e["currency"] == currency and e["origin_market"] == market
@@ -440,8 +441,9 @@ def buy(sid, match, qty, note="", lot_override=None, snap_dir=None,
 
 def sell(sid, match, qty, note="", snap_dir=None, today=None) -> dict:
     """Market sell. A-share same-day round trips are rejected (T+1).
-    Proceeds enter the settling queue: same-market rebuy at T+1,
-    FX/cross-market use at T+1 (A/US) or T+2 (HK)."""
+    Proceeds enter the settling queue: same-market rebuy immediately
+    (T+0, user mandate 2026-10-06), FX/cross-market use at T+1 (A/US)
+    or T+2 (HK)."""
     season = load_season(sid)
     today = _today(today)
     _require_active(season)
@@ -471,7 +473,7 @@ def sell(sid, match, qty, note="", snap_dir=None, today=None) -> dict:
     pos["qty"] = round(pos["qty"] - qty, 4)
     if pos["qty"] <= EPS:
         season["positions"].remove(pos)
-    avail_d = next_trading_day(today, 1)
+    avail_d = today  # same-market rebuy usable immediately (T+0)
     fx_d = next_trading_day(today, 2 if market == "HK" else 1)
     season["settling"].append({
         "currency": cur, "amount": proceeds, "origin_market": market,
