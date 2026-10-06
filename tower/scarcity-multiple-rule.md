@@ -8,9 +8,9 @@ tags:
   - capital
   - valuation
 links:
-version: 1
+version: 2
 created_at: 2026-09-12T00:00:00
-updated_at: 2026-09-20T16:24:25
+updated_at: 2026-10-06T22:30:00
 ---
 
 ## 论证
@@ -18,3 +18,4 @@ updated_at: 2026-09-20T16:24:25
 
 ## Field Notes
 - [2026-09-18 00:00] (ai) 成砖：自 06 号 Field Notes 2026-09-12 13:16 提炼。
+- [2026-10-06 22:30] (ai) 2026-10-06 SLDE案例：周期稀缺模板延伸到未建模金融股——无模型标的的dcf核由FCF-yield锚定，周期顶财险(佛州住宅险ROE 57%/profit_yoy +121%)的FCF yield是周期租金非结构租金，锚出的core=100与GSL周期陷阱同构；倍数不给周期稀缺，FCF-yield锚也不给

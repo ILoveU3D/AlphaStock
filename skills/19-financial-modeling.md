@@ -19,8 +19,8 @@ commands:
   - model build X
   - model set X
   - model list
-version: 32
-updated_at: 2026-10-06T07:26:11
+version: 43
+updated_at: 2026-10-06T22:37:49
 ---
 
 # 19 · Financial Modeling（财务建模）
@@ -155,3 +155,14 @@ HK 全名单来自 mainindicator batch），状态存 `models/campaign.json`
 - [2026-10-05 22:52] (ai) HK dossiers pass lint trivially: raw text volume is ~1.4k chars (HKF10 main indicators only, no annual-report PDF channel) so the 30% ratio is meaningless for HK — quality bar must be enforced by content density vs official interim/annual results, and the data caliber break (Eastmoney continuing-ops vs official full IFRS) blocks valuation-layer build; declare and pause like HK:00001
 - [2026-10-06 06:10] (ai) FUTU 案例三个口径陷阱（2026-10-06）：① 20-F 申报人无 annual.json 且 companyfacts 的 revenue 是 ASC 606 合同收入（不含利息收入）——净利率 107%/毛利率 188% 全是口径假象，必须用含利息的总收入口径（20-F/6-K）；② 券商 OCF 混入客户资金流（ocf_yield 33.8% 假象）且 debt_ratio 82% 是客户应付款——FCF/EV 类指标全部不可用；③ master.csv 价格（110.55）与 kline 收盘（102.17）冲突时，用 drawdown_52w×52 周高反推校验（-48.77%×.33 只有 102.17 自洽）再定价格锚
 - [2026-10-06 07:26] (ai) world_narratives 的世界描述字段名必须是 world（不是 description）——lint 报 'no world text' 即此因；另：lint 字符量计入 model.json 全部字符串叶子（含维度名、evidence 的 type/title/source、证伪监控各字段），规划补量时 evidence/falsification/gaps 每件约贡献 2-3.5K 字符
+- [2026-10-06 13:20] (ai) model set 只接受数字/逗号分隔数组（不支持@file），scenarios 必须用 bear.prob=0.45 逐键传入；且 set 前必须先 model build 生成默认 assumptions（fetch+build+set+build 四步）；write 的 culture/reverse_dcf 支持 @file 整块替换（archive.write_fields 的 sections 分支）
+- [2026-10-06 14:00] (ai) A股 history.json 的 debt 字段=负债合计（含无息经营负债），非有息负债——有息负债必须从年报资产负债表附注重建（601168 实证：341.65亿 vs 真实有息243.3亿，差98亿）；net_debt 桥接时少数股东权益按账面值加入并声明
+- [2026-10-06 14:00] (ai) A股 master 的 PE_TTM 已含最新中报利润（601168 实证：14.18=市值842.39/TTM归母59.4亿，含2026H1），建模时 TTM 口径直接用 master 勿用 FY-only 自算（H1 folded in: TTM=FY+H1新-H1旧）
+- [2026-10-06 14:39] (ai) HK目标建模三坑（2026-10-06汇丰案）：① raw/history.json只是gather暂存，正式history必须先跑 model fetch 写到stock根目录，否则build报no history；② model set 的KV值全部float化，currency等字符串字段无法set——per_share经price_fx换算成HKD后result.currency仍标CNY，须在rdcf.gap里声明口径；③ 银行/金融股适配：net_debt=0（负债是经营原料）、da/capex/nwc归零使FCFF≈税后利润、机械值=无资本约束理论上限（CET1留存致真实可分配为净利60-80%），gap必须三点全声明
+- [2026-10-06 14:50] (ai) 大数单位陷阱（2026-10-06宏力达案，连续两次踩坑）：net_debt/shares等十亿级参数从中文素材（亿元）换算到引擎（CNY原值）时必须显式过一遍'亿元×1e8'再写值——宏力达净现金20.48亿曾先后误写为1.95亿和195亿；建议set前用python -c核对一次数量级（市值/股本应为合理股价区间）
+- [2026-10-06 17:56] (ai) US companyfacts XBRL revenue tags have multi-year anomalies: AER 2018-2021 revenue reported as 9.7M-15.7M (tag switch), CMRE 2024 2.084B vs 2025 0.878B (-58% cliff) — when a US target's revenue series breaks >40% between adjacent years while NI stays coherent, suspect tag/consolidation change first (check NI/OCF coherence + segments), flag in gaps, and never build the revenue trajectory on the broken span without 10-K verification
+- [2026-10-06 18:56] (ai) model write 的 @file 解析按后缀分流：.json 才 parse 成数组/对象，.txt 永远是字符串——culture.evidence 这类数组字段必须存成 .json 后缀再 @引用（US:G 踩坑后修正）；另 raw_text_volume 只数 raw/*.json 顶层 glob，raw/_staging/ 子目录的分片不计入 raw 量（staging 草稿不会虚增 lint 分母）
+- [2026-10-06 21:11] (ai) lint 体量估算二次踩坑（INCY 2026-10-06）：raw/_staging 里的 src_item*.txt 是源文导出不是 AI 写作——估理解层字数时必须排除 src_* 前缀，只算 flywheel/culture/rdcf/dims/falsification 等纯写作件（INCY：上轮误把 43KB src 导出当写作量以为超额达标，实测纯写作 31.4K 差线 9.9K，被迫补写 d11-d16 六个维度才过线）；合并前用 python 实测 staging 写作件字符总和 vs raw_text_volume*0.3 再动手
+- [2026-10-06 21:11] (ai) 「引擎装载口径」维度的槽位公允值必须在 build 完成后从 result.json 回写，禁止凭记忆近似（INCY 2026-10-06：凭感觉写 74/101/129，实际 58.2/103.4/139.8——bear 估高 26%）；正确流程=装载口径维度初稿只写参数不写槽位值，build 后用实际输出回填 gap 与装载口径两处，价格口径同时用 result.json 的 price 对齐（115.30→113.73 漂移案例）
+- [2026-10-06 21:35] (ai) 上下文中断恢复程序：摘要声称'已创建'的文件以磁盘为准——顶层 model.json/assumptions.json/result.json 任一缺失即合并/装载脚本未实际执行，恢复时先 Get-ChildItem 核对目录再重跑脚本；set_assumptions 不接受 gaps 键（只收 _TOP_KEYS+场景驱动键），gaps 只能进理解层
+- [2026-10-06 22:37] (ai) F10 debt 字段对资源/制造类公司严重失真（000612: 15.34亿 vs 年报有息5.9亿；000792: 107亿 vs 12.8亿；601225: 989亿 vs 219.7亿）——估值层 net_debt 必须从年报科目重算（短借+长借+一年内到期+租赁），把 history.debt 当线索不当事实

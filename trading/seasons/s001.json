@@ -14,9 +14,17 @@
   "cash": {
     "CNY": 0.0,
     "HKD": 0.0,
-    "USD": 811.52
+    "USD": 179.13
   },
-  "settling": [],
+  "settling": [
+    {
+      "currency": "USD",
+      "amount": 519.53,
+      "origin_market": "US",
+      "available_date": "2026-10-07",
+      "fx_date": "2026-10-07"
+    }
+  ],
   "positions": [
     {
       "market": "US",
@@ -52,8 +60,8 @@
       "market": "US",
       "code": "HRMY",
       "name": "HRMY",
-      "qty": 23.0,
-      "avg_cost": 40.0848,
+      "qty": 39.0,
+      "avg_cost": 39.8549,
       "currency": "USD",
       "last_buy_date": "2026-10-06",
       "lot": 1
@@ -64,16 +72,6 @@
       "name": "Adobe Inc.",
       "qty": 3.0,
       "avg_cost": 241.2633,
-      "currency": "USD",
-      "last_buy_date": "2026-10-02",
-      "lot": 1
-    },
-    {
-      "market": "US",
-      "code": "BKE",
-      "name": "巴克尔",
-      "qty": 12.0,
-      "avg_cost": 43.1858,
       "currency": "USD",
       "last_buy_date": "2026-10-02",
       "lot": 1
@@ -473,6 +471,51 @@
       "note": "QMF加仓(池#3三核全,PTC兑现资金再部署第二笔): core90.3/votes4池内美股第3,文化75已蒸馏; 模型bear50.64=+25%/base113.54=+180%(10-02建模非stale); 现价40.43在10-03纪律43前高复核线下方,加仓窗口有效; 加10股至23股约11.9%NAV; Wakix发作性睡病 franchise 论点完好,零红旗",
       "settle_amount": 0.0,
       "seq": 18
+    },
+    {
+      "ts": "2026-10-06T22:08:55",
+      "date": "2026-10-06",
+      "action": "sell",
+      "market": "US",
+      "code": "BKE",
+      "name": "巴克尔",
+      "qty": 12.0,
+      "price": 43.46,
+      "gross": 521.52,
+      "fees": {
+        "platform": 1.99
+      },
+      "fees_total": 1.99,
+      "cash_delta": 0.0,
+      "settle_amount": 519.53,
+      "available_date": "2026-10-07",
+      "fx_date": "2026-10-07",
+      "realized_pnl": 1.3,
+      "currency": "USD",
+      "session": "in",
+      "note": "模型公允清触发:10-04重估canonical加权公允38.76vs现价~43.4(+12%),10-03预置线执行;生意层零红旗(FY25营收+6.6%/净利+7.3%双增,OCF/NI1.20,ROE49%)非证伪,纯估值兑现;大师层buffett/散户乙gates仍过(门槛非排名),散户乙永续纪律属钥匙孔账户不适用赛季中线护照;兑现触发三条件(FCF yield<6%/特别股息取消/同店连续负)虽未亮,但买入锚73.76已作废,持有理由不成立;盈亏约平",
+      "seq": 19
+    },
+    {
+      "ts": "2026-10-06T22:09:32",
+      "date": "2026-10-06",
+      "action": "buy",
+      "market": "US",
+      "code": "HRMY",
+      "name": "Harmony Biosciences Holdings, Inc.",
+      "qty": 16.0,
+      "price": 39.4,
+      "gross": 630.4,
+      "fees": {
+        "platform": 1.99
+      },
+      "fees_total": 1.99,
+      "cash_delta": -632.39,
+      "currency": "USD",
+      "session": "in",
+      "note": "10-02预置扳机执行(任一持仓退出即换入HRMY,触发器亮了就打):池#3 core90,4大师票(buffett/munger/livermore/duan);10-04canonical模型weighted63.17=+59%(bear28.89=-27%p0.3/base72.32/bull87.85)——安全垫叙事随重估失效,仓位按bear真实尾部定:加16至39股约19.7%NAV与TCOM并列最大,bear情景-5.3%NAV在全触发预算-7.2%内;intel复查零红旗,OCF/NI2.19,净现金7.17亿=市值31%;-50%测试=专利悬崖+orexin颠覆双杀联合概率低,可承受故规模由此定;生意=WAKIX孤儿药定价权+GR桥接2027,文化=孤儿药 playbook专注",
+      "settle_amount": 0.0,
+      "seq": 20
     }
   ],
   "nav_history": [
@@ -1323,78 +1366,69 @@
     },
     {
       "date": "2026-10-06",
-      "nav": 7830.67,
-      "cash_total": 811.52,
-      "settling_total": 0,
+      "nav": 7823.45,
+      "cash_total": 179.13,
+      "settling_total": 519.53,
       "positions": [
         {
           "market": "US",
           "code": "ZM",
           "name": "Zoom通讯",
           "qty": 16.0,
-          "price": 93.62,
+          "price": 94.14,
           "currency": "USD",
-          "value_base": 1497.92
+          "value_base": 1506.24
         },
         {
           "market": "US",
           "code": "TCOM",
           "name": "携程",
           "qty": 40.0,
-          "price": 38.79,
+          "price": 38.31,
           "currency": "USD",
-          "value_base": 1551.6
+          "value_base": 1532.4
         },
         {
           "market": "US",
           "code": "NVDA",
           "name": "NVDA",
           "qty": 3.0,
-          "price": 238.9,
+          "price": 242.07,
           "currency": "USD",
-          "value_base": 716.7
+          "value_base": 726.21
         },
         {
           "market": "US",
           "code": "HRMY",
           "name": "HRMY",
-          "qty": 23.0,
-          "price": 39.92,
+          "qty": 39.0,
+          "price": 39.01,
           "currency": "USD",
-          "value_base": 918.16
+          "value_base": 1521.39
         },
         {
           "market": "US",
           "code": "ADBE",
           "name": "Adobe Inc.",
           "qty": 3.0,
-          "price": 238.79,
+          "price": 238.55,
           "currency": "USD",
-          "value_base": 716.37
-        },
-        {
-          "market": "US",
-          "code": "BKE",
-          "name": "巴克尔",
-          "qty": 12.0,
-          "price": 43.45,
-          "currency": "USD",
-          "value_base": 521.4
+          "value_base": 715.65
         },
         {
           "market": "US",
           "code": "FUTU",
           "name": "富途控股",
           "qty": 10.0,
-          "price": 109.7,
+          "price": 112.29,
           "currency": "USD",
-          "value_base": 1097.0
+          "value_base": 1122.9
         }
       ],
       "fx": {
         "CNY": 1.0,
         "HKD": 0.8542,
-        "USD": 6.703
+        "USD": 6.7036
       }
     }
   ],
@@ -1503,6 +1537,13 @@
       "nav": 7822.91,
       "day_pnl": -4.31,
       "text": "20261006盘中执行(用户授权在途资金交易): PTC兑现资金2314.25 T+1到账后两笔再部署完成——①FUTU 10@109.81(1098.10USD,14.1%NAV): r5翻正扳机亮按0910规则执行,Form4零红旗复查通过,利润+108%vs价-49%错杀,一致SB目标160.85=+45%; ②HRMY+10@40.59(总23股,11.9%NAV): 池#3三核全,模型bear50.64=+25%,43复核线下方窗口有效. 余现金811.52(10.4%机动). 组合7仓: TCOM19.8%/ZM19.1%/FUTU14.1%/HRMY11.9%/NVDA9.1%/ADBE9.1%/BKE6.6%. PTC收购正式公告仍未落地(10-06新闻0条),193.02卖出价vs传闻对价~167后验在途"
+    },
+    {
+      "date": "2026-10-06",
+      "ts": "2026-10-06T22:10:31",
+      "nav": 7850.08,
+      "day_pnl": 22.86,
+      "text": "20261006午后窗口(用户当日第二次授权): ①BKE全清12@43.46(realized+1.30约平)——10-04重估canonical加权公允38.76vs现价+12%,10-03预置'模型公允清'线触发;生意层零红旗(FY25双增/OCF1.20/ROE49%)非证伪,纯估值纪律兑现;buffett/散户乙gates仍过=门槛非排名. ②HRMY+16@39.40(总39股,约19.6%NAV与TCOM并列最大)——10-02预置'任一持仓退出即换入HRMY'扳机执行,池#3 core90 4票;仓位按10-04canonical bear28.89(-27%,p0.3)真实尾部定,bear情景-5.3%NAV在全触发预算-7.2%内;今晨+10@40.59引用旧bear50.64(+25%)系过期数字(10-04重估已作废),本笔按canonical重定规模. ③组合6仓:TCOM19.6%/ZM19.3%/HRMY19.6%/FUTU14.1%/NVDA9.3%/ADBE9.2%;现金179+BKE在途519.53(T+1,10-07到账)=约698(8.9%). 线索引不变:TCOM硬止37.85(现38.4余0.5,窗口10/24,国庆催化在途,一致58.41)/HRMY止37.4(43复核线)/NVDA trail221/ZM止80.4盈118/ADBE止218盈275. 明日弹药约1217(现金+到账),HRMY若续守池内前列且bear尾部可控,部署率91%已达标,后续窗口无新论点不加仓"
     }
   ],
   "totals": {

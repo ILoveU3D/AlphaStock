@@ -17,8 +17,8 @@ commands:
   - ask X --evidence
   - intel X
   - recommend --user me
-version: 33
-updated_at: 2026-10-06T10:59:26
+version: 35
+updated_at: 2026-10-06T22:29:50
 ---
 
 # Playbook
@@ -272,3 +272,5 @@ Output shape (hard rules):
 - [2026-10-06 00:18] (ai) model set 的情景驱动参数一律小数口径：revenue_growth 传 2 意为 +200%（引擎按 1+g 复合）；美股 SEC companyfacts 的 revenue 字段可能错标为细项而非总营收——校准说明写进估值层 history.json 的 gaps，绝不要写进 raw/（raw 体积膨胀会抬高 lint 的 30% 文本率基数，导致 QUALIFIED 翻转为 INCOMPLETE）
 - [2026-10-06 10:59] (ai) HK ex-div trap (2026-10-06 江南布衣 case): Tencent HK prev_close is ex-div adjusted while snapshot quotes carry the cum close - a -7.6% intraday 'crash' on ex-div days is mechanical, not a sell signal; check fqkline cqr/FHcontent fields (末期息+特别息) before judging; valuation is unchanged (cum price pairs with cum model values, TTM dividend yield lags the ex-event by design)
 - [2026-10-06 10:59] (ai) masters-vote --json under PowerShell: '>' redirect writes UTF-16/BOM and the FRESHNESS WARN line lands in the captured stream, breaking json.load; parse via Python subprocess capture (utf-8, txt[txt.find('{'):]) or read the toolhost-persisted console log instead
+- [2026-10-06 15:50] (ai) 模型锚点引用须核对 result.json 的 updated_at:10-06 journal 仍引用 10-02 HRMY 公允113.54并称非stale,但 10-04 建模战役批量重建已把 2029 专利悬崖做进 bear/base(公允降至63.17);journal 里的模型数字会过时,决策前须重读 models/<mkt>/<code>/result.json 原值
+- [2026-10-06 22:29] (ai) SLDE案例(2026-10-06): L1池顶core=100的SLDE是无模型+无文化蒸馏的佛州住宅财险(ROE 57%/profit_yoy +121%/FCF yield 28%)——宽池头部无model.json标的的dcf核是FCF-yield锚，周期顶金融股该锚系统性虚高(dcf core=100无模型支撑)；NUTX core 97同型(微市值+90%波动+52周高位98分位+曾profit_spike史)。L3前置检查：池顶名字无模型时先问FCF yield是周期顶还是结构稀缺(scarcity-multiple-rule周期模板)，GSL否决链的金融变体
