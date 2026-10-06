@@ -14,8 +14,8 @@ commands:
   - trade sell
   - trade nav
   - trade journal
-version: 48
-updated_at: 2026-10-04T21:34:34
+version: 49
+updated_at: 2026-10-06T11:30:13
 ---
 
 # Playbook
@@ -121,3 +121,4 @@ for. Cite the nav-as-of date. Never soften risk observations.
 - [2026-10-03 17:55] (user) MANDATE 2026-10-03 (user): trade dashboard command removed; season summaries are AI-composed from status/nav/journal --json - never regenerate Markdown dashboards; seasons are shared across all users
 - [2026-10-04 20:29] (ai) 买股票就是买公司(2026-10-04用户铁律): 交易决策与赛季复盘必须过模型层--model list upside与止损止盈线并列审视,journal引用模型数字时须核对估值层是否已重估(HRMY 113.54->63.17教训); 核心三核=商业模式/企业文化/DCF便宜度
 - [2026-10-04 21:34] (ai) trade status 只给全赛季汇总，单赛季持仓明细用 trade nav <season>（status 不接 season 位置参数）
+- [2026-10-06 11:30] (ai) 港股持仓价格跳空先查除净日历再定性(周年大会后1-2周高window): 前复权K线看不见的缺口是股息不是亏损——03306案(2026-10-06除净1.81/股)AI误判-7.1%暴跌,实为除权+0.8%涨; trade新增dividend子命令补记股息(计入performance不被deposit中性化),除净日应计入账保持NAV连续

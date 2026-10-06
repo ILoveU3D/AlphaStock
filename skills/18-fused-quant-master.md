@@ -17,8 +17,8 @@ commands:
   - ask X --evidence
   - intel X
   - recommend --user me
-version: 31
-updated_at: 2026-10-06T00:18:13
+version: 33
+updated_at: 2026-10-06T10:59:26
 ---
 
 # Playbook
@@ -270,3 +270,5 @@ Output shape (hard rules):
 - [2026-10-05 22:34] (ai) US pe_ttm snapshot values can be data artifacts: TTD showed pe_ttm 0.14 at .95 (impossible vs Q2 adj EPS .34 - real forward ~10x); flag US multiples that imply EPS > 40% of price and verify against live sources before citing (倍数口径规则 extension)
 - [2026-10-05 22:34] (ai) v29 correction (PS ate dollar signs): TTD pe_ttm 0.14 at price 11.95 USD vs Q2 adj EPS 0.34 USD - real forward ~10x; the rule stands: verify impossible US multiples against live sources before citing
 - [2026-10-06 00:18] (ai) model set 的情景驱动参数一律小数口径：revenue_growth 传 2 意为 +200%（引擎按 1+g 复合）；美股 SEC companyfacts 的 revenue 字段可能错标为细项而非总营收——校准说明写进估值层 history.json 的 gaps，绝不要写进 raw/（raw 体积膨胀会抬高 lint 的 30% 文本率基数，导致 QUALIFIED 翻转为 INCOMPLETE）
+- [2026-10-06 10:59] (ai) HK ex-div trap (2026-10-06 江南布衣 case): Tencent HK prev_close is ex-div adjusted while snapshot quotes carry the cum close - a -7.6% intraday 'crash' on ex-div days is mechanical, not a sell signal; check fqkline cqr/FHcontent fields (末期息+特别息) before judging; valuation is unchanged (cum price pairs with cum model values, TTM dividend yield lags the ex-event by design)
+- [2026-10-06 10:59] (ai) masters-vote --json under PowerShell: '>' redirect writes UTF-16/BOM and the FRESHNESS WARN line lands in the captured stream, breaking json.load; parse via Python subprocess capture (utf-8, txt[txt.find('{'):]) or read the toolhost-persisted console log instead

@@ -1323,7 +1323,7 @@
     },
     {
       "date": "2026-10-06",
-      "nav": 7831.28,
+      "nav": 7830.67,
       "cash_total": 811.52,
       "settling_total": 0,
       "positions": [
@@ -1332,69 +1332,69 @@
           "code": "ZM",
           "name": "Zoom通讯",
           "qty": 16.0,
-          "price": 93.75,
+          "price": 93.62,
           "currency": "USD",
-          "value_base": 1500.0
+          "value_base": 1497.92
         },
         {
           "market": "US",
           "code": "TCOM",
           "name": "携程",
           "qty": 40.0,
-          "price": 38.72,
+          "price": 38.79,
           "currency": "USD",
-          "value_base": 1548.8
+          "value_base": 1551.6
         },
         {
           "market": "US",
           "code": "NVDA",
           "name": "NVDA",
           "qty": 3.0,
-          "price": 236.36,
+          "price": 238.9,
           "currency": "USD",
-          "value_base": 709.08
+          "value_base": 716.7
         },
         {
           "market": "US",
           "code": "HRMY",
           "name": "HRMY",
           "qty": 23.0,
-          "price": 40.7,
+          "price": 39.92,
           "currency": "USD",
-          "value_base": 936.1
+          "value_base": 918.16
         },
         {
           "market": "US",
           "code": "ADBE",
           "name": "Adobe Inc.",
           "qty": 3.0,
-          "price": 236.46,
+          "price": 238.79,
           "currency": "USD",
-          "value_base": 709.38
+          "value_base": 716.37
         },
         {
           "market": "US",
           "code": "BKE",
           "name": "巴克尔",
           "qty": 12.0,
-          "price": 42.95,
+          "price": 43.45,
           "currency": "USD",
-          "value_base": 515.4
+          "value_base": 521.4
         },
         {
           "market": "US",
           "code": "FUTU",
           "name": "富途控股",
           "qty": 10.0,
-          "price": 110.1,
+          "price": 109.7,
           "currency": "USD",
-          "value_base": 1101.0
+          "value_base": 1097.0
         }
       ],
       "fx": {
         "CNY": 1.0,
-        "HKD": 0.8546,
-        "USD": 6.7059
+        "HKD": 0.8542,
+        "USD": 6.703
       }
     }
   ],
