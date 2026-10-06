@@ -534,16 +534,23 @@ def fx(sid, from_cur, to_cur, amount, snap_dir=None, today=None) -> dict:
 
 
 def cash_move(sid, action, amount, currency, note="", snap_dir=None,
-              today=None) -> dict:
+              today=None, code="") -> dict:
     """Deposit into / withdraw from the season (withdraw = the
-    'dividend-style living costs' stream of the dual goal)."""
+    'dividend-style living costs' stream of the dual goal). The
+    'dividend' action books a stock cash dividend: cash rises and it
+    IS performance — it stays out of the deposit/withdraw
+    neutralisation in day_pnl / net_return (JNBY 03306 case,
+    2026-10-06)."""
     season = load_season(sid)
     today = _today(today)
     _require_active(season)
     settle_due(season, today)
-    if action not in ("deposit", "withdraw"):
+    if action not in ("deposit", "withdraw", "dividend"):
         raise TradeError(
-            f"action must be deposit or withdraw, got {action!r}")
+            f"action must be deposit, withdraw or dividend, "
+            f"got {action!r}")
+    if action == "dividend" and not code:
+        raise TradeError("dividend requires the paying stock code")
     if amount <= 0:
         raise TradeError("amount must be positive")
     if currency not in config.TRADE_CURRENCIES:
@@ -555,11 +562,16 @@ def cash_move(sid, action, amount, currency, note="", snap_dir=None,
         raise TradeError(f"no FX rate for {currency}")
     base_val = round(
         amount * rates[currency] / rates[season["base_currency"]], 2)
-    if action == "deposit":
+    if action in ("deposit", "dividend"):
         season["cash"][currency] = round(
             season["cash"].get(currency, 0.0) + amount, 2)
-        season["totals"]["deposited"] = round(
-            season["totals"]["deposited"] + base_val, 2)
+        if action == "deposit":
+            season["totals"]["deposited"] = round(
+                season["totals"]["deposited"] + base_val, 2)
+        else:
+            season["totals"]["dividends"] = round(
+                season["totals"].setdefault("dividends", 0.0)
+                + base_val, 2)
     else:
         cash = season["cash"].get(currency, 0.0)
         if cash < amount - EPS:
@@ -572,7 +584,8 @@ def cash_move(sid, action, amount, currency, note="", snap_dir=None,
     fill = _append_fill(season, {
         "ts": _now(), "date": today, "action": action,
         "currency": currency, "amount": float(amount),
-        "base_value": base_val, "note": note})
+        "base_value": base_val, "note": note,
+        **({"code": code} if code else {})})
     save_season(season)
     return fill
 
@@ -760,8 +773,9 @@ def render_fill(f: dict) -> str:
             f"(spread {f['spread'] * 100:.2f}%) | fill #{f['seq']} "
             f"{f['date']}"]
     else:
+        code = f"{f['code']} " if f.get("code") else ""
         lines = [
-            f"[{a.upper()}] {f['amount']:,.2f} {f['currency']} "
+            f"[{a.upper()}] {code}{f['amount']:,.2f} {f['currency']} "
             f"(base value {f['base_value']:,.2f}) | fill #{f['seq']} "
             f"{f['date']}"]
     if f.get("note"):

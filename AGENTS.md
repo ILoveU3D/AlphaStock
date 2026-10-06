@@ -42,7 +42,7 @@ you found it.
 ## Freshness contract (code-enforced)
 
 - `ask`, `compare`, `overview`, `recommend`, `holding list`, and
-  `trade buy/sell/fx/cash/nav/journal/status` run a
+  `trade buy/sell/fx/cash/dividend/nav/journal/status` run a
   **freshness gate** before any output. The gate calls
   `doctor.run_checks()` internally:
   - **FAIL** (no snapshot / ancient data >7 days) → command prints

@@ -966,6 +966,23 @@ def cmd_trade(args) -> int:
             print(tr.render_fill(fill))
         return 0
 
+    if cmd == "dividend":
+        if not _check_freshness(args):
+            return 1
+        try:
+            fill = tr.cash_move(args.season_id, "dividend", args.amount,
+                                args.currency.upper(),
+                                note=args.note or "", snap_dir=_snap(),
+                                code=args.code.upper())
+        except tr.TradeError as exc:
+            print(f"[TRADE REJECTED] {exc}", file=sys.stderr)
+            return 1
+        if args.json:
+            print(tr.to_json(fill))
+        else:
+            print(tr.render_fill(fill))
+        return 0
+
     if cmd == "nav":
         if not _check_freshness(args):
             return 1
@@ -2400,6 +2417,20 @@ def build_parser() -> argparse.ArgumentParser:
     pt_cash.add_argument("--note", default=None,
                          help="e.g. 'living costs' for withdrawals")
     _trade_common(pt_cash)
+
+    pt_div = pt_sub.add_parser(
+        "dividend", help="book a stock cash dividend (counts as "
+                         "performance, unlike deposit)")
+    pt_div.add_argument("season_id")
+    pt_div.add_argument("code", help="paying stock code, e.g. 03306")
+    pt_div.add_argument("--amount", type=float, required=True,
+                        help="total cash received (per-share x qty)")
+    pt_div.add_argument("--currency", required=True,
+                        metavar="CNY|HKD|USD")
+    pt_div.add_argument("--note", default=None,
+                        help="e.g. 'final 1.06 + special 0.75 x 500, "
+                             "ex-date 10-06'")
+    _trade_common(pt_div)
 
     pt_nav = pt_sub.add_parser("nav", help="mark-to-market snapshot")
     pt_nav.add_argument("season_id")

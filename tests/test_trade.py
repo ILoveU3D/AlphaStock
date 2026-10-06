@@ -443,6 +443,27 @@ def test_cash_deposit_withdraw_totals(trade_dir, snap):
                      snap_dir=snap, today="2026-09-04")
 
 
+def test_dividend_counts_as_performance(trade_dir, snap):
+    """A stock cash dividend raises cash but must NOT be neutralised as
+    an external deposit — it is performance (JNBY 03306 ex-date case,
+    2026-10-06)."""
+    from value_genie import trade as tr
+    tr.new_season("s001", base="HKD", capital=50000.0, markets=["HK"])
+    fill = tr.cash_move("s001", "dividend", 905.0, "HKD", code="03306",
+                        note="final 1.06 + special 0.75 = 1.81 x 500",
+                        snap_dir=snap, today="2026-10-06")
+    s = tr.load_season("s001")
+    assert s["cash"]["HKD"] == 50905.0
+    assert s["totals"]["dividends"] == 905.0
+    assert s["totals"]["deposited"] == 0.0   # not an external transfer
+    assert fill["action"] == "dividend" and fill["code"] == "03306"
+    entry = tr.mark_nav("s001", snap_dir=snap, today="2026-10-06")
+    assert entry["nav"] == 50905.0
+    with pytest.raises(tr.TradeError, match="code"):
+        tr.cash_move("s001", "dividend", 100.0, "HKD",
+                     snap_dir=snap, today="2026-10-06")
+
+
 def test_withdraw_settled_proceeds_without_extra_mark(trade_dir, snap,
                                                       prices, hk_lot_100):
     """T+2-matured proceeds must be withdrawable directly — cash_move
