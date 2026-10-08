@@ -10,6 +10,8 @@ import time
 import pandas as pd
 
 from .. import config
+from .driver import preferred, run_with_failover
+from .health import get_health
 from .http import TX, em_push2_get, num
 
 PAGE_SIZE = 100
@@ -37,13 +39,26 @@ def _parse_clist_rows(rows: list) -> list:
     return out
 
 
-def fetch_market_quotes(market: str) -> pd.DataFrame:
+def fetch_market_quotes(market: str, health=None) -> pd.DataFrame:
     """Fetch the full listed universe for one market.
 
     Returns a DataFrame with columns: market, code, name, industry,
     market_id, price, pct_chg, volume, amount, turnover, pe_dyn, pe_static,
     pe_ttm, pb, market_cap, float_cap. Empty frame on total failure.
+
+    Source order is health-aware: when Eastmoney's penalty sinks it
+    below Tencent (persistent IP blocks), the Tencent-degraded universe
+    goes first and EM becomes the backup.
     """
+    h = health if health is not None else get_health()
+    tx_tried = False
+    if preferred("quotes", market, h) == "tencent":
+        tx_tried = True
+        tx = fetch_market_quotes_tx(market)
+        if not tx.empty:
+            h.record_success("tencent")
+            return tx
+        h.record_failure("tencent", None)
     all_rows, pn = [], 1
     page_fails = 0
     total = 0
@@ -83,9 +98,12 @@ def fetch_market_quotes(market: str) -> pd.DataFrame:
         # EM push2 outage (or a truncated universe): prefer a COMPLETE
         # Tencent-degraded universe over a partial/rich EM one — the funnel
         # screens the whole market, so missing rows lose candidates.
-        tx = fetch_market_quotes_tx(market)
-        if not tx.empty:
-            return tx
+        if not tx_tried:
+            tx = fetch_market_quotes_tx(market)
+            if not tx.empty:
+                h.record_success("tencent")
+                return tx
+            h.record_failure("tencent", None)
     if not all_rows:
         print(f"    [{market}] WARN: no quotes fetched")
         return pd.DataFrame(columns=["market", "code"])
@@ -334,12 +352,13 @@ def _tx_quote_symbols(market: str, code: str) -> list:
     return syms
 
 
-def fetch_quote_any(market: str, code: str, market_id: str = "") -> dict | None:
-    """One quote row, EM ulist first, Tencent realtime as fallback.
+def fetch_quote_any(market: str, code: str, market_id: str = "",
+                    health=None) -> dict | None:
+    """One quote row, health-ordered sources (EM ulist / Tencent realtime).
 
     Covers symbols outside the clist universe (ETFs, funds) and EM
     outages. Returns a dict with code/name/price/pe_ttm/pb/market_cap/
-    market_id where available, or None when both sources fail.
+    market_id where available, or None when every source fails.
     """
     secid = None
     if market == "A":
@@ -348,19 +367,29 @@ def fetch_quote_any(market: str, code: str, market_id: str = "") -> dict | None:
         secid = "116." + str(code).zfill(5)
     elif market == "US" and market_id:
         secid = f"{market_id}.{code}"
-    if secid:
+
+    def _em():
+        if not secid:
+            return None
         df = fetch_quotes_by_secids([secid])
-        if not df.empty:
-            row = df.iloc[0].to_dict()
-            if market == "HK":
-                row["code"] = str(row["code"]).zfill(5)
-            return row
-    for sym in _tx_quote_symbols(market, str(code)):
-        q = fetch_quote_tx(sym)
-        if q is not None:
-            q["market_id"] = market_id
-            return q
-    return None
+        if df.empty:
+            return None
+        row = df.iloc[0].to_dict()
+        if market == "HK":
+            row["code"] = str(row["code"]).zfill(5)
+        return row
+
+    def _tx():
+        for sym in _tx_quote_symbols(market, str(code)):
+            q = fetch_quote_tx(sym)
+            if q is not None:
+                q["market_id"] = market_id
+                return q
+        return None
+
+    res, _, _ = run_with_failover(
+        "quotes", market, {"eastmoney": _em, "tencent": _tx}, health)
+    return res
 
 
 def exclude_risk_names(df: pd.DataFrame) -> pd.DataFrame:

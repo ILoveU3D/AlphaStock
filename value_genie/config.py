@@ -256,6 +256,67 @@ KLINE_FRESH_DAYS = {"A": 0, "HK": 0, "US": 3}
 # HK F10 / deep financials reuse window in days.
 DEEP_FRESH_DAYS = 7
 
+# ---------------------------------------------------------------------------
+# Trading calendar (user mandate 2026-10-08: static yearly tables).
+# MAINTENANCE DUTY: refresh these tables annually against the official
+# SSE/SZSE, HKEX and NYSE calendars; doctor warns when the current year
+# has no entries. Dates are ISO strings; half days still count as trading
+# days (session closes early).
+# ---------------------------------------------------------------------------
+TRADING_HOLIDAYS = {
+    # SSE/SZSE 2026 (State Council schedule)
+    "A": {
+        "2026-01-01", "2026-01-02",                          # 元旦
+        "2026-02-16", "2026-02-17", "2026-02-18", "2026-02-19",
+        "2026-02-20",                                        # 春节 (CNY 02-17)
+        "2026-04-06",                                        # 清明
+        "2026-05-01", "2026-05-04", "2026-05-05",            # 劳动节
+        "2026-06-19",                                        # 端午
+        "2026-09-25",                                        # 中秋
+        "2026-10-01", "2026-10-02", "2026-10-05", "2026-10-06",
+        "2026-10-07",                                        # 国庆
+    },
+    # HKEX 2026
+    "HK": {
+        "2026-01-01",                                        # New Year
+        "2026-02-17", "2026-02-18", "2026-02-19",            # Lunar New Year
+        "2026-04-03", "2026-04-06", "2026-04-07",            # Easter + 清明
+        "2026-05-01",                                        # Labour Day
+        "2026-05-25",                                        # Buddha's Birthday (obs.)
+        "2026-06-19",                                        # Tuen Ng
+        "2026-07-01",                                        # HKSAR Day
+        "2026-10-01",                                        # National Day
+        "2026-10-19",                                        # Chung Yeung (obs.)
+        "2026-12-25",                                        # Christmas
+    },
+    # NYSE 2026
+    "US": {
+        "2026-01-01",                                        # New Year's Day
+        "2026-01-19",                                        # MLK
+        "2026-02-16",                                        # Washington's Birthday
+        "2026-04-03",                                        # Good Friday
+        "2026-05-25",                                        # Memorial Day
+        "2026-06-19",                                        # Juneteenth
+        "2026-07-03",                                        # Independence Day (obs.)
+        "2026-09-07",                                        # Labor Day
+        "2026-11-26",                                        # Thanksgiving
+        "2026-12-25",                                        # Christmas
+    },
+}
+# Early-close days (still trading days): session ends at midday.
+HALF_DAYS = {
+    "A": set(),
+    "HK": {"2026-02-16", "2026-12-24", "2026-12-31"},        # LNY/Xmas/NY eve
+    "US": {"2026-11-27", "2026-12-24"},                      # after Thanksgiving, Xmas eve
+}
+# US daylight-saving window (Beijing-time sessions shift one hour earlier).
+US_DST = ("2026-03-08", "2026-11-01")
+
+# Fetch parallelism (user mandate 2026-10-08): worker pools are per source
+# HOST group — groups run concurrently, requests inside a group stay
+# serialized with the existing politeness sleeps. SEC stays single-worker.
+FETCH_WORKERS = {"EM": 4, "TX": 4, "SEC": 1, "default": 4}
+
 DEFAULT_PRESET = "balanced"
 DEFAULT_TOP_N = 20
 

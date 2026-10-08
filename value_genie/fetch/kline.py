@@ -6,14 +6,14 @@ day, US may lag up to 3 calendar days because its session closes early
 morning Beijing time).
 """
 
-import time
-from datetime import date, datetime, timedelta
+from datetime import date, datetime
 from pathlib import Path
 
 import pandas as pd
 
-from .. import config
+from .. import calendar, config
 from ..atomic import atomic_to_csv
+from .driver import run_with_failover
 from .http import TX, em_push2_get, num
 
 KLINE_COLS = ["date", "open", "close", "high", "low", "volume", "amount"]
@@ -107,20 +107,31 @@ def fetch_kline_tx(symbol: str, lmt: int = 320) -> pd.DataFrame | None:
 
 
 def fetch_kline_any(market: str, code: str, market_id: str = "",
-                    lmt: int = 300) -> pd.DataFrame | None:
-    """EM first, then every Tencent symbol candidate."""
+                    lmt: int = 300, health=None) -> pd.DataFrame | None:
+    """Health-ordered kline sources (EM push2his / Tencent candidates).
+
+    A source whose penalty sank it (persistent blocks) yields its first
+    seat automatically; per-stock misses just move to the next source
+    without health impact.
+    """
     secid_prefix = CLIST_TO_SECID.get(market_id, market_id)
     secid = f"{secid_prefix}.{code}" if secid_prefix else None
-    if secid:
-        df = fetch_kline(secid, lmt=lmt)
-        if df is not None and not df.empty:
-            return df
-        time.sleep(0.2)
-    for sym in tx_symbol_candidates(market, code, market_id):
-        df = fetch_kline_tx(sym, lmt=lmt + 20)
-        if df is not None and not df.empty:
-            return df
-    return None
+
+    def _em():
+        if not secid:
+            return None
+        return fetch_kline(secid, lmt=lmt)
+
+    def _tx():
+        for sym in tx_symbol_candidates(market, code, market_id):
+            df = fetch_kline_tx(sym, lmt=lmt + 20)
+            if df is not None and not df.empty:
+                return df
+        return None
+
+    res, _, _ = run_with_failover(
+        "kline", market, {"eastmoney": _em, "tencent": _tx}, health)
+    return res
 
 
 # ---------------------------------------------------------------------------
@@ -145,24 +156,17 @@ def kline_cache_path(snapshot_dir: Path, market: str, code: str) -> Path:
 def last_expected_trading_day(market: str, now: datetime | None = None) -> date:
     """Most recent date whose session should be fully reflected in klines.
 
-    A/HK bars appear after the ~16:00 close; the US session closes early
-    morning Beijing time, so its latest bar lags one calendar day.
+    Thin wrapper over calendar.last_completed_session: A/HK bars appear
+    after the ~16:00 close; the US session closes early morning Beijing
+    time (DST-aware), so its latest bar lags one calendar day.
     """
-    now = now or datetime.now()
-    d = now.date()
-    if market == "US":
-        d -= timedelta(days=1)
-    elif now.hour < 17:
-        d -= timedelta(days=1)
-    while d.weekday() >= 5:  # skip Sat/Sun
-        d -= timedelta(days=1)
-    return d
+    return calendar.last_completed_session(market, now)
 
 
 def kline_is_fresh(path: Path, market: str,
                    now: datetime | None = None) -> bool:
     """True when the cached kline covers the latest expected trading day
-    (plus the per-market tolerance in calendar days)."""
+    (plus the per-market tolerance in trading days)."""
     kl = load_kline(path)
     if kl is None or kl.empty or "date" not in kl.columns:
         return False
@@ -171,4 +175,5 @@ def kline_is_fresh(path: Path, market: str,
     except (ValueError, TypeError):
         return False
     expected = last_expected_trading_day(market, now)
-    return (expected - last).days <= config.KLINE_FRESH_DAYS[market]
+    lag = calendar.trading_day_lag(market, last, expected)
+    return lag <= config.KLINE_FRESH_DAYS[market]
