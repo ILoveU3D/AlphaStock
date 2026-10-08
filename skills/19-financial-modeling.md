@@ -19,8 +19,8 @@ commands:
   - model build X
   - model set X
   - model list
-version: 46
-updated_at: 2026-10-08T12:19:21
+version: 50
+updated_at: 2026-10-08T15:41:28
 ---
 
 # 19 · Financial Modeling（财务建模）
@@ -169,3 +169,7 @@ HK 全名单来自 mainindicator batch），状态存 `models/campaign.json`
 - [2026-10-08 01:07] (ai) E&P valuation trap (RRC 2026-10-08): SMPV/NAV anchors must declare liquidation vs going-concern basis and subtract net debt for equity value — narrative target 42-50 collapsed to engine weighted 24.7 once the FCFF engine charged perpetual capex; every narrative anchor must be engine-recomputable (write both numbers in the dossier and reconcile before closing)
 - [2026-10-08 12:19] (ai) HK thesis/funnel 边缘股的 peers 映射常给错行业（百威给了零食饮料组、中通给了航运港口组、老铺给了服饰组）——写卷宗时 peers 数据必须人工核行业再引用，并在 gaps 声明同行映射缺陷
 - [2026-10-08 12:19] (ai) hk_quotes.csv 的 HK 代码无前导零（'2475' 非 '02475'），zfill(5) 才能匹配；master 的 HK market_cap 与 PE 反推市值存在 10-30% 口径差，卷宗锚定 PE 而非市值列并声明 gap
+- [2026-10-08 12:49] (ai) US companyfacts revenue tag 可为分部行而非总收入：FCFS 2018 起 tag=零售商品销售行（2024/2025 与 10-K 分部表算术精确匹配），致快照 PS/rev_yoy/gross_margin(110%)/net_margin 全部口径污染；建模时用 10-K 分部表总收入修复并写入 gaps
+- [2026-10-08 13:24] (ai) lint 体量口径实测：_text_volume 只计 JSON 字符串叶（键名/语法/数字不计），staging 文件字节数会高估卷宗量约 5-10%——装载前用 archive._text_volume 模拟组装后的 archive 实测，再决定补几组维度；多组 dims 必须先合并成单个 dims_all.json 再 write（dimensions 是整块替换，分次 write 会只剩最后一组）
+- [2026-10-08 14:38] (ai) US 外国私人发行人（如 CLBT 提交 20-F 而非 10-K）gather 年报抓取为空：fetch_annual_us 硬编码 form==10-K；修复路径=EDGAR submissions 定位 20-F→archives 拉全文→Item 4 切入 item1、Item 5 切入 item7（目录里标题会出现两次，取正文最后一次出现位置）；SEC companyfacts 限流时全标签返回空会静默覆盖 history，需重试退避二次拉取，builder 按申报 fy 分组会把财年错配进日历年（CLBT 丢过 FY2022），改按 concepts 实际期间 start/end 重建 2019-2025 序列
+- [2026-10-08 15:41] (ai) OTEX 建模两记：①dimensions 是整块替换——多份 dims 分片装载前必须先合并成一个 JSON 再 model write，逐分 write 会让最后一份覆盖前面所有；②raw_text_volume 的 glob 非递归，raw/_staging/ 不计入 raw 分母，但 lint 计数只算 model.json 字符串叶，staging 文件的 JSON 语法开销（括号/引号/字段名）会被扣掉约 5-8%，预合并前要按「字符串叶」口径测算而不是文件字符数；③10-K MD&A 切片里的千元小表先验明正身再引用——OTEX 里 26,379 那张是剥离 TSA 报销表，SBC 真值只存在于 Non-GAAP 调节桥（.6M），差点误引

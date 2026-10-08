@@ -1155,7 +1155,7 @@
     },
     {
       "date": "2026-10-08",
-      "nav": 52101.25,
+      "nav": 51526.25,
       "cash_total": 0,
       "settling_total": 3806.25,
       "positions": [
@@ -1164,42 +1164,42 @@
           "code": "03306",
           "name": "江南布衣",
           "qty": 500.0,
-          "price": 22.48,
+          "price": 21.98,
           "currency": "HKD",
-          "value_base": 11240.0
+          "value_base": 10990.0
         },
         {
           "market": "HK",
           "code": "03998",
           "name": "波司登",
           "qty": 4000.0,
-          "price": 4.28,
+          "price": 4.265,
           "currency": "HKD",
-          "value_base": 17120.0
+          "value_base": 17060.0
         },
         {
           "market": "HK",
           "code": "01378",
           "name": "中国宏桥",
           "qty": 500.0,
-          "price": 21.28,
+          "price": 20.94,
           "currency": "HKD",
-          "value_base": 10640.0
+          "value_base": 10470.0
         },
         {
           "market": "HK",
           "code": "06862",
           "name": "海底捞",
           "qty": 1000.0,
-          "price": 9.295,
+          "price": 9.2,
           "currency": "HKD",
-          "value_base": 9295.0
+          "value_base": 9200.0
         }
       ],
       "fx": {
         "CNY": 1.0,
-        "HKD": 0.8543,
-        "USD": 6.7035
+        "HKD": 0.92,
+        "USD": 7.2
       }
     }
   ],
