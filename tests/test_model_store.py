@@ -75,6 +75,45 @@ class TestDefaults:
         assert a["scenarios"]["base"]["capex_pct_rev"] == \
             config.MODEL_FALLBACK_CAPEX_PCT
 
+    def test_hk_cny_reporter_gets_price_fx(self, mdir, monkeypatch):
+        # HKF10 amounts are CNY while the quote is HKD — defaults must
+        # stamp the manifest FX and retag currency (2026-10-08 audit)
+        h = _history()
+        h["market"], h["code"], h["id"] = "HK", "00189", "HK:00189"
+        h["currency"] = "CNY"
+        store.save_history(h)
+        monkeypatch.setattr(store, "_manifest_hkdcny", lambda: 0.8543)
+        a = store.default_assumptions("HK", "00189")
+        assert a["price_fx"] == pytest.approx(round(1.0 / 0.8543, 5),
+                                              abs=1e-9)
+        assert a["currency"] == "HKD"
+
+    def test_hk_cny_reporter_without_fx_declares_gap(self, mdir,
+                                                     monkeypatch):
+        h = _history()
+        h["market"], h["code"], h["id"] = "HK", "00189", "HK:00189"
+        h["currency"] = "CNY"
+        store.save_history(h)
+        monkeypatch.setattr(store, "_manifest_hkdcny", lambda: None)
+        a = store.default_assumptions("HK", "00189")
+        assert "price_fx" not in a
+        assert a["currency"] == "CNY"
+        assert any("price_fx" in g for g in a["gaps"])
+
+    def test_hkd_reporter_and_a_shares_untouched(self, mdir, monkeypatch):
+        monkeypatch.setattr(store, "_manifest_hkdcny", lambda: 0.8543)
+        hkd = _history()
+        hkd["market"], hkd["code"], hkd["id"] = "HK", "00016", "HK:00016"
+        hkd["currency"] = "HKD"
+        store.save_history(hkd)
+        a = store.default_assumptions("HK", "00016")
+        assert "price_fx" not in a
+        assert a["currency"] == "HKD"
+        store.save_history(_history())
+        b = store.default_assumptions("A", "600900")
+        assert "price_fx" not in b
+        assert b["currency"] == "CNY"
+
 
 class TestSetAndResult:
     def test_set_appends_changelog(self, mdir):

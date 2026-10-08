@@ -86,12 +86,29 @@ def run_checks(data_dir=None) -> list:
                     if x is not None]
             if lags:
                 worst = max(lags)
+                freshest = min(lags)
                 tol = config.KLINE_FRESH_DAYS[mk] + 2
-                status = ("PASS" if worst <= tol
-                          else ("WARN" if worst <= 7 else "FAIL"))
-                out.append((status, mk,
-                            f"klines: {len(files)} files, worst last-bar "
-                            f"lag {worst} day(s)"))
+                # Gate on fetch freshness: a stale FETCH moves every
+                # file back together, so the freshest file proves the
+                # pipeline reached the market's latest session. The
+                # worst file is a per-stock state (suspension, halted
+                # microcap) — e.g. Lakala 300773 suspended over the
+                # 8-day National-Day gap must not FAIL a trading-day
+                # answer (2026-10-08). Mass partial staleness (>25%
+                # of files beyond tol) still warns.
+                beyond = [x for x in lags if x > tol]
+                if freshest > 7:
+                    status = "FAIL"
+                elif freshest > tol or len(beyond) > max(2, len(lags) // 4):
+                    status = "WARN"
+                else:
+                    status = "PASS"
+                msg = (f"klines: {len(files)} files, freshest last-bar "
+                       f"lag {freshest} day(s)")
+                if beyond:
+                    msg += (f", {len(beyond)} beyond tol (worst "
+                            f"{worst} day(s), suspended or stale)")
+                out.append((status, mk, msg))
     for name, min_rows in (("a_financials.csv", 1000),
                            ("us_financials.csv", 500),
                            ("hk_f10.csv", 50)):
@@ -206,13 +223,20 @@ def doctor_exit_code(checks: list) -> int:
     return 1 if any(c[0] == "FAIL" for c in checks) else 0
 
 
-def freshness_gate(data_dir=None) -> tuple:
+def freshness_gate(data_dir=None, market=None) -> tuple:
     """(status, summary) where status is PASS / WARN / FAIL.
 
     FAIL = no snapshot or ancient data — must block price-sensitive
     answers. WARN = stale but usable — warn and proceed. PASS = fresh.
+    `market` scopes the per-market rows (klines, quotes, financials,
+    core gaps) to that one market: a closed A-share market must not
+    block an HK/US answer whose own data is fresh (National-Day
+    holiday artifact, 2026-10-08). Global rows ("-": snapshot age,
+    watchlist, radar, manifest) always apply.
     """
     checks = run_checks(data_dir)
+    if market:
+        checks = [c for c in checks if c[1] in ("-", str(market).upper())]
     if any(c[0] == "FAIL" for c in checks):
         fails = [c[2] for c in checks if c[0] == "FAIL"]
         return "FAIL", "; ".join(fails)

@@ -27,7 +27,8 @@ def _seed(market="US", code="TEST"):
 
 def test_build_writes_result_and_json(capsys, mdir, monkeypatch):
     _seed()
-    monkeypatch.setattr(cli, "_check_freshness", lambda args: True)
+    monkeypatch.setattr(cli, "_check_freshness",
+                        lambda args, market=None: True)
     monkeypatch.setattr(cli, "_model_price", lambda m, args: 20.0)
     monkeypatch.setattr(cli, "_model_master", lambda args: None)
     monkeypatch.setattr(cli, "_resolve_stock_or_exit",
@@ -41,14 +42,18 @@ def test_build_writes_result_and_json(capsys, mdir, monkeypatch):
 
 def test_build_gate_fail_blocks(capsys, mdir, monkeypatch):
     _seed()
-    monkeypatch.setattr(cli, "_check_freshness", lambda args: False)
+    monkeypatch.setattr(cli, "_resolve_stock_or_exit",
+                        lambda q: _FakeMatch())
+    monkeypatch.setattr(cli, "_check_freshness",
+                        lambda args, market=None: False)
     rc = cli.main(["model", "build", "US:TEST", "--json"])
     assert rc == 1
     assert capsys.readouterr().out == ""
 
 
 def test_build_without_history_fails(capsys, mdir, monkeypatch):
-    monkeypatch.setattr(cli, "_check_freshness", lambda args: True)
+    monkeypatch.setattr(cli, "_check_freshness",
+                        lambda args, market=None: True)
     monkeypatch.setattr(cli, "_resolve_stock_or_exit",
                         lambda q: _FakeMatch())
     rc = cli.main(["model", "build", "US:TEST", "--json"])
@@ -68,6 +73,21 @@ def test_set_requires_reason(capsys, mdir, monkeypatch):
     assert rc == 0
     out = json.loads(capsys.readouterr().out)
     assert out["wacc"] == 0.11
+
+
+def test_set_currency_accepts_string(capsys, mdir, monkeypatch):
+    # currency is the one non-numeric top-level key (listing-currency
+    # tag for CNY-reporting HK models)
+    _seed()
+    from value_genie.model import store
+    store.save_assumptions(store.default_assumptions("US", "TEST"))
+    monkeypatch.setattr(cli, "_resolve_stock_or_exit",
+                        lambda q: _FakeMatch())
+    rc = cli.main(["model", "set", "US:TEST", "currency=USD",
+                   "--reason", "标签更正", "--json"])
+    assert rc == 0
+    out = json.loads(capsys.readouterr().out)
+    assert out["currency"] == "USD"
 
 
 def test_list_json(capsys, mdir):

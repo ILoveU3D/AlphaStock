@@ -9,8 +9,8 @@ triggers:
 commands:
   - doctor
   - fetch
-version: 32
-updated_at: 2026-10-02T21:40:21
+version: 36
+updated_at: 2026-10-08T11:11:18
 ---
 
 # Playbook
@@ -71,3 +71,7 @@ known snapshot is older than one trading day:
 - [2026-10-01 18:39] (ai) KO/BRK_B kline cache had only 1 bar in snapshot 20261001 (ZM had 320) — US names reached via watchlist fallback may fetch single-day klines only; verify kline depth before citing long-window returns for US holdings
 - [2026-10-02 19:16] (ai) model history 探针定稿(2026-10-02): A利润表RPT_LICO_FN_CPD键REPORTDATE(无营业利润,ebit入gaps); A现金流/资产负债RPT_DMSK_FN_*键REPORT_DATE(ocf=NETCASH_OPERATE,capex=CONSTRUCT_LONG_ASSET,cash=MONETARYFUNDS,debt=TOTAL_LIABILITIES); HK主指标RPT_HKF10_FN_MAININDICATOR需sortColumns=REPORT_DATE&sortTypes=-1否则升序,金额为报告币种(非必HKD); da两市场均无源
 - [2026-10-02 21:40] (ai) SEC XBRL 多年财报用 companyfacts 端点(单请求全标签);companyconcept 会对部分 CIK 返回合法但空载荷(PYPL 2026-10-02 实测),静默截断历史
+- [2026-10-08 00:01] (ai) WinError5 PermissionError on kline os.replace is transient AV/indexer file lock (20261007 fetch crashed on HK_01081.csv.tmp then completed on re-run) - re-run fetch, do not debug
+- [2026-10-08 00:02] (ai) doctor A-kline worst-last-bar-lag FAIL during Golden Week is a holiday artifact (A-share closed 10-01~10-07, last bar 09-30) - not stale data, expect auto-recovery on next trading day
+- [2026-10-08 02:18] (ai) A-share kline last-bar lag FAIL during Golden Week/CNY is a holiday artifact not staleness: 2026-10-08 doctor showed 8-day lag because last A close was Sep 30 (market closed Oct 1-7) while snapshot age was 2.1h (PASS). Before forcing fetch or bypassing gates, check the holiday calendar; freshness signal = snapshot age, kline calendar-lag during market holidays is expected
+- [2026-10-08 11:11] (ai) 2026-10-08 doctor 修复：K线闸门改判最新鲜文件（抓取健康度），单只停牌股不再FAIL全市场；>25%文件超容差仍WARN（拉卡拉国庆停牌案例，845测试全过）
