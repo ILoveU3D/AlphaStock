@@ -17,8 +17,8 @@ commands:
   - ask X --evidence
   - intel X
   - recommend --user me
-version: 35
-updated_at: 2026-10-06T22:29:50
+version: 36
+updated_at: 2026-10-08T14:50:02
 ---
 
 # Playbook
@@ -274,3 +274,4 @@ Output shape (hard rules):
 - [2026-10-06 10:59] (ai) masters-vote --json under PowerShell: '>' redirect writes UTF-16/BOM and the FRESHNESS WARN line lands in the captured stream, breaking json.load; parse via Python subprocess capture (utf-8, txt[txt.find('{'):]) or read the toolhost-persisted console log instead
 - [2026-10-06 15:50] (ai) 模型锚点引用须核对 result.json 的 updated_at:10-06 journal 仍引用 10-02 HRMY 公允113.54并称非stale,但 10-04 建模战役批量重建已把 2029 专利悬崖做进 bear/base(公允降至63.17);journal 里的模型数字会过时,决策前须重读 models/<mkt>/<code>/result.json 原值
 - [2026-10-06 22:29] (ai) SLDE案例(2026-10-06): L1池顶core=100的SLDE是无模型+无文化蒸馏的佛州住宅财险(ROE 57%/profit_yoy +121%/FCF yield 28%)——宽池头部无model.json标的的dcf核是FCF-yield锚，周期顶金融股该锚系统性虚高(dcf core=100无模型支撑)；NUTX core 97同型(微市值+90%波动+52周高位98分位+曾profit_spike史)。L3前置检查：池顶名字无模型时先问FCF yield是周期顶还是结构稀缺(scarcity-multiple-rule周期模板)，GSL否决链的金融变体
+- [2026-10-08 14:50] (ai) US FPI 公司（如 PLGO/FIHL，百慕大等外国私人发行人）年报为 20-F 而非 10-K：fetch_annual_us 的 10-K 硬匹配会 fail-closed，annual.json 为空导致 model gather 缺核心素材——建模前先查 submissions 里有无 20-F，有则手工抓取并切片 Item 4（业务）/Item 5（MD&A）存为同构 annual.json，再把此盲区记入该司模型 gaps
