@@ -123,12 +123,18 @@ class DataSource:
 
     capabilities: ["quotes:A", "quotes:HK", "financials:A", "kline:A", ...]
     fetchers: {"quotes": callable, "financials": callable, "kline": callable}
+    host: rate-limit group key for parallel scheduling ("EM"/"TX"/"SEC").
+    priority: static preference, lower = preferred; the dynamic health
+    penalty is added on top (a source that keeps refusing connections
+    sinks automatically).
     """
 
     id: str
     name: str
     capabilities: list = field(default_factory=list)
     fetchers: dict = field(default_factory=dict)
+    host: str = ""
+    priority: int = 100
 
 
 _SOURCES: dict[str, DataSource] = {}
@@ -166,6 +172,25 @@ def get_sources(data_type: str, market: str) -> list[DataSource]:
 def list_sources() -> list[DataSource]:
     """All registered data sources."""
     return list(_SOURCES.values())
+
+
+def ordered_sources(data_type: str, market: str,
+                    health=None) -> list[DataSource]:
+    """Sources for (data_type, market) in current preference order.
+
+    Sort key: (health.penalty(source_id) + priority, priority) — a
+    source in cooldown (penalty >= 1000) sinks below every healthy one.
+    ``health`` is any object with a ``penalty(source_id) -> int`` method
+    (fetch.health.SourceHealth); without it the static order decides.
+    Ties keep the curated get_sources order (sorted is stable).
+    """
+    srcs = get_sources(data_type, market)
+
+    def _key(ds: DataSource):
+        pen = health.penalty(ds.id) if health is not None else 0
+        return (pen + ds.priority, ds.priority)
+
+    return sorted(srcs, key=_key)
 
 
 # ---------------------------------------------------------------------------

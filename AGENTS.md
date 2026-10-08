@@ -54,11 +54,28 @@ you found it.
 - Snapshot age is measured in **hours** (manifest mtime), not days —
   a next-day snapshot is already stale; recommend `fetch` when WARN.
 - `--no-check` skips the gate (for automated pipelines / testing only).
-- **Agent house rule (user-mandated 2026-09-03)**: every conversation
-  starts by checking snapshot age; if older than **1 hour**, run
-  `python -m value_genie fetch` first and answer from the new snapshot.
-  The 24h/7d gates above are CLI defaults — the agent standard is
-  1 hour. Never analyze on stale data without fetching.
+- **Agent house rule (user-mandated 2026-09-03; calendar-aware since
+  2026-10-08)**: every conversation starts with `doctor --json` and
+  reads `agent_rule[market].needs_fetch` — the machine form of the
+  1-hour iron rule: a closed market whose data sits at/after the last
+  completed session's close needs **no** fetch (a holiday weekend is
+  not staleness); an in-session market with data >1h old, or data
+  older than the last close, does. Fetch only the markets you need.
+  The 24h/7d CLI gates stay as backstops (kline lag counts trading
+  days, so a Golden-Week gap no longer FAILs US answers). Never
+  analyze on stale data without fetching.
+- `fetch --markets US` (any subset of A/HK/US) fetches only those
+  markets; the rest are **carried forward** from today's own dir or
+  the prior snapshot — master.csv stays full-market, per-market
+  `market_at` timestamps and FX inheritance are recorded in the
+  manifest (`carried` tags surface in `doctor`).
+- Quotes/kline sources are health-ordered and fail over automatically
+  (registry + `data/source_health.json`, regenerable): a source with
+  repeated connection errors cools down for 1h and yields its primary
+  seat (e.g. EM push2 IP-blocked → Tencent takes quotes), recovering
+  on the next success. A per-entity miss is never counted as an
+  outage. Deep fetches (klines / HK F10) run on per-source worker
+  pools (`config.FETCH_WORKERS`).
 - `ask` always pulls the LIVE quote for price/PE/PB; fundamentals and
   percentiles come from the latest snapshot. `recommend` /
   `holding list` price holdings live with a snapshot-price fallback.

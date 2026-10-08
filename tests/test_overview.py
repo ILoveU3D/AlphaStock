@@ -185,3 +185,144 @@ class TestDoctor:
         status, msg = dr.freshness_gate(data_dir=tmp_path)
         assert status == "PASS"
         assert "fresh" in msg
+
+    # ------------------------------------------------------------------
+    # Calendar-aware age rows (user mandate 2026-10-08): a closed-market
+    # day only requires data as of the last completed session's close.
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _close_ts_map(now):
+        from value_genie import calendar
+        return {mk: calendar.session_close_dt(
+                    mk, calendar.last_completed_session(mk, now))
+                .isoformat()
+                for mk in ("A", "HK", "US")}
+
+    def test_closed_day_as_of_last_close_passes(self, tmp_path):
+        """Sunday mid-Golden-Week: every market's data pinned at its last
+        session close -> market rows PASS, global age row exempted."""
+        import os
+        from datetime import datetime
+        snap = make_snap(tmp_path)
+        now = datetime(2026, 10, 4, 12, 0)          # Sunday, A+HK closed
+        manifest = {"failures": [],
+                    "market_at": self._close_ts_map(now),
+                    "carried_markets": ["HK"]}
+        (snap / "manifest.json").write_text(
+            json.dumps(manifest), encoding="utf-8")
+        old = datetime(2026, 10, 2, 12, 0).timestamp()  # 48h before `now`
+        os.utime(snap / "manifest.json", (old, old))
+        checks = dr.run_checks(data_dir=tmp_path, now=now)
+        close_rows = [c for c in checks if "data as of last close" in c[2]]
+        assert len(close_rows) == 3
+        assert all(c[0] == "PASS" for c in close_rows)
+        hk = next(c for c in close_rows if c[1] == "HK")
+        assert "carried" in hk[2]
+        age = [c for c in checks if "hour(s)" in c[2]]
+        assert age and age[0][0] == "PASS"        # exempted, not WARN
+        assert "as of last close" in age[0][2]
+        assert not [c for c in checks if c[0] == "FAIL"]
+
+    def test_trading_day_30h_snapshot_warns(self, tmp_path):
+        """On a trading day the 24h wall-clock contract still applies."""
+        import os
+        from datetime import datetime
+        snap = make_snap(tmp_path)
+        now = datetime(2026, 10, 9, 18, 0)          # Friday, after close
+        ts = datetime(2026, 10, 8, 12, 0)           # 30h old, pre-close
+        manifest = {"failures": [],
+                    "market_at": {mk: ts.isoformat()
+                                  for mk in ("A", "HK", "US")}}
+        (snap / "manifest.json").write_text(
+            json.dumps(manifest), encoding="utf-8")
+        old = ts.timestamp()
+        os.utime(snap / "manifest.json", (old, old))
+        checks = dr.run_checks(data_dir=tmp_path, now=now)
+        age = [c for c in checks if "hour(s)" in c[2]]
+        assert age and age[0][0] == "WARN"
+        stale = [c for c in checks if "stale vs last close" in c[2]]
+        assert stale and all(c[0] == "WARN" for c in stale)
+
+    def test_market_at_ages_are_per_market(self, tmp_path):
+        """A partial fetch refreshes only its own market's timestamp."""
+        from datetime import datetime
+        from value_genie import calendar
+        snap = make_snap(tmp_path)
+        now = datetime(2026, 10, 9, 18, 0)          # Friday, after close
+        fresh = calendar.session_close_dt(
+            "US", calendar.last_completed_session("US", now)).isoformat()
+        manifest = {"failures": [],
+                    "market_at": {"A": "2026-10-08T12:00:00",
+                                  "HK": "2026-10-08T12:00:00",
+                                  "US": fresh}}
+        (snap / "manifest.json").write_text(
+            json.dumps(manifest), encoding="utf-8")
+        checks = dr.run_checks(data_dir=tmp_path, now=now)
+        us = next(c for c in checks
+                  if c[1] == "US" and "last close" in c[2])
+        a = next(c for c in checks
+                 if c[1] == "A" and "last close" in c[2])
+        assert us[0] == "PASS" and "as of last close" in us[2]
+        assert a[0] == "WARN" and "stale vs last close" in a[2]
+
+    def test_agent_rule_machine_form(self, tmp_path):
+        """agent_rule: closed + as-of-close -> no fetch; in-session with
+        >1h data -> fetch (the 1-hour iron rule, machine-readable)."""
+        from datetime import datetime, timedelta
+        from value_genie import calendar
+        snap = make_snap(tmp_path)
+        closed_now = datetime(2026, 10, 4, 12, 0)   # Sunday
+        manifest = {"market_at": self._close_ts_map(closed_now)}
+        rule = dr.agent_rule(snap, manifest, closed_now)
+        assert set(rule) == {"A", "HK", "US"}
+        assert all(not r["needs_fetch"] for r in rule.values())
+        assert all(r["reason"] == "ok" for r in rule.values())
+        # in-session, 2h-old data -> must fetch (trading-day iron rule)
+        open_now = datetime(2026, 10, 9, 10, 30)    # Friday A session
+        assert calendar.in_session("A", open_now)
+        old = (open_now - timedelta(hours=2)).isoformat()
+        rule = dr.agent_rule(snap, {"market_at": {"A": old}}, open_now)
+        assert rule["A"]["needs_fetch"]
+        assert rule["A"]["reason"] == "in_session&age>1h"
+        assert rule["A"]["age_hours"] == 2.0
+        # stale beyond the last completed session's close -> fetch
+        rule = dr.agent_rule(
+            snap, {"market_at": {"A": "2026-09-30T12:00:00"}}, open_now)
+        assert rule["A"]["needs_fetch"]
+        assert rule["A"]["reason"] == "stale_beyond_last_close"
+
+    def test_doctor_json_contains_agent_rule(self, tmp_path):
+        make_snap(tmp_path)
+        checks = dr.run_checks(data_dir=tmp_path)
+        payload = json.loads(dr.to_json(checks, data_dir=tmp_path))
+        assert "agent_rule" in payload
+        assert set(payload["agent_rule"]) == {"A", "HK", "US"}
+        a = payload["agent_rule"]["A"]
+        assert {"needs_fetch", "reason", "age_hours"} <= set(a)
+
+    def test_degraded_quotes_source_warns(self, tmp_path):
+        snap = make_snap(tmp_path)
+        manifest = {"failures": [],
+                    "datasets": {"A": {"source": "tencent"}}}
+        (snap / "manifest.json").write_text(
+            json.dumps(manifest), encoding="utf-8")
+        checks = dr.run_checks(data_dir=tmp_path)
+        deg = [c for c in checks if "source=tencent" in c[2]]
+        assert deg and deg[0][0] == "WARN" and deg[0][1] == "A"
+
+    def test_freshness_gate_market_scope(self, tmp_path):
+        """A-share holiday kline lag must not block a US answer: scoping
+        the gate to US drops the A/HK per-market FAIL rows while global
+        rows still apply (National-Day artifact, 2026-10-08)."""
+        from datetime import datetime
+        snap = make_snap(tmp_path, stale_kline=True)
+        # pretend the fetch happened just now: per-market age rows PASS
+        now_iso = datetime.now().isoformat(timespec="seconds")
+        (snap / "manifest.json").write_text(json.dumps(
+            {"failures": [],
+             "market_at": {mk: now_iso for mk in ("A", "HK", "US")}}),
+            encoding="utf-8")
+        status_all, _ = dr.freshness_gate(data_dir=tmp_path)
+        assert status_all == "FAIL"               # A klines are ancient
+        status_us, msg = dr.freshness_gate(data_dir=tmp_path, market="US")
+        assert status_us == "PASS", msg

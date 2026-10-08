@@ -425,7 +425,7 @@ def fake_result(m):
 class TestAsk:
     def test_ask_brief(self, capsys, monkeypatch):
         monkeypatch.setattr("value_genie.doctor.freshness_gate",
-                            lambda d=None: ("PASS", "ok"))
+                            lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr(
             "value_genie.resolve.resolve",
             lambda q, **k: [Match("A", "600001", "Alpha Co", 100.0, "1")])
@@ -441,7 +441,7 @@ class TestAsk:
 
     def test_ask_shows_alternatives(self, capsys, monkeypatch):
         monkeypatch.setattr("value_genie.doctor.freshness_gate",
-                            lambda d=None: ("PASS", "ok"))
+                            lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr(
             "value_genie.resolve.resolve",
             lambda q, **k: [Match("A", "600001", "Alpha Co", 100.0, "1"),
@@ -461,7 +461,7 @@ class TestAsk:
         hint fires (hint goes to stderr)."""
         import json
         monkeypatch.setattr("value_genie.doctor.freshness_gate",
-                            lambda d=None: ("PASS", "ok"))
+                            lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr(
             "value_genie.resolve.resolve",
             lambda q, **k: [Match("A", "600001", "Alpha Co", 100.0, "1"),
@@ -485,7 +485,7 @@ class TestAsk:
             "market,code,name\nA,600001,Alpha Co\n", encoding="utf-8")
         seen = {}
         monkeypatch.setattr("value_genie.doctor.freshness_gate",
-                            lambda d=None: ("PASS", "ok"))
+                            lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr(
             "value_genie.resolve.resolve",
             lambda q, **k: [Match("A", "600001", "Alpha Co", 100.0, "1")])
@@ -505,7 +505,7 @@ class TestAsk:
     def test_ask_json(self, capsys, monkeypatch):
         import json
         monkeypatch.setattr("value_genie.doctor.freshness_gate",
-                            lambda d=None: ("PASS", "ok"))
+                            lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr(
             "value_genie.resolve.resolve",
             lambda q, **k: [Match("A", "600001", "Alpha Co", 100.0, "1")])
@@ -519,7 +519,7 @@ class TestAsk:
 
     def test_ask_no_match_returns_2(self, capsys, monkeypatch):
         monkeypatch.setattr("value_genie.doctor.freshness_gate",
-                            lambda d=None: ("PASS", "ok"))
+                            lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr("value_genie.resolve.resolve",
                             lambda q, **k: [])
         assert main(["ask", "nonsense"]) == 2
@@ -527,7 +527,7 @@ class TestAsk:
 
     def test_compare(self, capsys, monkeypatch):
         monkeypatch.setattr("value_genie.doctor.freshness_gate",
-                            lambda d=None: ("PASS", "ok"))
+                            lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr(
             "value_genie.resolve.resolve",
             lambda q, **k: [Match("A", "600001", "Alpha Co", 100.0, "1")])
@@ -545,7 +545,7 @@ class TestAsk:
 
     def test_compare_json(self, capsys, monkeypatch):
         monkeypatch.setattr("value_genie.doctor.freshness_gate",
-                            lambda d=None: ("PASS", "ok"))
+                            lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr(
             "value_genie.resolve.resolve",
             lambda q, **k: [Match("A", "600001", "Alpha Co", 100.0, "1")])
@@ -566,7 +566,7 @@ class TestAsk:
 class TestOverviewCli:
     def test_overview(self, capsys, monkeypatch):
         monkeypatch.setattr("value_genie.doctor.freshness_gate",
-                            lambda d=None: ("PASS", "ok"))
+                            lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr(
             "value_genie.overview.market_overview",
             lambda markets=None, top_n=10, data_dir=None: {
@@ -583,7 +583,7 @@ class TestOverviewCli:
              "roe": 30.0, "composite_score": 60.0,
              "drawdown_52w": float("nan")}])
         monkeypatch.setattr("value_genie.doctor.freshness_gate",
-                            lambda d=None: ("PASS", "ok"))
+                            lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr(
             "value_genie.overview.market_overview",
             lambda markets=None, top_n=10, data_dir=None: {
@@ -610,7 +610,7 @@ class TestFreshnessGate:
     def test_ask_blocked_on_fail(self, capsys, monkeypatch):
         monkeypatch.setattr(
             "value_genie.doctor.freshness_gate",
-            lambda d=None: ("FAIL", "no snapshots found"))
+            lambda d=None, market=None: ("FAIL", "no snapshots found"))
         monkeypatch.setattr(
             "value_genie.resolve.resolve",
             lambda q, **k: [Match("A", "600001", "X", 100.0, "1")])
@@ -623,7 +623,7 @@ class TestFreshnessGate:
     def test_ask_warns_but_proceeds_on_warn(self, capsys, monkeypatch):
         monkeypatch.setattr(
             "value_genie.doctor.freshness_gate",
-            lambda d=None: ("WARN", "snapshot age: 3 days"))
+            lambda d=None, market=None: ("WARN", "snapshot age: 3 days"))
         monkeypatch.setattr(
             "value_genie.resolve.resolve",
             lambda q, **k: [Match("A", "600001", "Alpha Co", 100.0, "1")])
@@ -635,11 +635,33 @@ class TestFreshnessGate:
         assert rc == 0
         assert "WARN" in err
 
+    def test_ask_scopes_gate_to_stock_market(self, capsys, monkeypatch):
+        """ask resolves the stock first and passes its market into the
+        gate, so a closed/stale A-share market never blocks a US answer
+        (National-Day artifact, 2026-10-08)."""
+        seen = {}
+
+        def fake_gate(d=None, market=None):
+            seen["market"] = market
+            return ("PASS", "data is fresh")
+
+        monkeypatch.setattr(
+            "value_genie.doctor.freshness_gate", fake_gate)
+        monkeypatch.setattr(
+            "value_genie.resolve.resolve",
+            lambda q, **k: [Match("US", "AAPL", "Apple", 100.0, "105")])
+        monkeypatch.setattr(
+            "value_genie.analyze.analyze_stock",
+            lambda m, snapshot_dir=None, horizon=None: fake_result(m))
+        rc = main(["ask", "AAPL"])
+        assert rc == 0
+        assert seen["market"] == "US"
+
     def test_ask_no_check_skips_gate(self, capsys, monkeypatch):
         called = []
         monkeypatch.setattr(
             "value_genie.doctor.freshness_gate",
-            lambda d=None: called.append(d) or ("FAIL", "should not run"))
+            lambda d=None, market=None: called.append(d) or ("FAIL", "should not run"))
         monkeypatch.setattr(
             "value_genie.resolve.resolve",
             lambda q, **k: [Match("A", "600001", "Alpha Co", 100.0, "1")])
@@ -653,7 +675,7 @@ class TestFreshnessGate:
     def test_compare_blocked_on_fail(self, capsys, monkeypatch):
         monkeypatch.setattr(
             "value_genie.doctor.freshness_gate",
-            lambda d=None: ("FAIL", "no snapshots"))
+            lambda d=None, market=None: ("FAIL", "no snapshots"))
         monkeypatch.setattr(
             "value_genie.resolve.resolve",
             lambda q, **k: [Match("A", "600001", "X", 100.0, "1")])
@@ -665,7 +687,7 @@ class TestFreshnessGate:
     def test_overview_blocked_on_fail(self, capsys, monkeypatch):
         monkeypatch.setattr(
             "value_genie.doctor.freshness_gate",
-            lambda d=None: ("FAIL", "no snapshots"))
+            lambda d=None, market=None: ("FAIL", "no snapshots"))
         rc = main(["overview"])
         err = capsys.readouterr().err
         assert rc == 1
@@ -725,7 +747,7 @@ class TestRecommendJsonCli:
                      "composite_score": 60.0, "pe_ttm": 25.0}]),
                 "health": _HEALTH}
         monkeypatch.setattr("value_genie.doctor.freshness_gate",
-                            lambda d=None: ("PASS", "ok"))
+                            lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr(
             "value_genie.recommend.build_recommendation",
             lambda *a, **k: fake)
@@ -741,7 +763,7 @@ class TestRecommendJsonCli:
 class TestHoldingListJsonCli:
     def test_holding_list_json(self, capsys, monkeypatch):
         monkeypatch.setattr("value_genie.doctor.freshness_gate",
-                            lambda d=None: ("PASS", "ok"))
+                            lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr(
             "value_genie.users.load_user",
             lambda uid: SimpleNamespace(id="u1", name="U1", holdings=[],
@@ -814,7 +836,7 @@ class TestParserSurface:
 class TestIntelCmd:
     def _patch(self, monkeypatch, report_result):
         monkeypatch.setattr("value_genie.doctor.freshness_gate",
-                            lambda d=None: ("PASS", "ok"))
+                            lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr(
             "value_genie.resolve.resolve",
             lambda q, **k: [Match("A", "688795", "摩尔线程-U", 100.0, "1")])
@@ -847,7 +869,7 @@ class TestIntelCmd:
 
     def test_no_match_returns_2(self, capsys, monkeypatch):
         monkeypatch.setattr("value_genie.doctor.freshness_gate",
-                            lambda d=None: ("PASS", "ok"))
+                            lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr("value_genie.resolve.resolve",
                             lambda q, **k: [])
         rc = main(["intel", "不存在股"])
@@ -855,7 +877,7 @@ class TestIntelCmd:
 
     def test_freshness_fail_blocks(self, capsys, monkeypatch):
         monkeypatch.setattr("value_genie.doctor.freshness_gate",
-                            lambda d=None: ("FAIL", "no snapshot"))
+                            lambda d=None, market=None: ("FAIL", "no snapshot"))
         rc = main(["intel", "摩尔线程"])
         captured = capsys.readouterr()
         assert rc == 1
@@ -865,7 +887,7 @@ class TestIntelCmd:
         called = []
         monkeypatch.setattr(
             "value_genie.doctor.freshness_gate",
-            lambda d=None: called.append(1) or ("FAIL", "x"))
+            lambda d=None, market=None: called.append(1) or ("FAIL", "x"))
         self._patch(monkeypatch, self._result())
         rc = main(["intel", "摩尔线程", "--no-check"])
         assert rc == 0
@@ -889,7 +911,7 @@ class TestAskIntelIntegration:
 
     def test_risk_flag_when_intel_red(self, capsys, monkeypatch):
         monkeypatch.setattr("value_genie.doctor.freshness_gate",
-                            lambda d=None: ("PASS", "ok"))
+                            lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr(
             "value_genie.resolve.resolve",
             lambda q, **k: [Match("A", "688795", "摩尔线程-U", 100.0, "1")])
@@ -908,7 +930,7 @@ class TestAskIntelIntegration:
 
     def test_no_flag_when_clean(self, capsys, monkeypatch):
         monkeypatch.setattr("value_genie.doctor.freshness_gate",
-                            lambda d=None: ("PASS", "ok"))
+                            lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr(
             "value_genie.resolve.resolve",
             lambda q, **k: [Match("A", "688795", "摩尔线程-U", 100.0, "1")])

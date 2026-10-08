@@ -11,7 +11,12 @@ from ..strategy.registry import DataSource, register_source, set_source_order
 
 
 def _register_sources():
-    """Register the three built-in data sources and their order."""
+    """Register the three built-in data sources and their order.
+
+    priority: static preference (lower = preferred); fetch.health adds a
+    dynamic penalty on top so an outage source sinks automatically.
+    host: rate-limit group for parallel scheduling (config.FETCH_WORKERS).
+    """
 
     # --- Eastmoney: quotes + A financials + HK F10 + klines ---
     register_source(DataSource(
@@ -27,6 +32,8 @@ def _register_sources():
             "financials": "fetch_a_financials / fetch_hk_f10",
             "kline": "fetch_kline_any (em primary)",
         },
+        host="EM",
+        priority=10,
     ))
 
     # --- SEC EDGAR: US financials ---
@@ -35,6 +42,8 @@ def _register_sources():
         name="SEC EDGAR (XBRL frames)",
         capabilities=["financials:US"],
         fetchers={"financials": "fetch_us_financials"},
+        host="SEC",
+        priority=10,
     ))
 
     # --- Tencent: quotes + kline backup ---
@@ -45,6 +54,8 @@ def _register_sources():
                       "kline:A", "kline:HK", "kline:US"],
         fetchers={"quotes": "fetch_market_quotes_tx (batch fallback)",
                   "kline": "fetch_kline_any (tx fallback)"},
+        host="TX",
+        priority=20,
     ))
 
     # Set lookup order: primary first, backup second

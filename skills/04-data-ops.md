@@ -9,25 +9,46 @@ triggers:
 commands:
   - doctor
   - fetch
-version: 36
-updated_at: 2026-10-08T11:11:18
+version: 40
+updated_at: 2026-10-08T16:10:00
 ---
 
 # Playbook
 
-Run `doctor` BEFORE answering price-sensitive questions when the last
-known snapshot is older than one trading day:
+Run `doctor` BEFORE answering price-sensitive questions — it is the
+conversation-start freshness probe:
 
-    python -m value_genie doctor
+    python -m value_genie doctor --json
 
-- All PASS → proceed; data is fresh enough.
-- WARN on snapshot age or kline lag → tell the human data may be stale,
-  offer to refresh, and prefer live-quote commands (`ask`) meanwhile.
-- FAIL (no snapshots / ancient data) → run fetch before answering:
-  `python -m value_genie fetch` (A+HK+US, ~10 min, incremental).
+- Read `agent_rule[market].needs_fetch` first (machine form of the
+  1-hour iron rule, 2026-10-08): a closed market with data at/after
+  the last completed session's close needs **no** fetch — a holiday
+  weekend is not staleness; an in-session market with data >1h old,
+  or data older than the last close, does.
+- Fetch only the markets you need:
+  `python -m value_genie fetch --markets US` (any subset of A/HK/US).
+  Markets not in the run are carried forward from today's own dir or
+  the prior snapshot; master.csv stays full-market and per-market
+  `market_at` / FX inheritance land in the manifest (`carried` tags
+  surface in `doctor`). A full A+HK+US run costs ~10 min; a same-day
+  partial run costs seconds (US-only measured 22.9s).
+- WARN on snapshot age or kline lag → tell the human data may be
+  stale, offer to refresh, and prefer live-quote commands (`ask`)
+  meanwhile. Kline lag counts trading days — a Golden-Week gap is
+  expected, not stale.
+- FAIL (no snapshots / ancient data) → run fetch before answering.
 
 ## Source failure playbook (learned the hard way)
 
+- Source health is dynamic (2026-10-08): quotes/kline sources are
+  ordered by health (registry + `data/source_health.json`,
+  regenerable). Repeated connection errors (grade 3) cool a source
+  down for 1h — it is skipped, not retried — and the next source
+  takes its primary seat (EM push2 IP-blocked → Tencent quotes).
+  Success restores it. A per-entity miss (an ETF outside the clist
+  universe, a delisted kline) never counts as an outage. Deep fetches
+  (klines / HK F10 / cashflow) run parallel on per-source worker
+  pools (`config.FETCH_WORKERS`).
 - Eastmoney push2 rate-limits: the client rotates mirror hosts
   (push2delay first) with cooldowns; partial quote pages are kept with
   a warning — check `manifest.json` `failures` for what is missing.
@@ -75,3 +96,6 @@ known snapshot is older than one trading day:
 - [2026-10-08 00:02] (ai) doctor A-kline worst-last-bar-lag FAIL during Golden Week is a holiday artifact (A-share closed 10-01~10-07, last bar 09-30) - not stale data, expect auto-recovery on next trading day
 - [2026-10-08 02:18] (ai) A-share kline last-bar lag FAIL during Golden Week/CNY is a holiday artifact not staleness: 2026-10-08 doctor showed 8-day lag because last A close was Sep 30 (market closed Oct 1-7) while snapshot age was 2.1h (PASS). Before forcing fetch or bypassing gates, check the holiday calendar; freshness signal = snapshot age, kline calendar-lag during market holidays is expected
 - [2026-10-08 11:11] (ai) 2026-10-08 doctor 修复：K线闸门改判最新鲜文件（抓取健康度），单只停牌股不再FAIL全市场；>25%文件超容差仍WARN（拉卡拉国庆停牌案例，845测试全过）
+- [2026-10-08 15:55] (ai) fetch --markets A/HK/US 分市场抓取(2026-10-08): 同日partial run复用同目录、跨日从prior快照结转(carried标签+market_at分市场时间戳+fx继承), master.csv始终全市场; 实测US-only 22.9s
+- [2026-10-08 15:55] (ai) 1h铁律机器化(2026-10-08): doctor --json 的 agent_rule[market].needs_fetch 是会话开始唯一检查入口——闭市且数据>=上一收盘=ok不fetch, 交易时段age>1h=stale_beyond_last_close/in_session&age>1h=fetch; kline lag改算交易日(国庆8天不再FAIL美股)
+- [2026-10-08 15:55] (ai) 数据源健康降级(2026-10-08): EM连续ConnectionError(grade3)x2即进1h冷却跳过不试, 腾讯自动升主座, 恢复自动还原; 空结果=per-entity miss不罚源; health持久化data/source_health.json(可再生); klines/HK深采已并行化(FETCH_WORKERS)

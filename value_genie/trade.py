@@ -21,7 +21,7 @@ import sys
 from datetime import date, datetime, timedelta
 from pathlib import Path
 
-from . import config
+from . import calendar, config
 
 SEASON_ID_RE = re.compile(r"^[a-z][a-z0-9_]{0,15}$")
 SEASON_STATUSES = ("active", "paused", "closed")
@@ -288,11 +288,14 @@ def validate_qty(market: str, code: str, qty, lot_override=None) -> int:
 # ---------------------------------------------------------------------------
 # Trading days and settlement
 # ---------------------------------------------------------------------------
-def next_trading_day(date_str: str, n: int = 1) -> str:
-    """n-th next trading day (weekdays only; holidays not tracked —
-    trades only happen when the user triggers them on real trading days,
-    so the approximation is documented, not solved)."""
+def next_trading_day(date_str: str, n: int = 1,
+                     market: str | None = None) -> str:
+    """n-th next trading day. With ``market`` the static holiday table
+    applies (calendar.py); without it the legacy weekday-only
+    approximation is kept for backwards compatibility."""
     d = date.fromisoformat(date_str)
+    if market is not None:
+        return calendar.next_trading_day(market, d, n).isoformat()
     added = 0
     while added < n:
         d += timedelta(days=1)
@@ -362,17 +365,9 @@ def _find_pos(season: dict, market: str, code: str):
 
 def _session_flag(market: str) -> str:
     """'in'/'out' — informational only (fills always execute at the
-    live_price quote; out-of-session quotes are the latest close)."""
-    now = datetime.now()
-    t = now.hour * 60 + now.minute
-    if now.weekday() >= 5:
-        return "out"
-    if market == "A":
-        return "in" if (570 <= t <= 690) or (780 <= t <= 900) else "out"
-    if market == "HK":
-        return "in" if (570 <= t <= 720) or (780 <= t <= 960) else "out"
-    # US in Beijing time (DST not modeled): 21:30-04:00
-    return "in" if (t >= 1290 or t <= 240) else "out"
+    live_price quote; out-of-session quotes are the latest close).
+    Holiday- and DST-aware via calendar.in_session."""
+    return "in" if calendar.in_session(market) else "out"
 
 
 def _append_fill(season: dict, fill: dict) -> dict:
@@ -474,7 +469,8 @@ def sell(sid, match, qty, note="", snap_dir=None, today=None) -> dict:
     if pos["qty"] <= EPS:
         season["positions"].remove(pos)
     avail_d = today  # same-market rebuy usable immediately (T+0)
-    fx_d = next_trading_day(today, 2 if market == "HK" else 1)
+    fx_d = next_trading_day(today, 2 if market == "HK" else 1,
+                            market=market)
     season["settling"].append({
         "currency": cur, "amount": proceeds, "origin_market": market,
         "available_date": avail_d, "fx_date": fx_d})

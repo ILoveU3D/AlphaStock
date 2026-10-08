@@ -14,7 +14,10 @@ recent HK F10 rows are reused from the latest prior snapshot.
 """
 
 import json
+import shutil
+import threading
 import time
+from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime
 from pathlib import Path
 
@@ -34,6 +37,7 @@ from .fundamentals import (fetch_a_balance, fetch_a_cashflow,
                            fetch_us_financials_one, frames_year_context)
 from .kline import (fetch_kline_any, kline_cache_path, kline_is_fresh,
                     load_kline, save_kline)
+from .health import get_health
 from .quotes import (exclude_non_operating_names, exclude_risk_names,
                      fetch_market_quotes, fetch_quote_any)
 from ..intel.radar import RADAR_COLUMNS, build_event_radar, merge_radar
@@ -254,42 +258,43 @@ def fetch_klines(cands: pd.DataFrame, market: str, snap_dir: Path,
 
     Fresh caches are searched in every reuse dir (today's partial snapshot
     first, then the latest prior snapshot) so crashed runs resume cheaply.
+    Network fetches run on a worker pool (config.FETCH_WORKERS bounds the
+    per-host concurrency inside the HTTP layer).
     """
     if cands.empty:
         return
-    for _, row in cands.iterrows():
+
+    def _one(row) -> str:
         code = str(row["code"])
         mid = str(row.get("market_id") or "")
         path = kline_cache_path(snap_dir, market, code)
         if not force and path.exists() and kline_is_fresh(path, market):
-            stats["reused"] += 1
-            continue
-        reused = False
+            return "reused"
         if not force:
             for prev_dir in reuse_dirs:
                 prev = kline_cache_path(prev_dir, market, code)
                 if prev.exists() and kline_is_fresh(prev, market):
                     save_kline(load_kline(prev), path)
-                    stats["reused"] += 1
-                    reused = True
-                    break
-        if reused:
-            continue
+                    return "reused"
         df = fetch_kline_any(market, code, mid, lmt=config.KLINE_DAYS)
+        time.sleep(0.25)  # politeness: per-worker cadence
         if df is not None and not df.empty:
             save_kline(df, path)
-            stats["fetched"] += 1
-        else:
-            stats["failed"] += 1
-        time.sleep(0.25)
+            return "fetched"
+        return "failed"
+
+    rows = [r for _, r in cands.iterrows()]
+    with ThreadPoolExecutor(
+            max_workers=config.FETCH_WORKERS.get("EM", 4)) as ex:
+        for status in ex.map(_one, rows):
+            stats[status] += 1
 
 
-def fetch_hk_deep(codes, snap_dir: Path, reuse_dirs: list,
-                  stats: dict) -> pd.DataFrame:
-    """Per-stock HK F10 latest metrics, reusing recent snapshot rows."""
+def _reuse_rows(reuse_dirs: list, fname: str) -> dict:
+    """Latest persisted rows of a deep-data CSV, first dir wins."""
     have = {}
     for prev_dir in reuse_dirs:
-        rp = prev_dir / "hk_f10.csv"
+        rp = prev_dir / fname
         if not rp.exists():
             continue
         try:
@@ -298,22 +303,33 @@ def fetch_hk_deep(codes, snap_dir: Path, reuse_dirs: list,
                 have.setdefault(str(r["code"]), dict(r))
         except (OSError, pd.errors.ParserError, ValueError):
             continue
-    rows = []
-    for code in codes:
+    return have
+
+
+def fetch_hk_deep(codes, snap_dir: Path, reuse_dirs: list,
+                  stats: dict) -> pd.DataFrame:
+    """Per-stock HK F10 latest metrics, reusing recent snapshot rows."""
+    have = _reuse_rows(reuse_dirs, "hk_f10.csv")
+
+    def _one(code):
         code = str(code)
         if code in have:
-            rows.append(have[code])
-            stats["reused"] += 1
-            continue
+            return code, have[code], "reused"
         f10 = fetch_hk_f10(code)
+        time.sleep(0.3)  # politeness: per-worker cadence
         if f10 is not None and not f10.empty:
             latest = f10.iloc[0].to_dict()
             latest["code"] = code
-            rows.append(latest)
-            stats["fetched"] += 1
-        else:
-            stats["failed"] += 1
-        time.sleep(0.3)
+            return code, latest, "fetched"
+        return code, None, "failed"
+
+    rows = []
+    with ThreadPoolExecutor(
+            max_workers=config.FETCH_WORKERS.get("EM", 4)) as ex:
+        for _, rec, status in ex.map(_one, codes):
+            stats[status] += 1
+            if rec is not None:
+                rows.append(rec)
     df = pd.DataFrame(rows)
     if not df.empty:
         atomic_to_csv(df, snap_dir / "hk_f10.csv")
@@ -324,31 +340,25 @@ def fetch_hk_cashflow_deep(codes, snap_dir: Path, reuse_dirs: list,
                            stats: dict) -> pd.DataFrame:
     """Annual HK cashflow rows for candidates + watch symbols, reusing
     rows saved in a recent snapshot (same chain as fetch_hk_deep)."""
-    have = {}
-    for prev_dir in reuse_dirs:
-        rp = prev_dir / "hk_cashflow.csv"
-        if not rp.exists():
-            continue
-        try:
-            prev = pd.read_csv(rp, dtype={"code": str})
-            for _, r in prev.iterrows():
-                have.setdefault(str(r["code"]), dict(r))
-        except (OSError, pd.errors.ParserError, ValueError):
-            continue
-    rows = []
-    for code in codes:
+    have = _reuse_rows(reuse_dirs, "hk_cashflow.csv")
+
+    def _one(code):
         code = str(code)
         if code in have:
-            rows.append(have[code])
-            stats["reused"] += 1
-            continue
+            return code, have[code], "reused"
         cf = fetch_hk_cashflow(code)
+        time.sleep(0.3)  # politeness: per-worker cadence
         if cf is not None and not cf.empty:
-            rows.append(cf.iloc[0].to_dict())
-            stats["fetched"] += 1
-        else:
-            stats["failed"] += 1
-        time.sleep(0.3)
+            return code, cf.iloc[0].to_dict(), "fetched"
+        return code, None, "failed"
+
+    rows = []
+    with ThreadPoolExecutor(
+            max_workers=config.FETCH_WORKERS.get("EM", 4)) as ex:
+        for _, rec, status in ex.map(_one, codes):
+            stats[status] += 1
+            if rec is not None:
+                rows.append(rec)
     df = pd.DataFrame(rows)
     if not df.empty:
         atomic_to_csv(df, snap_dir / "hk_cashflow.csv")
@@ -892,6 +902,81 @@ def _snapshot_age_days(snap_dir: Path) -> int:
         return 10 ** 6  # unparseable -> treat as ancient
 
 
+# Market-owned artifacts copied when a market is carried forward
+# (per-market fetch, user mandate 2026-10-08).
+CARRY_FILES = {
+    "A": ["a_quotes.csv", "a_financials.csv", "a_cashflow.csv",
+          "a_debt.csv", "a_cashflow_annual.csv", "a_dividends.csv"],
+    "HK": ["hk_quotes.csv", "hk_f10.csv", "hk_cashflow.csv"],
+    "US": ["us_quotes.csv", "us_financials.csv"],
+}
+
+
+def _read_manifest_quiet(snap_dir: Path) -> dict:
+    try:
+        return json.loads((snap_dir / "manifest.json")
+                          .read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+
+
+def _carry_forward(snap_dir: Path, missing: list[str], manifest: dict,
+                   log, prior: Path | None) -> pd.DataFrame | None:
+    """Carry markets not fetched this run into the new snapshot.
+
+    Same-day partial runs (A+HK in the morning, US in the evening) find
+    the market's files already in ``snap_dir``; cross-day runs copy them
+    from the prior snapshot. Returns the carried markets' prior
+    master.csv rows (already scored) for concat into the new master.
+    """
+    src_dirs = [snap_dir] + ([prior] if prior is not None else [])
+    frames, carried = [], []
+    for mk in missing:
+        src = next((d for d in src_dirs
+                    if (d / f"{mk.lower()}_quotes.csv").exists()), None)
+        if src is None:
+            manifest["failures"].append(
+                f"{mk}: not fetched and no prior snapshot to carry")
+            continue
+        if src != snap_dir:
+            for name in CARRY_FILES[mk]:
+                f = src / name
+                if f.exists():
+                    shutil.copy2(f, snap_dir / name)
+            ksrc = src / "kline"
+            if ksrc.is_dir():
+                (snap_dir / "kline").mkdir(exist_ok=True)
+                for f in ksrc.glob(f"{mk}_*.csv"):
+                    shutil.copy2(f, snap_dir / "kline" / f.name)
+        mp = src / "master.csv"
+        if mp.exists():
+            try:
+                rows = pd.read_csv(mp, dtype={"code": str})
+                if "market" in rows.columns:
+                    frames.append(rows[rows["market"] == mk])
+            except (OSError, pd.errors.ParserError, ValueError):
+                pass
+        src_manifest = _read_manifest_quiet(src)
+        mk_ts = ((src_manifest.get("market_at") or {}).get(mk)
+                 or src_manifest.get("created_at"))
+        if mk_ts:
+            manifest.setdefault("market_at", {})[mk] = mk_ts
+        for fxk in ("fx_hkdcny", "fx_usdcny"):
+            if fxk not in manifest and fxk in src_manifest:
+                manifest[fxk] = src_manifest[fxk]
+                manifest.setdefault("fx_carried", []).append(fxk)
+        carried.append(mk)
+        manifest["failures"].append(
+            f"{mk}: carried forward from {src.name}")
+        manifest["datasets"][mk] = {"carried": True}
+        log(f"    [{mk}] carried forward from {src.name}")
+    if carried:
+        manifest["carried_markets"] = carried
+    if frames:
+        return pd.concat(frames, ignore_index=True)
+    return None
+
+
 def run_fetch(markets=None, data_dir=None, refresh: bool = False,
               quiet: bool = False) -> Path:
     """Run the full pipeline; returns the snapshot directory path."""
@@ -908,10 +993,10 @@ def run_fetch(markets=None, data_dir=None, refresh: bool = False,
     # crashed-run resume), then the latest prior snapshot
     kline_reuse: list[Path] = []
     f10_reuse: list[Path] = []
+    prior = _prior_snapshot(data_dir, snap_dir)
     if not refresh:
         if any(snap_dir.iterdir()):
             kline_reuse.append(snap_dir)
-        prior = _prior_snapshot(data_dir, snap_dir)
         if prior is not None and prior not in kline_reuse:
             kline_reuse.append(prior)
         f10_reuse = [d for d in kline_reuse
@@ -922,6 +1007,13 @@ def run_fetch(markets=None, data_dir=None, refresh: bool = False,
                 "failures": []}
     log = (lambda *a: None) if quiet else print
     log(f"== value-genie fetch -> {snap_dir} ==")
+    _fail_lock = threading.Lock()
+
+    def _fail(msg: str):
+        """Thread-safe manifest failure collector (batch stages run on a
+        worker pool — a lost failure line is a lost debugging trail)."""
+        with _fail_lock:
+            manifest["failures"].append(msg)
 
     fx = None
     if "HK" in markets:
@@ -950,42 +1042,69 @@ def run_fetch(markets=None, data_dir=None, refresh: bool = False,
             atomic_to_csv(df, path)
         return df
 
-    a_fin = None
-    a_cf = None
-    a_bal = None
-    if "A" in markets:
-        a_fin = _load_or_fetch(snap_dir / "a_financials.csv",
-                               lambda: fetch_a_financials(quiet=quiet),
-                               "code", "A fin")
-        a_cf = _load_or_fetch(snap_dir / "a_cashflow.csv",
-                              lambda: fetch_a_cashflow(quiet=quiet),
-                              "code", "A cashflow")
-        a_bal = _load_or_fetch(snap_dir / "a_debt.csv",
-                               lambda: fetch_a_balance(quiet=quiet),
-                               "code", "A balance")
-        a_cf_ann = _load_or_fetch(
+    def _a_datasets():
+        """The A-share batch chain (income/cashflow/balance/annual/
+        dividends) — internally sequential (dividend years derive from
+        the annual cashflow), parallel against the other markets."""
+        fin = _load_or_fetch(snap_dir / "a_financials.csv",
+                             lambda: fetch_a_financials(quiet=quiet),
+                             "code", "A fin")
+        cf = _load_or_fetch(snap_dir / "a_cashflow.csv",
+                            lambda: fetch_a_cashflow(quiet=quiet),
+                            "code", "A cashflow")
+        bal = _load_or_fetch(snap_dir / "a_debt.csv",
+                             lambda: fetch_a_balance(quiet=quiet),
+                             "code", "A balance")
+        cf_ann = _load_or_fetch(
             snap_dir / "a_cashflow_annual.csv",
             lambda: fetch_a_cashflow_annual(quiet=quiet),
             "code", "A annual cf")
-        if a_cf_ann is not None and not a_cf_ann.empty \
-                and "report_date" in a_cf_ann.columns:
-            years = sorted({str(d)[:4] for d in a_cf_ann["report_date"]})
+        if cf_ann is not None and not cf_ann.empty \
+                and "report_date" in cf_ann.columns:
+            years = sorted({str(d)[:4] for d in cf_ann["report_date"]})
             _load_or_fetch(
                 snap_dir / "a_dividends.csv",
                 lambda: fetch_a_dividends(years, quiet=quiet),
                 "code", "A dividends")
-    us_fin = None
-    if "US" in markets:
-        us_fin = _load_or_fetch(snap_dir / "us_financials.csv",
-                                lambda: fetch_us_financials(quiet=quiet),
-                                "ticker", "US fin")
+        return fin, cf, bal
+
+    def _hk_batch_safe():
+        """HK stage-1 batch fundamentals; a failure disables lane B but
+        never the run (fail-closed semantics kept from the sequential
+        version)."""
+        try:
+            return fetch_hk_mainindicator_batch(quiet=quiet)
+        except Exception:  # noqa: BLE001 — batch stage must not raise
+            return None
+
+    # market-level batch stages run concurrently (different hosts);
+    # per-host politeness is enforced inside the HTTP layer
+    a_fin = a_cf = a_bal = us_fin = hk_batch = None
+    futs = {}
+    with ThreadPoolExecutor(max_workers=3) as ex:
+        if "A" in markets:
+            futs["A"] = ex.submit(_a_datasets)
+        if "US" in markets:
+            futs["US"] = ex.submit(
+                lambda: _load_or_fetch(
+                    snap_dir / "us_financials.csv",
+                    lambda: fetch_us_financials(quiet=quiet),
+                    "ticker", "US fin"))
+        if "HK" in markets:
+            futs["HK"] = ex.submit(_hk_batch_safe)
+        if "A" in futs:
+            a_fin, a_cf, a_bal = futs["A"].result()
+        if "US" in futs:
+            us_fin = futs["US"].result()
+        if "HK" in futs:
+            hk_batch = futs["HK"].result()
 
     cands_by_market = {}
     for market in markets:
         if market == "US" and (us_fin is None or us_fin.empty):
             # without SEC frames the operating-company gate cannot bite
             # and leveraged ETPs with phantom PEs would flood the funnel
-            manifest["failures"].append("US: no SEC financials fetched")
+            _fail("US: no SEC financials fetched")
             log("    [US] SKIP: no SEC financials, market dropped")
             continue
         qpath = snap_dir / f"{market.lower()}_quotes.csv"
@@ -1003,14 +1122,13 @@ def run_fetch(markets=None, data_dir=None, refresh: bool = False,
         if quotes is None:
             quotes = fetch_market_quotes(market)
         if quotes.empty or "code" not in quotes.columns:
-            manifest["failures"].append(f"{market}: no quotes fetched")
+            _fail(f"{market}: no quotes fetched")
             continue
         if quotes.attrs.get("partial"):
             # half a universe is used for this run only — persisting it
             # would make same-day reruns mistake it for a full market
-            manifest["failures"].append(
-                f"{market}: partial quotes ({len(quotes)} rows, "
-                f"not persisted)")
+            _fail(f"{market}: partial quotes ({len(quotes)} rows, "
+                  f"not persisted)")
             log(f"    [{market}] WARN: partial quotes "
                 f"({len(quotes)} rows), not saved for resume")
         elif not reused_quotes:
@@ -1024,18 +1142,13 @@ def run_fetch(markets=None, data_dir=None, refresh: bool = False,
             # stage-1 batch fundamentals (2026-09-29 v2): lane B was
             # structurally 0 for HK because quotes carry no fundamentals.
             # Fail-closed: lane A still works on quotes-only data.
-            try:
-                hk_batch = fetch_hk_mainindicator_batch(quiet=quiet)
-            except Exception:
-                hk_batch = None
             if hk_batch is not None:
                 df = quotes.merge(
                     hk_batch.drop(columns=["report_date"]),
                     on="code", how="left")
                 manifest["datasets"]["hk_batch"] = len(hk_batch)
             else:
-                manifest["failures"].append(
-                    "HK: batch fundamentals unavailable (lane B disabled)")
+                _fail("HK: batch fundamentals unavailable (lane B disabled)")
                 df = quotes
         else:
             df = quotes
@@ -1043,15 +1156,32 @@ def run_fetch(markets=None, data_dir=None, refresh: bool = False,
         gated = len(df)
         df = select_candidates(df, market)
         cands_by_market[market] = df
+        # per-market data timestamp: this market's data is fresh NOW
+        # (carried markets keep their original stamp via _carry_forward)
+        manifest.setdefault("market_at", {})[market] = \
+            datetime.now().isoformat(timespec="seconds")
         lane_counts = (df["lane"].value_counts().to_dict()
                        if "lane" in df.columns else {})
         manifest["datasets"][market] = {
             "quotes": len(quotes), "gated": gated, "candidates": len(df),
             "lane_a": int(lane_counts.get("A", 0)),
-            "lane_b": int(lane_counts.get("B", 0))}
+            "lane_b": int(lane_counts.get("B", 0)),
+            # degraded-source tag: doctor warns when a market ran on the
+            # Tencent fallback (no fundamentals in quotes)
+            "source": quotes.attrs.get("fallback", "eastmoney")}
         log(f"    [{market}] quotes={len(quotes)} gated={gated} "
             f"candidates={len(df)} (A={lane_counts.get('A', 0)} "
             f"B={lane_counts.get('B', 0)})")
+
+    # per-market fetch (user mandate 2026-10-08): markets NOT in this
+    # run are carried forward from today's own dir (same-day partial
+    # runs) or the prior snapshot, keeping master.csv full-market and
+    # each market's data timestamp honest.
+    missing = [m for m in config.MARKETS if m not in markets]
+    prior_master = None
+    if missing:
+        prior_master = _carry_forward(snap_dir, missing, manifest, log,
+                                      prior)
 
     kstats = {}
     for market, cands in cands_by_market.items():
@@ -1078,8 +1208,25 @@ def run_fetch(markets=None, data_dir=None, refresh: bool = False,
         fetch_hk_cashflow_deep(hk_codes, snap_dir, f10_reuse, hk_cf_stats)
         manifest["datasets"]["hk_cashflow"] = dict(hk_cf_stats)
         log(f"    [HK] cashflow {hk_cf_stats}")
+    elif "HK" in (manifest.get("carried_markets") or []):
+        # carried HK: reload its F10 so watchlist enrichment still works
+        f10p = snap_dir / "hk_f10.csv"
+        if f10p.exists():
+            try:
+                hk_f10 = pd.read_csv(f10p, dtype={"code": str})
+            except (OSError, pd.errors.ParserError, ValueError):
+                hk_f10 = None
 
     master = build_master(cands_by_market, snap_dir, hk_f10, fx)
+    if prior_master is not None and not prior_master.empty:
+        have = set(zip(master["market"], master["code"])) \
+            if {"market", "code"} <= set(master.columns) else set()
+        add = prior_master[
+            ~prior_master.apply(
+                lambda r: (r["market"], r["code"]) in have, axis=1)] \
+            if have else prior_master
+        if not add.empty:
+            master = pd.concat([master, add], ignore_index=True)
     atomic_to_csv(master, snap_dir / "master.csv")
     manifest["datasets"]["master"] = len(master)
 
@@ -1103,6 +1250,9 @@ def run_fetch(markets=None, data_dir=None, refresh: bool = False,
             atomic_to_csv(watch, snap_dir / "watchlist.csv")
 
     manifest["elapsed_sec"] = round(time.time() - t0, 1)
+    # persist source health so later processes (doctor/ask/trade) inherit
+    # this run's outage signal (data/source_health.json, regenerable)
+    get_health().save()
     atomic_write_text(snap_dir / "manifest.json",
                       json.dumps(manifest, indent=2))
     atomic_write_text(data_dir / "latest.json",

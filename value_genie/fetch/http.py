@@ -1,10 +1,14 @@
 """HTTP layer: resilient GET client with retry, backoff and rate-limit cooldown.
 
-Shared by all data source modules (Eastmoney, Tencent, SEC EDGAR).
+Shared by all data source modules (Eastmoney, Tencent, SEC EDGAR). Every
+Fetcher carries a ``source_id``; persistent failures and successes are
+recorded into fetch.health so the registry can demote a source that
+keeps refusing connections (dynamic priority).
 """
 
 import json
 import sys
+import threading
 import time
 
 import requests
@@ -12,6 +16,7 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
 from .. import config
+from .health import get_health
 
 
 def num(v):
@@ -25,6 +30,14 @@ def num(v):
         return None
 
 
+def _status_error(status: int) -> requests.HTTPError:
+    """An HTTPError carrying its status code, for health grading."""
+    err = requests.HTTPError(f"HTTP {status}")
+    err.response = requests.Response()
+    err.response.status_code = status
+    return err
+
+
 class Fetcher:
     """HTTP client with automatic retries and rate-limit cooldown.
 
@@ -33,8 +46,16 @@ class Fetcher:
     Eastmoney's transient rate limiting.
     """
 
-    def __init__(self, headers, name="http"):
+    def __init__(self, headers, name="http", source_id=""):
         self.name = name
+        # registry source this client belongs to; "" disables health
+        # recording (ad-hoc clients outside the source registry)
+        self.source_id = source_id
+        # in-flight call cap per family: parallel pipeline stages share
+        # the client without hammering one host
+        workers = config.FETCH_WORKERS.get(
+            name, config.FETCH_WORKERS.get("default", 4))
+        self._slots = threading.Semaphore(workers)
         self.consecutive_fail = 0
         self.session = requests.Session()
         self.session.headers.update(headers)
@@ -57,41 +78,48 @@ class Fetcher:
         """
         total_timeout = total_timeout or max(45, timeout * 3)
         last_err = None
+        last_exc = None
         attempt = 0
         total_attempts = retries + 1
-        while attempt < total_attempts:
-            attempt += 1
-            try:
-                deadline = time.monotonic() + total_timeout
-                with self.session.get(url, params=params, timeout=timeout,
-                                      stream=True) as r:
-                    chunks = []
-                    for chunk in r.iter_content(chunk_size=65536):
-                        chunks.append(chunk)
-                        if time.monotonic() > deadline:
-                            raise requests.Timeout(
-                                f"download exceeded {total_timeout}s")
-                    body = b"".join(chunks)
-                    status = r.status_code
-                if status == 200:
-                    self.consecutive_fail = 0
-                    return json.loads(body)
-                if status == 404:
-                    self.consecutive_fail = 0
-                    return None
-                last_err = f"HTTP {status}"
-            except Exception as e:  # noqa: BLE001
-                last_err = f"{type(e).__name__}: {str(e)[:120]}"
-            self.consecutive_fail += 1
-            if self.consecutive_fail >= cooldown_after and attempt < total_attempts:
-                print(f"    [cooldown] {self.name} failed "
-                      f"{self.consecutive_fail}x ({last_err}), "
-                      f"sleeping {cooldown_sec}s...", file=sys.stderr)
-                time.sleep(cooldown_sec)
-            else:
-                time.sleep(2.0 * attempt)
+        with self._slots:
+            while attempt < total_attempts:
+                attempt += 1
+                try:
+                    deadline = time.monotonic() + total_timeout
+                    with self.session.get(url, params=params,
+                                          timeout=timeout,
+                                          stream=True) as r:
+                        chunks = []
+                        for chunk in r.iter_content(chunk_size=65536):
+                            chunks.append(chunk)
+                            if time.monotonic() > deadline:
+                                raise requests.Timeout(
+                                    f"download exceeded {total_timeout}s")
+                        body = b"".join(chunks)
+                        status = r.status_code
+                    if status == 200:
+                        self.consecutive_fail = 0
+                        self._health_success()
+                        return json.loads(body)
+                    if status == 404:
+                        self.consecutive_fail = 0
+                        return None
+                    last_err = f"HTTP {status}"
+                    last_exc = _status_error(status)
+                except Exception as e:  # noqa: BLE001
+                    last_err = f"{type(e).__name__}: {str(e)[:120]}"
+                    last_exc = e
+                self.consecutive_fail += 1
+                if self.consecutive_fail >= cooldown_after and attempt < total_attempts:
+                    print(f"    [cooldown] {self.name} failed "
+                          f"{self.consecutive_fail}x ({last_err}), "
+                          f"sleeping {cooldown_sec}s...", file=sys.stderr)
+                    time.sleep(cooldown_sec)
+                else:
+                    time.sleep(2.0 * attempt)
         print(f"    [warn] {self.name} request failed: {url[:70]} -> "
               f"{last_err}", file=sys.stderr)
+        self._health_failure(last_exc)
         return None
 
     def get_text(self, url, params=None, timeout=20, retries=2,
@@ -137,60 +165,83 @@ class Fetcher:
         """Shared retry/backoff core: returns raw body bytes or None."""
         total_timeout = total_timeout or max(45, timeout * 3)
         last_err = None
+        last_exc = None
         attempt = 0
         total_attempts = retries + 1
-        while attempt < total_attempts:
-            attempt += 1
-            try:
-                deadline = time.monotonic() + total_timeout
-                req = (self.session.post if method == "POST"
-                       else self.session.get)
-                kwargs = {"timeout": timeout, "stream": True}
-                if method == "POST":
-                    kwargs["data"] = data
+        with self._slots:
+            while attempt < total_attempts:
+                attempt += 1
+                try:
+                    deadline = time.monotonic() + total_timeout
+                    req = (self.session.post if method == "POST"
+                           else self.session.get)
+                    kwargs = {"timeout": timeout, "stream": True}
+                    if method == "POST":
+                        kwargs["data"] = data
+                    else:
+                        kwargs["params"] = params
+                    with req(url, **kwargs) as r:
+                        chunks = []
+                        for chunk in r.iter_content(chunk_size=65536):
+                            chunks.append(chunk)
+                            if time.monotonic() > deadline:
+                                raise requests.Timeout(
+                                    f"download exceeded {total_timeout}s")
+                        body = b"".join(chunks)
+                        status = r.status_code
+                        self._last_encoding = (
+                            r.encoding if isinstance(r.encoding, str)
+                            else None)
+                    if status == 200:
+                        self.consecutive_fail = 0
+                        self._health_success()
+                        return body
+                    if status == 404:
+                        self.consecutive_fail = 0
+                        return None
+                    last_err = f"HTTP {status}"
+                    last_exc = _status_error(status)
+                except Exception as e:  # noqa: BLE001
+                    last_err = f"{type(e).__name__}: {str(e)[:120]}"
+                    last_exc = e
+                self.consecutive_fail += 1
+                if self.consecutive_fail >= cooldown_after and attempt < total_attempts:
+                    print(f"    [cooldown] {self.name} failed "
+                          f"{self.consecutive_fail}x ({last_err}), "
+                          f"sleeping {cooldown_sec}s...", file=sys.stderr)
+                    time.sleep(cooldown_sec)
                 else:
-                    kwargs["params"] = params
-                with req(url, **kwargs) as r:
-                    chunks = []
-                    for chunk in r.iter_content(chunk_size=65536):
-                        chunks.append(chunk)
-                        if time.monotonic() > deadline:
-                            raise requests.Timeout(
-                                f"download exceeded {total_timeout}s")
-                    body = b"".join(chunks)
-                    status = r.status_code
-                    self._last_encoding = (r.encoding
-                                           if isinstance(r.encoding, str)
-                                           else None)
-                if status == 200:
-                    self.consecutive_fail = 0
-                    return body
-                if status == 404:
-                    self.consecutive_fail = 0
-                    return None
-                last_err = f"HTTP {status}"
-            except Exception as e:  # noqa: BLE001
-                last_err = f"{type(e).__name__}: {str(e)[:120]}"
-            self.consecutive_fail += 1
-            if self.consecutive_fail >= cooldown_after and attempt < total_attempts:
-                print(f"    [cooldown] {self.name} failed "
-                      f"{self.consecutive_fail}x ({last_err}), "
-                      f"sleeping {cooldown_sec}s...", file=sys.stderr)
-                time.sleep(cooldown_sec)
-            else:
-                time.sleep(2.0 * attempt)
+                    time.sleep(2.0 * attempt)
         print(f"    [warn] {self.name} request failed: {url[:70]} -> "
               f"{last_err}", file=sys.stderr)
+        self._health_failure(last_exc)
         return None
 
+    def _health_success(self):
+        if self.source_id:
+            get_health().record_success(self.source_id)
 
-# Shared client instances (one per data source).
-EM = Fetcher({"User-Agent": config.EM_UA}, "EM")        # push2 quotes/klines
-DC = Fetcher({"User-Agent": config.EM_UA}, "DC")        # datacenter reports
-SEC = Fetcher(config.SEC_HEADERS, "SEC")                # SEC EDGAR frames
-TX = Fetcher(config.TX_UA, "TX")                        # Tencent fallback
-EM_WEB = Fetcher({"User-Agent": config.EM_UA}, "EM_WEB")  # np-anotice / np-listapi / reportapi
-SA = Fetcher({"User-Agent": config.EM_UA}, "SA")        # stockanalysis.com HTML
+    def _health_failure(self, exc):
+        if self.source_id:
+            get_health().record_failure(self.source_id, exc)
+
+
+# Shared client instances (one per data source). source_id ties each
+# client to the registry for health tracking; the semaphore bounds
+# concurrent requests per family (config.FETCH_WORKERS) so the parallel
+# pipeline stays polite per host.
+EM = Fetcher({"User-Agent": config.EM_UA}, "EM",
+             source_id="eastmoney")      # push2 quotes/klines
+DC = Fetcher({"User-Agent": config.EM_UA}, "DC",
+             source_id="eastmoney")      # datacenter reports
+SEC = Fetcher(config.SEC_HEADERS, "SEC",
+              source_id="sec_edgar")     # SEC EDGAR frames
+TX = Fetcher(config.TX_UA, "TX",
+             source_id="tencent")        # Tencent fallback
+EM_WEB = Fetcher({"User-Agent": config.EM_UA}, "EM_WEB",
+                 source_id="eastmoney")  # np-anotice / np-listapi / reportapi
+SA = Fetcher({"User-Agent": config.EM_UA}, "SA",
+             source_id="stockanalysis")  # stockanalysis.com HTML
 
 # push2 mirror rotation with failure avoidance: a host that just failed is
 # skipped for EM_HOST_COOLDOWN seconds, so a blocked mirror costs one quick

@@ -911,9 +911,9 @@ def cmd_trade(args) -> int:
         return 1
 
     if cmd in ("buy", "sell"):
-        if not _check_freshness(args):
-            return 1
         m = _resolve_stock_or_exit(args.stock)
+        if not _check_freshness(args, market=m.market):
+            return 1
         try:
             if cmd == "buy":
                 fill = tr.buy(args.season_id, m, qty=args.qty,
@@ -1067,8 +1067,6 @@ def _check_freshness(args, market=None) -> bool:
 
 
 def cmd_ask(args) -> int:
-    if not _check_freshness(args):
-        return 1
     from . import analyze as az
     from .resolve import resolve as resolve_stock
     try:
@@ -1076,11 +1074,15 @@ def cmd_ask(args) -> int:
     except FileNotFoundError:
         snap = None
     matches = resolve_stock(args.query, snapshot_dir=snap)
-    if not matches:
+    # resolve first so the freshness gate can scope to the stock's market
+    # (a closed A-share market must not block a US answer, 2026-10-08)
+    m = matches[0] if matches else None
+    if not _check_freshness(args, market=m.market if m else None):
+        return 1
+    if m is None:
         print(f"no match for {args.query!r}; try a full name or code",
               file=sys.stderr)
         return 2
-    m = matches[0]
     if len(matches) > 1:
         others = ", ".join(x.label() for x in matches[1:4])
         print(f"resolved: {m.label()} (also matched: {others})",
@@ -1096,8 +1098,6 @@ def cmd_ask(args) -> int:
 
 
 def cmd_intel(args) -> int:
-    if not _check_freshness(args):
-        return 1
     from . import resolve as rs
     from .intel import report as intel_report
     try:
@@ -1105,11 +1105,13 @@ def cmd_intel(args) -> int:
     except FileNotFoundError:
         snap = None
     matches = rs.resolve(args.query, snapshot_dir=snap)
-    if not matches:
+    m = matches[0] if matches else None
+    if not _check_freshness(args, market=m.market if m else None):
+        return 1
+    if m is None:
         print(f"no match for {args.query!r}; try a full name or code",
               file=sys.stderr)
         return 2
-    m = matches[0]
     if len(matches) > 1:
         others = ", ".join(x.label() for x in matches[1:4])
         print(f"resolved: {m.label()} (also matched: {others})",
@@ -1123,8 +1125,6 @@ def cmd_intel(args) -> int:
 
 
 def cmd_compare(args) -> int:
-    if not _check_freshness(args):
-        return 1
     from . import analyze as az
     from .resolve import resolve as resolve_stock
     try:
@@ -1139,6 +1139,11 @@ def cmd_compare(args) -> int:
                   file=sys.stderr)
             return 2
         matches.append(ms[0])
+    # gate scoped to a single shared market when all stocks live in one
+    mk_set = {m.market for m in matches}
+    if not _check_freshness(
+            args, market=mk_set.pop() if len(mk_set) == 1 else None):
+        return 1
     # drop duplicate resolutions
     seen, uniq = set(), []
     for m in matches:
@@ -1187,7 +1192,7 @@ def cmd_doctor(args) -> int:
     from . import doctor as dr
     checks = dr.run_checks(args.data_dir)
     if args.json:
-        print(dr.to_json(checks))
+        print(dr.to_json(checks, data_dir=args.data_dir))
     else:
         print(dr.render_checks(checks))
     return dr.doctor_exit_code(checks)

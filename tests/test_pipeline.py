@@ -203,6 +203,10 @@ def patched_fetchers(monkeypatch, counters):
     monkeypatch.setattr(pl, "fetch_hk_mainindicator_batch",
                         lambda quiet=False: None)
     monkeypatch.setattr(pl, "fetch_fx_hkdcny", lambda: 0.92)
+    # run_fetch imports this one lazily inside the function body, so the
+    # patch must land on the defining module (keeps the suite hermetic)
+    monkeypatch.setattr(
+        "value_genie.fetch.fundamentals.fetch_fx_usdcny", lambda: 7.25)
     monkeypatch.setattr(pl, "fetch_kline_any", fake_kline)
     # keep run_fetch hermetic: real user holdings would hit the network
     monkeypatch.setattr(pl, "collect_watch_symbols", lambda *a, **k: [])
@@ -323,6 +327,57 @@ def test_reuses_prior_snapshot_klines(patched_fetchers, tmp_path,
     assert snap.name == today
     # 600519 was reused from the prior snapshot; the other three fetched
     assert patched_fetchers["kline"] == 3
+
+
+# ---------------------------------------------------------------------------
+# Per-market fetch and carry-forward (user mandate 2026-10-08)
+# ---------------------------------------------------------------------------
+def test_partial_fetch_carries_same_day_markets(patched_fetchers, tmp_path):
+    """Same-day partial run (A+HK fetched in the morning, US in the
+    evening): master.csv stays full-market, carried markets keep their
+    original data timestamps, HK FX is inherited from the morning run."""
+    snap1 = pl.run_fetch(data_dir=tmp_path, quiet=True)
+    m1 = json.loads((snap1 / "manifest.json").read_text())
+    ts_a, ts_hk = m1["market_at"]["A"], m1["market_at"]["HK"]
+
+    snap2 = pl.run_fetch(markets=["US"], data_dir=tmp_path, quiet=True)
+    assert snap2 == snap1                            # same date dir
+    m2 = json.loads((snap2 / "manifest.json").read_text())
+    assert m2["carried_markets"] == ["A", "HK"]
+    assert m2["market_at"]["A"] == ts_a              # untouched by US run
+    assert m2["market_at"]["HK"] == ts_hk
+    assert "US" in m2["market_at"]
+    assert m2["datasets"]["A"] == {"carried": True}
+    assert m2["fx_carried"] == ["fx_hkdcny"]         # US run fetches no HK FX
+    assert m2["fx_usdcny"] == 7.25                   # this run's own fetch
+    master = pd.read_csv(snap2 / "master.csv", dtype={"code": str})
+    assert set(master["market"]) == {"A", "HK", "US"}
+    assert "600519" in set(master["code"])           # carried row
+    assert "AAPL" in set(master["code"])             # freshly fetched
+
+
+def test_carry_forward_copies_prior_day_files(patched_fetchers, tmp_path):
+    """Cross-day partial run: a market absent from today's run gets its
+    artifacts copied from the prior snapshot and its rows into master."""
+    import shutil
+    snap1 = pl.run_fetch(data_dir=tmp_path, quiet=True)
+    m1 = json.loads((snap1 / "manifest.json").read_text())
+    prior = tmp_path / "snapshots" / "20200101"
+    shutil.copytree(snap1, prior)
+    shutil.rmtree(snap1)
+
+    snap2 = pl.run_fetch(markets=["US"], data_dir=tmp_path, quiet=True)
+    assert snap2.name == date.today().strftime("%Y%m%d")
+    assert (snap2 / "a_quotes.csv").exists()         # copied forward
+    assert (snap2 / "a_financials.csv").exists()
+    assert (snap2 / "kline" / "A_600519.csv").exists()
+    m2 = json.loads((snap2 / "manifest.json").read_text())
+    assert m2["carried_markets"] == ["A", "HK"]
+    assert m2["market_at"]["A"] == m1["market_at"]["A"]
+    assert "fx_hkdcny" in m2["fx_carried"]
+    master = pd.read_csv(snap2 / "master.csv", dtype={"code": str})
+    assert set(master["market"]) == {"A", "HK", "US"}
+    assert "00700" in set(master["code"])            # carried HK row
 
 
 def test_candidate_cap(patched_fetchers, tmp_path, monkeypatch):
