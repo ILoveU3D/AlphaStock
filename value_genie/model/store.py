@@ -29,6 +29,18 @@ def _now() -> str:
     return datetime.now().replace(microsecond=0).isoformat()
 
 
+def _manifest_hkdcny() -> float | None:
+    """HKD/CNY rate recorded by the latest fetch run, if any."""
+    try:
+        from ..report import resolve_snapshot
+        m = json.loads((resolve_snapshot(None) / "manifest.json")
+                       .read_text(encoding="utf-8"))
+        v = m.get("fx_hkdcny")
+        return float(v) if v else None
+    except (OSError, ValueError, TypeError):
+        return None
+
+
 # ---------------------------------------------------------------------------
 # Paths & persistence
 # ---------------------------------------------------------------------------
@@ -176,6 +188,21 @@ def default_assumptions(market: str, code: str) -> dict:
     margins_path = [round(m0, 4)] * n
     last = h["years"][-1]
 
+    # HK mainland reporters: HKF10 amounts are CNY while the quote
+    # currency is HKD — stamp the manifest FX so per-share values land
+    # in quote terms. Without it, upside is silently wrong by the full
+    # CNY/HKD gap (~15%, 2026-10-08 audit).
+    cur = h.get("currency") or ""
+    price_fx = None
+    if h["market"] == "HK" and cur == "CNY":
+        fx = _manifest_hkdcny()
+        if fx:
+            price_fx = round(1.0 / fx, 5)
+            cur = "HKD"
+        else:
+            gaps.append("HK CNY reporter: no manifest fx_hkdcny — "
+                        "set price_fx manually before trusting upside")
+
     def _scenario(scale_g, scale_m, prob):
         return {"prob": prob,
                 "revenue_growth": [round(g * scale_g, 4) for g in fade],
@@ -188,11 +215,12 @@ def default_assumptions(market: str, code: str) -> dict:
         "version": SCHEMA_VERSION, "updated_at": _now(),
         "horizon_years": n, "wacc": config.DCF_DISCOUNT,
         "terminal_g": config.DCF_TERMINAL_G, "tax_rate": 0.15,
-        "currency": h.get("currency") or "",
+        "currency": cur,
         "net_debt": (last.get("debt") or 0) - (last.get("cash") or 0)
         if last.get("debt") is not None or last.get("cash") is not None
         else None,
         "shares": last.get("shares"),
+        **({"price_fx": price_fx} if price_fx is not None else {}),
         "scenarios": {
             "bear": _scenario(0.5, 0.8, config.MODEL_DEFAULT_PROBS["bear"]),
             "base": _scenario(1.0, 1.0, config.MODEL_DEFAULT_PROBS["base"]),

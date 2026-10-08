@@ -19,8 +19,8 @@ commands:
   - model build X
   - model set X
   - model list
-version: 43
-updated_at: 2026-10-06T22:37:49
+version: 46
+updated_at: 2026-10-08T12:19:21
 ---
 
 # 19 · Financial Modeling（财务建模）
@@ -166,3 +166,6 @@ HK 全名单来自 mainindicator batch），状态存 `models/campaign.json`
 - [2026-10-06 21:11] (ai) 「引擎装载口径」维度的槽位公允值必须在 build 完成后从 result.json 回写，禁止凭记忆近似（INCY 2026-10-06：凭感觉写 74/101/129，实际 58.2/103.4/139.8——bear 估高 26%）；正确流程=装载口径维度初稿只写参数不写槽位值，build 后用实际输出回填 gap 与装载口径两处，价格口径同时用 result.json 的 price 对齐（115.30→113.73 漂移案例）
 - [2026-10-06 21:35] (ai) 上下文中断恢复程序：摘要声称'已创建'的文件以磁盘为准——顶层 model.json/assumptions.json/result.json 任一缺失即合并/装载脚本未实际执行，恢复时先 Get-ChildItem 核对目录再重跑脚本；set_assumptions 不接受 gaps 键（只收 _TOP_KEYS+场景驱动键），gaps 只能进理解层
 - [2026-10-06 22:37] (ai) F10 debt 字段对资源/制造类公司严重失真（000612: 15.34亿 vs 年报有息5.9亿；000792: 107亿 vs 12.8亿；601225: 989亿 vs 219.7亿）——估值层 net_debt 必须从年报科目重算（短借+长借+一年内到期+租赁），把 history.debt 当线索不当事实
+- [2026-10-08 01:07] (ai) E&P valuation trap (RRC 2026-10-08): SMPV/NAV anchors must declare liquidation vs going-concern basis and subtract net debt for equity value — narrative target 42-50 collapsed to engine weighted 24.7 once the FCFF engine charged perpetual capex; every narrative anchor must be engine-recomputable (write both numbers in the dossier and reconcile before closing)
+- [2026-10-08 12:19] (ai) HK thesis/funnel 边缘股的 peers 映射常给错行业（百威给了零食饮料组、中通给了航运港口组、老铺给了服饰组）——写卷宗时 peers 数据必须人工核行业再引用，并在 gaps 声明同行映射缺陷
+- [2026-10-08 12:19] (ai) hk_quotes.csv 的 HK 代码无前导零（'2475' 非 '02475'），zfill(5) 才能匹配；master 的 HK market_cap 与 PE 反推市值存在 10-30% 口径差，卷宗锚定 PE 而非市值列并声明 gap

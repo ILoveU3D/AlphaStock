@@ -234,6 +234,12 @@ def fetch_annual_us(ticker: str) -> dict | None:
     text = _strip_html(html)
     item1 = _slice_item(text, r"Item\s+1[\.\:\s—–-]+Business",
                         [r"Item\s+1A[\.\:\s—–-]", r"Item\s+2[\.\:\s—–-]"])
+    if not item1:
+        # E&P filers combine the heading: "Items 1 and 2. Business and
+        # Properties" (RRC FY2025) — one combined section ending at 1A.
+        item1 = _slice_item(
+            text, r"Items\s+1\s+and\s+2[\.\:\s—–-]+Business",
+            [r"Item\s+1A[\.\:\s—–-]", r"Item\s+3[\.\:\s—–-]"])
     item7 = _slice_item(text,
                         r"Item\s+7[\.\:\s—–-]+Management",
                         [r"Item\s+7A[\.\:\s—–-]", r"Item\s+8[\.\:\s—–-]"])

@@ -1037,19 +1037,24 @@ def cmd_trade(args) -> int:
 # ---------------------------------------------------------------------------
 # AI-toolkit commands (ask / compare / overview / doctor / skill)
 # ---------------------------------------------------------------------------
-def _check_freshness(args) -> bool:
+def _check_freshness(args, market=None) -> bool:
     """Gate: return True if OK to proceed, False if blocked.
 
     FAIL → block (print reason, return False).
     WARN → warn to stderr, proceed.
     PASS → silent.
     --no-check → skip entirely (for automated pipelines).
+    `market` scopes per-market checks to one market (see
+    doctor.freshness_gate).
     """
     if getattr(args, "no_check", False):
         return True
     from . import doctor as dr
     data_dir = getattr(args, "data_dir", None)
-    status, msg = dr.freshness_gate(data_dir)
+    if market is not None:
+        status, msg = dr.freshness_gate(data_dir, market)
+    else:
+        status, msg = dr.freshness_gate(data_dir)
     if status == "FAIL":
         print(f"[FRESHNESS BLOCKED] {msg}", file=sys.stderr)
         print("run `python -m value_genie doctor` for details, "
@@ -1852,12 +1857,16 @@ def cmd_model(args) -> int:
     if args.model_cmd == "campaign":
         return _model_campaign(args)
 
-    # build is price-sensitive -> freshness-gated BEFORE any resolution
-    # (same order as cmd_ask: a FAIL gate emits nothing on stdout).
-    if args.model_cmd == "build" and not _check_freshness(args):
-        return 1
-
     m = _resolve_stock_or_exit(args.stock)
+
+    # build is price-sensitive -> freshness-gated, scoped to the
+    # target's own market: a closed A-share market must not block an
+    # HK/US build whose own data is fresh (National-Day artifact,
+    # 2026-10-08). Resolution emits nothing on stdout (multi-match
+    # notes go to stderr), so a FAIL gate still prints no price data.
+    if args.model_cmd == "build" and not _check_freshness(args,
+                                                          market=m.market):
+        return 1
 
     if args.model_cmd == "gather":
         from .model import gather as mg
@@ -1971,8 +1980,13 @@ def cmd_model(args) -> int:
             if "=" not in pair:
                 raise SystemExit(f"bad set pair {pair!r}; want key=value")
             k, v = pair.split("=", 1)
-            v = v.strip()
-            updates[k.strip()] = (
+            k, v = k.strip(), v.strip()
+            if k == "currency":
+                # the only non-numeric top-level key (listing currency
+                # tag, e.g. HKD for CNY-reporting HK models)
+                updates[k] = v
+                continue
+            updates[k] = (
                 [float(x) for x in v.split(",")] if "," in v
                 else float(v))
         try:
