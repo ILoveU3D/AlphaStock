@@ -11,9 +11,10 @@ tags:
 links:
   - "refines:poor-charlies-almanack"
   - "applies-to:franchise-moat"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:04:41
-updated_at: 2026-10-11T02:04:41
+updated_at: 2026-10-11T02:45:09
 ---
 
 ## 论证

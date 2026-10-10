@@ -13,9 +13,10 @@ links:
   - "refines:croupier-tax-arithmetic"
   - "refines:market-pari-mutuel"
   - "refines:lollapalooza-confluence"
-version: 2
+  - "applies-to:master-munger"
+version: 3
 created_at: 2026-10-11T02:32:05
-updated_at: 2026-10-11T02:41:32
+updated_at: 2026-10-11T02:45:40
 ---
 
 ## 论证

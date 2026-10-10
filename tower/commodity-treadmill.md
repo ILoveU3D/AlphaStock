@@ -9,9 +9,10 @@ tags:
   - moat
 links:
   - "refines:differentiation-survival-law"
-version: 3
+  - "applies-to:master-buffett"
+version: 4
 created_at: 2026-10-11T00:37:55
-updated_at: 2026-10-11T02:37:47
+updated_at: 2026-10-11T02:44:29
 ---
 
 ## 论证

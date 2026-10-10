@@ -12,9 +12,10 @@ links:
   - "refines:ceo-measurement-as-culture-evidence"
   - "applies-to:causes-not-outcomes"
   - "derives-from:business-model-first"
-version: 2
+  - "applies-to:master-duan"
+version: 3
 created_at: 2026-10-10T20:58:51
-updated_at: 2026-10-11T02:39:19
+updated_at: 2026-10-11T02:44:27
 ---
 
 ## 论证

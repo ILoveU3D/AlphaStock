@@ -11,9 +11,10 @@ tags:
 links:
   - "applies-to:benfen-motive-purity"
   - "refines:two-track-analysis"
-version: 2
+  - "applies-to:master-munger"
+version: 3
 created_at: 2026-10-11T02:17:09
-updated_at: 2026-10-11T02:33:57
+updated_at: 2026-10-11T02:44:08
 ---
 
 ## 论证

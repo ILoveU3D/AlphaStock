@@ -12,9 +12,10 @@ links:
   - "refines:consumerism-dcf-lens"
   - "applies-to:become-who-you-should-be"
   - "derives-from:dcf-universal-law"
-version: 1
+  - "applies-to:master-duan"
+version: 2
 created_at: 2026-10-10T22:23:38
-updated_at: 2026-10-10T22:23:38
+updated_at: 2026-10-11T02:45:42
 ---
 
 ## 论证

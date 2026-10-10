@@ -12,9 +12,10 @@ tags:
 links:
   - "refines:skin-in-the-game"
   - "refines:virtue-effects-in-economics"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:33:53
-updated_at: 2026-10-11T02:33:53
+updated_at: 2026-10-11T02:43:57
 ---
 
 ## 论证

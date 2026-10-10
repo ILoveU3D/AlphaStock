@@ -12,9 +12,10 @@ links:
   - "derives-from:dcf-universal-law"
   - "refines:rough-estimate-mandatory"
   - "refines:wonderful-at-fair"
-version: 1
+  - "applies-to:master-duan"
+version: 2
 created_at: 2026-10-10T21:08:11
-updated_at: 2026-10-10T21:08:11
+updated_at: 2026-10-11T02:45:16
 ---
 
 ## 论证

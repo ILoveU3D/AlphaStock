@@ -12,9 +12,10 @@ links:
   - "derives-from:causes-not-outcomes"
   - "refines:three-nevers"
   - "applies-to:paper-loss-vs-real-loss"
-version: 7
+  - "applies-to:master-duan"
+version: 8
 created_at: 2026-10-10T21:06:57
-updated_at: 2026-10-11T02:37:20
+updated_at: 2026-10-11T02:45:32
 ---
 
 ## 论证

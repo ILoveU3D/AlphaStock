@@ -13,9 +13,10 @@ links:
   - "derives-from:dcf-universal-law"
   - "refines:franchise-moat"
   - "refines:surfing-technology-wave"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:22:26
-updated_at: 2026-10-11T02:22:26
+updated_at: 2026-10-11T02:43:44
 ---
 
 ## 论证

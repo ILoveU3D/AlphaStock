@@ -11,9 +11,10 @@ tags:
 links:
   - "refines:poor-charlies-almanack"
   - "refines:weight-archaeology-reading"
-version: 1
+  - "applies-to:master-munger"
+version: 3
 created_at: 2026-10-11T02:04:39
-updated_at: 2026-10-11T02:04:39
+updated_at: 2026-10-11T02:46:10
 ---
 
 ## 论证
@@ -22,3 +23,6 @@ updated_at: 2026-10-11T02:04:39
 机制：概念的人格化载体给抽象断言提供了(a)叙事记忆钩(b)权重考古素材（这个人的真实决策点）(c)行为示范（概念在他的完整人生里是否自洽运行）。与 weight-archaeology-reading 直接同构：塔的 canon 精读轨本质就是系统化的 eminent-dead 交友计划。
 
 迁移：塔砖的 source 字段就是交友记录；读年报/股东信优先于读教科书（概念仍活在写它的人手里）；canon 选书偏爱带真实决策点的文本而非纯理论综述。
+
+## Field Notes
+- [2026-10-11 02:46] (ai) (ai) Talk Ten定义了该砖的情感形式：'没有哪种爱像基于仰慕的爱那样正当，而这种爱应当包括可教的死者（the instructive dead）'——与杰出死者的'交往'被纳入爱的对象而非仅仅是学习资源；儒家的火炬义务：芒格法官（祖父）去世多年后，'我孔孟到这样的程度：此刻演讲时还在想——芒格法官会乐见我在这里。祖父死后这么多年，我自认有义务为他的价值观举着火炬'——血脉传承与观念传承的双重身份。

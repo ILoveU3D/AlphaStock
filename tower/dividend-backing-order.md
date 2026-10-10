@@ -12,9 +12,10 @@ tags:
 links:
   - "derives-from:dcf-universal-law"
   - "refines:ultimate-buyer"
-version: 1
+  - "applies-to:master-sanhuyi"
+version: 2
 created_at: 2026-10-04T20:13:08
-updated_at: 2026-10-04T20:13:08
+updated_at: 2026-10-11T02:45:04
 ---
 
 ﻿## 论证

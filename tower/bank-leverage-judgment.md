@@ -11,9 +11,10 @@ tags:
 links:
   - "refines:right-business-people-price"
   - "derives-from:dcf-universal-law"
-version: 1
+  - "applies-to:master-buffett"
+version: 2
 created_at: 2026-10-11T01:21:53
-updated_at: 2026-10-11T01:21:53
+updated_at: 2026-10-11T02:43:47
 ---
 
 ## 论证

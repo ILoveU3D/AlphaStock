@@ -12,9 +12,10 @@ links:
   - "derives-from:business-model-first"
   - "refines:franchise-moat"
   - "applies-to:scarcity-multiple-rule"
-version: 6
+  - "applies-to:master-duan"
+version: 7
 created_at: 2026-10-10T21:00:11
-updated_at: 2026-10-10T23:39:28
+updated_at: 2026-10-11T02:45:00
 ---
 
 ## 论证

@@ -8,9 +8,10 @@ tags:
   - capital
   - value-investing
 links:
-version: 2
+  - "applies-to:master-buffett"
+version: 3
 created_at: 2026-09-20T16:24:31
-updated_at: 2026-10-10T20:24:17
+updated_at: 2026-10-11T02:44:10
 ---
 
 ## 论证

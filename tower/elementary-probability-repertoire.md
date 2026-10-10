@@ -11,9 +11,10 @@ tags:
 links:
   - "refines:latticework"
   - "refines:invert-always"
-version: 2
+  - "applies-to:master-munger"
+version: 3
 created_at: 2026-10-11T02:17:07
-updated_at: 2026-10-11T02:22:41
+updated_at: 2026-10-11T02:45:22
 ---
 
 ## 论证

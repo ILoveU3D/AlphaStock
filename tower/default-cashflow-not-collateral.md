@@ -9,9 +9,10 @@ tags:
   - risk
 links:
   - "refines:permanent-capital-structure"
-version: 1
+  - "applies-to:master-buffett"
+version: 2
 created_at: 2026-10-11T02:35:31
-updated_at: 2026-10-11T02:35:31
+updated_at: 2026-10-11T02:44:49
 ---
 
 ## 论证

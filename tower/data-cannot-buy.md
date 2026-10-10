@@ -9,9 +9,10 @@ tags:
   - epistemology
 links:
   - "refines:business-model-first"
-version: 1
+  - "applies-to:master-duan"
+version: 2
 created_at: 2026-09-20T16:24:22
-updated_at: 2026-09-20T16:24:22
+updated_at: 2026-10-11T02:44:47
 ---
 
 ## 论证

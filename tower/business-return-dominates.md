@@ -13,9 +13,10 @@ links:
   - "derives-from:dcf-universal-law"
   - "refines:franchise-moat"
   - "applies-to:three-kills"
-version: 2
+  - "applies-to:master-munger"
+version: 3
 created_at: 2026-10-11T02:17:29
-updated_at: 2026-10-11T02:22:50
+updated_at: 2026-10-11T02:44:14
 ---
 
 ## 论证

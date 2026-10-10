@@ -13,9 +13,10 @@ links:
   - "derives-from:dcf-universal-law"
   - "refines:rough-estimate-mandatory"
   - "refines:galileo-numerical-fluency"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:26:35
-updated_at: 2026-10-11T02:26:35
+updated_at: 2026-10-11T02:46:05
 ---
 
 ## 论证

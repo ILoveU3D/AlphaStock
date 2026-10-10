@@ -10,9 +10,10 @@ tags:
 links:
   - "derives-from:dcf-universal-law"
   - "refines:safety-margin-is-understanding"
-version: 5
+  - "applies-to:master-duan"
+version: 6
 created_at: 2026-10-10T23:06:19
-updated_at: 2026-10-11T02:30:33
+updated_at: 2026-10-11T02:44:31
 ---
 
 ## 论证

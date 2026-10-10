@@ -13,9 +13,10 @@ links:
   - "refines:borrowed-payout-veto"
   - "applies-to:per-share-compounding-blindspot"
   - "derives-from:dcf-universal-law"
-version: 6
+  - "applies-to:master-duan"
+version: 7
 created_at: 2026-10-10T22:22:04
-updated_at: 2026-10-11T02:36:39
+updated_at: 2026-10-11T02:44:17
 ---
 
 ## 论证

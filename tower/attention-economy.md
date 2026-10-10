@@ -9,9 +9,10 @@ tags:
   - narrative
 links:
   - "tension:dcf-universal-law"
-version: 1
+  - "applies-to:master-sheng"
+version: 2
 created_at: 2026-09-20T16:24:22
-updated_at: 2026-09-20T16:24:22
+updated_at: 2026-10-11T02:43:42
 ---
 
 ## 论证

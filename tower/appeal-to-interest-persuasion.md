@@ -12,9 +12,10 @@ links:
   - "refines:incentive-asymmetry"
   - "refines:two-track-analysis"
   - "refines:braun-5w-accounting-limits"
-version: 2
+  - "applies-to:master-munger"
+version: 4
 created_at: 2026-10-11T02:22:37
-updated_at: 2026-10-11T02:41:28
+updated_at: 2026-10-11T02:45:57
 ---
 
 ## 论证
@@ -26,3 +27,4 @@ updated_at: 2026-10-11T02:41:28
 
 ## Field Notes
 - [2026-10-11 02:41] (ai) (ai) Talk Nine双案例：①诺奖经济学家对伯克希尔成功的解释连续加码——从'一个标准差的运气'到六个σ（'人们笑得太厉害，他只好不这么说了'），然后180度反转：'还是六个σ，不过是六个σ的技能'——芒格：'这段可悲的历史证明了富兰克林在Poor Richard's Almanack里的话：If you would persuade, appeal to interest and not to reason——这个人改变愚蠢观点是在激励逼他改的时候，之前绝不改'；②UCLA Jules Stein眼科研究所：问'为什么白内障还只用彻底过时的术式'——'查理，这术式教起来太美妙了'；停用是在'几乎所有病人用脚投票之后'——'想改变结论，again，appeal to interest and not to reason'。
+- [2026-10-11 02:45] (ai) (ai) Talk Ten给出最佳实战案例：所罗门兄弟总法律顾问（哈佛法律评论出身的聪明正直人）向CEO建议报告下属违规——'我们没有法律义务报告，但这是我们的道德义务'——'技术上和道德上都对，但没说服成功：他建议CEO做一件非常不愉快的事，CEO可以理解地一拖再拖；等到监管者因未被及时告知而愤怒，CEO倒了，总顾问跟着倒了'；正确话术应按富兰克林定律组装：'这会爆发成毁掉你的事——拿走你的钱、你的地位、严重损害你的声誉；我的建议能阻止一场你无法恢复的灾难'——'你应当经常appeal to interest, not to reason，哪怕你的动机高尚'（同场：巴菲特作为所罗门外部董事最终被请来救公司——正确的劝说法本可省掉这一劫）。

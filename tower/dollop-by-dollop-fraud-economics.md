@@ -12,9 +12,10 @@ tags:
 links:
   - "refines:virtue-effects-in-economics"
   - "refines:incentive-asymmetry"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:33:49
-updated_at: 2026-10-11T02:33:49
+updated_at: 2026-10-11T02:45:06
 ---
 
 ## 论证

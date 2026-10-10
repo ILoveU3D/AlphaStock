@@ -12,9 +12,10 @@ links:
   - "derives-from:business-model-first"
   - "refines:differentiation-survival-law"
   - "refines:franchise-moat"
-version: 4
+  - "applies-to:master-duan"
+version: 5
 created_at: 2026-10-10T21:47:22
-updated_at: 2026-10-10T23:08:04
+updated_at: 2026-10-11T02:44:06
 ---
 
 ## 论证

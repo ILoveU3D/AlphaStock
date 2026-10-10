@@ -13,9 +13,10 @@ links:
   - "refines:paper-loss-vs-real-loss"
   - "applies-to:reference-frame-drift"
   - "applies-to:understanding-drop-test"
-version: 9
+  - "applies-to:master-duan"
+version: 10
 created_at: 2026-10-10T21:04:11
-updated_at: 2026-10-11T00:14:14
+updated_at: 2026-10-11T02:44:37
 ---
 
 ## 论证

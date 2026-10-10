@@ -12,10 +12,13 @@ links:
   - "refines:deliberate-practice"
   - "refines:weight-archaeology-reading"
   - "derives-from:compounding"
-version: 1
+version: 2
 created_at: 2026-10-10T22:23:28
-updated_at: 2026-10-10T22:23:28
+updated_at: 2026-10-11T02:45:49
 ---
 
 ## 论证
 （待论证）
+
+## Field Notes
+- [2026-10-11 02:45] (ai) (ai) Talk Ten直引互证：'对任何学科的强烈兴趣（intense interest）是真正卓越不可或缺的——我能在很多事情上强迫自己做到相当好，但无法在我没有强烈兴趣的任何事情上做到卓越。所以在可行的范围内，你要运作自己去做你有强烈兴趣的事'；assiduity定义：'我喜欢这个词，因为对我它意味着——坐在你的屁股上直到做完（Sit down on your ass until you do it）'；大萧条中两个合伙人建design-build施工队时的简单协议：'两人合伙、一切平分；每当我们在对他人的承诺上落后，就每天14小时、每周7天工作直到赶上'——' needless to say那家公司没有失败'——love×time的合伙契约版。

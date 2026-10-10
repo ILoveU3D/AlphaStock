@@ -8,9 +8,9 @@ tags:
   - survival
   - character
 links:
-version: 1
+version: 2
 created_at: 2026-09-20T16:24:32
-updated_at: 2026-09-20T16:24:32
+updated_at: 2026-10-11T02:45:51
 ---
 
 ## 论证
@@ -23,3 +23,4 @@ updated_at: 2026-09-20T16:24:32
 
 ## Field Notes
 - [2026-09-18 00:00] (ai) 成砖：藏书吸收（安杰拉·达克沃思《坚毅》）；status=principle=借来未验证，对话中真正调用/验证后升 law 并分形。
+- [2026-10-11 02:45] (ai) (ai) Talk Ten补充：芒格词源学——'assiduity对我就是坐下屁股直到做完'；获得'满是assiduity的好搭档'的三因子='我努力配得上他们+我精明地选择了他们+一点运气'——配得+选择+运气的归因三分法。

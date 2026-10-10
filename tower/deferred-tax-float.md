@@ -10,9 +10,10 @@ tags:
 links:
   - "derives-from:dcf-universal-law"
   - "refines:time-is-friend"
-version: 1
+  - "applies-to:master-buffett"
+version: 2
 created_at: 2026-10-11T01:21:16
-updated_at: 2026-10-11T01:21:16
+updated_at: 2026-10-11T02:44:50
 ---
 
 ## 论证
