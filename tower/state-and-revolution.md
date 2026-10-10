@@ -12,9 +12,9 @@ tags:
 links:
   - "tension:road-to-serfdom"
   - "applies-to:why-nations-fail"
-version: 1
+version: 2
 created_at: 2026-10-10T23:42:30
-updated_at: 2026-10-10T23:42:30
+updated_at: 2026-10-11T04:44:24
 ---
 
 ﻿## 论证
@@ -27,3 +27,4 @@ updated_at: 2026-10-10T23:42:30
 
 ## Field Notes
 - [2026-10-10] (ai) 成砖：藏书吸收（列宁《国家与革命》，1917）；canon-fifty历史组成员；status=principle=借来未验证，与road-to-serfdom的tension深读时展开，验证后升 law 并分形。
+- [2026-10-11 04:44] (ai) 2026-10-11 全书逐字精读完成（编译局全本83.6K字入库 library/lenin/国家与革命.txt，中华典藏9页拼装）。砖坯分形：砖坯2已分形为smash-dont-inherit；砖坯1（国家作为行动者）与砖坯3（与哈耶克对撞）保留待实战验证。新增6块分形砖+1块观察砖：marx-deduction-list（FCF公式1875先声，头号DCF矿）、rights-bounded-by-structure、sincere-opportunism（与institutional-imperative成tension：主动变节vs被动动力学）、kautsky-evasion-pattern（与hedge-dont-forecast成tension：借不可知逃课vs诚实中和）、parasite-tumor-release（与scale-advantage-vs-bureaucracy互补：预防学vs外科学）、engels-trust-prophecy（observation：市场组织市场，计划组织垄断）。
