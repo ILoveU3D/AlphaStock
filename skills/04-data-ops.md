@@ -9,8 +9,8 @@ triggers:
 commands:
   - doctor
   - fetch
-version: 40
-updated_at: 2026-10-08T16:10:00
+version: 43
+updated_at: 2026-10-08T22:32:10
 ---
 
 # Playbook
@@ -99,3 +99,6 @@ conversation-start freshness probe:
 - [2026-10-08 15:55] (ai) fetch --markets A/HK/US 分市场抓取(2026-10-08): 同日partial run复用同目录、跨日从prior快照结转(carried标签+market_at分市场时间戳+fx继承), master.csv始终全市场; 实测US-only 22.9s
 - [2026-10-08 15:55] (ai) 1h铁律机器化(2026-10-08): doctor --json 的 agent_rule[market].needs_fetch 是会话开始唯一检查入口——闭市且数据>=上一收盘=ok不fetch, 交易时段age>1h=stale_beyond_last_close/in_session&age>1h=fetch; kline lag改算交易日(国庆8天不再FAIL美股)
 - [2026-10-08 15:55] (ai) 数据源健康降级(2026-10-08): EM连续ConnectionError(grade3)x2即进1h冷却跳过不试, 腾讯自动升主座, 恢复自动还原; 空结果=per-entity miss不罚源; health持久化data/source_health.json(可再生); klines/HK深采已并行化(FETCH_WORKERS)
+- [2026-10-08 16:33] (ai) 2026-10-08节后首日坑: 快照a_quotes是上一交易日收盘(carry forward, gate提示'carried'), 当日真实收盘只存在于live kline——做当日广度/涨跌分析必须用fetch_kline_any实算, 快照pct_chg差一个session; 交叉验证法: snapshot price == kline prev_close 即说明quotes滞后一天
+- [2026-10-08 21:18] (ai) XBRL concept chains go stale: GOOGL switched revenue tag RevenueFromContractWithCustomerExcludingAssessedTax->Revenues in 2025, first-concept-wins extraction silently locks onto the dead series; always pick the freshest-covering concept (max visible period end) when rebuilding fundamentals as-of a past date (backtest_us_20251008.py)
+- [2026-10-08 22:32] (ai) 盘中窗口数据新鲜度口径(2026-10-08): ①数据年龄看内容时间不看manifest mtime——doctor显示0.5h但quotes内容仍是10-07收盘=实际18h,盘中交易前必须核实quotes口径 ②fetch默认复用日内quotes(旧收盘价),盘中必须--refresh强制重拉 ③报价源故障声明精确到生效源('腾讯fallback生效,EM冷却至23:13'而非'EM封禁中')

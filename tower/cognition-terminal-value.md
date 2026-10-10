@@ -11,9 +11,9 @@ tags:
 links:
   - "derives-from:terminal-value-swap"
   - "applies-to:dcf-universal-law"
-version: 5
+version: 6
 created_at: 2026-09-24T23:01:08
-updated_at: 2026-09-26T18:15:16
+updated_at: 2026-10-08T22:36:33
 ---
 
 ## 论证
@@ -24,3 +24,4 @@ updated_at: 2026-09-26T18:15:16
 - [2026-09-26 17:06] (ai) 工程师判断力复利三动作：错误资产化（postmortem把工时变模式库，不复盘的事故只是工时）、判断可见化（gitlog/专利/演讲不随离职清零，工资单清零）、现金流股权化（劳动所得换成判断力覆盖范围内的久期，工作与论点同一领域闭环=段永平路径）；年度检验：能做的决策类型是否新增，同类决策重复十二个月=工龄不是复利
 - [2026-09-26 17:42] (ai) 塔到代码的四条影响路径审计（20260926用户质询'塔真的能时刻影响选股吗'）: ①塔到AI实时推理（仅L3/L4, 依赖执行忠实度, 0925校准证明会偷懒压成模板） ②塔到FieldNotes到未来L3/L4（会话级时滞） ③Notes到代码gate（唯一自动化通道, GSL到CYCLE_TRAP为案例, 但过程偶发无标准无计数） ④塔到L1候选池=不存在（最大漏损: masters-vote无论点输入口, 池子由trailing gates建造, 增发期机器trailing指标最难看被结构性挡在池外=存储miss根因）; 修法三机制: gate谱系+验证计数升舱（note被journal引用且正确N次升代码带测试, gate误伤降回note）、--thesis论点喂池（塔砖断言的机器产业链扩进L1池, L2/L3闸门照旧）、引用战绩分列的证伪计量（有砖vs无砖决策的战绩分开记, 更好必须可测量否则塔即陵墓）
 - [2026-09-26 18:15] (ai) 机制②已落地(2026-09-26): theses/ 注册表 + masters-vote --thesis ——塔砖断言的增发期机器现在能注入 L1 候选池, 路径④接通; 池语义=funnel∪members(同场竞技), seat-not-a-vote(gates照旧), 谱系内嵌(brick+三特征+证伪集), 证伪触发即retire(永不删除); 机制①谱系已内嵌于thesis.brick字段, 机制③证伪计量(journal引用砖分列战绩)待建; 种子thesis: memory-supercycle, 源自存储2025 miss伤疤
+- [2026-10-08 22:36] (ai) 账本边界(2026-10-08用户明令):记忆一律入系统库(塔/skill Field Notes/赛季journal=git-tracked活账本),本地memory md文件非账本禁止手动写入——注意力铸币的执法条款,写本地文件=原料当柴烧
