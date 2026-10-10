@@ -16,9 +16,9 @@ links:
   - "applies-to:undervaluation-signed-by-tower"
   - "applies-to:consequence-is-last-moat"
   - "applies-to:deliberate-practice"
-version: 31
+version: 32
 created_at: 2026-10-10T20:11:19
-updated_at: 2026-10-11T01:59:22
+updated_at: 2026-10-11T02:22:48
 ---
 
 # 权重考古阅读法（Weight Archaeology）
@@ -74,3 +74,4 @@ updated_at: 2026-10-11T01:59:22
 - [2026-10-11 00:44] (ai) P14批（2026-10-11）：P2巴菲特股东信批一收官——1977-1986十封全量通读（360/561/820/945/888/1039/1251/1535/1652/1864行，合计10815行，无省略；1983-1986超64KB分段读；OCR缺陷=字母t全丢不影响理解）。产出8新砖+15 notes：新砖owner-earnings（1986附录业主盈利(a)+(b)-(c)，DCF计算层第一桥）/economic-goodwill（1983附录经济商誉=通胀放大器，See's 8美元换25 vs mundane 18换18）/retention-test（1983/84留存1美元检验+五年滚动）/commodity-treadmill（1985纺织结案踮脚竞赛+换船优于补漏）/inflation-tax（1979-81痛苦指数+通胀绦虫+跨栏漂移）/share-issue-rule（1982发股铁律+19年零稀释）/insurance-underwriting-discipline（承保纪律+walking dead+准备金永远偏乐观）/incentive-asymmetry（1985期权檄文两条船+1984旅鼠职业算术）；notes落点=mr-market/error-taxonomy/circle-of-competence/business-model-first/dcf-universal-law/return-expectation-humility/buyback-authenticity-test/intelligent-investor/never-sell-for-price/price-vs-value/culture-veto-first/no-return-target/organization-greatness-dcf/concentration-by-understanding/franchise-moat。批一坐标价值=巴菲特思想骨架元年锚：投资四标准1977/回购颂词1980/留存检验1983/经济商誉1983附录/护城河城堡1986/恐惧贪婪1986/owner earnings1986附录——后续批次只需标注演化不再重复立砖。下一批=批二1987-1996（10封，含1989航空股refuted样本+1988可乐名案）。
 - [2026-10-11 01:23] (ai) P15批：巴菲特股东信批二（1987-1996，10封）全读完毕并蒸馏——新砖10块（risk-redefined/growth-is-value-component/institutional-imperative/acquisition-discipline/deferred-tax-float/retail-smart-daily/board-three-structures/emt-refutation/bank-leverage-judgment/arbitrage-method）+notes 17条；素材特征：1990/1996官网版WebFetch截断缺口（boilerplate级）如实标注；批二主线等于从原则宣言转向机制解剖（风险五因素、成长价值一体、机构强制力、收购病理、治理三形态）+错误陈列馆成型（mistake du jour年度化）。
 - [2026-10-11 01:59] (ai) P16（2026-10-11）：巴菲特股东信批三1997-2006全读完毕并蒸馏。新增5砖：derivatives-wmd（2002衍生品WMD檄文+Gen Re Securities清盘实证+2006'批判系统不批判工具'补注）/noah-rule（预测下雨不算数，造方舟才算数）/mono-linked-chains（单变量链条原则，锌项目5.79亿忏悔）/helpers-ecology（Gotrocks寓言+2-and-20算术+牛顿第四定律：收益随运动增加而减少）/sharecropper-society（贸易逆差四连檄+pseudo-trade+reverse compounding+22亿美元外汇实证）。notes 20条：insurance-underwriting-discipline×2（承保三原则/experience vs exposure/NICO画像/Pascal赌注/GEICO伞险/Equitas/术语檄文）、emt-refutation（Schloss画像）、incentive-asymmetry（CEO薪酬批三合集）、board-three-structures（独董/审计四问）、franchise-moat（widening the moat+Mrs.B）、system-succession-five-gates（接班工程+CIO标准+Simpson授权）、never-sell-for-price（张力标记：大泡沫未卖自责）、black-swan（恐怖风险四点）、opportunity-cost-ruler（10%门槛）、risk-discipline（零乘律+三种债）、owner-earnings（EBITDA檄文）、verify-before-narrative（蟑螂律）、feynman-first-principles（术语檄文meta）、skin-in-the-game（MiTek真业主+owner-capitalism）、right-business-people-price（球童模型+报纸结案+Gillette）、acquisition-discipline（buyer of choice+tuck-in+快交易）、share-issue-rule（2005重申）、stop-doing-list（thumb-sucking+Darwin）、margin-of-safety（垃圾债方法论）、pendulum-detection（承保端钟摆）。批三重心=保险与衍生品风险工程+治理激励檄文+宏观首秀（外汇/贸易）。下批=批四2007-2016。
+- [2026-10-11 02:22] (ai) (ai) Munger教学法（Talk Three）：父亲讲McFayden课时刻意用需要'轻微脑力够一下'的间接方式，'因为必须自己够到，我握了一辈子'；'好的文学让读者为理解稍微够一下——自己够到的东西被打得更牢'（承诺一致性原理在学习上的正用）——阅读协议推论：塔砖的statement只给断言、论证放body，正是让读者'够一下'的设计；深读时先猜后读的收益有心理学根据。
