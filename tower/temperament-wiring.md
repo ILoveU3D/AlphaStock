@@ -11,9 +11,10 @@ tags:
 links:
   - "tension:deliberate-practice"
   - "refines:poor-charlies-almanack"
-version: 2
+  - "applies-to:master-munger"
+version: 4
 created_at: 2026-10-11T02:07:55
-updated_at: 2026-10-11T02:22:53
+updated_at: 2026-10-11T03:07:12
 ---
 
 ## 论证
@@ -28,3 +29,4 @@ updated_at: 2026-10-11T02:22:53
 
 ## Field Notes
 - [2026-10-11 02:22] (ai) (ai) Talk Three策略拟合律：'每个人必须按自己的边际效用考量和自己的心理来玩这个游戏——如果亏损会让你痛苦（而某些亏损不可避免），一生用非常保守的投资和储蓄模式可能才是明智'；'没有放之四海皆准的投资策略——我的对我管用，部分因为我很会承受亏损：心理上我扛得住，何况我的亏损很少'——策略选择的三因子=边际效用×心理承受力×能力结构，单一因子最优可能整体毁灭。
+- [2026-10-11 03:07] (ai) 2024年选人标准=先天接线的实证补强：'I never look at where a candidate has gone to school. Never!'——Pete Liegl（Forest River，19年shot the lights out）非名校；Ben Rosner（零售天才）'never went past 6th grade'；Bill Gates判断在爆发行业上路比挂在墙上的羊皮纸重要得多；'I've observed that a very large portion of business talent is innate with nature swamping nurture. Pete Liegl was a natural.'——生意天赋的先天权重压倒教养，学历信号在选人时应直接丢弃。

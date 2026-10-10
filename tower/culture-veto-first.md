@@ -14,9 +14,9 @@ links:
   - "applies-to:causes-not-outcomes"
   - "refines:ceo-measurement-as-culture-evidence"
   - "applies-to:master-duan"
-version: 9
+version: 10
 created_at: 2026-10-10T20:51:32
-updated_at: 2026-10-11T02:44:41
+updated_at: 2026-10-11T03:06:30
 ---
 
 ## 论证
@@ -30,3 +30,4 @@ updated_at: 2026-10-11T02:44:41
 - [2026-10-10 23:39] (ai) 赵理亚版行为级证据四例+审计分级：①松下2003拜访——见谁都说要做中国前三，'居然没有一个人问过为什么我们认为自己可以做到前三名……感觉这事好像没人关心一样'=全员只想混日子，中村社长靠'松下老人站在我背后'自警，段回来后把股票慢慢都卖了；②新东方——浑水做空时'那么多离开新东方的人说新东方的好话=俞敏洪干得很了不起'（正面证据），但'看到他们这么在乎股价后，真的很难找到我会愿意持有这个公司到永远的感觉'（负面信号）；③员工见领导战战兢兢的公司时间长了都出问题；④狼性文化最终会输给人性文化。茅台审计保留（2014-08-07）：'茅台目前还不太像一家有利润之上追求的公司，不然集团不会有那么多种酒，也不会有某某年要多少营业额的目标……顶多算是取之有道'——文化分级=利润之上追求＞取之有道＞唯利是图（否决）；茅台vs苹果说明：生意模式足够强大能部分弥补文化次优，但'谁改53度飞天谁下台'的国企免疫是特例不是范式。
 - [2026-10-11 00:43] (ai) 巴菲特1983年13条股东手册之坦诚条款：'在公开场合误导他人的CEO，最终会在私下里误导自己'——坦诚不是道德装饰，是防自欺的认知卫生；报告义务=以股东想要的信息为标准、报喜也报忧；自欺先于欺人，文化审计从报告措辞的诚实度开始。
 - [2026-10-11 02:38] (ai) 2010年双年致经理人备忘录=文化否决制的内部成文：我们可以承受亏钱——甚至很多钱，但承受不起损失声誉——哪怕一丝声誉；头版测试=每个行为以登上本地报纸头版、被配偶孩子读到为标准；Everybody else is doing it是提不出好理由时的同义语；犹豫该不该做时就已经越线；坏消息必须立即上报（Salomon教训）；Culture, more than rule books, determines how an organization behaves。
+- [2026-10-11 03:06] (ai) 2023年McCulloch铁律+2022信任治理=文化否决的制度两面。McCulloch（1863年首任货币监理署长致全国银行）：'Never deal with a rascal under the expectation that you can prevent him from cheating you'——许多以为能管住流氓的银行家都领教了这条智慧，我也是：'People are not that easy to read. Sincerity and empathy can easily be faked. That is as true now as it was in 1863.'2022治理版：'Berkshire emphasizes trust over rules to an unusual – some would say extreme – degree'；经营错误可以理解，'our tolerance for personal misconduct is zero'；'The disposition of money unmasks humans'——钱的处置方式揭掉人的面具（储户画像once-a-saver always-a-saver；股东中罕见look-at-me资产与dynasty-building）。

@@ -12,9 +12,9 @@ links:
   - "refines:poor-charlies-almanack"
   - "refines:weight-archaeology-reading"
   - "applies-to:master-munger"
-version: 3
+version: 4
 created_at: 2026-10-11T02:04:39
-updated_at: 2026-10-11T02:46:10
+updated_at: 2026-10-11T03:06:27
 ---
 
 ## 论证
@@ -26,3 +26,4 @@ updated_at: 2026-10-11T02:46:10
 
 ## Field Notes
 - [2026-10-11 02:46] (ai) (ai) Talk Ten定义了该砖的情感形式：'没有哪种爱像基于仰慕的爱那样正当，而这种爱应当包括可教的死者（the instructive dead）'——与杰出死者的'交往'被纳入爱的对象而非仅仅是学习资源；儒家的火炬义务：芒格法官（祖父）去世多年后，'我孔孟到这样的程度：此刻演讲时还在想——芒格法官会乐见我在这里。祖父死后这么多年，我自认有义务为他的价值观举着火炬'——血脉传承与观念传承的双重身份。
+- [2026-10-11 03:06] (ai) 2022年Charlie语录节（近期播客集）：'You can learn a lot from dead people'——敬仰的与厌恶的都读；'A great company keeps working after you are not; a mediocre company won't do that'；'If you keep making something more valuable, then some wise person is going to notice it and start buying'（Graham weighing machine推论）；'A string of wonderful numbers times zero will always equal zero. Don't count on getting rich twice.'；'When the world changes, you must change'——铁路案例'We were slow to recognize the change, but better late than never'；Charlie杀手锏='Warren, think more about it. You're smart and I'm right.'；巴菲特自加规则='Find a very smart high-grade partner – preferably slightly older than you – and then listen very carefully to what he says.'另两条：foolish gamblers vs patient investor；理性需要在乎（patience can be learned+长注意力=巨大优势）。

@@ -8,9 +8,10 @@ tags:
   - capital
   - discipline
 links:
-version: 10
+  - "applies-to:master-duan"
+version: 12
 created_at: 2026-09-20T16:24:22
-updated_at: 2026-10-11T02:38:52
+updated_at: 2026-10-11T03:04:09
 ---
 
 ## 论证
@@ -27,3 +28,4 @@ updated_at: 2026-10-11T02:38:52
 - [2026-10-10 23:40] (ai) 做空百度伤疤（2010-03-07）：'极度愚蠢，就是跑去做空百度……所有账号加起来亏了1.5-2亿美元，其中有个账号到现在都翻不了身'——且发生在巴菲特叫他不要做空之后，'不听老人言的后果'；最可惜的是现金储备全部消耗，机会成本巨大。危机时刻故事（2025浙大）：时速200公里前面20米一堵墙，'没什么办法，反正死定了。最重要的是，你不要开那么快呀'——安全第一不是危机时刻有办法（那时没办法），而是提早做准备；配套='不要让重要的事情变成紧急的事情'。
 - [2026-10-11 00:13] (ai) 散户乙版危墙（dnote_5746补充128，2021-08-30）：君子不立危墙的'危墙'特指要命的墙=杠杆×周期——鞍钢上轮周期赚钱后自筹借贷近300亿在鲅鱼圈扩产，钢铁转过剩后新厂从希望变包袱，压了十年无法翻身。对照白酒周期：茅台2013-2015销售额仍增（184→334亿）只是幅度小，优质白酒企业每次周期都不伤筋动骨、每次调整都是买进好时机——周期分两种：螺旋向上（好企业的调整=机会）与原地踏步的价值毁灭（高杠杆重资产=危墙）。
 - [2026-10-11 02:38] (ai) 2014金禧信证据：伯克希尔股票历史上三次约50%下跌——故绝不可借钱买伯克希尔（或任何股票）：再确定的标的，路径上的流动性危机也会先杀死杠杆者；这是段永平'不借钱'与'不做空'同源的最强历史注脚——波动不是风险，杠杆把波动变成风险。
+- [2026-10-11 03:04] (ai) 2017年四次腰斩表=不借钱的最强论据：伯克希尔历史上四次大跌-59.1%（1973-75）/-37.1%（1987）/-48.9%（1998-2000）/-50.7%（2008-09）——'the strongest argument against ever using borrowed money'；小额借款也会unsettle mind导致bad decisions；'The light can at any time go from green to red without pausing at yellow'（Kipling《If》收尾）。2018 Russian-roulette equation：usually win, occasionally die——只对拿upside不担downside的人合理；'Rational people don't risk what they have and need for what they don't have and don't need'（2017同句：risk what you have and need for what you don't need=insane，50年一致）。2023铁律重述：'One investment rule at Berkshire has not and will not change: Never risk permanent loss of capital.'

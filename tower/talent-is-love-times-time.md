@@ -12,9 +12,10 @@ links:
   - "refines:deliberate-practice"
   - "refines:weight-archaeology-reading"
   - "derives-from:compounding"
-version: 2
+  - "applies-to:master-duan"
+version: 4
 created_at: 2026-10-10T22:23:28
-updated_at: 2026-10-11T02:45:49
+updated_at: 2026-10-11T03:06:26
 ---
 
 ## 论证
@@ -22,3 +23,4 @@ updated_at: 2026-10-11T02:45:49
 
 ## Field Notes
 - [2026-10-11 02:45] (ai) (ai) Talk Ten直引互证：'对任何学科的强烈兴趣（intense interest）是真正卓越不可或缺的——我能在很多事情上强迫自己做到相当好，但无法在我没有强烈兴趣的任何事情上做到卓越。所以在可行的范围内，你要运作自己去做你有强烈兴趣的事'；assiduity定义：'我喜欢这个词，因为对我它意味着——坐在你的屁股上直到做完（Sit down on your ass until you do it）'；大萧条中两个合伙人建design-build施工队时的简单协议：'两人合伙、一切平分；每当我们在对他人的承诺上落后，就每天14小时、每周7天工作直到赶上'——' needless to say那家公司没有失败'——love×time的合伙契约版。
+- [2026-10-11 03:06] (ai) 2021年Ajit招聘故事=天赋识别的时间证据：1986年一个周六早晨，问'insurance experience?'答'None.'——'Nobody's perfect,' and hired him——'That was my lucky day'；此前'wandering in the wilderness'。同信三则配套：orangutan effect（Charlie命名：向猩猩解释你的想法，猩猩依然困惑，你自己却更清楚了——表达即思考）；职业建议=找'即使不需要钱也会选'的领域与人——从找到那天起它就不再是工作；教书70年的发现=五年级最难教（Coca-Cola秘方对学生是catnip）。
