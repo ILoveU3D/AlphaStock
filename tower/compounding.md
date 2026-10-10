@@ -9,9 +9,9 @@ tags:
   - time
 links:
   - "derives-from:dcf-universal-law"
-version: 1
+version: 2
 created_at: 2026-09-08T00:00:00
-updated_at: 2026-09-20T16:24:20
+updated_at: 2026-10-11T02:04:43
 ---
 
 ## 论证
@@ -21,3 +21,4 @@ updated_at: 2026-09-20T16:24:20
 
 ## Field Notes
 - [2026-09-18 00:00] (ai) 首次成砖：自 06 号技能核心信条 + 2026-09-11 个人终值轨迹实测提炼；细节见 personal-tv-three-laws 砖。
+- [2026-10-11 02:04] (ai) 芒格复利结构化（穷查理宝典Ch1）：房地产项目利润全部留在局内滚更大项目，$100K起步到1964年停手时$1.4M——复利的敌人不是收益率是每年的取出决定；把再投资做成默认结构而非每年重新说服自己（Ben Franklin身后用两个小基金教复利，芒格选择自己活成复利的示范=eschew frivolous expenditures）。

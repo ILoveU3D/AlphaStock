@@ -1,0 +1,24 @@
+---
+id: eminent-dead-friends
+title: 与逝去的伟人交朋友：传记是概念的人格化载体
+statement: '我是传记狂'：教伟大概念时把它绑在提出者的人生与人格上——'跟拥有正确思想的逝去伟人交朋友'（make Adam Smith your friend）比只教概念本身有效得多，因为概念挂上了人生叙事才有可提取的记忆钩与行为示范；传记=可租借的大师时间轴，'一本$30的历史书里有值几十亿美元的答案'——这是权重考古阅读法在芒格处的原型自白。
+source: "book:穷查理宝典"
+status: principle
+tags:
+  - learning
+  - reading
+  - biography
+links:
+  - "refines:poor-charlies-almanack"
+  - "refines:weight-archaeology-reading"
+version: 1
+created_at: 2026-10-11T02:04:39
+updated_at: 2026-10-11T02:04:39
+---
+
+## 论证
+原文（Ch1，See's Candies 75周年讲话引述）："I am a biography nut myself. And I think when you're trying to teach the great concepts that work, it helps to tie them into the lives and personalities of the people who developed them. I think you learn economics better if you make Adam Smith your friend. That sounds funny, making friends among the 'eminent dead,' but if you go through life making friends with the eminent dead who had the right ideas, I think it will work better for you in life and work better in education. It's way better than just giving the basic concepts." 另（Collison序）："There is no better teacher than history in determining the future. There are answers worth billions of dollars in a $30 history book."
+
+机制：概念的人格化载体给抽象断言提供了(a)叙事记忆钩(b)权重考古素材（这个人的真实决策点）(c)行为示范（概念在他的完整人生里是否自洽运行）。与 weight-archaeology-reading 直接同构：塔的 canon 精读轨本质就是系统化的 eminent-dead 交友计划。
+
+迁移：塔砖的 source 字段就是交友记录；读年报/股东信优先于读教科书（概念仍活在写它的人手里）；canon 选书偏爱带真实决策点的文本而非纯理论综述。
