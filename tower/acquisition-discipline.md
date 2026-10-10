@@ -10,9 +10,9 @@ tags:
 links:
   - "refines:share-issue-rule"
   - "derives-from:dcf-universal-law"
-version: 2
+version: 3
 created_at: 2026-10-11T01:21:14
-updated_at: 2026-10-11T01:58:53
+updated_at: 2026-10-11T02:35:59
 ---
 
 ## 论证
@@ -20,3 +20,4 @@ updated_at: 2026-10-11T01:58:53
 
 ## Field Notes
 - [2026-10-11 01:58] (ai) 批三增量（2001-2006）：①buyer of choice成型——ISCAR=Eitan一页半来信自荐，'公司与经理人的品质跃然纸上'；TTI=Paul Andrews拒绝战略买家（会拆）与PE（会加杠杆翻转），午饭前成交；声誉本身成为收购渠道，全球化首单落地②tuck-in飞轮：MiTek五年14笔、Fruit买Russell与VF内衣——借用已在场经理人的管理杠杆，mini-Berkshire自然生长③快交易三例：McLane与Wal-Mart两小时握手29天付款零due diligence（'我们知道一切都会和Wal-Mart说的一模一样'）；Clayton仅凭创始人自传+见人+公开财报报价；Forest River两页传真次日回复——快的前提是事前对人与行业的多年认知储备，不是省掉判断。
+- [2026-10-11 02:35] (ai) 2009年发股收购檄文=A/B公司换股数学：用自己被低估的股票买资产是双重损失；第二顾问唱反调疗法=收购案里唯一会说不的人恰是拿不到佣金的人，故'尽职调查'永远通过；理发师问你要不要理发时答案永远是Yes；吉娃娃别把自己幻想成杜宾。2014金禧信补完集团优势论证：资本在子公司间无税摩擦转移（See's的盈余去买别的生意）、如果马投票就没有汽车工业（业务自保本能）、给卖家第三种选择=永久家园（对照竞购者裁员与PE再杠杆）；spin-off无意义=控制权价值、资本配置灵活性、税务优势三合一；fees lead to transactions而非相反；从未听收购方说过dis-synergies。

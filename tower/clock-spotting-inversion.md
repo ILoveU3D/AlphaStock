@@ -12,10 +12,13 @@ links:
   - "refines:ceo-measurement-as-culture-evidence"
   - "applies-to:causes-not-outcomes"
   - "derives-from:business-model-first"
-version: 1
+version: 2
 created_at: 2026-10-10T20:58:51
-updated_at: 2026-10-10T20:58:51
+updated_at: 2026-10-11T02:39:19
 ---
 
 ## 论证
 （待论证）
+
+## Field Notes
+- [2026-10-11 02:39] (ai) 2011年IBM迟到顿悟的Thoreau注脚：It's not what you look at that matters, it's what you see——同一家公司研究了五十年，看与看见之间隔着一次范式转换；2010年Todd Combs选人同构：找2岁的Secretariat，不找10岁的Seabiscuit——看见潜力而非看见履历。

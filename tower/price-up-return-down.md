@@ -10,10 +10,13 @@ tags:
 links:
   - "refines:free-shares"
   - "derives-from:dcf-universal-law"
-version: 1
+version: 2
 created_at: 2026-10-11T00:12:35
-updated_at: 2026-10-11T00:12:35
+updated_at: 2026-10-11T02:36:41
 ---
 
 ## 论证
 （待论证）
+
+## Field Notes
+- [2026-10-11 02:36] (ai) 巴菲特2011年IBM数学题=散户乙同构论证：IBM五年回购500亿，股价低迷（均价200）买2.5亿股占7%，股价高（均价300）只买1.67亿股占6.5%——长期净买入者应为股价低迷欢呼；通勤族油箱谬误=明知余生都要开车，却因油价上涨而高兴；巴菲特自承读Graham《聪明的投资者》第八章后scales fell from my eyes，才从'盼涨'切换到'盼便宜'。

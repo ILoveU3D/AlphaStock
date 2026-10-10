@@ -12,9 +12,9 @@ links:
   - "derives-from:dcf-universal-law"
   - "refines:paper-loss-vs-real-loss"
   - "refines:poor-charlies-almanack"
-version: 1
+version: 2
 created_at: 2026-10-11T02:04:37
-updated_at: 2026-10-11T02:04:37
+updated_at: 2026-10-11T02:37:18
 ---
 
 ## 论证
@@ -26,3 +26,6 @@ updated_at: 2026-10-11T02:04:37
 
 ## 边界
 永久资本解除的是被迫卖出，不解除判断错误——若终值判断本身错了，永久资本只是让错误亏得更久。
+
+## Field Notes
+- [2026-10-11 02:37] (ai) 批四Life and Debt檄文集（2009-2014）：永不依赖陌生人的仁慈（2009）；信用如氧气，充足时无人注意，缺失时无所逃遁；赛车第一定律=想拿第一先得完赛，任何正数列乘以零即蒸发；祖父Ernest 1939年家书=隔夜拆借无门的年代家里要有现金；200亿现金承诺——99年里它降低回报，但第100年我们活着而许多人倒下，且100年里我们都睡得好（2012）；财务俄罗斯轮盘=100个弹膛1颗子弹也不玩，拿自己需要的东西去赌自己想要的东西是疯狂（2014）；财务持久三要素=盈利流、巨额流动资产、无近期大额现金需求；Ray DeVoe：More money has been lost reaching for yield than at the point of a gun（2010）。

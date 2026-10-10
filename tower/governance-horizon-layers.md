@@ -12,10 +12,13 @@ links:
   - "derives-from:business-model-first"
   - "refines:ceo-measurement-as-culture-evidence"
   - "applies-to:keyhole-philosophy"
-version: 1
+version: 2
 created_at: 2026-10-10T20:58:50
-updated_at: 2026-10-10T20:58:50
+updated_at: 2026-10-11T02:38:54
 ---
 
 ## 论证
 （待论证）
+
+## Field Notes
+- [2026-10-11 02:38] (ai) 2014金禧信分权论：分权是官僚主义的解药——伯克希尔无委员会、无预算流程、无法律/人事/公关/投资者关系/战略部；宁愿承担少数坏决策的可见成本，也不要官僚主义的不可见成本；2010年三大优势之二hire well, manage little——我们给经理人的不是合同而是舞台，志愿者型经理人不需要监控。
