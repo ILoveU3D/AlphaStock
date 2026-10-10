@@ -12,9 +12,10 @@ links:
   - "derives-from:business-model-first"
   - "refines:ceo-measurement-as-culture-evidence"
   - "applies-to:keyhole-philosophy"
-version: 2
+  - "applies-to:master-duan"
+version: 3
 created_at: 2026-10-10T20:58:50
-updated_at: 2026-10-11T02:38:54
+updated_at: 2026-10-11T02:46:08
 ---
 
 ## 论证

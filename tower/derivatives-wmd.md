@@ -9,9 +9,10 @@ tags:
   - derivatives
 links:
   - "refines:black-swan"
-version: 1
+  - "applies-to:master-buffett"
+version: 2
 created_at: 2026-10-11T01:55:53
-updated_at: 2026-10-11T01:55:53
+updated_at: 2026-10-11T02:44:58
 ---
 
 ## 论证

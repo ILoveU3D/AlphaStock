@@ -9,9 +9,10 @@ tags:
   - index
 links:
   - "refines:mr-market"
-version: 2
+  - "applies-to:master-buffett"
+version: 3
 created_at: 2026-10-11T01:56:23
-updated_at: 2026-10-11T02:37:12
+updated_at: 2026-10-11T02:46:14
 ---
 
 ## 论证

@@ -12,9 +12,10 @@ links:
   - "derives-from:business-model-first"
   - "refines:ceo-measurement-as-culture-evidence"
   - "applies-to:authority-is-evidence-of-model"
-version: 8
+  - "applies-to:master-duan"
+version: 9
 created_at: 2026-10-10T20:49:37
-updated_at: 2026-10-10T23:39:39
+updated_at: 2026-10-11T02:43:53
 ---
 
 ## 论证

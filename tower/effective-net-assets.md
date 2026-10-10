@@ -12,9 +12,10 @@ links:
   - "derives-from:dcf-universal-law"
   - "refines:ee-over-pe"
   - "applies-to:free-option-structure"
-version: 1
+  - "applies-to:master-duan"
+version: 2
 created_at: 2026-10-10T22:00:28
-updated_at: 2026-10-10T22:00:28
+updated_at: 2026-10-11T02:45:19
 ---
 
 ## 论证

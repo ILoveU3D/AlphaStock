@@ -11,9 +11,10 @@ tags:
 links:
   - "derives-from:buffett-essays"
   - "refines:business-model-first"
-version: 4
+  - "applies-to:master-buffett"
+version: 5
 created_at: 2026-10-10T20:24:19
-updated_at: 2026-10-11T02:38:15
+updated_at: 2026-10-11T02:44:21
 ---
 
 ## 论证

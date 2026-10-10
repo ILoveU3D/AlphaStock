@@ -10,9 +10,10 @@ tags:
 links:
   - "refines:governance-horizon-layers"
   - "applies-to:ceo-measurement-as-culture-evidence"
-version: 2
+  - "applies-to:master-buffett"
+version: 3
 created_at: 2026-10-11T01:21:34
-updated_at: 2026-10-11T01:57:26
+updated_at: 2026-10-11T02:43:59
 ---
 
 ## 论证

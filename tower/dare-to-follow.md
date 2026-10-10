@@ -12,9 +12,10 @@ links:
   - "derives-from:business-model-first"
   - "refines:differentiation-survival-law"
   - "applies-to:end-state-elimination"
-version: 2
+  - "applies-to:master-duan"
+version: 3
 created_at: 2026-10-10T21:44:23
-updated_at: 2026-10-10T23:40:05
+updated_at: 2026-10-11T02:44:43
 ---
 
 ## 论证

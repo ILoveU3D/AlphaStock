@@ -9,9 +9,10 @@ tags:
   - philosophy
 links:
   - "derives-from:dcf-universal-law"
-version: 9
+  - "applies-to:master-duan"
+version: 10
 created_at: 2026-09-20T16:24:22
-updated_at: 2026-10-11T00:42:57
+updated_at: 2026-10-11T02:44:12
 ---
 
 ## 论证

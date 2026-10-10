@@ -12,9 +12,10 @@ links:
   - "derives-from:compounding"
   - "applies-to:causes-not-outcomes"
   - "refines:benfen-motive-purity"
-version: 1
+  - "applies-to:master-duan"
+version: 2
 created_at: 2026-10-10T22:22:57
-updated_at: 2026-10-10T22:22:57
+updated_at: 2026-10-11T02:43:49
 ---
 
 ## 论证

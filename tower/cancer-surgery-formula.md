@@ -11,9 +11,10 @@ tags:
 links:
   - "refines:business-model-first"
   - "applies-to:error-taxonomy"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:17:27
-updated_at: 2026-10-11T02:17:27
+updated_at: 2026-10-11T02:44:19
 ---
 
 ## 论证

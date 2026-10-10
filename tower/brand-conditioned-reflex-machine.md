@@ -14,9 +14,10 @@ links:
   - "refines:franchise-moat"
   - "refines:lollapalooza-confluence"
   - "applies-to:dcf-universal-law"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:26:38
-updated_at: 2026-10-11T02:26:38
+updated_at: 2026-10-11T02:44:04
 ---
 
 ## 论证

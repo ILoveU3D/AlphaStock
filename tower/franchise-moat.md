@@ -9,9 +9,10 @@ tags:
   - moat
 links:
   - "applies-to:dcf-universal-law"
-version: 8
+  - "applies-to:master-buffett"
+version: 9
 created_at: 2026-09-20T16:24:21
-updated_at: 2026-10-11T02:39:27
+updated_at: 2026-10-11T02:45:48
 ---
 
 ## 论证

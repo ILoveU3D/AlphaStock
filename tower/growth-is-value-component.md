@@ -10,9 +10,10 @@ tags:
 links:
   - "derives-from:dcf-universal-law"
   - "refines:retention-test"
-version: 1
+  - "applies-to:master-buffett"
+version: 2
 created_at: 2026-10-11T01:20:50
-updated_at: 2026-10-11T01:20:50
+updated_at: 2026-10-11T02:46:10
 ---
 
 ## 论证

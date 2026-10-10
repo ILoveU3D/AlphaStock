@@ -13,9 +13,10 @@ links:
   - "refines:latticework"
   - "applies-to:productivity-gains-capture"
   - "applies-to:systems-hard-to-cheat"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:41:13
-updated_at: 2026-10-11T02:41:13
+updated_at: 2026-10-11T02:44:35
 ---
 
 ## 论证

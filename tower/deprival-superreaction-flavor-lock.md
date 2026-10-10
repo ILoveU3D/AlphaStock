@@ -13,9 +13,10 @@ links:
   - "refines:brand-is-impression"
   - "refines:franchise-moat"
   - "refines:brand-conditioned-reflex-machine"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:26:40
-updated_at: 2026-10-11T02:26:40
+updated_at: 2026-10-11T02:44:56
 ---
 
 ## 论证

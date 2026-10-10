@@ -12,9 +12,10 @@ links:
   - "derives-from:business-model-first"
   - "refines:three-nevers"
   - "applies-to:keyhole-philosophy"
-version: 2
+  - "applies-to:master-duan"
+version: 3
 created_at: 2026-10-10T20:49:35
-updated_at: 2026-10-10T21:00:12
+updated_at: 2026-10-11T02:45:29
 ---
 
 ## 论证

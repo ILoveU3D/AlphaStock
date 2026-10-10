@@ -11,9 +11,10 @@ tags:
 links:
   - "refines:circle-of-competence"
   - "refines:override-biased-experts"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:22:31
-updated_at: 2026-10-11T02:22:31
+updated_at: 2026-10-11T02:43:51
 ---
 
 ## 论证

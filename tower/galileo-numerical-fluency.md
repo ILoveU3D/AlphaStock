@@ -11,9 +11,10 @@ tags:
 links:
   - "applies-to:dcf-universal-law"
   - "refines:market-cap-arithmetic-gate"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:26:33
-updated_at: 2026-10-11T02:26:33
+updated_at: 2026-10-11T02:45:59
 ---
 
 ## 论证

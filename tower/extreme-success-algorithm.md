@@ -13,9 +13,10 @@ links:
   - "refines:lollapalooza-confluence"
   - "applies-to:single-factor-maximization"
   - "applies-to:surfing-technology-wave"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:41:03
-updated_at: 2026-10-11T02:41:03
+updated_at: 2026-10-11T02:45:37
 ---
 
 ## 论证

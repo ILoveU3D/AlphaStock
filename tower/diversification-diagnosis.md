@@ -12,9 +12,10 @@ links:
   - "derives-from:business-model-first"
   - "refines:circle-of-competence"
   - "applies-to:success-lock-in"
-version: 1
+  - "applies-to:master-duan"
+version: 2
 created_at: 2026-10-10T21:46:50
-updated_at: 2026-10-10T21:46:50
+updated_at: 2026-10-11T02:45:02
 ---
 
 ## 论证

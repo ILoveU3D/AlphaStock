@@ -12,9 +12,10 @@ tags:
 links:
   - "refines:latticework"
   - "refines:five-helpful-notions-procedure"
-version: 2
+  - "applies-to:master-munger"
+version: 3
 created_at: 2026-10-11T02:28:33
-updated_at: 2026-10-11T02:41:30
+updated_at: 2026-10-11T02:46:12
 ---
 
 ## 论证

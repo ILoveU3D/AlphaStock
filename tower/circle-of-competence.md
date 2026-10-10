@@ -8,9 +8,10 @@ tags:
   - capital
   - epistemology
 links:
-version: 14
+  - "applies-to:master-buffett"
+version: 15
 created_at: 2026-09-20T16:24:21
-updated_at: 2026-10-11T02:39:49
+updated_at: 2026-10-11T02:44:25
 ---
 
 ## 论证

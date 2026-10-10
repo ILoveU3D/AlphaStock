@@ -13,9 +13,10 @@ links:
   - "refines:market-pari-mutuel"
   - "refines:incentive-asymmetry"
   - "applies-to:dcf-universal-law"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:30:27
-updated_at: 2026-10-11T02:30:27
+updated_at: 2026-10-11T02:44:39
 ---
 
 ## 论证

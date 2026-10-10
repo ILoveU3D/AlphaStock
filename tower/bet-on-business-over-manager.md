@@ -12,9 +12,10 @@ links:
   - "refines:franchise-moat"
   - "applies-to:ceo-measurement-as-culture-evidence"
   - "refines:business-model-first"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:17:33
-updated_at: 2026-10-11T02:17:33
+updated_at: 2026-10-11T02:43:55
 ---
 
 ## 论证

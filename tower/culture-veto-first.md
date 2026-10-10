@@ -13,9 +13,10 @@ links:
   - "refines:benfen-motive-purity"
   - "applies-to:causes-not-outcomes"
   - "refines:ceo-measurement-as-culture-evidence"
-version: 8
+  - "applies-to:master-duan"
+version: 9
 created_at: 2026-10-10T20:51:32
-updated_at: 2026-10-11T02:38:18
+updated_at: 2026-10-11T02:44:41
 ---
 
 ## 论证

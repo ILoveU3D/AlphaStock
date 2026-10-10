@@ -12,9 +12,10 @@ links:
   - "refines:understanding-drop-test"
   - "applies-to:mr-market"
   - "derives-from:benfen-motive-purity"
-version: 1
+  - "applies-to:master-duan"
+version: 2
 created_at: 2026-10-10T22:23:07
-updated_at: 2026-10-10T22:23:07
+updated_at: 2026-10-11T02:44:23
 ---
 
 ## 论证

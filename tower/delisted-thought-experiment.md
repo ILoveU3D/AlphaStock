@@ -12,9 +12,10 @@ links:
   - "derives-from:business-model-first"
   - "refines:understanding-drop-test"
   - "applies-to:keyhole-philosophy"
-version: 4
+  - "applies-to:master-duan"
+version: 5
 created_at: 2026-10-10T21:04:12
-updated_at: 2026-10-10T23:08:26
+updated_at: 2026-10-11T02:44:53
 ---
 
 ## 论证

@@ -12,9 +12,10 @@ tags:
 links:
   - "refines:feynman-first-principles"
   - "refines:darwin-disconfirmation-method"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:30:29
-updated_at: 2026-10-11T02:30:29
+updated_at: 2026-10-11T02:45:34
 ---
 
 ## 论证

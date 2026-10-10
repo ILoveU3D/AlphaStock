@@ -9,9 +9,10 @@ tags:
   - dividend
 links:
   - "applies-to:dcf-universal-law"
-version: 3
+  - "applies-to:master-sanhuyi"
+version: 4
 created_at: 2026-09-20T16:24:22
-updated_at: 2026-10-11T00:12:56
+updated_at: 2026-10-11T02:45:53
 ---
 
 ## 论证

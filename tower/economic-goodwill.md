@@ -10,9 +10,10 @@ tags:
 links:
   - "refines:franchise-moat"
   - "derives-from:dcf-universal-law"
-version: 3
+  - "applies-to:master-buffett"
+version: 4
 created_at: 2026-10-11T00:37:47
-updated_at: 2026-10-11T02:37:45
+updated_at: 2026-10-11T02:45:13
 ---
 
 ## 论证

@@ -12,9 +12,10 @@ links:
   - "derives-from:dcf-universal-law"
   - "applies-to:ceo-measurement-as-culture-evidence"
   - "refines:ee-over-pe"
-version: 2
+  - "applies-to:master-duan"
+version: 3
 created_at: 2026-10-10T21:32:22
-updated_at: 2026-10-10T23:08:30
+updated_at: 2026-10-11T02:44:02
 ---
 
 ## 论证

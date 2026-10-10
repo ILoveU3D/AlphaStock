@@ -12,9 +12,10 @@ tags:
 links:
   - "derives-from:dcf-universal-law"
   - "refines:dcf-growth-three-laws"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:33:51
-updated_at: 2026-10-11T02:33:51
+updated_at: 2026-10-11T02:46:02
 ---
 
 ## 论证
