@@ -14,7 +14,7 @@
   "cash": {
     "CNY": 0.0,
     "HKD": 0.0,
-    "USD": 698.66
+    "USD": 2211.47
   },
   "settling": [],
   "positions": [
@@ -26,16 +26,6 @@
       "avg_cost": 89.7381,
       "currency": "USD",
       "last_buy_date": "2026-09-29",
-      "lot": 1
-    },
-    {
-      "market": "US",
-      "code": "TCOM",
-      "name": "携程",
-      "qty": 40.0,
-      "avg_cost": 40.6998,
-      "currency": "USD",
-      "last_buy_date": "2026-09-24",
       "lot": 1
     },
     {
@@ -508,6 +498,30 @@
       "note": "10-02预置扳机执行(任一持仓退出即换入HRMY,触发器亮了就打):池#3 core90,4大师票(buffett/munger/livermore/duan);10-04canonical模型weighted63.17=+59%(bear28.89=-27%p0.3/base72.32/bull87.85)——安全垫叙事随重估失效,仓位按bear真实尾部定:加16至39股约19.7%NAV与TCOM并列最大,bear情景-5.3%NAV在全触发预算-7.2%内;intel复查零红旗,OCF/NI2.19,净现金7.17亿=市值31%;-50%测试=专利悬崖+orexin颠覆双杀联合概率低,可承受故规模由此定;生意=WAKIX孤儿药定价权+GR桥接2027,文化=孤儿药 playbook专注",
       "settle_amount": 0.0,
       "seq": 20
+    },
+    {
+      "ts": "2026-10-08T22:18:04",
+      "date": "2026-10-08",
+      "action": "sell",
+      "market": "US",
+      "code": "TCOM",
+      "name": "携程",
+      "qty": 40.0,
+      "price": 37.87,
+      "gross": 1514.8,
+      "fees": {
+        "platform": 1.99
+      },
+      "fees_total": 1.99,
+      "cash_delta": 0.0,
+      "settle_amount": 1512.81,
+      "available_date": "2026-10-08",
+      "fx_date": "2026-10-09",
+      "realized_pnl": -115.18,
+      "currency": "USD",
+      "session": "in",
+      "note": "硬止37.85触发：今开37.62/盘中低37.63破线，按计划亏损上限-7%纪律执行（破线即卖不犹豫，10-07预置）；国庆催化+10/24窗口论点让位于价格纪律；卖出现金T+1到账后按无新论点不加仓原则暂持",
+      "seq": 21
     }
   ],
   "nav_history": [
@@ -1492,8 +1506,66 @@
     },
     {
       "date": "2026-10-08",
-      "nav": 7780.36,
+      "nav": 7725.14,
       "cash_total": 698.66,
+      "settling_total": 1512.81,
+      "positions": [
+        {
+          "market": "US",
+          "code": "ZM",
+          "name": "Zoom通讯",
+          "qty": 16.0,
+          "price": 93.26,
+          "currency": "USD",
+          "value_base": 1492.16
+        },
+        {
+          "market": "US",
+          "code": "NVDA",
+          "name": "NVDA",
+          "qty": 3.0,
+          "price": 236.9,
+          "currency": "USD",
+          "value_base": 710.7
+        },
+        {
+          "market": "US",
+          "code": "HRMY",
+          "name": "HRMY",
+          "qty": 39.0,
+          "price": 38.98,
+          "currency": "USD",
+          "value_base": 1520.22
+        },
+        {
+          "market": "US",
+          "code": "ADBE",
+          "name": "Adobe Inc.",
+          "qty": 3.0,
+          "price": 233.83,
+          "currency": "USD",
+          "value_base": 701.49
+        },
+        {
+          "market": "US",
+          "code": "FUTU",
+          "name": "富途控股",
+          "qty": 10.0,
+          "price": 108.91,
+          "currency": "USD",
+          "value_base": 1089.1
+        }
+      ],
+      "fx": {
+        "CNY": 1.0,
+        "HKD": 0.92,
+        "USD": 7.2
+      }
+    },
+    {
+      "date": "2026-10-09",
+      "nav": 7850.52,
+      "cash_total": 2211.47,
       "settling_total": 0,
       "positions": [
         {
@@ -1501,54 +1573,45 @@
           "code": "ZM",
           "name": "Zoom通讯",
           "qty": 16.0,
-          "price": 94.77,
+          "price": 96.03,
           "currency": "USD",
-          "value_base": 1516.32
-        },
-        {
-          "market": "US",
-          "code": "TCOM",
-          "name": "携程",
-          "qty": 40.0,
-          "price": 38.09,
-          "currency": "USD",
-          "value_base": 1523.6
+          "value_base": 1536.48
         },
         {
           "market": "US",
           "code": "NVDA",
           "name": "NVDA",
           "qty": 3.0,
-          "price": 237.47,
+          "price": 230.63,
           "currency": "USD",
-          "value_base": 712.41
+          "value_base": 691.89
         },
         {
           "market": "US",
           "code": "HRMY",
           "name": "HRMY",
           "qty": 39.0,
-          "price": 39.34,
+          "price": 39.85,
           "currency": "USD",
-          "value_base": 1534.26
+          "value_base": 1554.15
         },
         {
           "market": "US",
           "code": "ADBE",
           "name": "Adobe Inc.",
           "qty": 3.0,
-          "price": 232.77,
+          "price": 243.51,
           "currency": "USD",
-          "value_base": 698.31
+          "value_base": 730.53
         },
         {
           "market": "US",
           "code": "FUTU",
           "name": "富途控股",
           "qty": 10.0,
-          "price": 109.68,
+          "price": 112.6,
           "currency": "USD",
-          "value_base": 1096.8
+          "value_base": 1126.0
         }
       ],
       "fx": {
@@ -1677,6 +1740,34 @@
       "nav": 7780.51,
       "day_pnl": 2.04,
       "text": "20261007(美东)窗口: 零交易=正确动作——6仓纪律线全零触发: TCOM 38.04守硬止37.85上方0.19(全组合最紧点,黄金周收官数据向好=AI伴游+158%/入境翻倍,窗口10/24在途,破线即卖不犹豫); HRMY 39.41(止37.4,池#3 core90 4票buffett/munger/livermore/duan); ZM 94.67(止80.4/盈118,池#15); NVDA 237.33(trail221,入场后最高收248.03未刷新=吊灯不上调); ADBE 232.70(止218,Form4观察项无新增最近09-18); FUTU 109.76(止95). 现金698.66(BKE款已T+0可用)不部署: 持仓全员顶纪律cap,EXEL(池#14,3票)新开仓须先交QUALIFIED模型,无新论点不加仓(10-06 journal承诺). 部署率91.0%. NAV 7780.46日-69.62. 数据声明: EM全节点不可达(0.1s拒绝=疑似封禁),fetch经腾讯/SEC回退完成; A股kline滞8天系休市+EM双因素致闸门FAIL=美股会话假阳性,本窗口--no-check已披露; 一致评级TCOM StrongBuy29家目标58.44"
+    },
+    {
+      "date": "2026-10-08",
+      "ts": "2026-10-08T22:18:34",
+      "nav": 7727.24,
+      "day_pnl": -51.23,
+      "text": "20261008(美东)窗口: TCOM硬止执行——今开37.62直接破硬止37.85(盘中低37.63),@37.87全清40股,realized-115.18(-7.1%计划上限内);国庆催化兑现(AI伴游+158%/入境翻倍)但买预期卖事实已发生,价格纪律优先于10/24窗口;后验项注销. 其余5仓零触发: ZM93.15(止80.4/盈118)/NVDA235.95(trail221,最高收248.03未刷新)/HRMY38.95(止37.4余1.55)/ADBE235.20+1.04%(止218)/FUTU109.12(止95). 现金698.66+TCOM款1512.81(T+1,fx10-09)=约2211(28%NAV)待部署;原则不变:无新论点不加仓,EXEL(池#14,3票)新开仓须先交QUALIFIED模型. 组合5仓:HRMY19.7%/ZM19.3%/FUTU14.1%/NVDA9.2%/ADBE9.1%. 数据声明:fetch复用日内quotes,盘中价经腾讯接口直取(EM封禁中)"
+    },
+    {
+      "date": "2026-10-08",
+      "ts": "2026-10-08T22:29:10",
+      "nav": 7722.81,
+      "day_pnl": -55.66,
+      "text": "20261008补-完整流程复核(用户四条批评后补做): fetch --refresh重拉US全量(quotes腾讯盘中价/klines200新bar/intel579事件),5仓逐只intel扫描零红旗零生意级新情况,纪律线盘中价重核全零触发=持有成立;TCOM卖出后验:消息面正面但价格纪律独立成立,反弹不追/重进需新论点.数据缺口声明:HRMY ratings源故障,ADBE快照外雷达不覆盖"
+    },
+    {
+      "date": "2026-10-09",
+      "ts": "2026-10-09T19:52:36",
+      "nav": 7772.78,
+      "day_pnl": 47.64,
+      "text": "20261009 PTC后验闭环(10-06在途项): 施耐德正式协议/股全现金(溢价42.3%/46.1%VWAP,226亿股权,2027Q3交割,HSR+CFIUS待审)。我的193.02卖出价 vs 205 = 少赚6.2%,对应9-12个月交割期+双边监管风险=并购套利报酬非价值投资报酬,规则不赚此钱,后验不遗憾。价值腿验证:产业资本42%溢价实锤130-145错杀诊断(L3切换成本/战略价值);运气腿声明:catalyst身份与时点不在买入note内(无任何收购期权字样),3周兑现系时间馈赠。模型公允123 vs 买入价130-139 的自相矛盾入册:实际操作锚=一致目标173而非自有模型,下次买入价不得高于自有模型公允,或必须在note中显式声明锚切换理由。"
+    },
+    {
+      "date": "2026-10-09",
+      "ts": "2026-10-09T22:21:03",
+      "nav": 7848.07,
+      "day_pnl": 122.93,
+      "text": "20261009(美东10:20盘中)窗口: 零交易=完整否决链后的abstain——部署率71.8%低于80%目标但每个不买都有硬理由. ①持仓5仓纪律线零触发(腾讯live核价): ZM96.00(止80.4/盈118, 10-07两笔Form4下钻=CEO袁征cashless exercise约3.5万股+董事Subotovsky 2637股@93.7-94.6=SBC例行观察项非簇集, 卖出价低于现价=非逃顶)/NVDA230.92(trail221, 最高收248.03未刷新)/HRMY39.86(止37.4余2.46, 池#3四票core90.3)/ADBE244.16(止218/盈275, 模型weighted419=+76%但10%封顶已满)/FUTU112.67(止95). ②新开仓全链否决: EXEL(池#15三票core67.2, dossier已QUALIFIED门槛通过)估值层今日build后否决——weighted公允29.11 vs 60.38=-51.8%, bear19.68=-67%尾部, comps中位23.39, 一致目标54.87<现价+BofA今日Sell41, pos52=100动量顶; 市场在为zanzalintinib PDUFA12-03成功+ANDA和解续命付费, 模型不付这个价, PTC校准课后买入价不得高于自有模型公允; SLDE能力圈外/NUTX动量顶/TCOM结构未重建(再进场扳机未到)/BZ Form4簇集否决在途/TTD PE0.15数据伪影不可验证/LOGI JKHY QLYS无dossier未过建模先行闸; PYPL今日掉出票池(0票, sheng动量门今日不过+debt_ratio75%支付浮存口径卡住基本面大师)=池外无L1基础, cores88.9+模型upside92%仅在池内时才构成候补. ③加仓路径全堵: HRMY 19.8%已顶bear尾部预算/ZM模型upside仅+6.5%太薄/FUTU无估值层过不了模型铁律/NVDA模型-63.7%否决/ADBE封顶. 结论: 现金2211(28.2%)过夜, 举证责任已逐项履行, 不为部署率买模型否决的票. 数据源: 腾讯fallback生效(EM封禁中), fetch --refresh盘中价; HRMY ratings源故障缺口声明"
     }
   ],
   "totals": {

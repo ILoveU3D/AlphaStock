@@ -11,10 +11,13 @@ tags:
 links:
   - "refines:paper-loss-vs-real-loss"
   - "derives-from:dcf-universal-law"
-version: 1
+version: 2
 created_at: 2026-09-25T02:13:18
-updated_at: 2026-09-25T02:13:18
+updated_at: 2026-10-09T20:15:48
 ---
 
 ## 论证
 （待论证）
+
+## Field Notes
+- [2026-10-09 20:15] (ai) 2026-10-09 记忆入库迁移： L3定投操作参数(2026-09-12用户明确)=每季度5万定投六原型(品牌税/平台/银行/浮存金/水电/资源收租)，首笔5%、单名上限15%、终持8-15家、新钱默认非半导体；卖出规则与钥匙孔严格分表

@@ -19,8 +19,8 @@ commands:
   - model build X
   - model set X
   - model list
-version: 50
-updated_at: 2026-10-08T15:41:28
+version: 61
+updated_at: 2026-10-08T22:30:27
 ---
 
 # 19 · Financial Modeling（财务建模）
@@ -173,3 +173,14 @@ HK 全名单来自 mainindicator batch），状态存 `models/campaign.json`
 - [2026-10-08 13:24] (ai) lint 体量口径实测：_text_volume 只计 JSON 字符串叶（键名/语法/数字不计），staging 文件字节数会高估卷宗量约 5-10%——装载前用 archive._text_volume 模拟组装后的 archive 实测，再决定补几组维度；多组 dims 必须先合并成单个 dims_all.json 再 write（dimensions 是整块替换，分次 write 会只剩最后一组）
 - [2026-10-08 14:38] (ai) US 外国私人发行人（如 CLBT 提交 20-F 而非 10-K）gather 年报抓取为空：fetch_annual_us 硬编码 form==10-K；修复路径=EDGAR submissions 定位 20-F→archives 拉全文→Item 4 切入 item1、Item 5 切入 item7（目录里标题会出现两次，取正文最后一次出现位置）；SEC companyfacts 限流时全标签返回空会静默覆盖 history，需重试退避二次拉取，builder 按申报 fy 分组会把财年错配进日历年（CLBT 丢过 FY2022），改按 concepts 实际期间 start/end 重建 2019-2025 序列
 - [2026-10-08 15:41] (ai) OTEX 建模两记：①dimensions 是整块替换——多份 dims 分片装载前必须先合并成一个 JSON 再 model write，逐分 write 会让最后一份覆盖前面所有；②raw_text_volume 的 glob 非递归，raw/_staging/ 不计入 raw 分母，但 lint 计数只算 model.json 字符串叶，staging 文件的 JSON 语法开销（括号/引号/字段名）会被扣掉约 5-8%，预合并前要按「字符串叶」口径测算而不是文件字符数；③10-K MD&A 切片里的千元小表先验明正身再引用——OTEX 里 26,379 那张是剥离 TSA 报销表，SBC 真值只存在于 Non-GAAP 调节桥（.6M），差点误引
+- [2026-10-08 17:34] (ai) US 10-K 的 item7_mdna 切片会静默失败成空（annual.json item7_mdna len=0）：切片正则只锚定行首标题、实际命中目录条目后因长度 <500 被丢弃——WTM 案例的修复法是手动下载 10-K 全文、放宽正则锚定、切出完整 MD&A 存 raw/_staging/src_mdna.txt 再写作；写 gaps 时声明该文件不计入 raw 体量（raw_text_volume 只 glob raw/*.json）
+- [2026-10-08 17:36] (ai) campaign 写作波形推进模式（2026-10-08 实证）：主智能体按 campaign next 队列每波取 3 家，3 个并行 general_purpose_task 子智能体各写一家全流程（读素材→RRC 样例→_staging 分片→@file 装载→lint 循环到 PASS），每波后主智能体独立 lint 复核再放下一波；单会话 6 波 18 家、全部一次通过（ratio 0.31-0.45）。子智能体提示词须内嵌全部红线（@file、.json 后缀数组、world 字段名、「」引号、30% 线先算后写、staging src_* 不计写作量）+ 公司特定行业透镜 + raw_text_volume 实测命令；孪生上市（RSMDF/RMD 型，10 CDI=1 股）用浓缩移植+CDI 入口层模式（实证：OTC 价差是报价滞后伪影），勿整卷重写
+- [2026-10-08 18:24] (ai) HK建模实测两点(09992案)：(1)快照 kline 存于 data/snapshots/<date>/kline/<MKT>_<code>.csv 每股一文件(如 HK_09992.csv)而非合并 hk_klines.csv；(2)EM push2 live quote 连接失败时 ask 用快照价(149.2)而 kline 当日收盘(152.5)可差 2%，rdcf 引价时双口径标注；另证 HK PE 滞后陷阱在本股影响轻微(TTM 仅高 3.6%)，但重算 TTM=FY-H1prev+H1curr 流程仍须走——影响大小取决于中报利润跳升幅度而非陷阱是否存在
+- [2026-10-08 19:00] (ai) A 股产量口径张力（600989 案例）：聚烯烃年化产量可超名义产能 10%+（2026H1 297.31 万吨年化 595 vs 名义 520），系装置超负荷运行+统计口径（烯烃 vs 聚烯烃、含外购单体）混合——建模时产能×产量交叉验证出现矛盾不要硬算，按口径缺口在 gaps 声明，量增判断按满产满销处理
+- [2026-10-08 19:29] (ai) US 建模素材 annual.json 是单行超长 JSON（80KB+），Read 工具 64KB 上限直接报错且 limit 参数无效（单行无分行）；正确姿势：python 提取 item1_business/item7_mdna 到 raw/_staging/src_*.txt 再分段 Read（src_ 前缀不计写作量）——注意提取脚本别把临时文件误写到 raw/ 根目录，会污染 raw_text_volume 分母（glob *.json 只计 json，txt 不计，但仍污染目录）
+- [2026-10-08 19:31] (ai) A股 annual.json segments 陷阱（601326 案）：report_date 按年份前缀过滤会把半年报混进年报序列（2019 煤炭收入错读为 26.4 亿，实为半年报覆盖年报），必须按 '-12-' 过滤；另：JSON 分片装载前先跑一次 json.load 结构验证可拦住键名笔误（601899 案 impant/impact 相邻笔误，JSON 语法合法、装载不报错，但废键静默入库）
+- [2026-10-08 20:11] (ai) HK 建模素材字符串量极小（mainindicator 三表全是数字、_text_volume 只计字符串叶，HKF10 概况仅 ~2K 字符），lint 比值对 HK 形同虚设（02388=10.9x、01818=9.4x）——HK 卷宗质量靠 AI 自律：写作量对标 15-20K 字符（与 A/US 全量卷宗同量级），警惕未来 agent 用几百字符混过 30% 线的空心档案
+- [2026-10-08 20:11] (ai) US live quote 不可用时（BLBD 案）ask 走快照收盘价，gaps 声明 live quote 缺失并标收盘口径；另 lint/ask 的 resolve 链会先打 eastmoney searchapi suggest，当前返回非 JSON 连续 warn——代码前缀形式 US:BLBD 直接 resolve 成功，warn 无害可忽略
+- [2026-10-08 21:05] (ai) model lint 分母只统计 raw/ 根目录 *.json（raw_text_volume），filings/*.txt 年报全文与 raw/_staging/ 都不进比值——巨头年报乱码不推高门槛，但若要引用'信息量≥年报'的语义应按此口径理解（600938 验证）
+- [2026-10-08 21:05] (ai) pypdf 提取 A 股年报 PDF 中文大面积乱码时：数字与表格结构仍可靠可读（直接搜数字串定位），中文叙述用公司官网业绩新闻稿+上证报年报摘要+券商点评三源交叉核验后再写入卷宗（600938：递减率9.5%/派息0.73+0.55/研发54.81亿均此法核验）；港股披露易版 PDF 字体嵌入不同，可作重提回退
+- [2026-10-08 22:30] (ai) 给建模员 prompt 写公司特定背景前必须先核实代码↔公司对应（ask 或 master.csv）——US:AD 实为 Array Digital Infrastructure，我却凭印象写成 AdvanSix（真身是 ASIX），子智能体顺背景建了错位卷宗 models/US/ASIX（卷宗本身合格、若在队列算提前完成，但 US:AD 真身被跳过需补建）；教训：ticker 背景假设是 AI 的债，不是工具的

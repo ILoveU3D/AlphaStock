@@ -9,8 +9,8 @@ triggers:
   - Is X a buy
 commands:
   - ask
-version: 25
-updated_at: 2026-10-06T11:09:52
+version: 28
+updated_at: 2026-10-09T20:14:52
 ---
 
 # Playbook
@@ -84,3 +84,6 @@ Answer "what do you think of X" with a verdict first, evidence later.
 - [2026-10-05 22:48] (ai) 20-F申报方(TSM/ASML等ADR)在SEC companyconcept管道fail-closed:无基本面无报价只有K线,ask返回insufficient data;需补20-F/年报替代源
 - [2026-10-06 01:03] (ai) 美股Form4内部人方向核查:Sandbox内python requests可直连sec.gov(带UA头)——company_tickers.json取CIK→data.sec.gov/submissions取accession→Archives index.json找raw XML→解transactionCode(P/S/A/F/M)+10b5-1标记;WebFetch被SEC/反爬全挡,此管道是ADR内部人核查唯一通道
 - [2026-10-06 11:09] (ai) HK ex-div day quirk (03306 2026-10-06): pool dcf core 88.9 @cum 23.10 vs ask dcf 95 @ex-div 21.44 with model fair unchanged at 32.6 - the dividend is not netted anywhere; rule: net the DPS out of model fair before citing upside or ranking on ex-div days ((32.6-1.81)/21.44=+44%, not 32.6/21.44=+52%)
+- [2026-10-08 22:40] (ai) 强制链路(2026-10-04):任何股票任务先查模型新鲜度(model status,STALE先更新)→模型数据与大师决断同级→三核核心;只跑ask --evidence不跑intel视为不完整(2026-09-09舆情铁律,大股东减持+业绩高增背离=经典卖出信号)
+- [2026-10-08 22:41] (ai) 利润构成核查(沐曦688802样本):单季扭亏需拆经营vs投资浮盈——2026Q2净利6.12亿中含8.87亿投资浮盈+OCF/净利过低+扣非占比过低=会计扭亏非业务扭亏,警惕财报粉饰信号
+- [2026-10-09 20:14] (ai) 2026-10-09 记忆入库迁移： ①倍数口径规则(2026-09-15用户明确)=任何倍数必须标注口径(TTM/LF/forward)且从工具箱实算，禁止记忆断言； ②信息核查原则(2026-09-14)=用户提及公司事件先搜公开渠道再定性，避免叙事替代核查(塔砖recall-is-not-verdict)

@@ -411,6 +411,21 @@ position-sizing discipline.
    strategies, 6:1 master veto — the fusion must catch that BEFORE
    recommending (docs/analysis/20260915_undervalued_gsl.md).
 
+## Git & memory boundaries (user-mandated)
+
+- **Git (2026-09-06)**: never push `main` directly — the repo has PR
+  protection but credentials can bypass it silently, so "push
+  succeeded" is NOT proof of compliance. Push only feature branches;
+  PRs are opened and merged by the user on GitHub. The AI never
+  calls the GitHub API to operate PRs on the user's behalf.
+- **Memory files (2026-10-03 / 2026-10-09)**: no local memory files
+  (`project_memory.md` prohibited 2026-10-03; `user_profile.md`
+  prohibited 2026-10-09). All memory lives in the system libraries:
+  philosophy → `tower/` bricks, procedures → `skills/` Field Notes,
+  user state → `users/` (LOCAL-ONLY, gitignored), seasons →
+  `trading/seasons/`. New user mandates are recorded at their proper
+  layer at conversation time, never in scratch memory files.
+
 ## Self-refinement protocol (leave the toolkit smarter)
 
 After answering, if you hit a quirk or found a better procedure

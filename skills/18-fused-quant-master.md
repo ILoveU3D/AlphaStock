@@ -17,8 +17,8 @@ commands:
   - ask X --evidence
   - intel X
   - recommend --user me
-version: 36
-updated_at: 2026-10-08T14:50:02
+version: 40
+updated_at: 2026-10-09T20:42:29
 ---
 
 # Playbook
@@ -275,3 +275,7 @@ Output shape (hard rules):
 - [2026-10-06 15:50] (ai) 模型锚点引用须核对 result.json 的 updated_at:10-06 journal 仍引用 10-02 HRMY 公允113.54并称非stale,但 10-04 建模战役批量重建已把 2029 专利悬崖做进 bear/base(公允降至63.17);journal 里的模型数字会过时,决策前须重读 models/<mkt>/<code>/result.json 原值
 - [2026-10-06 22:29] (ai) SLDE案例(2026-10-06): L1池顶core=100的SLDE是无模型+无文化蒸馏的佛州住宅财险(ROE 57%/profit_yoy +121%/FCF yield 28%)——宽池头部无model.json标的的dcf核是FCF-yield锚，周期顶金融股该锚系统性虚高(dcf core=100无模型支撑)；NUTX core 97同型(微市值+90%波动+52周高位98分位+曾profit_spike史)。L3前置检查：池顶名字无模型时先问FCF yield是周期顶还是结构稀缺(scarcity-multiple-rule周期模板)，GSL否决链的金融变体
 - [2026-10-08 14:50] (ai) US FPI 公司（如 PLGO/FIHL，百慕大等外国私人发行人）年报为 20-F 而非 10-K：fetch_annual_us 的 10-K 硬匹配会 fail-closed，annual.json 为空导致 model gather 缺核心素材——建模前先查 submissions 里有无 20-F，有则手工抓取并切片 Item 4（业务）/Item 5（MD&A）存为同构 annual.json，再把此盲区记入该司模型 gaps
+- [2026-10-08 17:59] (ai) HK 口径对账技巧：东财港股 PE_TTM 常为静态口径（用上一年报归母），验证法是「market_cap / pe = 隐含净利」与官方年报归母净利精确对账（01070 实证：453.77 亿/18.19 = 24.95 亿港元，恰等于 FY2025 归母）；中报利润跳升后 TTM = FY归母 - 上年H1归母 + 本年H1归母，必须手工重算并在卷宗声明口径
+- [2026-10-08 22:40] (ai) 推荐不排斥持仓/已推荐股(2026-10-02用户明确):霸榜持久性=误价真实性正向信号须显式呈现;输出=霸榜股(持有即推荐,标注折扣收敛/仍宽状态)+新首选双列
+- [2026-10-09 20:04] (ai) 2026-10-09 用户方法论指令(塔砖model-is-weapon-not-operator): 模型与大师圆桌=参考层,任何一方不构成否决;最终买/不买决策必须by token产出,质料=商业模式+企业文化+DCF三核(只能深度调研获得,无模型可替代);L4裁决时若大师强烈倾向与模型结论冲突,义务=点名分歧坐标并深度思考,而非取交集或任一服从
+- [2026-10-09 20:42] (ai) 2026-10-09 波司登模型审计课(03998,10-08 changelog): 净债务陷阱——旧模型用'总负债110.59亿-现金29.77亿=80.8亿净债务',误把经营性负债(应付/合约负债)当债务;正确口径=计息负债-现金,FY2026实为净现金65.8亿,一单修正摆动147亿CNY权益价值(公允6.17→8.04)。建模规则:net_debt只算interest-bearing,经营负债进NWC不进net_debt;build前必须过这一眼
