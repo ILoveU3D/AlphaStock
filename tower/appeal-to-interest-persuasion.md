@@ -12,9 +12,9 @@ links:
   - "refines:incentive-asymmetry"
   - "refines:two-track-analysis"
   - "refines:braun-5w-accounting-limits"
-version: 1
+version: 2
 created_at: 2026-10-11T02:22:37
-updated_at: 2026-10-11T02:22:37
+updated_at: 2026-10-11T02:41:28
 ---
 
 ## 论证
@@ -23,3 +23,6 @@ updated_at: 2026-10-11T02:22:37
 机制：道德劝说的失败路径=触发地位威胁（'你比谁高尚？'）→激发对抗性辩护；利益劝说的成功路径=把正确行为映射到对方既有的目标函数（安全、财富、声誉）上，让对方自己得出结论；鲜活例子=把抽象利益具象成可想象的损失场景（记忆与情感双通道）。
 
 迁移：向管理层/用户提建议时先画对方利益图（这建议怎么帮他保住他最怕失去的）；'这是对的'永远配上'这对你的利害是什么'；反腐败/反欺诈内控设计的沟通语言=勒索风险+声誉风险+家庭风险，不是'你这样不道德'；写作纪律：每个劝诫性结论配一个Salomon式反例（损失具象化）。
+
+## Field Notes
+- [2026-10-11 02:41] (ai) (ai) Talk Nine双案例：①诺奖经济学家对伯克希尔成功的解释连续加码——从'一个标准差的运气'到六个σ（'人们笑得太厉害，他只好不这么说了'），然后180度反转：'还是六个σ，不过是六个σ的技能'——芒格：'这段可悲的历史证明了富兰克林在Poor Richard's Almanack里的话：If you would persuade, appeal to interest and not to reason——这个人改变愚蠢观点是在激励逼他改的时候，之前绝不改'；②UCLA Jules Stein眼科研究所：问'为什么白内障还只用彻底过时的术式'——'查理，这术式教起来太美妙了'；停用是在'几乎所有病人用脚投票之后'——'想改变结论，again，appeal to interest and not to reason'。
