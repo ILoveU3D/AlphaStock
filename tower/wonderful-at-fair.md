@@ -8,9 +8,9 @@ tags:
   - capital
   - value
 links:
-version: 2
+version: 3
 created_at: 2026-09-20T16:24:21
-updated_at: 2026-10-10T20:24:16
+updated_at: 2026-10-11T01:22:19
 ---
 
 ## 论证
@@ -19,3 +19,4 @@ updated_at: 2026-10-10T20:24:16
 ## Field Notes
 - [2026-09-18 00:00] (ai) 成砖：自 skills/09 芒格手册蒸馏。
 - [2026-10-10 20:24] (ai) 考古1988年信（library/buffett/1988.txt）：'合理价格'的当年操作定义不是低倍数——可乐买入价约15倍盈利/约5倍净资产，高于同期道指约11倍，信中对倍数只字未提；决策函数自述='在自认理解的标的间求税后数学期望最大化、不论资产类别'。合理=期望现值的安全边际，不便宜≠不合理，便宜也≠合理。
+- [2026-10-11 01:22] (ai) 1989年原文：It is far better to buy a wonderful company at a fair price than a fair company at a wonderful price——芒格逼出的第二次进化（第一次是Graham教的烟蒂法）。1996年演化版：宁要确定的好结果，不要hopeful的伟大结果——Inevitables（可乐/吉列式必然者）给合理价就重仓，Impostors（伪装者）无论多便宜不碰。

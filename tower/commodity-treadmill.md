@@ -9,10 +9,13 @@ tags:
   - moat
 links:
   - "refines:differentiation-survival-law"
-version: 1
+version: 2
 created_at: 2026-10-11T00:37:55
-updated_at: 2026-10-11T00:37:55
+updated_at: 2026-10-11T01:23:40
 ---
 
 ## 论证
 （待论证）
+
+## Field Notes
+- [2026-10-11 01:23] (ai) USAir教训链四段完整呈现：1990年你不可能比最蠢的对手聪明太多（价格战由最蠢者定价）；1991年自Kitty Hawk以来航空业累计净亏损；1994年解剖：管制期高成本可转嫁的类比害死我——非监管商品生意成本必须降到竞争水平否则灭绝，这本该对我显而易见；Kelleher：破产法院对航司已成疗养院（竞争者从破产法庭里反复爬出来低价竞争）；You don't have to make it back the way that you lost it——不必从跌倒处爬起，换跑道即可。

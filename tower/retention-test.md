@@ -9,10 +9,13 @@ tags:
   - dividend
 links:
   - "derives-from:dcf-universal-law"
-version: 1
+version: 2
 created_at: 2026-10-11T00:37:51
-updated_at: 2026-10-11T00:37:51
+updated_at: 2026-10-11T01:23:34
 ---
 
 ## 论证
 （待论证）
+
+## Field Notes
+- [2026-10-11 01:23] (ai) 1992年Alice警告：jam tomorrow and jam yesterday - but never jam today——管理层永远许诺明天的留存回报。检验的行业表达：最好的生意等于长期能以高回报率配置大量增量资本的生意（留存通过检验）；最坏的生意等于以低回报吞掉大量资本的生意（留存失败）；多数高回报生意不需要多少增量资本——它们应该分红回购。

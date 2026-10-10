@@ -8,9 +8,9 @@ tags:
   - capital
   - holding
 links:
-version: 2
+version: 3
 created_at: 2026-09-20T16:24:22
-updated_at: 2026-10-11T00:43:19
+updated_at: 2026-10-11T01:23:07
 ---
 
 ## 论证
@@ -19,3 +19,4 @@ updated_at: 2026-10-11T00:43:19
 ## Field Notes
 - [2026-09-18 00:00] (ai) 成砖：自 skills/17 散户乙手册蒸馏。
 - [2026-10-11 00:43] (ai) 巴菲特1986年永久持有宣言：Cap Cities/GEICO/华邮三大即使显著高估也不卖——偏好的持有期是永远；1983年已立规：拒绝gin rummy式管理（每轮换掉最不看好的牌）；不卖好生意的算术=复利中断成本高于高估后的均值回归收益；与散户乙'永不卖=不为价格卖'逐字互证。
+- [2026-10-11 01:23] (ai) 1993年持有檄文：CEO绝不卖crown jewel子公司，却听经纪人一句涨多了就换股——You can't go broke taking a profit是最糟糕的advice；以持有整个生意的坚韧持有一小份。1996年：乔丹不会因公牛股价涨了就卖球队——Inactivity strikes us as intelligent behavior。

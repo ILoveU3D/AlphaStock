@@ -12,10 +12,13 @@ links:
   - "derives-from:business-model-first"
   - "refines:culture-veto-first"
   - "applies-to:time-is-friend"
-version: 1
+version: 2
 created_at: 2026-10-10T21:00:09
-updated_at: 2026-10-10T21:00:09
+updated_at: 2026-10-11T01:23:37
 ---
 
 ## 论证
 （待论证）
+
+## Field Notes
+- [2026-10-11 01:23] (ai) 1989年：只与喜欢、信任、钦佩的人合作——我从未与坏人做成过一笔好交易。1990年Watson：I am no genius, but I am smart in spots and I stay around those spots。1996年Candler 1896年引文（可乐配方买定）+我们为太空探索鼓掌，但宁可自己不搭船——尊敬但回避某些生意。
