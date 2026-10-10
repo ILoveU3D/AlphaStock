@@ -8,7 +8,7 @@
 
 **Tech Stack:** Python 3.10+, pandas, requests (existing `fetch/http.Fetcher`). No new dependencies.
 
-**Spec:** `docs/superpowers/specs/2026-09-08-intel-sentiment-system-design.md` §7 (情报通道), §11.2 (P2 scope). P4 items (master gates, skill 16, AGENTS/README) are out of scope here.
+**Spec:** `docs/specs/2026-09-08-intel-sentiment-system-design.md` §7 (情报通道), §11.2 (P2 scope). P4 items (master gates, skill 16, AGENTS/README) are out of scope here.
 
 ---
 

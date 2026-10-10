@@ -44,3 +44,6 @@ tmp/
 *.log
 .DS_Store
 Thumbs.db
+
+# Session scratch helpers (AGENTS.md: scratch goes to tmp/ or OS temp)
+_tmp_*

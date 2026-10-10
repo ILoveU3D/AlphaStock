@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** 落地 spec v2.1（`docs/superpowers/specs/2026-09-05-cashflow-first-valuation-design.md`）：年报口径的 fcf_yield / borrowed_dividend / capex_to_ocf 三因子（A/HK/US 三市场），ocf_yield 年报口径修正，四位大师 gates 吸收，ask 输出与判断层 Field Notes。
+**Goal:** 落地 spec v2.1（`docs/specs/2026-09-05-cashflow-first-valuation-design.md`）：年报口径的 fcf_yield / borrowed_dividend / capex_to_ocf 三因子（A/HK/US 三市场），ocf_yield 年报口径修正，四位大师 gates 吸收，ask 输出与判断层 Field Notes。
 
 **Architecture:** 数据层三个新抓取（A 年报现金流 + A 分红事件表批量、HK per-stock 现金流量表、US frames 三概念）→ pipeline 层 `load_annual_cashflows` 统一装载 + `add_cashflow_factors` 统一算因子（build_master 与 build_watchlist 共用）→ 展示层（ask 旗标/指标、EVIDENCE_METRICS、peer 百分位）→ 策略层（masters gates、user set-style、Field Notes）。所有新列对旧快照 NaN 容错。
 

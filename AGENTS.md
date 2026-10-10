@@ -447,6 +447,10 @@ system trustworthy.
   (no `libs/` folder — user-mandated policy): if dependencies are
   missing, stop and ask the user to install them.
 - Tests: `python -B -m pytest tests -q` (each file standalone).
+- Scratch files (one-off analysis helpers, ad-hoc JSON dumps) go to
+  `tmp/` (gitignored) or the OS temp dir — never the repo root;
+  anything left in the root must be committed deliberately or deleted
+  at session end.
 - Data lives in `data/snapshots/YYYYMMDD/`; never edit snapshot files.
   `data/` as a whole is **regenerable run-time state — safe to wipe
   daily** (user-mandated policy; `fetch` rebuilds it). Per-user
