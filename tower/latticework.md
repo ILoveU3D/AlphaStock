@@ -8,9 +8,9 @@ tags:
   - capital
   - method
 links:
-version: 1
+version: 2
 created_at: 2026-09-20T16:24:21
-updated_at: 2026-09-20T16:24:21
+updated_at: 2026-10-11T02:17:35
 ---
 
 ## 论证
@@ -18,3 +18,4 @@ updated_at: 2026-09-20T16:24:21
 
 ## Field Notes
 - [2026-09-18 00:00] (ai) 成砖：自 skills/09 芒格手册蒸馏；本塔即该砖的基建。
+- [2026-10-11 02:17] (ai) (ai) Talk Two（穷查理宝典USC 1994）模型预算：'80或90个重要模型就能运载成为世俗智者90%的货——其中只有一小撮真正载重货'；学科来源约束：模型必须来自多个学科（'世界的全部智慧不会藏在一个学术小系'）；第一批载重模型=复利、费马-帕斯卡初等概率、决策树、会计（知其极限）、backup system、breakpoint、critical mass。
