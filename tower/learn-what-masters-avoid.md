@@ -12,9 +12,10 @@ links:
   - "refines:three-nevers"
   - "applies-to:weight-archaeology-reading"
   - "derives-from:circle-of-competence"
-version: 2
+  - "applies-to:master-duan"
+version: 3
 created_at: 2026-10-10T21:06:58
-updated_at: 2026-10-10T21:52:53
+updated_at: 2026-10-11T02:46:36
 ---
 
 ## 论证

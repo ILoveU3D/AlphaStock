@@ -11,9 +11,10 @@ tags:
 links:
   - "refines:dcf-universal-law"
   - "refines:hard-science-organizing-ethos"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:28:35
-updated_at: 2026-10-11T02:28:35
+updated_at: 2026-10-11T02:48:28
 ---
 
 ## 论证

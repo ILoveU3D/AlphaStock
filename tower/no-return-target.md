@@ -12,9 +12,10 @@ links:
   - "refines:mr-market"
   - "applies-to:reference-frame-drift"
   - "derives-from:causes-not-outcomes"
-version: 3
+  - "applies-to:master-duan"
+version: 4
 created_at: 2026-10-10T21:33:50
-updated_at: 2026-10-11T00:43:37
+updated_at: 2026-10-11T02:47:03
 ---
 
 ## 论证

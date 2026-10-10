@@ -10,9 +10,10 @@ tags:
 links:
   - "refines:skin-in-the-game"
   - "applies-to:ceo-measurement-as-culture-evidence"
-version: 8
+  - "applies-to:master-buffett"
+version: 9
 created_at: 2026-10-11T00:42:34
-updated_at: 2026-10-11T02:33:55
+updated_at: 2026-10-11T02:46:20
 ---
 
 ## 论证

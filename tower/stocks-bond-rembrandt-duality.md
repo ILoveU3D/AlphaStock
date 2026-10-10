@@ -13,9 +13,10 @@ links:
   - "refines:manias-panics-crashes"
   - "refines:market-pari-mutuel"
   - "applies-to:dcf-universal-law"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:32:07
-updated_at: 2026-10-11T02:32:07
+updated_at: 2026-10-11T02:48:37
 ---
 
 ## 论证

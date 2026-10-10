@@ -11,9 +11,10 @@ tags:
 links:
   - "refines:thinking-fast-slow"
   - "refines:poor-charlies-almanack"
-version: 2
+  - "applies-to:master-munger"
+version: 3
 created_at: 2026-10-11T02:07:46
-updated_at: 2026-10-11T02:39:55
+updated_at: 2026-10-11T02:49:09
 ---
 
 ## 论证

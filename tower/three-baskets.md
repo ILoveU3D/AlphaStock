@@ -11,9 +11,10 @@ tags:
 links:
   - "refines:circle-of-competence"
   - "refines:poor-charlies-almanack"
-version: 2
+  - "applies-to:master-munger"
+version: 3
 created_at: 2026-10-11T02:07:43
-updated_at: 2026-10-11T02:28:43
+updated_at: 2026-10-11T02:48:59
 ---
 
 ## 论证

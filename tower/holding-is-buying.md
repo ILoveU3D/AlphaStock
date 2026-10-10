@@ -10,9 +10,10 @@ tags:
 links:
   - "derives-from:dcf-universal-law"
   - "refines:cost-blind-trading"
-version: 1
+  - "applies-to:master-duan"
+version: 2
 created_at: 2026-10-10T23:05:57
-updated_at: 2026-10-10T23:05:57
+updated_at: 2026-10-11T02:46:16
 ---
 
 ## 论证

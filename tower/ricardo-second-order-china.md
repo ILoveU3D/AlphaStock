@@ -12,9 +12,10 @@ tags:
 links:
   - "refines:consequences-have-consequences"
   - "applies-to:chip-war"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:41:15
-updated_at: 2026-10-11T02:41:15
+updated_at: 2026-10-11T02:48:05
 ---
 
 ## 论证

@@ -12,9 +12,10 @@ links:
   - "applies-to:learn-what-masters-avoid"
   - "refines:culture-veto-first"
   - "derives-from:business-model-first"
-version: 1
+  - "applies-to:master-duan"
+version: 2
 created_at: 2026-10-10T22:22:34
-updated_at: 2026-10-10T22:22:34
+updated_at: 2026-10-11T02:49:27
 ---
 
 ## 论证

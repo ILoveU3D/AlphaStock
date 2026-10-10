@@ -12,9 +12,10 @@ links:
   - "derives-from:business-model-first"
   - "refines:differentiation-survival-law"
   - "applies-to:causes-not-outcomes"
-version: 2
+  - "applies-to:master-duan"
+version: 3
 created_at: 2026-10-10T22:47:12
-updated_at: 2026-10-10T23:07:29
+updated_at: 2026-10-11T02:47:41
 ---
 
 ## 论证

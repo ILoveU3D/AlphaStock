@@ -12,9 +12,10 @@ tags:
 links:
   - "refines:franchise-moat"
   - "derives-from:dcf-universal-law"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:17:24
-updated_at: 2026-10-11T02:17:24
+updated_at: 2026-10-11T02:49:18
 ---
 
 ## 论证

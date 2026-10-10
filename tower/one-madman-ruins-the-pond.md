@@ -11,9 +11,10 @@ tags:
 links:
   - "applies-to:franchise-moat"
   - "applies-to:three-kills"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:17:22
-updated_at: 2026-10-11T02:17:22
+updated_at: 2026-10-11T02:47:12
 ---
 
 ## 论证

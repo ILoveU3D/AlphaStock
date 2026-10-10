@@ -12,9 +12,10 @@ links:
   - "derives-from:business-model-first"
   - "refines:culture-veto-first"
   - "applies-to:time-is-friend"
-version: 3
+  - "applies-to:master-duan"
+version: 4
 created_at: 2026-10-10T21:00:09
-updated_at: 2026-10-11T01:58:29
+updated_at: 2026-10-11T02:48:07
 ---
 
 ## 论证

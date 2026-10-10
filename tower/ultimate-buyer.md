@@ -11,9 +11,10 @@ tags:
 links:
   - "derives-from:dcf-universal-law"
   - "tension:attention-economy"
-version: 3
+  - "applies-to:master-duan"
+version: 4
 created_at: 2026-09-22T14:40:35
-updated_at: 2026-09-22T14:44:51
+updated_at: 2026-10-11T02:49:11
 ---
 
 ## 论证

@@ -11,9 +11,10 @@ tags:
 links:
   - "refines:eminent-dead-friends"
   - "refines:poor-charlies-almanack"
-version: 2
+  - "applies-to:master-munger"
+version: 3
 created_at: 2026-10-11T02:11:35
-updated_at: 2026-10-11T02:26:52
+updated_at: 2026-10-11T02:49:22
 ---
 
 ## 论证

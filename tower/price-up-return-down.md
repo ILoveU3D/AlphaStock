@@ -10,9 +10,10 @@ tags:
 links:
   - "refines:free-shares"
   - "derives-from:dcf-universal-law"
-version: 2
+  - "applies-to:master-sanhuyi"
+version: 3
 created_at: 2026-10-11T00:12:35
-updated_at: 2026-10-11T02:36:41
+updated_at: 2026-10-11T02:47:30
 ---
 
 ## 论证

@@ -13,9 +13,10 @@ links:
   - "derives-from:dcf-universal-law"
   - "refines:franchise-moat"
   - "applies-to:cloud-utility-transition"
-version: 2
+  - "applies-to:master-munger"
+version: 3
 created_at: 2026-10-11T02:17:16
-updated_at: 2026-10-11T02:41:26
+updated_at: 2026-10-11T02:47:39
 ---
 
 ## 论证

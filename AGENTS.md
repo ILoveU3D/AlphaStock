@@ -206,6 +206,11 @@ Notes; `refuted` bricks are never deleted (errors are assets).
    brick (`tower add`, then `tower note` for refinements); books are
    absorbed as `principle` bricks and promoted to `law` only after
    our own verification (`tower set --status law --reason "..."`).
+   Master-attributed bricks are linked `applies-to: master-<id>`
+   (hub bricks master-duan/buffett/munger/graham/livermore/sheng/
+   sanhuyi) **at absorb time**, so `tower search master-<id>`
+   always returns the full theory set for the L3 master vote
+   (tower→L3 channel, skills/18; user mandate 2026-10-11).
 3. Answers stay non-evasive: brick × current reality = concrete
    judgment; a conditional verdict must state its conditions, not
    hedge.
@@ -398,7 +403,9 @@ position-sizing discipline.
    written argumentation duty (business model: moat + machine
    lifecycle; culture: founder + 本分审计, behavior-level evidence
    only; DCF: reverse-DCF implied expectations as the starting point)
-   + 7-master qualitative vote on top (playbooks 07-12, 17) →
+   + 7-master qualitative vote on top (playbooks 07-12, 17 + tower
+   hub bricks `master-<id>` via `tower search` — tower→L3 channel,
+   vote reasons cite brick IDs, skills/18) →
    **L4** AI fused verdict (user style + market
    conditions; NOT a mechanical gate intersection). Close with
    position discipline per Duan — enter only if a -50% drawdown on the

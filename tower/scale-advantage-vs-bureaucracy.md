@@ -12,9 +12,10 @@ tags:
 links:
   - "refines:franchise-moat"
   - "applies-to:institutional-imperative"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:17:11
-updated_at: 2026-10-11T02:17:11
+updated_at: 2026-10-11T02:48:19
 ---
 
 ## 论证

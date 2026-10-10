@@ -12,9 +12,10 @@ tags:
 links:
   - "refines:deferred-tax-float"
   - "derives-from:dcf-universal-law"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:17:31
-updated_at: 2026-10-11T02:17:31
+updated_at: 2026-10-11T02:48:50
 ---
 
 ## 论证

@@ -17,8 +17,8 @@ commands:
   - ask X --evidence
   - intel X
   - recommend --user me
-version: 40
-updated_at: 2026-10-09T20:42:29
+version: 42
+updated_at: 2026-10-11T02:51:33
 ---
 
 # Playbook
@@ -175,10 +175,33 @@ Hard rules:
 - Scores ∈ [0,100]; a scoreless note belongs in the analysis prose,
   not in the profile store.
 
+#### 塔→L3 通道（user mandate 2026-10-11）
+
+Each master's qualitative vote is tower-grounded, never improvised
+from memory:
+
+1. `tower search master-<id>` pulls that master's full theory set —
+   the 7 hub bricks (master-duan / master-buffett / master-munger /
+   master-graham / master-livermore / master-sheng / master-sanhuyi)
+   are the canonical entry; every master-attributed brick carries an
+   `applies-to: master-<id>` link (search matches the links field),
+   so newly distilled theory enters the next vote automatically.
+2. Bricks分流三类：选股/否决类 → vote input；仓位/纪律类
+   （concentration-by-understanding、free-shares 成本收回、
+   never-sell-for-price 等）→ 移交 L4 仓位纪律层，不入选票本身；
+   元认知/人生类 → 不接表决。
+3. Every vote reason cites its brick IDs（用户可审计）；a master
+   stance with no brick backing is marked 无砖 (playbook-only
+   judgment) — 裸判断降级展示。
+4. Thin hubs（2026-10-11 时点：graham 5 / livermore 2 / sheng 1
+   成员）vote playbook-primary until the library distillation
+   fattens them; hub bodies carry the 现状声明.
+
 Then the 7-master qualitative vote runs **on top of** the three-core
-review — each master votes from their own playbook lens (business
-model, culture, moat, earn/lose paths per the deepened playbooks
-07-12, 17; data via `ask X --evidence` + `intel X`):
+review — each master votes from their own playbook lens + tower brick
+set (business model, culture, moat, earn/lose paths per the deepened
+playbooks 07-12, 17; data via `ask X --evidence` + `intel X`; theory
+via `tower search master-<id>`):
 
 - Buffett: 三时代定位 + owner earnings + right people
 - Munger: 双轨分析 + 三筐 (In/Out/Too Hard) + Lollapalooza
@@ -279,3 +302,4 @@ Output shape (hard rules):
 - [2026-10-08 22:40] (ai) 推荐不排斥持仓/已推荐股(2026-10-02用户明确):霸榜持久性=误价真实性正向信号须显式呈现;输出=霸榜股(持有即推荐,标注折扣收敛/仍宽状态)+新首选双列
 - [2026-10-09 20:04] (ai) 2026-10-09 用户方法论指令(塔砖model-is-weapon-not-operator): 模型与大师圆桌=参考层,任何一方不构成否决;最终买/不买决策必须by token产出,质料=商业模式+企业文化+DCF三核(只能深度调研获得,无模型可替代);L4裁决时若大师强烈倾向与模型结论冲突,义务=点名分歧坐标并深度思考,而非取交集或任一服从
 - [2026-10-09 20:42] (ai) 2026-10-09 波司登模型审计课(03998,10-08 changelog): 净债务陷阱——旧模型用'总负债110.59亿-现金29.77亿=80.8亿净债务',误把经营性负债(应付/合约负债)当债务;正确口径=计息负债-现金,FY2026实为净现金65.8亿,一单修正摆动147亿CNY权益价值(公允6.17→8.04)。建模规则:net_debt只算interest-bearing,经营负债进NWC不进net_debt;build前必须过这一眼
+- [2026-10-11 02:51] (ai) 塔→L3通道落地(user mandate 2026-10-11): 7大师枢纽砖建立(master-duan 53成员/buffett 33/munger 70/graham 5/livermore 2/sheng 1/sanhuyi 6, 含conversation源按体系归属的dividend-backing-order与book:滚雪球), 成员砖applies-to回填, tower search master-<id>一次拉回全集(links字段参与匹配); 三分类=选股否决→L3表决/仓位纪律→L4/元认知不接; 表决理由强制引砖ID无砖降级; 后台书籍蒸馏队列并发加砖时, 每批吸收后必须即挂applies-to(吸收即链接, 已写入AGENTS.md入塔义务), 否则枢纽查询漏新砖

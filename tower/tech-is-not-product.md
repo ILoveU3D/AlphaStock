@@ -11,9 +11,10 @@ tags:
 links:
   - "derives-from:business-model-first"
   - "refines:differentiation-survival-law"
-version: 2
+  - "applies-to:master-duan"
+version: 3
 created_at: 2026-10-10T21:44:43
-updated_at: 2026-10-10T22:48:49
+updated_at: 2026-10-11T02:48:52
 ---
 
 ## 论证

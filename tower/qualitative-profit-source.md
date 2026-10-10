@@ -12,9 +12,10 @@ links:
   - "refines:rough-estimate-mandatory"
   - "derives-from:business-model-first"
   - "applies-to:keyhole-philosophy"
-version: 2
+  - "applies-to:master-duan"
+version: 3
 created_at: 2026-10-10T21:05:29
-updated_at: 2026-10-10T22:00:31
+updated_at: 2026-10-11T02:47:43
 ---
 
 ## 论证

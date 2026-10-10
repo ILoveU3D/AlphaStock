@@ -12,9 +12,10 @@ links:
   - "refines:circle-of-competence"
   - "refines:incentive-asymmetry"
   - "refines:two-track-analysis"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:22:29
-updated_at: 2026-10-11T02:22:29
+updated_at: 2026-10-11T02:47:16
 ---
 
 ## 论证

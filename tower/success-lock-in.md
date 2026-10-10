@@ -11,9 +11,10 @@ tags:
 links:
   - "derives-from:business-model-first"
   - "applies-to:end-state-elimination"
-version: 2
+  - "applies-to:master-duan"
+version: 3
 created_at: 2026-10-10T21:38:48
-updated_at: 2026-10-10T22:48:25
+updated_at: 2026-10-11T02:48:41
 ---
 
 ## 论证

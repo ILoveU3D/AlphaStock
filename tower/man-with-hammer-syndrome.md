@@ -11,9 +11,10 @@ tags:
 links:
   - "refines:latticework"
   - "refines:poor-charlies-almanack"
-version: 3
+  - "applies-to:master-munger"
+version: 4
 created_at: 2026-10-11T02:11:33
-updated_at: 2026-10-11T02:41:20
+updated_at: 2026-10-11T02:46:41
 ---
 
 ## 论证

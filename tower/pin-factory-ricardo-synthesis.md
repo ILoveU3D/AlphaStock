@@ -12,9 +12,10 @@ tags:
 links:
   - "refines:latticework"
   - "applies-to:wealth-of-nations"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:41:09
-updated_at: 2026-10-11T02:41:09
+updated_at: 2026-10-11T02:47:25
 ---
 
 ## 论证

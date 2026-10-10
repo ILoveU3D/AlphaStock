@@ -8,9 +8,10 @@ tags:
   - capital
   - buffett
 links:
-version: 1
+  - "applies-to:master-buffett"
+version: 2
 created_at: 2026-09-20T16:24:32
-updated_at: 2026-09-20T16:24:32
+updated_at: 2026-10-11T02:48:56
 ---
 
 ## 论证

@@ -13,9 +13,10 @@ links:
   - "refines:tech-is-not-product"
   - "applies-to:ceo-measurement-as-culture-evidence"
   - "derives-from:business-model-first"
-version: 1
+  - "applies-to:master-duan"
+version: 2
 created_at: 2026-10-10T22:22:25
-updated_at: 2026-10-10T22:22:25
+updated_at: 2026-10-11T02:47:37
 ---
 
 ## 论证

@@ -11,9 +11,10 @@ tags:
 links:
   - "derives-from:dcf-universal-law"
   - "refines:delisted-thought-experiment"
-version: 2
+  - "applies-to:master-duan"
+version: 3
 created_at: 2026-10-10T21:32:20
-updated_at: 2026-10-10T23:07:18
+updated_at: 2026-10-11T02:48:32
 ---
 
 ## 论证

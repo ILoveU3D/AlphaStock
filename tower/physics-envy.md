@@ -11,9 +11,10 @@ tags:
 links:
   - "refines:rough-estimate-mandatory"
   - "refines:poor-charlies-almanack"
-version: 3
+  - "applies-to:master-munger"
+version: 4
 created_at: 2026-10-11T02:07:53
-updated_at: 2026-10-11T02:41:22
+updated_at: 2026-10-11T02:47:21
 ---
 
 ## 论证

@@ -8,9 +8,10 @@ tags:
   - capital
   - holding
 links:
-version: 5
+  - "applies-to:master-sanhuyi"
+version: 6
 created_at: 2026-09-20T16:24:22
-updated_at: 2026-10-11T02:39:24
+updated_at: 2026-10-11T02:46:59
 ---
 
 ## 论证

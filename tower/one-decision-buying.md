@@ -12,9 +12,10 @@ links:
   - "refines:wonderful-at-fair"
   - "refines:never-sell-for-price"
   - "refines:poor-charlies-almanack"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:07:48
-updated_at: 2026-10-11T02:07:48
+updated_at: 2026-10-11T02:47:08
 ---
 
 ## 论证

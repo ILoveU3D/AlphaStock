@@ -11,9 +11,10 @@ tags:
   - regulation
 links:
   - "refines:market-pari-mutuel"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:41:18
-updated_at: 2026-10-11T02:41:18
+updated_at: 2026-10-11T02:47:01
 ---
 
 ## 论证

@@ -11,9 +11,10 @@ tags:
 links:
   - "refines:fooled-by-randomness"
   - "applies-to:error-taxonomy"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:07:49
-updated_at: 2026-10-11T02:07:49
+updated_at: 2026-10-11T02:48:21
 ---
 
 ## 论证

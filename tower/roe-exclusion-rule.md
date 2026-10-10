@@ -12,9 +12,10 @@ links:
   - "refines:ee-over-pe"
   - "derives-from:business-model-first"
   - "applies-to:ceo-measurement-as-culture-evidence"
-version: 1
+  - "applies-to:master-duan"
+version: 2
 created_at: 2026-10-10T21:57:26
-updated_at: 2026-10-10T21:57:26
+updated_at: 2026-10-11T02:48:13
 ---
 
 ## 论证

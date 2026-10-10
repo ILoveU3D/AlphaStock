@@ -13,9 +13,10 @@ links:
   - "refines:error-taxonomy"
   - "refines:temperament-wiring"
   - "derives-from:dcf-universal-law"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:22:23
-updated_at: 2026-10-11T02:22:23
+updated_at: 2026-10-11T02:47:48
 ---
 
 ## 论证

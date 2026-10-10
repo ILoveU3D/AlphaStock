@@ -12,9 +12,10 @@ links:
   - "derives-from:dcf-universal-law"
   - "refines:model-is-weapon-not-operator"
   - "applies-to:understanding-drop-test"
-version: 10
+  - "applies-to:master-duan"
+version: 11
 created_at: 2026-10-10T21:02:42
-updated_at: 2026-10-11T02:08:09
+updated_at: 2026-10-11T02:48:15
 ---
 
 ## 论证

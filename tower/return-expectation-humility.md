@@ -10,9 +10,10 @@ tags:
 links:
   - "derives-from:dcf-universal-law"
   - "refines:minimum-sufficient-speed"
-version: 4
+  - "applies-to:master-duan"
+version: 5
 created_at: 2026-10-10T23:06:04
-updated_at: 2026-10-11T00:43:11
+updated_at: 2026-10-11T02:48:02
 ---
 
 ## 论证
