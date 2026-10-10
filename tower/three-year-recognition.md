@@ -12,9 +12,10 @@ links:
   - "refines:mr-market"
   - "derives-from:dcf-universal-law"
   - "applies-to:reference-frame-drift"
-version: 1
+  - "applies-to:master-duan"
+version: 2
 created_at: 2026-10-10T21:02:43
-updated_at: 2026-10-10T21:02:43
+updated_at: 2026-10-11T02:49:05
 ---
 
 ## 论证

@@ -8,9 +8,10 @@ tags:
   - capital
   - value
 links:
-version: 2
+  - "applies-to:master-graham"
+version: 3
 created_at: 2026-09-20T16:24:21
-updated_at: 2026-10-11T00:43:22
+updated_at: 2026-10-11T02:47:34
 ---
 
 ## 论证

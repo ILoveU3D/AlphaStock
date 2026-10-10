@@ -12,9 +12,10 @@ tags:
 links:
   - "refines:systems-hard-to-cheat"
   - "applies-to:benfen-motive-purity"
-version: 3
+  - "applies-to:master-munger"
+version: 4
 created_at: 2026-10-11T02:32:09
-updated_at: 2026-10-11T02:41:33
+updated_at: 2026-10-11T02:49:24
 ---
 
 ## 论证

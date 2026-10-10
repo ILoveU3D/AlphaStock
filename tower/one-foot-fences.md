@@ -12,9 +12,10 @@ links:
   - "refines:circle-of-competence"
   - "refines:market-pari-mutuel"
   - "refines:concentration-by-understanding"
-version: 2
+  - "applies-to:master-munger"
+version: 3
 created_at: 2026-10-11T02:22:20
-updated_at: 2026-10-11T02:28:41
+updated_at: 2026-10-11T02:47:10
 ---
 
 ## 论证

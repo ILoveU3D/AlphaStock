@@ -10,9 +10,10 @@ tags:
 links:
   - "refines:franchise-moat"
   - "applies-to:terminal-value-two-forms"
-version: 1
+  - "applies-to:master-buffett"
+version: 2
 created_at: 2026-10-11T01:21:17
-updated_at: 2026-10-11T01:21:17
+updated_at: 2026-10-11T02:47:58
 ---
 
 ## 论证

@@ -13,9 +13,10 @@ links:
   - "refines:keyhole-philosophy"
   - "applies-to:paper-loss-vs-real-loss"
   - "refines:reference-frame-drift"
-version: 5
+  - "applies-to:master-duan"
+version: 6
 created_at: 2026-10-10T20:51:31
-updated_at: 2026-10-10T23:06:57
+updated_at: 2026-10-11T02:49:13
 ---
 
 ## 论证

@@ -12,9 +12,10 @@ links:
   - "derives-from:circle-of-competence"
   - "refines:understanding-drop-test"
   - "applies-to:learn-what-masters-avoid"
-version: 2
+  - "applies-to:master-duan"
+version: 3
 created_at: 2026-10-10T21:30:56
-updated_at: 2026-10-10T21:57:30
+updated_at: 2026-10-11T02:47:05
 ---
 
 ## 论证

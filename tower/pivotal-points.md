@@ -8,9 +8,10 @@ tags:
   - capital
   - timing
 links:
-version: 2
+  - "applies-to:master-livermore"
+version: 3
 created_at: 2026-09-20T16:24:22
-updated_at: 2026-09-22T14:54:20
+updated_at: 2026-10-11T02:47:27
 ---
 
 ## 论证

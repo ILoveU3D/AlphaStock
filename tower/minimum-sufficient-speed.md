@@ -12,9 +12,10 @@ links:
   - "derives-from:compounding"
   - "applies-to:error-taxonomy"
   - "refines:three-nevers"
-version: 4
+  - "applies-to:master-duan"
+version: 5
 created_at: 2026-10-10T21:52:46
-updated_at: 2026-10-10T23:07:53
+updated_at: 2026-10-11T02:46:52
 ---
 
 ## 论证

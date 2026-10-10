@@ -11,9 +11,10 @@ tags:
 links:
   - "refines:two-track-analysis"
   - "applies-to:materialist-lens-and-its-boundary"
-version: 3
+  - "applies-to:master-munger"
+version: 4
 created_at: 2026-10-11T02:22:16
-updated_at: 2026-10-11T02:46:07
+updated_at: 2026-10-11T02:46:18
 ---
 
 ## 论证

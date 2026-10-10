@@ -13,9 +13,10 @@ links:
   - "refines:end-state-elimination"
   - "applies-to:culture-veto-first"
   - "derives-from:business-model-first"
-version: 4
+  - "applies-to:master-duan"
+version: 5
 created_at: 2026-10-10T22:47:03
-updated_at: 2026-10-11T01:58:56
+updated_at: 2026-10-11T02:48:39
 ---
 
 ## 论证

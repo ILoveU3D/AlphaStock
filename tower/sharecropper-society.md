@@ -9,9 +9,10 @@ tags:
   - currency
 links:
   - "refines:inflation-tax"
-version: 1
+  - "applies-to:master-buffett"
+version: 2
 created_at: 2026-10-11T01:56:24
-updated_at: 2026-10-11T01:56:24
+updated_at: 2026-10-11T02:48:26
 ---
 
 ## 论证

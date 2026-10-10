@@ -8,9 +8,10 @@ tags:
   - capital
   - method
 links:
-version: 6
+  - "applies-to:master-munger"
+version: 7
 created_at: 2026-09-20T16:24:21
-updated_at: 2026-10-11T02:45:54
+updated_at: 2026-10-11T02:46:32
 ---
 
 ## 论证

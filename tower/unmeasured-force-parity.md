@@ -12,9 +12,10 @@ tags:
 links:
   - "refines:physics-envy"
   - "tension:galileo-numerical-fluency"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:30:31
-updated_at: 2026-10-11T02:30:31
+updated_at: 2026-10-11T02:49:16
 ---
 
 ## 论证

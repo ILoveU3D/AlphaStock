@@ -12,9 +12,10 @@ tags:
 links:
   - "refines:latticework"
   - "applies-to:untapped-pricing-power"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:41:06
-updated_at: 2026-10-11T02:41:06
+updated_at: 2026-10-11T02:47:32
 ---
 
 ## 论证

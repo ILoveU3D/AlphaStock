@@ -9,9 +9,10 @@ tags:
   - action
 links:
   - "refines:black-swan"
-version: 2
+  - "applies-to:master-buffett"
+version: 3
 created_at: 2026-10-11T01:55:55
-updated_at: 2026-10-11T02:37:43
+updated_at: 2026-10-11T02:47:06
 ---
 
 ## 论证

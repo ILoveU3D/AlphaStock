@@ -10,9 +10,10 @@ tags:
 links:
   - "derives-from:dcf-universal-law"
   - "refines:paper-loss-vs-real-loss"
-version: 2
+  - "applies-to:master-sanhuyi"
+version: 3
 created_at: 2026-10-11T00:12:30
-updated_at: 2026-10-11T02:39:22
+updated_at: 2026-10-11T02:49:01
 ---
 
 ## 论证

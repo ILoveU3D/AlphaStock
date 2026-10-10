@@ -13,9 +13,10 @@ links:
   - "refines:incentive-asymmetry"
   - "applies-to:benfen-motive-purity"
   - "applies-to:institutional-imperative"
-version: 3
+  - "applies-to:master-munger"
+version: 4
 created_at: 2026-10-11T02:22:19
-updated_at: 2026-10-11T02:41:35
+updated_at: 2026-10-11T02:48:46
 ---
 
 ## 论证

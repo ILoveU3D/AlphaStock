@@ -12,9 +12,10 @@ tags:
 links:
   - "refines:franchise-moat"
   - "applies-to:cloud-utility-transition"
-version: 1
+  - "applies-to:master-munger"
+version: 2
 created_at: 2026-10-11T02:17:18
-updated_at: 2026-10-11T02:17:18
+updated_at: 2026-10-11T02:48:43
 ---
 
 ## 论证

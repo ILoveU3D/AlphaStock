@@ -12,9 +12,10 @@ tags:
 links:
   - "derives-from:dcf-universal-law"
   - "refines:concentration-by-understanding"
-version: 2
+  - "applies-to:master-munger"
+version: 3
 created_at: 2026-10-11T02:17:13
-updated_at: 2026-10-11T02:41:24
+updated_at: 2026-10-11T02:46:47
 ---
 
 ## 论证

@@ -8,9 +8,10 @@ tags:
   - capital
   - value-investing
 links:
-version: 2
+  - "applies-to:master-graham"
+version: 3
 created_at: 2026-09-20T16:24:31
-updated_at: 2026-10-11T00:43:17
+updated_at: 2026-10-11T02:46:28
 ---
 
 ## 论证

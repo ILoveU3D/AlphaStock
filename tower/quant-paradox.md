@@ -10,9 +10,10 @@ tags:
 links:
   - "refines:data-cannot-buy"
   - "applies-to:model-is-weapon-not-operator"
-version: 1
+  - "applies-to:master-duan"
+version: 2
 created_at: 2026-10-10T23:06:26
-updated_at: 2026-10-10T23:06:26
+updated_at: 2026-10-11T02:47:46
 ---
 
 ## 论证

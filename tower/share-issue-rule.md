@@ -9,9 +9,10 @@ tags:
 links:
   - "derives-from:dcf-universal-law"
   - "refines:per-share-compounding-blindspot"
-version: 4
+  - "applies-to:master-buffett"
+version: 5
 created_at: 2026-10-11T00:38:02
-updated_at: 2026-10-11T02:36:01
+updated_at: 2026-10-11T02:48:25
 ---
 
 ## 论证

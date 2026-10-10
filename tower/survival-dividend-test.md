@@ -12,9 +12,10 @@ links:
   - "refines:spare-cash-only"
   - "refines:free-shares"
   - "derives-from:dcf-universal-law"
-version: 2
+  - "applies-to:master-sanhuyi"
+version: 3
 created_at: 2026-10-10T23:57:31
-updated_at: 2026-10-11T00:15:00
+updated_at: 2026-10-11T02:48:44
 ---
 
 ## 论证
