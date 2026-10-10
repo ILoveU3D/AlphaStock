@@ -10,10 +10,13 @@ tags:
 links:
   - "refines:skin-in-the-game"
   - "applies-to:ceo-measurement-as-culture-evidence"
-version: 1
+version: 2
 created_at: 2026-10-11T00:42:34
-updated_at: 2026-10-11T00:42:34
+updated_at: 2026-10-11T01:22:44
 ---
 
 ## 论证
 （待论证）
+
+## Field Notes
+- [2026-10-11 01:22] (ai) 1991年H.H.Brown范式：Frank Rooney底薪7,800美元+利润分成——经理人自己要求低底薪高浮动。1992年期权会计三问檄文：期权不是薪酬是什么？薪酬不是费用是什么？费用不进利润计算该进哪里？——我愿出价买任何高管的价外期权。1994年双向对称檄文：大胡萝卜必须与经理人可控领域直接挂钩（按Scott Fetzer而非Berkshire业绩计酬）；资本占用双向收费——增量资本按高费率收费、释放资本按高费率返奖（把钱寄回Omaha对他有利）；期权行权价不随留存收益累积上调=躺平暴富——分红越少期权经理越赚，代理声明从不写这一条；双向合伙才叫alignment，多数计划是heads I win, tails you lose；母公司非理性行为会诱发子公司模仿。1996年GEICO两变量制：保单增长+承保盈利，全公司8000人同一把尺。

@@ -8,9 +8,9 @@ tags:
   - capital
   - value
 links:
-version: 1
+version: 2
 created_at: 2026-09-20T16:24:21
-updated_at: 2026-09-20T16:24:21
+updated_at: 2026-10-11T01:23:36
 ---
 
 ## 论证
@@ -18,3 +18,4 @@ updated_at: 2026-09-20T16:24:21
 
 ## Field Notes
 - [2026-09-18 00:00] (ai) 成砖：自 skills/10 格雷厄姆手册蒸馏。
+- [2026-10-11 01:23] (ai) 1990年RJR檄文：财务杠杆是把匕首绑在方向盘上——指向司机；fallen angels（被错杀的优质杠杆）与人造垃圾债券必须区分；成功投资的三词秘诀等于margin of safety；Forbes 400没有图书管理员——高杠杆致富者从不靠安全边际。1992年：安全边际是Graham的cornerstone——应对估值不确定性的第二招（第一招是守在能力圈）。
