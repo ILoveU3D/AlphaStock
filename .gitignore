@@ -26,6 +26,11 @@ profiles/
 # valuation results are proprietary judgment — never pushed to any remote
 models/
 
+# Reading library is LOCAL-ONLY (2026-10-10): downloaded master ledgers
+# (letters/memos/blog posts) are copyrighted material — never pushed to
+# any remote; bricks distilled from them live in tower/ instead
+library/
+
 # Skill edit backups (skills.py keeps last 10 versions at runtime)
 skills/.backup/
 

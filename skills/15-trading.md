@@ -14,8 +14,8 @@ commands:
   - trade sell
   - trade nav
   - trade journal
-version: 62
-updated_at: 2026-10-09T22:21:18
+version: 63
+updated_at: 2026-10-10T17:19:12
 ---
 
 # Playbook
@@ -135,3 +135,4 @@ for. Cite the nav-as-of date. Never soften risk observations.
 - [2026-10-09 19:39] (ai) 2026-10-09 用户评级Excellent: 三只已验证模式——①波司登: 回购规模放大(单日500万股vs此前300万级)是论点强化信号,可加仓; ②PTC: 收购传闻持仓,传闻对价上方也是卖点(卖事实不赌落地); ③江南布衣: 高息股除权缺口≠亏损,息是回报主体需并入performance
 - [2026-10-09 19:57] (ai) 2026-10-09 PTC模型校准课: 自有DCF(10-04建,WACC9%/tg3%)加权公允123 vs 施耐德对价205——①独立DCF永远看不见协同价值(€250M成本+€800M收入协同,13x vs 21x EV/EBITA),收购对价=独立价值+协同+控制权溢价,不能拿产业资本对价直接审判独立DCF; ②真正误差源=情景集缺失M&A尾部(Autodesk 2025年追过PTC有先例却赋零权重)+base增速7%→3.5%比公司自述10%轨迹保守; ③规则修正: 模型公允是参照系不是闸门,价格>模型公允时的义务是'点名市场在为哪个我模型里没有的假设付费',不是禁止买入
 - [2026-10-09 22:21] (ai) 预置候选被估值层否决首例(20261009 EXEL): dossier QUALIFIED门槛通过≠可买, model build才是最终裁决——weighted公允29.11 vs 60.38=-51.8%+bear-67%尾部+一致目标54.87<现价+pos52=100, 四信号同向否决; 闸门顺序=dossier QUALIFIED→model fetch/build→模型层铁律(买入价不得高于自有模型公允,PTC校准课), 预置计划到执行窗口必须补跑估值层再决断; abstain合法条件举证模板: 持仓零触发+新开仓逐名否决+加仓逐名否决三段式
+- [2026-10-10 17:19] (ai) season fills JSON: dividend/fx entries carry amount/base_value only (no qty/market/name/price) — parse fills defensively with .get(); NAV-gain reconcile check: NAV gain must equal sum(realized)+sum(unrealized at avg_cost), residue <0.3% comes from 4-dp avg_cost rounding

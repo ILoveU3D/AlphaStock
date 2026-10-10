@@ -19,8 +19,8 @@ commands:
   - model build X
   - model set X
   - model list
-version: 62
-updated_at: 2026-10-10T14:44:44
+version: 63
+updated_at: 2026-10-10T18:25:48
 ---
 
 # 19 · Financial Modeling（财务建模）
@@ -185,3 +185,4 @@ HK 全名单来自 mainindicator batch），状态存 `models/campaign.json`
 - [2026-10-08 21:05] (ai) pypdf 提取 A 股年报 PDF 中文大面积乱码时：数字与表格结构仍可靠可读（直接搜数字串定位），中文叙述用公司官网业绩新闻稿+上证报年报摘要+券商点评三源交叉核验后再写入卷宗（600938：递减率9.5%/派息0.73+0.55/研发54.81亿均此法核验）；港股披露易版 PDF 字体嵌入不同，可作重提回退
 - [2026-10-08 22:30] (ai) 给建模员 prompt 写公司特定背景前必须先核实代码↔公司对应（ask 或 master.csv）——US:AD 实为 Array Digital Infrastructure，我却凭印象写成 AdvanSix（真身是 ASIX），子智能体顺背景建了错位卷宗 models/US/ASIX（卷宗本身合格、若在队列算提前完成，但 US:AD 真身被跳过需补建）；教训：ticker 背景假设是 AI 的债，不是工具的
 - [2026-10-10 14:44] (ai) campaign监控运维文件不入库(2026-10-10整理): 根目录campaign_monitor.cmd已删——计划任务真链路=ValueGenieCampaignMonitor→models\_monitor_task.vbs(wscript隐窗)→models\_monitor_task.cmd(python -u -m value_genie model campaign monitor -n 20), 全在models/本地only; 跟踪副本必与live漂移(实测已漂移: live多了-u/-n 20/logs改道), 机器侧硬编码路径文件留在机器侧
+- [2026-10-10 18:25] (ai) model write 的 @file 路径相对仓库根目录解析（cwd），不是 models/<market>/<code> 目录——装载 US:AD 时必须写 @models/US/AD/raw/_staging/xxx.json 全相对路径；另：rdcf_*.txt 等长文写作件常为单行文件，分段处理用段落标题锚（split on 【标题】）而非换行符
