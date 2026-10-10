@@ -10,10 +10,13 @@ tags:
 links:
   - "derives-from:dcf-universal-law"
   - "refines:safety-margin-is-understanding"
-version: 1
+version: 2
 created_at: 2026-10-10T23:06:19
-updated_at: 2026-10-10T23:06:19
+updated_at: 2026-10-11T00:43:43
 ---
 
 ## 论证
 （待论证）
+
+## Field Notes
+- [2026-10-11 00:43] (ai) 巴菲特1984年Billy Rose比喻：持有40只股票的组合像有40个女人的后宫——任何一个你都不可能真正了解；伯克希尔集中只因财务实力允许masterly inactivity——十年不见选股荒也能不动；集中不是风格偏好，是理解深度对机会数量的诚实。

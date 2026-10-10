@@ -8,9 +8,9 @@ tags:
   - capital
   - value-investing
 links:
-version: 1
+version: 2
 created_at: 2026-09-20T16:24:31
-updated_at: 2026-09-20T16:24:31
+updated_at: 2026-10-11T00:43:17
 ---
 
 ## 论证
@@ -23,3 +23,4 @@ updated_at: 2026-09-20T16:24:31
 
 ## Field Notes
 - [2026-09-18 00:00] (ai) 成砖：藏书吸收（本杰明·格雷厄姆《聪明的投资者》）；status=principle=借来未验证，对话中真正调用/验证后升 law 并分形。
+- [2026-10-11 00:43] (ai) 巴菲特1984年引Graham：'Investment is most intelligent when it is most businesslike'（投资越是像做生意就越聪明）——WPPSS债券按生意估值法买入即此句操作版；证券分析的全部技术都是这句话的脚注。

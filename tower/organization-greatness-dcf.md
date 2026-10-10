@@ -12,10 +12,13 @@ links:
   - "derives-from:dcf-universal-law"
   - "derives-from:compounding"
   - "refines:civilization-dcf-four-marks"
-version: 1
+version: 2
 created_at: 2026-10-08T20:00:22
-updated_at: 2026-10-08T20:00:22
+updated_at: 2026-10-11T00:43:40
 ---
 
 ## 论证
 （待论证）
+
+## Field Notes
+- [2026-10-11 00:43] (ai) 巴菲特1986年组织两职能：总部只做两件事——吸引并留住能自我运转的经理（Nicklaus/Palmer高尔夫队比喻：让明星按自己的方式打球）+资本配置；David Ogilvy巨人/侏儒原则：用巨人则公司成巨人，用侏儒则公司成侏儒；no-layoff自益论：保险萧条期不裁员不是慈善，是留住承保纪律的执行者；'与让你反胃的人共事如同为钱结婚——已经富有时还这么干是绝对的疯狂'。

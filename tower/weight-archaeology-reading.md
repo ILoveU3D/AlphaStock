@@ -16,9 +16,9 @@ links:
   - "applies-to:undervaluation-signed-by-tower"
   - "applies-to:consequence-is-last-moat"
   - "applies-to:deliberate-practice"
-version: 28
+version: 29
 created_at: 2026-10-10T20:11:19
-updated_at: 2026-10-11T00:15:34
+updated_at: 2026-10-11T00:44:16
 ---
 
 # 权重考古阅读法（Weight Archaeology）
@@ -71,3 +71,4 @@ updated_at: 2026-10-11T00:15:34
 - [2026-10-10 23:41] (ai) P11批（2026-10-10）：三册查漏任务b3收官——赵理亚版全量重读13095行（0-12600行前会话四批，12600-13095本会话收尾，含2025浙大问答实录全章）；产出0新砖+17 notes。零新砖是查漏的诚实结论：赵理亚版独有素材已被2021+增量扫描（8砖16 notes）与b1/b2蒸馏预先捕获，全量重读的价值=证据密度增强+覆盖确认；盲区修复法=目录比对（五章2916/6141/10110/11970分界）+抽样读（1700-1980行定性定量/财报排除/高手错误率/做空百度/margin断面），确认0-5400行与既有砖全映射。新捕获的证据级素材：做空百度1.5-2亿美元scar、危机时刻故事、乐视零终值判词、定价权冷漠测试完整晚宴版、需要/不需要不对称律、茅台审计保留（文化分级）、塑化剂送检确证前置。三册查漏总账：b1=2砖+10 notes，b2=5砖+19 notes，b3=0砖+17 notes，合计7砖+46 notes。下一队列：散户乙老窖2013案（低污染restore全协议首演）→P2巴菲特股东信→P3 Marks备忘录→P4穷查理（待放书）。
 - [2026-10-10 23:58] (ai) P12批（2026-10-11）：散户乙老窖2013案+神华2021换仓案收官（dnote_5744/5745全量通读）。低污染声明：事先已知案件大致弧线（老窖十倍、换仓神华成功），档案为主题汇编+回顾性总结为主（真实时2013帖嵌在2020+总结内），故非盲测预言而是权重diff——我的框架：风险测试=认知的（懂不懂）、仓位上限=理解度；他的框架：风险测试=生存的（最坏分红养不养得起家）、仓位下限=生存线覆盖后越低越贪婪。产出1新砖（survival-dividend-test生存线分红测试，refines spare-cash-only/free-shares）+6 notes（free-shares时间线、buyback-authenticity-test分红诚信、mr-market危机判别三则、cost-blind-trading回报率比较换仓、rough-estimate-mandatory大胖子毛估估、fooled-by-randomness成就归因、business-model-first神华资产分解）。核心收获：段问'这钱亏得起吗'，散户乙问'这资产最坏情况下养得起我吗'——非闲钱投资者的可操作版本。剩余队列：5742理念/5743阶段选股/5746宏观人生三篇主题汇编→P2巴菲特股东信→P3 Marks备忘录。
 - [2026-10-11 00:15] (ai) P13批（2026-10-11）：散户乙三篇主题汇编收官——dnote_5742理念篇480行/41KB+dnote_5743阶段选股篇254行/19KB+dnote_5746宏观人生篇387行/28KB，合计1121行全量通读。产出2新砖+14 notes：新砖three-kills（三杀分类学：杀价格不怕/杀估值是机会/杀估值体系最怕，判别=估值锚还在吗）、price-up-return-down（分红再投悖论：股价上涨降低长期投资者收益，前提=分红再投+高分红率+永续，烟草公司百年实证）；notes落点=free-shares（分红造假方向判别+零成本股票四条件）、paper-loss-vs-real-loss（失败=价值理解错误）、three-nevers（危墙=杠杆×周期，鞍钢300亿vs白酒不伤筋动骨）、circle-of-competence×2（电脑程序比喻+不投新兴行业）、mr-market（宏观三则）、dcf-universal-law（长期确定两条）、return-expectation-humility（均值回归自觉）、rough-estimate-mandatory（一次性损失不乘PE）、cost-blind-trading（换房例+只现金与股置换）、error-taxonomy（两个以为）、fooled-by-randomness（释老毛逃顶=运气）、business-model-first（定量vs定性确定+中石油反例）、survival-dividend-test（底线思维顺序）。散户乙素材库五篇全部读完（5742-5746），权重考古散户乙战役收官。累计：段三册7砖46notes+散户乙3砖（含survival-dividend-test）30notes。下一批=P2巴菲特股东信（library/buffett/ 1977-2024已备）。
+- [2026-10-11 00:44] (ai) P14批（2026-10-11）：P2巴菲特股东信批一收官——1977-1986十封全量通读（360/561/820/945/888/1039/1251/1535/1652/1864行，合计10815行，无省略；1983-1986超64KB分段读；OCR缺陷=字母t全丢不影响理解）。产出8新砖+15 notes：新砖owner-earnings（1986附录业主盈利(a)+(b)-(c)，DCF计算层第一桥）/economic-goodwill（1983附录经济商誉=通胀放大器，See's 8美元换25 vs mundane 18换18）/retention-test（1983/84留存1美元检验+五年滚动）/commodity-treadmill（1985纺织结案踮脚竞赛+换船优于补漏）/inflation-tax（1979-81痛苦指数+通胀绦虫+跨栏漂移）/share-issue-rule（1982发股铁律+19年零稀释）/insurance-underwriting-discipline（承保纪律+walking dead+准备金永远偏乐观）/incentive-asymmetry（1985期权檄文两条船+1984旅鼠职业算术）；notes落点=mr-market/error-taxonomy/circle-of-competence/business-model-first/dcf-universal-law/return-expectation-humility/buyback-authenticity-test/intelligent-investor/never-sell-for-price/price-vs-value/culture-veto-first/no-return-target/organization-greatness-dcf/concentration-by-understanding/franchise-moat。批一坐标价值=巴菲特思想骨架元年锚：投资四标准1977/回购颂词1980/留存检验1983/经济商誉1983附录/护城河城堡1986/恐惧贪婪1986/owner earnings1986附录——后续批次只需标注演化不再重复立砖。下一批=批二1987-1996（10封，含1989航空股refuted样本+1988可乐名案）。
