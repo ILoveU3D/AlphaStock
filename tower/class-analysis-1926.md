@@ -12,9 +12,9 @@ tags:
 links:
   - "applies-to:class-map-2026-china"
   - "applies-to:materialist-lens-and-its-boundary"
-version: 1
+version: 2
 created_at: 2026-10-10T23:42:28
-updated_at: 2026-10-10T23:42:28
+updated_at: 2026-10-11T01:57:06
 ---
 
 ﻿## 论证
@@ -27,3 +27,4 @@ updated_at: 2026-10-10T23:42:28
 
 ## Field Notes
 - [2026-10-10] (ai) 成砖：藏书吸收（毛泽东《中国社会各阶级分析》，1925）；canon-fifty历史组成员；status=principle=借来未验证，深读时对照class-map-2026-china验证切片法在当代的迁移误差后升 law 并分形。
+- [2026-10-11 01:57] (ai) 深读分形完成（2026-10-11，全文7.2K字逐字读毕）：种子砖的三个砖胚已分形为7块独立砖——enemy-friend-map-first/position-determines-stance/final-contest-polarization/threshold-coalition-switch/power-concentration-not-headcount/declining-strata-most-radical/vagrant-force-channeling；切片法升law的验证条件=用2026年中国政策案例实测迁移误差后 tower set。

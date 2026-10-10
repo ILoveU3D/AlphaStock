@@ -12,9 +12,9 @@ tags:
 links:
   - "refines:falsificationism"
   - "applies-to:tech-is-not-product"
-version: 1
+version: 2
 created_at: 2026-10-10T23:17:28
-updated_at: 2026-10-10T23:17:28
+updated_at: 2026-10-11T01:58:26
 ---
 
 ﻿## 论证
@@ -27,3 +27,4 @@ updated_at: 2026-10-10T23:17:28
 
 ## Field Notes
 - [2026-10-10] (ai) 成砖：藏书吸收（费曼《费曼物理学讲义·卷一》）；种子级先验蒸馏、未经深读，Phase 5 深读队列待验；status=principle=借来未验证，对话中真正调用/验证后升 law 并分形。
+- [2026-10-11 01:58] (ai) 巴菲特2001术语檄文：'Bad terminology is the enemy of good thinking'——保险业'Loss Development'应改名'oops'：损失不是后来长出来的，它们一直在那里，后来长出来的是管理层的认知；命名错误让全行业假装负债是生长的而非欠下的——知道名字≠知道东西的保险版。
