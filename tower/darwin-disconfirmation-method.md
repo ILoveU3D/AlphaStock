@@ -11,9 +11,9 @@ tags:
 links:
   - "refines:falsificationism"
   - "refines:poor-charlies-almanack"
-version: 1
+version: 2
 created_at: 2026-10-11T02:11:32
-updated_at: 2026-10-11T02:11:32
+updated_at: 2026-10-11T02:22:45
 ---
 
 ## 论证
@@ -22,3 +22,6 @@ updated_at: 2026-10-11T02:11:32
 机制：证伪主义（falsificationism）说'理论必须可证伪'；达尔文工作法补上操作时序——不是被动接受证伪检验，而是主动给反证排队优先权。情感成本是真实的（'珍爱且来之不易'），所以能执行的人极少，执行者的超额收益来自多数人的系统性不执行。爱因斯坦的'自我批评'定义同源："the testing and destruction of his own well-loved ideas."
 
 迁移：塔的证伪集巡逻应该是每日队列头而不是尾部（thesis 的 falsification 字段先于 narrative 字段被读）；写完砖先自己找反例再发布；reading 重读时先找'当时不喜欢的章节'。
+
+## Field Notes
+- [2026-10-11 02:22] (ai) (ai) Talk Three可训练性补注：'Warren和我都非常擅长改变我们先前的结论——我们刻意发展这种能力，因为没有它，灾难常至'；制度环境=伯克希尔分权（'我们把所有权力下放，只留总部资本配置'）+选'我们极为爱慕的人'掌权，由他们创造各自生意里'承认先前结论错误'的现实认知文化——改变先验结论不是天赋是机构资产。
