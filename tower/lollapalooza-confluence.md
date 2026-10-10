@@ -11,9 +11,9 @@ tags:
 links:
   - "refines:latticework"
   - "refines:poor-charlies-almanack"
-version: 2
+version: 3
 created_at: 2026-10-11T02:07:45
-updated_at: 2026-10-11T02:26:45
+updated_at: 2026-10-11T02:39:51
 ---
 
 ## 论证
@@ -25,3 +25,4 @@ updated_at: 2026-10-11T02:26:45
 
 ## Field Notes
 - [2026-10-11 02:26] (ai) (ai) Talk Four（1996）工程化实例：结核病靠三药常规联用才长期驯服、飞机飞行同理；Glotz计划是有意制造的正面lollapalooza——巴甫洛夫×社会证明×操作性奖赏×规模（广告与分销的规模劣势转嫁给对手）——'我们要启动某种类似化学里自催化反应的东西'；负面lollapalooza=New Coke灾难本身+学术界对灾难的零反应（对照：波音一周坠三架飞机会有的Boeing式反应，学术界几乎没有）。
+- [2026-10-11 02:39] (ai) 2014金禧信Charlie四因素=伯克希尔成功的合奏公式：Buffett的怪癖乘系统的怪癖乘运气乘狂热追随；John Wooden七主力类比——坚持只用最强阵容并把全部技能集中于一人五十年持续精进，out-Woodened Wooden；系统与个人互相成就的virtuous circle：文化吸引同类，同类强化文化。

@@ -9,9 +9,9 @@ tags:
   - dividend
 links:
   - "derives-from:dcf-universal-law"
-version: 2
+version: 3
 created_at: 2026-10-11T00:37:51
-updated_at: 2026-10-11T01:23:34
+updated_at: 2026-10-11T02:38:19
 ---
 
 ## 论证
@@ -19,3 +19,4 @@ updated_at: 2026-10-11T01:23:34
 
 ## Field Notes
 - [2026-10-11 01:23] (ai) 1992年Alice警告：jam tomorrow and jam yesterday - but never jam today——管理层永远许诺明天的留存回报。检验的行业表达：最好的生意等于长期能以高回报率配置大量增量资本的生意（留存通过检验）；最坏的生意等于以低回报吞掉大量资本的生意（留存失败）；多数高回报生意不需要多少增量资本——它们应该分红回购。
+- [2026-10-11 02:38] (ai) 2010年what-will-they-do-with-the-money因子：Sears留存的一美元和Sam Walton留存的一美元不是同一种一美元——留存盈利的价值取决于管理人把它投去哪；2012年股息檄文sell-off对dividend数学：200万净值、ROE 12%、125%定价的公司，方案B（盈利全留存、股东每年卖3.2%股份）十年后财富与现金流全面占优约4%——一刀切股息不如股东自选sell-off，还附税负劣势；Fisher餐厅喻：汉堡店和中餐馆都能成功，但不能朝三暮四——分红政策一旦确立就该像菜单一样稳定。

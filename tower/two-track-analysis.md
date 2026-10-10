@@ -11,9 +11,9 @@ tags:
 links:
   - "refines:thinking-fast-slow"
   - "refines:poor-charlies-almanack"
-version: 1
+version: 2
 created_at: 2026-10-11T02:07:46
-updated_at: 2026-10-11T02:07:46
+updated_at: 2026-10-11T02:39:55
 ---
 
 ## 论证
@@ -22,3 +22,6 @@ updated_at: 2026-10-11T02:07:46
 机制：理性轨道给出"如果所有人都是理性的，结论是什么"的基准解；心理轨道然后问"哪些自动机制会把真实参与者推离基准解、往哪个方向推、幅度多大"——第二轨既是风险清单（自己的误判）也是alpha来源（对手的误判定价）。
 
 迁移：分析公司=第一轨算DCF基准+第二轨审计管理层激励/股东结构里的误判源；分析市场=第一轨估值分布+第二轨情绪摆锤位置；分析自己=决策前两轨都要过（thinking-fast-slow 的操作化版本）。
+
+## Field Notes
+- [2026-10-11 02:39] (ai) 2008年approval sedates the brain=心理轨道对分析轨道的麻醉：顾问与董事会的一致赞同让CEO的大脑停止风险计算；伯克希尔的结构性反麻醉=无收购部、无helper压力、inhuman patience（前十年净增仅一个生意）、收购第二顾问唱反调疗法——制度设计先行于个人意志力。

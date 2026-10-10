@@ -10,10 +10,13 @@ tags:
 links:
   - "derives-from:dcf-universal-law"
   - "refines:paper-loss-vs-real-loss"
-version: 1
+version: 2
 created_at: 2026-10-11T00:12:30
-updated_at: 2026-10-11T00:12:30
+updated_at: 2026-10-11T02:39:22
 ---
 
 ## 论证
 （待论证）
+
+## Field Notes
+- [2026-10-11 02:39] (ai) 2014年Tesco忏悔补机制：坏消息总是成串出现（厨房里的蟑螂从不止一只）——散户乙三杀（业绩杀、估值杀、情绪杀）的微观动力学：第一只蟑螂出现时市场只给业绩杀，连环爆出后估值杀与情绪杀相继启动；thumb-sucking的4.44亿学费=拖延让一个杀熬成三个杀。
