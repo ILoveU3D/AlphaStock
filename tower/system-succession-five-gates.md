@@ -13,10 +13,13 @@ links:
   - "derives-from:terminal-value-era-relativity"
   - "derives-from:scarce-factor-captures-surplus"
   - "applies-to:plan-builds-artifact-not-emergence"
-version: 1
+version: 2
 created_at: 2026-10-08T16:50:16
-updated_at: 2026-10-08T16:50:16
+updated_at: 2026-10-11T01:57:30
 ---
 
 ## 论证
 （待论证）
+
+## Field Notes
+- [2026-10-11 01:57] (ai) 伯克希尔接班工程（2003-2006）：①CEO接班=董事会核心议题，三位内部候选人已unanimous定案并持续更新②衰败接班更难——能力衰退时自我评估同步衰退，须外人吹哨；董事与股东的财务完全对齐是吹哨的燃料；'如果我的慈善潜力因同事不好意思请我离开而受损，那是悲剧'③CIO标准（2006公开招聘）：聪明+近年好业绩远远不够，要基因里编程好识别并避开从未见过的风险——金融机构常用模型看不见某些危险；气质=独立思考+情绪稳定+对人与机构行为的敏锐理解；留人是特殊难题（Berkshire履历本身就是市场价值）④Lou Simpson先例：给足超额业绩报酬，他本可早走去管大得多的钱却从不考虑；授权真交棒=我月后十日才知他的操作，'有时我默默不同意他的决定，但他通常是对的'（1980-2004年均20.3% vs 指数13.5%）。

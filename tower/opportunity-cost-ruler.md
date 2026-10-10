@@ -10,9 +10,9 @@ tags:
 links:
   - "derives-from:dcf-universal-law"
   - "refines:cost-blind-trading"
-version: 2
+version: 3
 created_at: 2026-10-10T23:06:11
-updated_at: 2026-10-10T23:40:23
+updated_at: 2026-10-11T01:57:56
 ---
 
 ## 论证
@@ -20,3 +20,4 @@ updated_at: 2026-10-10T23:40:23
 
 ## Field Notes
 - [2026-10-10 23:40] (ai) 卖put的合法条件（2025-04-08）：买苹果英伟达谷歌台积电+卖腾讯put——'如果put进来的价格从10年后看是便宜的，那这个投资就值得做，长短皆宜'：期权卖出只有当行权价本身通过10年便宜测试时才合法（=带补贴的限价买单），这统一了2018年'卖option可能错失好公司'的反思——测试通过时put是买入工具的增强，通不过时才是机会成本陷阱。
+- [2026-10-11 01:57] (ai) 巴菲特2002年10%税前门槛：达不到10%税前回报预期就坐场外——'61年投资生涯约50年有机会可投'，'occasionally successful investing requires inactivity'。与段永平互补：门槛不是目标——门槛决定动不动手（机会成本标尺的硬触发），预设目标=预测市场反应（no-return-target所禁）；一硬一软，同一把尺的两面。

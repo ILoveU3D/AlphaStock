@@ -9,9 +9,9 @@ tags:
   - method
 links:
   - "refines:reference-frame-drift"
-version: 1
+version: 2
 created_at: 2026-09-12T00:00:00
-updated_at: 2026-09-20T16:24:26
+updated_at: 2026-10-11T01:58:59
 ---
 
 ## 论证
@@ -19,3 +19,4 @@ updated_at: 2026-09-20T16:24:26
 
 ## Field Notes
 - [2026-09-18 00:00] (ai) 成砖：自 06 号 Field Notes 2026-09-12 13:24 提炼。
+- [2026-10-11 01:58] (ai) 承保端钟摆（2006）：资本涌入super-cat领域→费率下跌→我们大幅缩减风灾敞口——'别人贪婪时恐惧，别人恐惧时贪婪'在保险侧的同构执行；判别锚是价格与损失概率的关系（论点锚），不是市场份额或去年保费（价格锚）；'inappropriate prices most certainly guarantee eventual losses'。

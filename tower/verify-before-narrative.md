@@ -9,9 +9,9 @@ tags:
   - method
 links:
   - "refines:falsificationism"
-version: 1
+version: 2
 created_at: 2026-09-14T00:00:00
-updated_at: 2026-09-20T16:24:26
+updated_at: 2026-10-11T01:58:24
 ---
 
 ## 论证
@@ -19,3 +19,4 @@ updated_at: 2026-09-20T16:24:26
 
 ## Field Notes
 - [2026-09-18 00:00] (ai) 成砖：自 06 号 Field Notes 2026-09-12 11:51 提炼。
+- [2026-10-11 01:58] (ai) 巴菲特厨房蟑螂律（2002）：'There is seldom just one cockroach in the kitchen'——发现一处弱会计或粉饰，默认还有第二处；红旗的贝叶斯更新不是从1到1，是从1到N。本系统接口：intel红旗（粉饰/减持/借钱分红）=L2否决的底层先验。
