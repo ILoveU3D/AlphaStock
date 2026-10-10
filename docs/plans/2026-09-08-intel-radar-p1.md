@@ -4,7 +4,7 @@
 
 **Goal:** Build the intel radar batch channel for A-shares — full-market event tables (解禁/减持/回购/定增/业绩预告/披露预约) + earnings-quality flags, merged as 9 risk columns into master.csv / watchlist.csv, with event_radar.csv detail and doctor coverage.
 
-**Architecture:** New `value_genie/intel/` subpackage split by subsystem (per user mandate): `model.py` (IntelItem + eq signals), `_dc.py` (shared Eastmoney datacenter pager), `earnings.py` / `announcements.py` (per-subsystem A-share fetchers), `radar.py` (aggregation + merge). `run_fetch()` calls `build_event_radar()` after master/watchlist assembly. Semantics: no event = 0.0 (positive confirmation), source failure = NaN (gates fail-closed). Spec: `docs/superpowers/specs/2026-09-08-intel-sentiment-system-design.md`.
+**Architecture:** New `value_genie/intel/` subpackage split by subsystem (per user mandate): `model.py` (IntelItem + eq signals), `_dc.py` (shared Eastmoney datacenter pager), `earnings.py` / `announcements.py` (per-subsystem A-share fetchers), `radar.py` (aggregation + merge). `run_fetch()` calls `build_event_radar()` after master/watchlist assembly. Semantics: no event = 0.0 (positive confirmation), source failure = NaN (gates fail-closed). Spec: `docs/specs/2026-09-08-intel-sentiment-system-design.md`.
 
 **Tech Stack:** Python 3.10+, pandas, requests (already installed globally — never vendor). Tests: pytest with all network mocked.
 
@@ -45,8 +45,8 @@ tests/test_overview.py             # MODIFY: make_snap + doctor check
 ### Task 0: Baseline, branch, commit pending docs
 
 **Files:**
-- Create: `docs/superpowers/plans/2026-09-08-intel-radar-p1.md` (this file)
-- Commit pending: `docs/superpowers/specs/2026-09-08-intel-sentiment-system-design.md`, `skills/04-data-ops.md`
+- Create: `docs/plans/2026-09-08-intel-radar-p1.md` (this file)
+- Commit pending: `docs/specs/2026-09-08-intel-sentiment-system-design.md`, `skills/04-data-ops.md`
 
 - [ ] **Step 1: Verify baseline is green**
 
@@ -65,7 +65,7 @@ git checkout -b feat/intel-radar-p1
 - [ ] **Step 3: Commit the pending doc changes + this plan**
 
 ```bash
-git add docs/superpowers/specs/2026-09-08-intel-sentiment-system-design.md skills/04-data-ops.md docs/superpowers/plans/2026-09-08-intel-radar-p1.md
+git add docs/specs/2026-09-08-intel-sentiment-system-design.md skills/04-data-ops.md docs/plans/2026-09-08-intel-radar-p1.md
 git commit -m "docs(intel): P1 radar implementation plan + probe appendix + DC field notes"
 ```
 
