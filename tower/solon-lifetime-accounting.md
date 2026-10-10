@@ -11,9 +11,10 @@ tags:
 links:
   - "applies-to:terminal-value-swap"
   - "refines:poor-charlies-almanack"
-version: 2
+  - "applies-to:master-munger"
+version: 4
 created_at: 2026-10-11T02:11:36
-updated_at: 2026-10-11T02:30:37
+updated_at: 2026-10-11T03:06:28
 ---
 
 ## 论证
@@ -25,3 +26,4 @@ updated_at: 2026-10-11T02:30:37
 
 ## Field Notes
 - [2026-10-11 02:30] (ai) (ai) Talk Six职业选择的终点记账：复杂的低成本-高成本投资模式即便有效，'大部分赚钱活动将包含深刻的反社会效应'——因为它加剧'全国越来越多有道德的年轻头脑被吸进高薪的金钱管理及其伴随的现代摩擦，而非从事为他人提供更多价值的工作'；'早期的查理·芒格对年轻人是个可怕的职业榜样，因为从资本主义夺走的东西没有相应足够的文明产出'（'其他类似职业榜样更糟'）；2006补记的Buffett妙喻：'如果当前投资趋势蔓延到赛马场，大多数赌徒会试图通过总是带着一个高价雇佣的私人贴士员来改善成绩'——理财业把全社会变成了付钱买贴士的赌徒；替代模型=Ben Franklin（'做公益非常有效……投资也相当不错'），对照模型=Bernie Cornfeld。
+- [2026-10-11 03:06] (ai) 2022年Charlie两条人生会计规则：'Early on, write your desired obituary – and then behave accordingly'——讣告先行=以终局账本倒推当下行为，与梭伦'死前不算幸福'同一结构但主动化：不只等终点计分，而是预先写好终点再活成它；配套='I want to know where I'm going to die so I never go there'（逆向消除法的地点版）。

@@ -15,10 +15,13 @@ links:
   - "applies-to:great-transformation"
   - "applies-to:scarce-factor-captures-surplus"
   - "refines:civilization-dcf-four-marks"
-version: 1
+version: 2
 created_at: 2026-10-01T12:54:23
-updated_at: 2026-10-01T12:54:23
+updated_at: 2026-10-11T03:08:28
 ---
 
 ## 论证
 （待论证）
+
+## Field Notes
+- [2026-10-11 03:08] (ai) 2022-2024巴菲特资本主义判词补完。2022 Schumpeter两面：'The system creates an ever-growing pile of losers while concurrently delivering a gusher of improved goods and services'——创造性毁灭的输家堆与福利喷泉是同一机器的两个出口。2024总判词：'It has its faults and abuses – in certain respects more egregious now than ever – but it also can work wonders unmatched by other economic systems'；引擎='the sensible – better yet imaginative – deployment of savings by citizens'；反事实='If America had consumed all that it produced, the country would have been spinning its wheels'；235年、400万人口起点、一场内战，'America changed the world in the blink of a celestial eye'。

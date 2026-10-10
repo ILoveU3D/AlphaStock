@@ -10,10 +10,14 @@ tags:
 links:
   - "refines:stocks-for-the-long-run"
   - "refines:inflation-tax"
-version: 1
+  - "applies-to:master-buffett"
+version: 3
 created_at: 2026-10-11T02:35:03
-updated_at: 2026-10-11T02:35:03
+updated_at: 2026-10-11T03:04:08
 ---
 
 ## 论证
 （待论证）
+
+## Field Notes
+- [2026-10-11 03:04] (ai) 2017年bonds-to-Berkshire switch=三类别框架的实战版：2012年11月赌局托管的零息国债YTM仅0.88%（等于100倍永不增长的市盈率），而标普股息率2.5%——把债换成11,200股伯克希尔B股，Girls Inc.最终得222万而非100万。2024现金檄文闭环：3342亿现金引评论家围观，但'Berkshire will never prefer ownership of cash-equivalent assets over the ownership of good businesses'——whether controlled or partially owned；2021补充：始终80%以上净资产在股票、偏好100%，现金多是failure to find的结果，never pleasant, never permanent。

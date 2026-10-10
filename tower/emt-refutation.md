@@ -10,9 +10,9 @@ tags:
 links:
   - "refines:mr-market"
   - "applies-to:master-buffett"
-version: 4
+version: 5
 created_at: 2026-10-11T01:21:36
-updated_at: 2026-10-11T02:45:27
+updated_at: 2026-10-11T03:05:47
 ---
 
 ## 论证
@@ -21,3 +21,4 @@ updated_at: 2026-10-11T02:45:27
 ## Field Notes
 - [2026-10-11 01:56] (ai) 2006 Walter Schloss画像：47年合伙、无秘书无文员、从不沾内幕信息、靠Graham式简单统计法买约1,000只平庸股票，大幅跑赢且投资者不赚钱他分文不取——1984年我公开举他反驳EMT，商学院的反应是闭上眼睛继续把教条当经文讲，质疑EMT的教师晋升机会约等于Galileo当教皇；'如果你做航运生意，竞争对手都被教成地平说是天大的好事'。对照组=同年的2-and-20人群。
 - [2026-10-11 02:37] (ai) 2010年补刀：EMT死忠=Flat Earth Society把环球航行当作恼人的anomaly；Galbraith评经济学家=最节约思想的人，思想一旦形成终生不再更新；商学院学生该学的是如何给企业估值，而不是期权定价——两门课的位置教反了。
+- [2026-10-11 03:05] (ai) 2022年补刀：'stocks often trade at truly foolish prices, both high and low. Efficient markets exist only in textbooks.'市场行为'usually understandable only in retrospect'；控股生意几乎永不贱卖——非duress卖家不会给你恐慌价，这正是恐慌价只在公开市场出现的原因。

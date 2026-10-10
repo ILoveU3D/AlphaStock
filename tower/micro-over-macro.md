@@ -11,9 +11,10 @@ tags:
 links:
   - "refines:latticework"
   - "applies-to:productivity-gains-capture"
-version: 1
+  - "applies-to:master-munger"
+version: 3
 created_at: 2026-10-11T02:41:01
-updated_at: 2026-10-11T02:41:01
+updated_at: 2026-10-11T03:07:11
 ---
 
 ## 论证
@@ -21,3 +22,6 @@ updated_at: 2026-10-11T02:41:01
 
 机制：宏观的复杂性来自互动项的指数爆炸（同场他名言：'后果有后果，经济学让气象学看起来像茶会'），所以宏观预测=对不可预测系统做外推，正确率注定低；微观是局部均衡：变量少、可验证、有套利闭环，'几个基本概念就能像热刀切黄油一样解开看起来很难的微观问题'——而且'这种思维方式报酬极高'。
 迁移：投资里公司层（微观）优先于行业配置与大盘择时（宏观）——本工具ask单公司视图先于overview、L1池按公司而非板块构建；宏观叙事（利率/汇率/周期）只能做否决条件不能做买入理由（与data-cannot-buy同构）；对'宏观大师'型研究员的产出先打对折。
+
+## Field Notes
+- [2026-10-11 03:07] (ai) 2023年Bertie金矿地图喻=预测者不存在的行为级证明：Bertie本能地知道pundits应永远被无视——'if she could reliably predict tomorrow's winners, would she freely share her valuable insights and thereby increase competitive buying? That would be like finding gold and then handing a map to the neighbors showing its location.'真预测的市场价值必然使持有者沉默，故免费流通的预测必然不含真预测；同年判词：'America has been a terrific country for investors. All they have needed to do is sit quietly, listening to no one.'2019配套：'pundits reveal far more about themselves than about the future.'

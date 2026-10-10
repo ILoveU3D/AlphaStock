@@ -10,10 +10,14 @@ tags:
 links:
   - "refines:spare-cash-only"
   - "refines:mr-market"
-version: 1
+  - "applies-to:master-buffett"
+version: 3
 created_at: 2026-10-11T02:35:04
-updated_at: 2026-10-11T02:35:04
+updated_at: 2026-10-11T03:07:08
 ---
 
 ## 论证
 （待论证）
+
+## Field Notes
+- [2026-10-11 03:07] (ai) 2017年谨慎反向律补完桶的另一面：'The less the prudence with which others conduct their affairs, the greater the prudence with which we must conduct our own'——他人越不谨慎，我们越要谨慎；这与'弥漫的恐惧是朋友'是同一定律的两半：别人贪婪时恐惧（谨慎反向律）、别人恐惧时贪婪（下金子拿桶接）——方向由群体的情绪极性决定，不由自己的胆量决定。

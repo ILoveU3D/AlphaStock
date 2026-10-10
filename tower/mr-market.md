@@ -8,9 +8,10 @@ tags:
   - capital
   - psychology
 links:
-version: 11
+  - "applies-to:master-graham"
+version: 13
 created_at: 2026-09-20T16:24:21
-updated_at: 2026-10-11T02:36:45
+updated_at: 2026-10-11T03:05:46
 ---
 
 ## 论证
@@ -28,3 +29,4 @@ updated_at: 2026-10-11T02:36:45
 - [2026-10-11 00:42] (ai) 巴菲特批一层（1979-1986）：恐惧贪婪名言1986年首述完整版——'两种超级传染病恐惧与贪婪……我们只在别人贪婪时恐惧，在别人恐惧时贪婪'；Graham石油勘探者天堂故事（1985）：勘探者到天堂门口喊'地狱发现石油'，同行全奔向地狱，他犹豫后也跟去——'也许那谣言有点道理'：从众压力能让知情者自我怀疑；机构行为实证（1979）：养老基金1971年高价时122%净资金入市、1974崩盘后21%、1978年谷底9%——越便宜越不买是机构常态；股东自选择（1979餐厅比喻+1983拆股论）：公司以沟通方式获得它寻求的股东群体，亢奋市场是企业的扒手，换手税吃掉六分之一盈利。
 - [2026-10-11 01:22] (ai) 1993年欢迎波动逻辑：真正的投资者欢迎波动——市场躁郁越重，好价格的机会越大；市场关一两年无所谓。1992年价格形成机制对照：一级市场（新发行）由卖家定价永无半价，二级市场周期性愚蠢出清——同一家生意谈判价x、二级价x/2，谈判交易整体注定跑输二级市场。1994年宏观檄文：30年经历越战、工资物价管制、两次石油冲击、总统辞职、苏联解体、单日508点、国债收益率2.8%-17.4%——无一撼动Graham原则；最好的买入都发生在宏观恐慌顶点；Fear is the foe of the faddist, but the friend of the fundamentalist；我们定价不选时（price, not time）——Ted Williams：跑出快乐区就只是.250击球手。
 - [2026-10-11 02:36] (ai) 2013年农场邻居寓言=市场先生的伯克希尔版：农场邻居每天随心情喊价是天大的优势，但股票持有人常被同胞的癫狂传染——流动性从纯粹的祝福变成诅咒；2016年恐慌期两牢记：弥漫的恐惧是投资者的朋友（送上便宜货），个人的恐惧是敌人；2013年非专业投资者处方同源：盯着球场，别盯记分牌。
+- [2026-10-11 03:05] (ai) 2021-2023市场先生判词补完。business-pickers宣言：'Charlie and I are not stock-pickers; we are business-pickers'；shooting-fish-in-a-barrel=公开市场偶尔以美妙价格卖美妙生意，谈判交易中罕见且永不批量；公开市场退出错误也更容易。2023赌场论：市场会seize up甚至vanish（1914年关四个月、2001年关几天）；2008年9月即时全球瘫痪——通讯速度与技术便利使instant worldwide paralysis成为可能；'today's active participants are neither more emotionally stable nor better taught than when I was in school'；'markets now exhibit far more casino-like behavior'——casino now resides in many homes and daily tempts the occupants；华尔街真正让汁液流动的是feverish activity——'whatever foolishness can be marketed will be vigorously marketed'；结局循环：政客愤怒、肇事者rich and unpunished溜走、邻居bewildered poorer vengeful——'Money, he learns, has trumped morality.'伯克希尔的Not-So-Secret Weapon=以巨额资金+确定性履约即时响应市场瘫痪的能力（2023：能处理超越历史任何量级的金融灾难，危机时做国家的资产帮忙灭火，不做点火者）。

@@ -11,10 +11,13 @@ links:
   - "derives-from:dcf-universal-law"
   - "refines:time-is-friend"
   - "applies-to:master-buffett"
-version: 2
+version: 3
 created_at: 2026-10-11T01:21:16
-updated_at: 2026-10-11T02:44:50
+updated_at: 2026-10-11T03:08:32
 ---
 
 ## 论证
 （待论证）
+
+## Field Notes
+- [2026-10-11 03:08] (ai) 2018年第四资金来源实证=递延税浮存的资产负债表版：505亿美元递延税负债（147亿未实现利得税+283亿加速折旧）=财政部的无息贷款，与浮存并列伯克希尔四大资金来源（debt少用/equity 3490亿全美第一——若100%派息则今天只有2200万/float/deferred taxes）。2022浮存更新：1470亿→1640亿（Alleghany并入），1967年以来8000倍；2024浮存1710亿、20年承保税后利润320亿。

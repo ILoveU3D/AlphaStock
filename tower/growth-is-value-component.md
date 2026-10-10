@@ -11,10 +11,13 @@ links:
   - "derives-from:dcf-universal-law"
   - "refines:retention-test"
   - "applies-to:master-buffett"
-version: 2
+version: 3
 created_at: 2026-10-11T01:20:50
-updated_at: 2026-10-11T02:46:10
+updated_at: 2026-10-11T03:08:27
 ---
 
 ## 论证
 （待论证）
+
+## Field Notes
+- [2026-10-11 03:08] (ai) 2023年稀有宝贝定义=成长作为价值变量的终极表述：'We particularly favor the rare enterprise that can deploy additional capital at high returns in the future. Owning only one of these companies – and simply sitting tight – can deliver wealth almost beyond measure. Even heirs to such a holding can – ugh! – sometimes live a lifetime of leisure.'增量资本的高回报部署能力=复利机器的判别特征，拥有一家即够；判断经理能力比这更难——'Berkshire has had its share of disappointments'（McCulloch铁律见culture-veto-first砖）。

@@ -13,9 +13,9 @@ links:
   - "applies-to:ceo-measurement-as-culture-evidence"
   - "refines:business-model-first"
   - "applies-to:master-munger"
-version: 2
+version: 3
 created_at: 2026-10-11T02:17:33
-updated_at: 2026-10-11T02:43:55
+updated_at: 2026-10-11T03:07:51
 ---
 
 ## 论证
@@ -24,3 +24,6 @@ updated_at: 2026-10-11T02:43:55
 机制：好生意自带系统惯性（平庸经理人被系统带着走也能复利），坏生意自带逆向水流（天才也要先逆流消耗掉生意的衰减再谈创造）；可识别的例外人有共同指纹——过往实绩+狂热+聚焦，缺一不可，所以例外清单短而稳定。
 
 迁移：三核权重设计——商业模式核对企业文化核的'创始人魅力'子项有优先权：好生意+可信文化>平庸生意+魅力领袖；'跟人走'的合法性条件：例外人指纹齐全+他自己重仓+生意未死（核心可切除见cancer-surgery-formula）；识别任务不难但要纪律：宁可错过'maybe天才'也不给叙事光环打折。
+
+## Field Notes
+- [2026-10-11 03:07] (ai) 批五两个'值得跟随的经理人'全记。2018 GEICO/Tony Nicely：1976年危机（230万张亏损保单）+Jack Byrne救火+4700万买一半，1995年23亿买另一半（'people say I never pay up!'）；行业第七升至第二（+1200%），承保盈利累计155亿、浮存25亿→221亿——估计Tony创造超500亿内在价值；手法='helping his 40,000 associates to identify and polish abilities they didn't realize they possessed'。2024 Pete Liegl（Forest River）：2005年中介信指定卖给伯克希尔+自报预期价='no-nonsense approach'；一周后Omaha会面成交；薪酬环节——Pete查了伯克希尔的proxy说'I wouldn't want to make more than my boss, so pay me 100,000 per year'+超当年盈利10%的奖金，vague条款19年从未出问题；'During the next 19 years, Pete shot the lights out. No competitor came close to his performance.'选人结论：单次获胜的人事决策影响breathtaking——GEICO=生意决策、Ajit=经理决策、Charlie=合伙人决策。

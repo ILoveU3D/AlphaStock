@@ -10,9 +10,10 @@ tags:
 links:
   - "refines:commodity-treadmill"
   - "derives-from:dcf-universal-law"
-version: 6
+  - "applies-to:master-buffett"
+version: 8
 created_at: 2026-10-11T00:42:30
-updated_at: 2026-10-11T02:36:03
+updated_at: 2026-10-11T03:06:31
 ---
 
 ## 论证
@@ -24,3 +25,4 @@ updated_at: 2026-10-11T02:36:03
 - [2026-10-11 01:56] (ai) 批三增量其二：⑤GEICO 1981-83商业伞险教训：305万美元自留保费最终损失9,410万，其中9,030万是收不回的再保应收——'cheap reinsurance is a fool's bargain'，再保不是商品：一张保单=一个承诺，承诺的质量天差地别（对照财险商品化：没人说'请来一份National Indemnity'，像航空座位；retroactive恰恰相反，我们留存全部风险）⑥Equitas（2006）：收71.2亿美元现金证券、承担上限139亿的1993年前Lloyd's存量负债——retroactive浮存引擎，DCRA会计下年年记承保亏损，靠浮存投资收益覆盖⑦'Loss Development'术语檄文：损失不是develop出来的，它们一直在那里，develop出来的是管理层的认知——建议改名'oops'；反对准备金折现=给16岁儿子的正常性生活推一把。
 - [2026-10-11 02:08] (ai) 浮存金重分类（Ch3）：'合适情形下保险浮存金——多年内不必赔付的保费收入——更应当作资产而非负债'；负债表不是事实是分类，分类权本身就是分析工具。
 - [2026-10-11 02:36] (ai) 批四四证：2010年四戒律首次成文——理解所有敞口、保守评估损失概率与成本、设定即使保守也能盈利的价格、价格不够就离场；2015年At Berkshire it is a religion, Old Testament style；保险=贩卖承诺，史上8张单笔保费超10亿的保单全部为伯克希尔所写；浮存=循环基金：永不离开的1美元负债与明天出门的1美元负债在GAAP下同等待遇，前者价值巨大；损失成本上升即时转化为保费上升（GEICO均单损失1951年约30美元，2015年约1,000美元，公司反而更值钱）；GEICO的日落晒干草——行业利润受压时加速抢新客，因为我们知道太阳一定会再升起。
+- [2026-10-11 03:06] (ai) 批五保险判词补完。2023承保人画像：可以thin, fat, male, female, young, old, foreign or domestic——'But they can't be optimists at the office, however desirable that quality may generally be in life'；P/C的惊喜几乎总是负面的，骗子检测慢且贵，通胀（货币与法律两种）是wild card；57年1700万→830亿保费（5000倍）仍有增长空间；经理阵容=P/C保险的Cooperstown名人堂。2024模式解剖：先收钱后知成本（延迟可达30年以上——石棉暴露50年后仍在赔付）是双刃——某些长尾险（医疗过失/产品责任）可让公司在破产途中报告虚构利润多年甚至数十年，'particularly dangerous if the CEO is an optimist or a crook. History reveals a large number of each species'；定价纪律='We must never write inadequately-priced policies in order to stay in the game. That policy is corporate suicide.'；十年期保单=madness（车险已从一年缩到六个月）；Mike Goldberg标准='We want our underwriters to daily come to work nervous, but not paralyzed'；不依赖再保险=material and enduring cost advantage；20年承保税后利润320亿=3.3美分/美元，浮存460亿→1710亿。2019利率警告：浮存价值利率敏感——行业旧组合5-6分被迫滚成2-3分（负利率never-never land），追收益的危险游戏（低质债/另类）'most institutions are ill-equipped to play'。

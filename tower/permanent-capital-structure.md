@@ -12,9 +12,10 @@ links:
   - "derives-from:dcf-universal-law"
   - "refines:paper-loss-vs-real-loss"
   - "refines:poor-charlies-almanack"
-version: 2
+  - "applies-to:master-munger"
+version: 4
 created_at: 2026-10-11T02:04:37
-updated_at: 2026-10-11T02:37:18
+updated_at: 2026-10-11T03:07:53
 ---
 
 ## 论证
@@ -29,3 +30,4 @@ updated_at: 2026-10-11T02:37:18
 
 ## Field Notes
 - [2026-10-11 02:37] (ai) 批四Life and Debt檄文集（2009-2014）：永不依赖陌生人的仁慈（2009）；信用如氧气，充足时无人注意，缺失时无所逃遁；赛车第一定律=想拿第一先得完赛，任何正数列乘以零即蒸发；祖父Ernest 1939年家书=隔夜拆借无门的年代家里要有现金；200亿现金承诺——99年里它降低回报，但第100年我们活着而许多人倒下，且100年里我们都睡得好（2012）；财务俄罗斯轮盘=100个弹膛1颗子弹也不玩，拿自己需要的东西去赌自己想要的东西是疯狂（2014）；财务持久三要素=盈利流、巨额流动资产、无近期大额现金需求；Ray DeVoe：More money has been lost reaching for yield than at the point of a gun（2010）。
+- [2026-10-11 03:07] (ai) 批五堡垒条款补完。2018承诺：现金永远不低于200亿——'I will never risk getting caught short of cash'（会犯commission的错、会错过机会，但永不缺钱）。2021：300亿现金底线；现金多='failure to find'的结果，never pleasant, never permanent。2023 built to last专节：能处理超越历史任何量级的金融灾难——'This ability is one we will not relinquish'；2008年恐慌中伯克希尔靠经营产生现金，未以任何方式依赖商业票据、银行额度或债市——'We did not predict the time of an economic paralysis but we were always prepared for one.'极端财政保守=对股东的corporate pledge——像给防火建筑买的保险，多数年多数十年用不上，但不给信任我们的Bertie们造成permanent damage（quotational shrinkage无法避免也不算违约）；'Berkshire is built to last.'；EBITDA在伯克希尔是banned measurement。2019遗嘱条款（用法律结构死后继续对抗机构强制力）：执行人不得卖伯克希尔、免prudent man责任、12-15年分批转B股捐出——'safe course'是卖股买国债，我不认同；'They will regularly be tested by Wall Streeters bearing fees.'2022未来承诺：CEO永远是Chief Risk Officer（'a task it is irresponsible to delegate'）；未来CEO必须自掏腰包持股；'At Berkshire, there will be no finish line.'

@@ -11,9 +11,10 @@ tags:
 links:
   - "refines:poor-charlies-almanack"
   - "applies-to:benfen-motive-purity"
-version: 2
+  - "applies-to:master-munger"
+version: 4
 created_at: 2026-10-11T02:11:30
-updated_at: 2026-10-11T02:38:57
+updated_at: 2026-10-11T03:07:52
 ---
 
 ## 论证
@@ -25,3 +26,4 @@ updated_at: 2026-10-11T02:38:57
 
 ## Field Notes
 - [2026-10-11 02:38] (ai) 2013年Mrs. B收购全记：1.25页提案一字未改成交，无投行无律师——1946年起家时净资产72,264美元加现金50美元的老太太，用握手做成九亿美元生意；If they absorb Mrs. B's lessons, they need none from me——可靠性本身就是最稀缺的商业资产，它让一切交易成本趋零。
+- [2026-10-11 03:07] (ai) 批五坦诚文化判词集。2020创业者群像：NICO的Jack Ringwalt——1940年12.5万美元起家、pipsqueak、专做odd-ball risks、讨厌监管者，1967年15分钟握手成交、从未要审计；Mrs. B餐前必唱God Bless America、工作到103岁；Knoxville双雄Clayton（1956）与Haslam（1958年6,000美元加油站）各创10亿税前利润企业——'Sometimes there is a magic to genes.'2024纠错纪律：cardinal sin=delaying the correction of mistakes=Charlie所说的'thumb-sucking'——'Problems cannot be wished away. They require action, however uncomfortable'；2019-23五年信中'mistake/error'用了16次，许多巨型公司同期一次未用（Amazon 2021例外）；董事会禁忌词implying managerial perfection'always made me nervous'；Greg接棒前提='if you start fooling your shareholders, you will soon believe your own baloney and be fooling yourself as well'；Tom Murphy六十年前建议='praise by name, criticize by category'。

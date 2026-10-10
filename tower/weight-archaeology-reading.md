@@ -16,9 +16,9 @@ links:
   - "applies-to:undervaluation-signed-by-tower"
   - "applies-to:consequence-is-last-moat"
   - "applies-to:deliberate-practice"
-version: 33
+version: 34
 created_at: 2026-10-10T20:11:19
-updated_at: 2026-10-11T02:40:19
+updated_at: 2026-10-11T03:08:57
 ---
 
 # 权重考古阅读法（Weight Archaeology）
@@ -76,3 +76,4 @@ updated_at: 2026-10-11T02:40:19
 - [2026-10-11 01:59] (ai) P16（2026-10-11）：巴菲特股东信批三1997-2006全读完毕并蒸馏。新增5砖：derivatives-wmd（2002衍生品WMD檄文+Gen Re Securities清盘实证+2006'批判系统不批判工具'补注）/noah-rule（预测下雨不算数，造方舟才算数）/mono-linked-chains（单变量链条原则，锌项目5.79亿忏悔）/helpers-ecology（Gotrocks寓言+2-and-20算术+牛顿第四定律：收益随运动增加而减少）/sharecropper-society（贸易逆差四连檄+pseudo-trade+reverse compounding+22亿美元外汇实证）。notes 20条：insurance-underwriting-discipline×2（承保三原则/experience vs exposure/NICO画像/Pascal赌注/GEICO伞险/Equitas/术语檄文）、emt-refutation（Schloss画像）、incentive-asymmetry（CEO薪酬批三合集）、board-three-structures（独董/审计四问）、franchise-moat（widening the moat+Mrs.B）、system-succession-five-gates（接班工程+CIO标准+Simpson授权）、never-sell-for-price（张力标记：大泡沫未卖自责）、black-swan（恐怖风险四点）、opportunity-cost-ruler（10%门槛）、risk-discipline（零乘律+三种债）、owner-earnings（EBITDA檄文）、verify-before-narrative（蟑螂律）、feynman-first-principles（术语檄文meta）、skin-in-the-game（MiTek真业主+owner-capitalism）、right-business-people-price（球童模型+报纸结案+Gillette）、acquisition-discipline（buyer of choice+tuck-in+快交易）、share-issue-rule（2005重申）、stop-doing-list（thumb-sucking+Darwin）、margin-of-safety（垃圾债方法论）、pendulum-detection（承保端钟摆）。批三重心=保险与衍生品风险工程+治理激励檄文+宏观首秀（外汇/贸易）。下批=批四2007-2016。
 - [2026-10-11 02:22] (ai) (ai) Munger教学法（Talk Three）：父亲讲McFayden课时刻意用需要'轻微脑力够一下'的间接方式，'因为必须自己够到，我握了一辈子'；'好的文学让读者为理解稍微够一下——自己够到的东西被打得更牢'（承诺一致性原理在学习上的正用）——阅读协议推论：塔砖的statement只给断言、论证放body，正是让读者'够一下'的设计；深读时先猜后读的收益有心理学根据。
 - [2026-10-11 02:40] (ai) P17 批四2007-2016蒸馏完成：新砖4（three-asset-classes三大资产类别、raining-gold-bucket天上下金子拿桶接、regulated-compact受监管契约、default-cashflow-not-collateral违约=现金流断裂），notes 41条挂41砖，great-good-gruesome三分类从严降级为franchise-moat note；批四五大主题=资产类别总檄文、危机下重手、监管契约、信贷现金流本体论、金禧双文（Charlie系统15条+Warren忏悔全集）；塔346砖。下批：批五2017-2024全读。
+- [2026-10-11 03:08] (ai) P18 批五2017-2024蒸馏完成（P2巴菲特股东信48封全读收官）：新砖3块——few-winners-work-wonders（58年=约12个真正好决策，weeds wither as flowers bloom，Mistakes fade away; winners can forever blossom）、hedge-dont-forecast（日本仓位货币中性结构：不可知的对冲掉、可知的留下来，股息8.12亿vs利息1.35亿正carry）、size-anchor-on-returns（规模是超额回报的锚：净值占标普宇宙6%，战列舰掉头，slightly better+materially less risk为诚实预期）。notes 34条挂30砖：owner-earnings/risk-redefined/helpers-ecology/three-asset-classes/three-nevers/organization-greatness-dcf/economic-goodwill/institutional-imperative/acquisition-discipline/board-three-structures/retention-test/stocks-for-the-long-run/buyback-authenticity-test/mr-market/emt-refutation/talent-is-love-times-time/eminent-dead-friends/solon-lifetime-accounting/culture-veto-first/insurance-underwriting-discipline/regulated-compact/raining-gold-bucket/time-is-friend/micro-over-macro/temperament-wiring/bet-on-business-over-manager/reliability-supervirtue/permanent-capital-structure/inflation-tax/growth-is-value-component/capitalism-three-parts/error-taxonomy/wonderful-at-fair/deferred-tax-float。塔415砖。P2巴菲特股东信1977-2024共48封全量通读+五批蒸馏全部完成。下批：P3 Marks备忘录（library/marks/已备）。
