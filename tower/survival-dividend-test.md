@@ -12,10 +12,13 @@ links:
   - "refines:spare-cash-only"
   - "refines:free-shares"
   - "derives-from:dcf-universal-law"
-version: 1
+version: 2
 created_at: 2026-10-10T23:57:31
-updated_at: 2026-10-10T23:57:31
+updated_at: 2026-10-11T00:15:00
 ---
 
 ## 论证
 （待论证）
+
+## Field Notes
+- [2026-10-11 00:15] (ai) 散户乙底线思维（dnote_5743，2022-05-02离开股市5年感悟）：买入前把最坏情况考虑进去要有底线思维，买入后坚定不移乐观——顺序不可反（买入前乐观=追高，买入后悲观=割肉）；最佳买入时机=好公司遇突发事件/一致悲观时。控制仓位防风险=没入门，真正的风控=当初选的什么股票。
