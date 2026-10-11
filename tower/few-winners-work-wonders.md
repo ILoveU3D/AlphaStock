@@ -10,10 +10,13 @@ tags:
 links:
   - "refines:compounding"
   - "refines:concentration-by-understanding"
-version: 1
+version: 2
 created_at: 2026-10-11T03:02:52
-updated_at: 2026-10-11T03:02:52
+updated_at: 2026-10-11T20:21:33
 ---
 
 ## 论证
 （待论证）
+
+## Field Notes
+- [2026-10-11 20:21] (ai) Sutton RL注（credit-assignment-noise tension）：偏态结果分布与归因噪声共同成立——回报分布极端偏态（少数决策贡献终值大头）而恰恰这些大额延迟回报最无法干净归因；解法：下大注于理解深的生意（承认偏态）+拒绝对自己做单笔归因（只审计过程）。宏大奖杯与微观免责不矛盾，矛盾只发生在用结果自我加冕或自我鞭笞时。
