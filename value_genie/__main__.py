@@ -231,6 +231,8 @@ def cmd_masters_vote(args) -> int:
             vetoed.get("borrowed_dividend"),
             errors="coerce") == 1).sum()),
         "profit_spike": int(vetoed["profit_spike"].sum()),
+        "expectation_overreach": int(
+            vetoed["expectation_overreach"].sum()),
     }
     pool = df[(df["vote_count"] >= 1) & (~df["veto_hard"])]
     if pool.empty:
@@ -310,7 +312,9 @@ def cmd_masters_vote(args) -> int:
                     for _, r in cycle_trapped.iterrows()],
                 "cycle_trap_ratio": cs.CYCLE_TRAP_RATIO,
                 "cycle_warn_ratio": cs.CYCLE_WARN_RATIO,
-                "profit_spike_pct": cs.PROFIT_SPIKE_PCT}
+                "profit_spike_pct": cs.PROFIT_SPIKE_PCT,
+                "graham_g_flag": cs.GRAHAM_G_FLAG,
+                "expectation_gap_flag": cs.EXPECTATION_GAP_FLAG}
         if horizon:
             meta["horizon"] = horizon
             meta["ranking"] = ("tactical (short_floor > pullback_sweet > "
@@ -346,7 +350,9 @@ def cmd_masters_vote(args) -> int:
     print(f"vetoed   : {len(vetoed)} excluded by hard veto "
           f"(intel_red={veto_sources['intel_red']}, "
           f"borrowed_dividend={veto_sources['borrowed_dividend']}, "
-          f"profit_spike={veto_sources['profit_spike']})"
+          f"profit_spike={veto_sources['profit_spike']}, "
+          f"expectation_overreach="
+          f"{veto_sources['expectation_overreach']})"
           + (f"; cycle_trap: {len(cycle_trapped)}"
              if not cycle_trapped.empty else ""))
     if n_distilled:
@@ -358,7 +364,7 @@ def cmd_masters_vote(args) -> int:
     print()
     print(f"{'rank':>4} {'market':>6} {'code':>8} {'name':<14} "
           f"{'price':>8} {'votes':>5} {'core':>5} {'dcf_g':>6} "
-          f"{'mean_comp':>9} {'pe_div':>6}  flags")
+          f"{'grm_g':>6} {'gap':>6} {'mean_comp':>9} {'pe_div':>6}  flags")
     for i, (_, r) in enumerate(top.iterrows(), 1):
         flags = []
         if r.get("thesis"):
@@ -377,10 +383,15 @@ def cmd_masters_vote(args) -> int:
         core_s = f"{core:.0f}" if pd.notna(core) else "-"
         dcf_g = r.get("dcf_implied_g")
         dcf_g_s = f"{dcf_g:+.1f}" if pd.notna(dcf_g) else "-"
+        grm_g = r.get("graham_g")
+        grm_g_s = f"{grm_g:+.1f}" if pd.notna(grm_g) else "-"
+        exp_gap = r.get("expectation_gap")
+        exp_gap_s = f"{exp_gap:+.1f}" if pd.notna(exp_gap) else "-"
         name = str(r.get("name") or "")[:14]
         print(f"{i:>4} {str(r.get('market')):>6} {str(r.get('code')):>8} "
               f"{name:<14} {r.get('price', float('nan')):>8g} "
               f"{int(r['vote_count']):>5} {core_s:>5} {dcf_g_s:>6} "
+              f"{grm_g_s:>6} {exp_gap_s:>6} "
               f"{r['mean_composite']:>9.1f} "
               f"{div_s:>6}  {', '.join(flags)}")
         print(f"{'':>4} masters: {r['masters_passed']}")
