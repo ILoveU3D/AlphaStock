@@ -18,8 +18,8 @@ commands:
   - skill list
   - tower stats
   - trade status
-version: 1
-updated_at: 2026-10-03T00:00:00
+version: 2
+updated_at: 2026-10-11T15:04:56
 ---
 
 # Playbook
@@ -66,3 +66,4 @@ updated_at: 2026-10-03T00:00:00
 不堆砌命令语法（命令是 AI 自己的事，不是用户的负担）。
 
 ## Field Notes
+- [2026-10-11 15:04] (ai) 用户 mandate 2026-10-11：讲解必须多举例子、讲故事启发，少堆凝练抽象理论（用户原话：抽象理论一下不能理解）；概念先故事后公式，一次只讲一层
