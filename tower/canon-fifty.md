@@ -13,9 +13,9 @@ links:
   - "refines:latticework-gap-map"
   - "applies-to:weight-archaeology-reading"
   - "refines:absorb-delta-not-duplicate"
-version: 4
+version: 5
 created_at: 2026-10-10T23:31:25
-updated_at: 2026-10-11T01:00:00
+updated_at: 2026-10-11T10:35:00
 ---
 
 ## 两轨制
@@ -35,17 +35,17 @@ updated_at: 2026-10-11T01:00:00
 2. 段永平投资问答录·投资逻辑篇 — ✅已深读（23砖）
 3. 大道·段永平投资问答录（赵理亚） — ✅已深读（8砖）
 4. 巴菲特致股东的信 — 种子（2砖，Phase 2 主矿）
-5. 聪明的投资者（格雷厄姆） — 种子
-6. 怎样选择成长股（费雪） — 种子
-7. 投资最重要的事（Marks） — 种子（Phase 3）
+5. 聪明的投资者（格雷厄姆） — 种子（全文未获取标记跳过：本批搜索未得可用源）
+6. 怎样选择成长股（费雪） — 种子（全文未获取标记跳过：本批搜索未得可用源）
+7. 投资最重要的事（Marks） — 种子（Phase 3；书源已解决=官方备忘录全集1990-2025入库 library/marks/：25MB PDF+4.9MB txt，书的章节即备忘录的扩展编排）
 8. 穷查理宝典 — ✅已深读（2026-10-11全书读毕：Ch1-3+十一场讲话全文逐字；Talk 1-10分批蒸馏74砖，Talk Eleven《人类误判心理学》25倾向蒸馏7增量砖——first-conclusion-lock/persian-messenger-syndrome/past-success-attribution-audit/self-regard-endowment-bias/contrast-blindness-trend-death/availability-misweighing/authority-misinfluence-governance——+9注补已有砖；全书累计81砖）
-9. 金融炼金术（索罗斯） — 种子（Phase 3）
+9. 金融炼金术（索罗斯） — 种子（Phase 3；全文未获取标记跳过：本批搜索未得可用源）
 
 ### 心理与行为（4）
 10. 思考，快与慢 11. 社会性动物 12. 乌合之众 13. 正义之心
 
 ### 历史、社会与政治（9）
-14. 枪炮、病菌与钢铁 15. 国家为什么会失败 16. 旧制度与大革命（中英全本已入库） 17. 通往奴役之路 — ✅已深读（8砖：种子升级+6分形+1观察，2026-10-11全书逐字读毕；中华典藏中译本459KB入库 library/hayek/；与21的tension对已展开） 18. 国富论（中英全本已入库） 19. 资本论（中文三卷全本入库 library/marx/） 20. 中国社会各阶级分析 — ✅已深读（8砖：种子+7分形，2026-10-11全文逐字读毕） 21. 国家与革命 — ✅已深读（8砖：种子+6分形+1观察，2026-10-11全书逐字读毕；编译局全本入库 library/lenin/） 22. 芯片战争
+14. 枪炮、病菌与钢铁 15. 国家为什么会失败（全文未获取标记跳过：联盟导购/Cloudflare拦截，精读需纸书或新源） 16. 旧制度与大革命 — ✅已深读（8砖：种子statement升级为五环论证链+7分形〔6 principle+1 observation〕，2026-10-11全书逐字读毕；冯棠商务版1328行含注释两附录；两对tension：与smash-dont-inherit〔打碎处方vs继承诊断〕、与declining-strata-most-radical〔存量损失引擎vs增量期望引擎〕；头号矿=reform-most-dangerous-moment期望差引擎） 17. 通往奴役之路 — ✅已深读（8砖：种子升级+6分形+1观察，2026-10-11全书逐字读毕；中华典藏中译本459KB入库 library/hayek/；与21的tension对已展开） 18. 国富论（中英全本已入库） 19. 资本论（中文三卷全本入库 library/marx/） 20. 中国社会各阶级分析 — ✅已深读（8砖：种子+7分形，2026-10-11全文逐字读毕） 21. 国家与革命 — ✅已深读（8砖：种子+6分形+1观察，2026-10-11全书逐字读毕；编译局全本入库 library/lenin/） 22. 芯片战争
 
 ### 哲学与思想（6）
 23. 论语（伦理=本分审计的中文源代码） 24. 道德经（变化本体论：反者道之动） 25. 传习录（知行·心学版） 26. 实践论（知行·唯物版，与25成tension对） 27. 矛盾论（主要矛盾分析=行业分析承重墙） 28. 猜想与反驳（认识论地基）
@@ -89,3 +89,4 @@ canon 管"书"；Phase 2-4 的实时账本（巴菲特信原文/Marks备忘录/�
 - [2026-10-11 08:20] (ai) 第17本《通往奴役之路》全书逐字读毕（王明毅/冯兴元1997中译本，1118行全文）并产出8砖：种子statement升级为全书论证链，分形6块principle（knowledge-dispersion-price-signal/law-vs-discretion/worst-get-on-top/economic-control-total-control/two-kinds-of-security/scale-consensus-inverse-law）+1块observation（truth-termination）。tension对落地：与state-and-revolution双向链接（law-vs-discretion/economic-control-total-control各带角度），与engels-trust-prophecy两条张力（知识轴/价值轴）。头号矿=worst-get-on-top（文化审计的机制层）与economic-control-total-control（DCF公理的产权前提）。canon历史组已深读3/9（20/21/17）。
 - [2026-10-11 08:30] (ai) 书源战役第二轮（两代理并行检索）：资本论/国富论中文/旧制度中文已在前会话入库（上条04:45前的书源记录已过时）；本轮新增找到：金融炼金术（100md，中文PDF401页+TXT573KB）、枪炮病菌与钢铁（100md，中信2022中译本，TXT/PDF/EPUB）、芯片战争（100md，中文蔡树军译+英文Scribner版双全本）、投资最重要的事（openelib，中信升级版EPUB全文）。仍未获全文：聪明的投资者/怎样选择成长股（115lu实测为诱饵跳转站，无合法免费全文源，标记跳过、种子砖垫着）、国家为什么会失败（中文无源；英文pdfdrive/zoboko有人机验证待浏览器手工）。100md为http-only站，curl可用。
 - [2026-10-11 09:30] (ai) 第8本《穷查理宝典》全书逐字读毕（stripe.press英文官方版，4003行全读完）：Talk Eleven《人类误判心理学》（2005扩展版，芒格81岁凭记忆约50小时重写25倾向）为收官场次，增量蒸馏7砖+9注（Talk 1-10的74砖已在前批完成，累计81砖，canon投资组已深读4/9）。头号矿=availability-misweighing（「不产生成堆数字的因素」要特别强调——本系统「量化只否决、AI做选择」三核等权架构的心理学地基）与persian-messenger-syndrome（坏消息通路=组织认知供氧管，文化核审计的行为级证据）。芯片战争PDF已下载验证（357页4.7MB蔡树军译本入库 library/miller/）；三本（投资最重要的事/国家为什么会失败/枪炮病菌与钢铁）浏览器代理下载中。
+- [2026-10-11 10:35] (ai) 第22本《芯片战争》全书逐字读毕（蔡树军中译本355页，PDF→TXT提取10372行，跨session分两批读完）并分形10砖（全数principle）：摩尔定律产业契约/地理集中悖论/资本门槛护城河/ASML整合型垄断/代工大联盟/武器化相互依赖/瓶颈半衰期/军事第一客户/激励设计成本革命/需求冲击误诊；种子砖statement全数承接、砖坯清零。两处tension落地（single-factor-maximization/ricardo-second-order-china），计算碎片化论点按absorb-delta-not-duplicate并入gpu-platform-cocreation轨道。canon历史组已深读4/9（20/21/17/22），canon总计已深读8/40。下一步：等三本下载代理结果（金融炼金术优先），或先入国富论/资本论（中文全本已在库）。
