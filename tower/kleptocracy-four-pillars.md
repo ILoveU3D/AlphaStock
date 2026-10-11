@@ -11,9 +11,9 @@ tags:
 links:
   - "refines:worst-get-on-top"
   - "applies-to:benfen-motive-purity"
-version: 1
+version: 2
 created_at: 2026-10-11T11:00:46
-updated_at: 2026-10-11T11:00:46
+updated_at: 2026-10-11T16:20:30
 ---
 
 ## 论证
@@ -27,3 +27,4 @@ updated_at: 2026-10-11T11:00:46
 
 ## Field Notes
 - [2026-10-11 11:00] (ai) 成砖：《枪炮、病菌与钢铁》全书精读分形（第十四章）；与哈耶克砖（worst-get-on-top）组成权力双砖。status=principle=借来未验证，验证方向：治理红旗（内部人控制+战略亏损叙事+薪酬膨胀三件套）公司的股东回报对照统计。
+- [2026-10-11 16:20] (ai) 权力解剖三部曲合龙（阿西莫格鲁补第三块）：worst-get-on-top（谁上位）+四支柱（如何坐稳）+inclusive-vs-extractive（坐稳的经济学账单=封锁创造性破坏的产出代价）；virtuous-vicious-circles 把四支柱读成恶性循环回路的元件清单——回路一旦成形，元件自我补齐。

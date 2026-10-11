@@ -10,9 +10,9 @@ tags:
   - epistemology
 links:
   - "refines:causes-not-outcomes"
-version: 2
+version: 3
 created_at: 2026-09-20T16:24:28
-updated_at: 2026-10-11T11:01:50
+updated_at: 2026-10-11T16:20:39
 ---
 
 ## 论证
@@ -33,3 +33,4 @@ updated_at: 2026-10-11T11:01:50
 ## Field Notes
 - [2026-09-18 00:00] (ai) 成砖：藏书吸收（贾雷德·戴蒙德《枪炮、病菌与钢铁》）；status=principle=借来未验证，对话中真正调用/验证后升 law 并分形。
 - [2026-10-11 11:01] (ai) 深读完成：全书逐字读毕（上海译文2006谢延光译本1176行/26.9万字符，library/diamond/，kgbook mobi解包零丢失验证）；分形8块砖（上列清单），砖坯清零；statement升级为近因-终极因分层合成（v2）；头号矿=anna-karenina-principle（否决制筛选的史前论证，与红旗清单同源）；位置论三部曲落成：tasmania-effect↔geographic-concentration-paradox（tension两极）+axis-propagation-friction（摩擦可测）；权力双砖落成：worst-get-on-top（哈耶克筛选）+kleptocracy-four-pillars（戴蒙德维持）。
+- [2026-10-11 16:20] (ai) reversal-of-fortunes 正面tension落地：1500年最富的阿兹特克/印加心脏地带今日最穷、荒地北美与澳洲今日最富——禀赋经由制度起作用才决定所得，密度红利在榨取逻辑下反成诅咒；两书共享kleptocracy解剖、分歧在因果漏斗（戴蒙德禀赋直接进产出，阿西莫格鲁禀赋→诱发榨取→制度→产出）；和解读法：上限由禀赋定，实现度由制度定。

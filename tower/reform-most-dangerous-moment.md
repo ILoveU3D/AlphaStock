@@ -12,9 +12,9 @@ tags:
 links:
   - "refines:old-regime-revolution"
   - "tension:declining-strata-most-radical"
-version: 1
+version: 2
 created_at: 2026-10-11T08:52:51
-updated_at: 2026-10-11T08:52:51
+updated_at: 2026-10-11T16:20:46
 ---
 
 ## 论证
@@ -31,3 +31,6 @@ updated_at: 2026-10-11T08:52:51
 
 ## 证伪
 若系统性观察到：改革深化期不满指标单调下降、或市场对"改善初现"的反应是稳定买入而非高波动，则定理降级为法国特例。
+
+## Field Notes
+- [2026-10-11 16:20] (ai) critical-juncture-amplification 与本砖=同一枚硬币两面：托克维尔给关键时期的政治动力学（改革释放期望差使旧制度最危险），阿西莫格鲁给制度分岔的乘数机制（小差异×关键时期=世纪分岔，黑死病东西欧双岔是标准判例）——拐点期资产用分段预期，不外推当前联盟结构。

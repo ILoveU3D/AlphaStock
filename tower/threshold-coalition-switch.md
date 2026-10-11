@@ -11,9 +11,9 @@ tags:
 links:
   - "refines:class-analysis-1926"
   - "applies-to:irrational-exuberance"
-version: 1
+version: 2
 created_at: 2026-10-11T01:56:00
-updated_at: 2026-10-11T01:56:00
+updated_at: 2026-10-11T16:20:44
 ---
 
 ## 论证
@@ -25,3 +25,6 @@ updated_at: 2026-10-11T01:56:00
 
 ## 边界
 阈值同盟解释联盟扩张速度，不保证方向正确——错误预期制造的"曙光"同样触发扩张（假突破），需配合证伪集巡逻。
+
+## Field Notes
+- [2026-10-11 16:20] (ai) critical-juncture-amplification 提供宏观对位：阈值处的同盟跳变若发生在关键时期（黑死病/光荣革命），跳变结果被制度锁死并乘数放大为世纪分岔——毛的阈值同盟是过程机制（谁在何时加入），阿西莫格鲁的关键时期是结果锁定（岔路选哪边）。

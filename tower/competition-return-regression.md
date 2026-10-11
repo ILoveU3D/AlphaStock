@@ -14,9 +14,9 @@ links:
   - "refines:franchise-moat"
   - "tension:business-return-dominates"
   - "applies-to:master-graham"
-version: 1
+version: 2
 created_at: 2026-10-11T14:34:35
-updated_at: 2026-10-11T14:34:35
+updated_at: 2026-10-11T16:20:35
 ---
 
 ## 百年行业数据（第13章）
@@ -40,3 +40,6 @@ updated_at: 2026-10-11T14:34:35
 
 - 与 falling-profit-rate-tendency（马克思：利润率的历史下降趋势）成微观/宏观对：马克思断言总量趋势，格雷厄姆实证行业间回归——同一竞争逻辑在不同海拔。
 - 与 business-return-dominates 成互补 tension：那块砖说"要进入更好的生意"（长期回报趋近 ROIC），本砖说"更好生意的高回报本身会被竞争拉回"——解是叠加态：选**有护城河的**高回报生意，即 franchise。无护城河的高 ROE 是租来的，租期由竞争决定。
+
+## Field Notes
+- [2026-10-11 16:20] (ai) 回归趋中的引擎有了名字（creative-destruction-growth-engine）：格雷厄姆趋中律靠创造性破坏执行；护城河=人为暂停回归的私人装置，行政免竞争=永久豁免回归的制度装置——趋中律的边界条件写在制度性质里。
