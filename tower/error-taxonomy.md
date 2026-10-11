@@ -13,9 +13,9 @@ links:
   - "refines:three-nevers"
   - "applies-to:paper-loss-vs-real-loss"
   - "applies-to:master-duan"
-version: 10
+version: 11
 created_at: 2026-10-10T21:06:57
-updated_at: 2026-10-11T12:23:01
+updated_at: 2026-10-11T12:48:16
 ---
 
 ## 论证
@@ -30,3 +30,4 @@ updated_at: 2026-10-11T12:23:01
 - [2026-10-11 02:37] (ai) 批四忏悔补遗：EFH终局（2013）——20亿买LBO债没问Charlie，税前亏8.73亿，Next time I'll call Charlie；Charlie 2014年补刀：最大的错误是omission错误（没买沃尔玛等），净值因此少500亿美元以上——commission错误可见且耻辱，omission错误不可见但更贵；GEICO信用卡副业亏损忏悔（2009）=能力圈外的学费照交不误。
 - [2026-10-11 03:08] (ai) 2020年PCC忏悔=过程错误的大型标本：110亿美元减记——'No one misled me... I was simply too optimistic about PCC's normalized profit potential'；对净有形资产回报的判断是对的，对未来盈利均值与支付价格的判断错了——'PCC is far from my first error of that sort. But it's a big one.'同年经营盈利-9%但通过回购5%+留存提升，每股内在价值仍升——过程错误可被正确方向的持续行动稀释，这正是error-taxonomy与few-winners-work-wonders的接口：避免原则性错误（借钱/做空/不懂的事），过程错误交给时间与赢家覆盖。
 - [2026-10-11 12:23] (ai) 哲学战役批一（实践论）：许多时候须反复失败多次，才能纠正错误的认识——认识失败不是异常而是工序的常态输入；原定的思想、理论、计划、方案毫无改变地实现出来的事是很少的。投资映射：买入论证被证伪不应触发辩护机制，而应触发认识修正——部分或全部改变预想是常态，毫无改变才是例外。
+- [2026-10-11 12:48] (ai) 哲学战役批二（论语）：改正的信任维度——'君子之过也，如日月之食焉：过也，人皆见之；更也，人皆仰之'（子张：错误天然公开可见，公开改正不是信任损失而是信任增强事件）；'过而不改，是谓过矣'（卫灵公：错误本身不定义错误，不改才定义）；'过，则勿惮改'（学而）；'丘也幸，苟有过，人必知之'（述而：孔子把被人知错当作幸运——错误可见性是礼物）。
