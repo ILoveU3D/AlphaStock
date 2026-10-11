@@ -13,9 +13,9 @@ links:
   - "derives-from:dcf-universal-law"
   - "refines:dcf-growth-three-laws"
   - "applies-to:master-graham"
-version: 2
+version: 3
 created_at: 2026-10-11T14:34:14
-updated_at: 2026-10-11T15:44:58
+updated_at: 2026-10-11T18:24:20
 ---
 
 ## 公式与出处
@@ -46,3 +46,4 @@ updated_at: 2026-10-11T15:44:58
 
 ## Field Notes
 - [2026-10-11 15:44] (ai) 2026-10-11 落地为机器旗：本砖倒用形式已进入 QMF 管道——L1 宽池两列 graham_g/expectation_gap + L2 单向否决旗 expectation_overreach（consensus.py GRAHAM_G_FLAG=15/EXPECTATION_GAP_FLAG=15，user mandate）；首日实盘捕获 PLTR（pe178.7，munger/livermore/sheng 三票照样否决）与 WAT（pe109.8）——格雷厄姆的算术第一次以代码身份坐在 L2 否决席上
+- [2026-10-11 18:24] (ai) 勒庞注（contagion-not-reason+fixed-belief-floating-opinion）：市场为未证实增长付钱的通道是断言-重复-传染而非论证——graham_g被'众所周知'地重复得越久越接近传染深度峰值而非证据峰值；expectation_overreach的本质是固定虚构的免检溢价，首次公开审视（做空报告/证伪文/监管问询）是溶剂，不须正确即能终结溢价。
