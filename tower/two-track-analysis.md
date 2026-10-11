@@ -12,9 +12,9 @@ links:
   - "refines:thinking-fast-slow"
   - "refines:poor-charlies-almanack"
   - "applies-to:master-munger"
-version: 4
+version: 5
 created_at: 2026-10-11T02:07:46
-updated_at: 2026-10-11T08:32:00
+updated_at: 2026-10-11T12:23:00
 ---
 
 ## 论证
@@ -27,3 +27,4 @@ updated_at: 2026-10-11T08:32:00
 ## Field Notes
 - [2026-10-11 02:39] (ai) 2008年approval sedates the brain=心理轨道对分析轨道的麻醉：顾问与董事会的一致赞同让CEO的大脑停止风险计算；伯克希尔的结构性反麻醉=无收购部、无helper压力、inhuman patience（前十年净增仅一个生意）、收购第二顾问唱反调疗法——制度设计先行于个人意志力。
 - [2026-10-11 08:32] (ai) Talk 11=双轨分析理性轨的完整弹药库——2005扩展版25倾向全文就是心理轨的对冲清单（Talk 1-10的零散心理讨论在此汇编成系统）；使用协议：重仓决策把25倾向当检查单过一遍（五常客：激励超级反应/第一结论锁/社会证明/剥夺反应/易得性错估）；新增7砖入位：first-conclusion-lock/persian-messenger-syndrome/past-success-attribution-audit/self-regard-endowment-bias/contrast-blindness-trend-death/availability-misweighing/authority-misinfluence-governance。
+- [2026-10-11 12:23] (ai) 哲学战役批一（实践论）：'去粗取精、去伪存真、由此及彼、由表及里'十六字工序=双轨分析的上下游——第一轨（量化）负责去粗取精、去伪存真（筛掉噪音与造假），第二轨（质性）负责由此及彼、由表及里（从外部联系进入内部矛盾）。工序输入必须是十分丰富（非零碎不全）且合于实际（非错觉）的感性材料——数据残缺或失真时，任何推理只产出错觉的概念与结论。
