@@ -8,9 +8,9 @@ tags:
   - master-hub
   - masters-vote
 links:
-version: 1
+version: 2
 created_at: 2026-10-11T02:43:29
-updated_at: 2026-10-11T02:43:29
+updated_at: 2026-10-11T14:35:42
 ---
 
 枢纽砖角色：格雷厄姆体系的规范查询入口——成员砖经 `applies-to:master-graham` 汇聚，`tower search master-graham` 一次拉回全集。
@@ -20,3 +20,6 @@ updated_at: 2026-10-11T02:43:29
 三分类：选股/否决类（margin-of-safety 算术、周期股低 PE 反向指标自检）→L3 表决输入；市场态度类（mr-market）→时机与情绪框架层；其余随书籍蒸馏持续回填。
 
 现状声明：体系厚度当前最薄（5 砖），L3 格雷厄姆票以 playbook 09 为主、塔砖为辅，蒸馏完成后反转。
+
+## Field Notes
+- [2026-10-11 14:35] (ai) 《聪明的投资者》全书读毕（2026-10-11，1964年第4版中译2526行逐字），理论库丰富完成：8新砖（pe-as-priced-growth/average-earnings-power/main-loss-good-times-bad-stocks/competition-return-regression/market-prices-dividends-4x/financial-efficiency-agency/growth-picking-unknowable/diversification-as-insurance）+intelligent-investor种子升级全书合成+margin-of-safety两注（价格依赖三点论/债券式双算术）；L3格雷厄姆表决的完整理论集=本hub+intelligent-investor+margin-of-safety+mr-market+price-vs-value+security-analysis+8新砖。

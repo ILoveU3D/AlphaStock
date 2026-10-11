@@ -9,9 +9,9 @@ tags:
   - psychology
 links:
   - "applies-to:master-graham"
-version: 15
+version: 16
 created_at: 2026-09-20T16:24:21
-updated_at: 2026-10-11T13:06:37
+updated_at: 2026-10-11T14:35:43
 ---
 
 ## 论证
@@ -32,3 +32,4 @@ updated_at: 2026-10-11T13:06:37
 - [2026-10-11 03:05] (ai) 2021-2023市场先生判词补完。business-pickers宣言：'Charlie and I are not stock-pickers; we are business-pickers'；shooting-fish-in-a-barrel=公开市场偶尔以美妙价格卖美妙生意，谈判交易中罕见且永不批量；公开市场退出错误也更容易。2023赌场论：市场会seize up甚至vanish（1914年关四个月、2001年关几天）；2008年9月即时全球瘫痪——通讯速度与技术便利使instant worldwide paralysis成为可能；'today's active participants are neither more emotionally stable nor better taught than when I was in school'；'markets now exhibit far more casino-like behavior'——casino now resides in many homes and daily tempts the occupants；华尔街真正让汁液流动的是feverish activity——'whatever foolishness can be marketed will be vigorously marketed'；结局循环：政客愤怒、肇事者rich and unpunished溜走、邻居bewildered poorer vengeful——'Money, he learns, has trumped morality.'伯克希尔的Not-So-Secret Weapon=以巨额资金+确定性履约即时响应市场瘫痪的能力（2023：能处理超越历史任何量级的金融灾难，危机时做国家的资产帮忙灭火，不做点火者）。
 - [2026-10-11 12:47] (ai) 哲学战役批二（论语）：对市场爱恶的独立验证义务——'众恶之，必察焉；众好之，必察焉'（卫灵公）：众人厌恶的必须亲自审查、众人喜爱的也必须亲自审查——两个方向的群体一致都不构成证据，只构成待检验的假设；孔子版本的'逆势'不是自动反做，是拒绝让人群替代自己的检验工序。
 - [2026-10-11 13:06] (ai) 哲学战役批三（道德经）：独立观察位的肖像——'众人熙熙，如享太牢，如春登台；我独泊兮其未兆……俗人昭昭，我独昏昏；俗人察察，我独闷闷'（20）：众人在宴会与春台（FOMO的群像），善为士者澹兮其若海——逆向不是姿态是信息结构：在众声喧哗处保持未兆之泊。
+- [2026-10-11 14:35] (ai) 格雷厄姆第16章对'利用市场先生'的算术化收束：安全边际用统计数据与算术推理区别投资与投机——投机者'觉得时间对他有利或技巧优于大众'基于主观判断无确定线索支持；投资者的边际'基于统计数据的简单和确定的算术推理'。市场先生的报价是原料，安全边际是把原料变成决策的唯一机器。
