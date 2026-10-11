@@ -13,9 +13,9 @@ links:
   - "derives-from:dcf-universal-law"
   - "refines:dcf-growth-three-laws"
   - "applies-to:master-graham"
-version: 1
+version: 2
 created_at: 2026-10-11T14:34:14
-updated_at: 2026-10-11T14:34:14
+updated_at: 2026-10-11T15:44:58
 ---
 
 ## 公式与出处
@@ -43,3 +43,6 @@ updated_at: 2026-10-11T14:34:14
 ## 公式的软肋：德州仪器
 
 格雷厄姆自己提供了证伪案例（第12章）：德州仪器 1953 年 5 美元 → 1960 年 256 美元，同期 EPS 43美分→3.91美元、零分红；1962 年支付了现金红利，但当年 EPS 跌到 2.14 美元、股价崩至 49 美元。公式对 g 没有上限约束，而市场为增长付价的弹性就是风险的弹性——付 48 倍的人在 g 证伪时承受 80% 的回撤。与 growth-picking-unknowable 成对使用：公式负责定价，那块砖负责警告定价者。
+
+## Field Notes
+- [2026-10-11 15:44] (ai) 2026-10-11 落地为机器旗：本砖倒用形式已进入 QMF 管道——L1 宽池两列 graham_g/expectation_gap + L2 单向否决旗 expectation_overreach（consensus.py GRAHAM_G_FLAG=15/EXPECTATION_GAP_FLAG=15，user mandate）；首日实盘捕获 PLTR（pe178.7，munger/livermore/sheng 三票照样否决）与 WAT（pe109.8）——格雷厄姆的算术第一次以代码身份坐在 L2 否决席上
