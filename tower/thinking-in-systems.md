@@ -12,9 +12,9 @@ tags:
 links:
   - "applies-to:compounding"
   - "applies-to:franchise-moat"
-version: 1
+version: 2
 created_at: 2026-10-10T23:17:31
-updated_at: 2026-10-10T23:17:31
+updated_at: 2026-10-11T16:20:41
 ---
 
 ﻿## 论证
@@ -27,3 +27,4 @@ updated_at: 2026-10-10T23:17:31
 
 ## Field Notes
 - [2026-10-10] (ai) 成砖：藏书吸收（梅多斯《系统之美》）；种子级先验蒸馏、未经深读，Phase 5 深读队列待验；status=principle=借来未验证，对话中真正调用/验证后升 law 并分形。
+- [2026-10-11 16:20] (ai) virtuous-vicious-circles 提供百年级系统案例：制度漂移=缓变存量、关键时期=流量冲击、良性/恶性循环=自增强回路——良性存量是广泛的既得产权利益（改革不可逆）、恶性存量是租金供养的镇压能力（推翻成本随抽取递增），结构决定行为的制度版。

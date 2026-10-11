@@ -12,9 +12,9 @@ links:
   - "refines:dcf-universal-law"
   - "derives-from:proposition-vs-lens"
   - "applies-to:keyhole-two-species"
-version: 2
+version: 3
 created_at: 2026-09-28T11:20:25
-updated_at: 2026-09-28T11:35:13
+updated_at: 2026-10-11T16:20:55
 ---
 
 ## 论证
@@ -22,3 +22,4 @@ updated_at: 2026-09-28T11:35:13
 
 ## Field Notes
 - [2026-09-28 11:35] (ai) 用户确认并升级为荐股纪律（原话'以后荐股还是第一考虑DCF原则'）：三律从方法论讨论升级为荐股L4层强制起点——reverse DCF显形化隐含预期→情景×概率→证伪集滚动更新；成砖当日即获用户授权，计首次使用验证
+- [2026-10-11 16:20] (ai) authoritarian-growth-ceiling 给终值g补制度边界：追赶段经济体的终值增长率按追赶红利耗尽折价（苏联1970s刹车样本）、前沿段若制度转向榨取前沿溢价即政策风险敞口——增长三律之外，制度位置是g的边界条件；同批收口：治理审计先于现金流预测，DCF对象必须是归属股东的现金流（inclusive-vs-extractive 投资迁移）。
