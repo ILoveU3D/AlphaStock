@@ -12,10 +12,13 @@ links:
   - "derives-from:dcf-universal-law"
   - "refines:class-map-2026-china"
   - "refines:materialist-lens-and-its-boundary"
-version: 1
+version: 2
 created_at: 2026-10-08T15:04:45
-updated_at: 2026-10-08T15:04:45
+updated_at: 2026-10-11T11:32:16
 ---
 
 ## 论证
 （待论证）
+
+## Field Notes
+- [2026-10-11 11:32] (ai) 书本 grounding 到位（2026-10-11资本论卷一读毕）：本假说的'来源层/索取权层'两分得到卷一文本支撑——surplus-from-production-not-exchange（剩余价值只能在生产中创造，流通是零和）+ labor-duality-two-readings（劳动二重性=同物两视的微观基础）；比例性死亡问题（价值/劳动比无界）在补遗底稿的'单个商品价值=总生产物价值除法'与机器价值转移规律中已有线索，卷二流通过程与卷三诸形态读后再校准。

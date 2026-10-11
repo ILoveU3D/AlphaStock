@@ -17,8 +17,8 @@ commands:
   - ask X --evidence
   - intel X
   - recommend --user me
-version: 42
-updated_at: 2026-10-11T02:51:33
+version: 43
+updated_at: 2026-10-11T11:28:43
 ---
 
 # Playbook
@@ -303,3 +303,4 @@ Output shape (hard rules):
 - [2026-10-09 20:04] (ai) 2026-10-09 用户方法论指令(塔砖model-is-weapon-not-operator): 模型与大师圆桌=参考层,任何一方不构成否决;最终买/不买决策必须by token产出,质料=商业模式+企业文化+DCF三核(只能深度调研获得,无模型可替代);L4裁决时若大师强烈倾向与模型结论冲突,义务=点名分歧坐标并深度思考,而非取交集或任一服从
 - [2026-10-09 20:42] (ai) 2026-10-09 波司登模型审计课(03998,10-08 changelog): 净债务陷阱——旧模型用'总负债110.59亿-现金29.77亿=80.8亿净债务',误把经营性负债(应付/合约负债)当债务;正确口径=计息负债-现金,FY2026实为净现金65.8亿,一单修正摆动147亿CNY权益价值(公允6.17→8.04)。建模规则:net_debt只算interest-bearing,经营负债进NWC不进net_debt;build前必须过这一眼
 - [2026-10-11 02:51] (ai) 塔→L3通道落地(user mandate 2026-10-11): 7大师枢纽砖建立(master-duan 53成员/buffett 33/munger 70/graham 5/livermore 2/sheng 1/sanhuyi 6, 含conversation源按体系归属的dividend-backing-order与book:滚雪球), 成员砖applies-to回填, tower search master-<id>一次拉回全集(links字段参与匹配); 三分类=选股否决→L3表决/仓位纪律→L4/元认知不接; 表决理由强制引砖ID无砖降级; 后台书籍蒸馏队列并发加砖时, 每批吸收后必须即挂applies-to(吸收即链接, 已写入AGENTS.md入塔义务), 否则枢纽查询漏新砖
+- [2026-10-11 11:28] (ai) L3 七大师定性表决必须显式开票（表格+引砖ID）再进 L4——2026-10-11 用户追问'为什么没看到L3/L4的master vote'暴露口头裁决跳过开票环节的缺漏；开票结果可翻转 L4（03306 6:1 vs 03998 5:2 导致港股并列首选，HRMY 2✓4✗ 降为观察）

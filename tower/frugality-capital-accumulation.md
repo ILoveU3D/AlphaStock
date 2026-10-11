@@ -12,9 +12,9 @@ links:
   - "derives-from:wealth-of-nations"
   - "refines:retention-test"
   - "refines:compounding"
-version: 1
+version: 2
 created_at: 2026-10-11T10:26:00
-updated_at: 2026-10-11T10:26:00
+updated_at: 2026-10-11T11:32:12
 ---
 
 ## 论证
@@ -26,3 +26,4 @@ retention-test（留存1美元检验）是此律的公司版本：留存利润�
 
 ## Field Notes
 - [2026-10-11] (ai) 成砖：《国富论》精读分形；与retention-test的对接点——巴菲特把斯密的"节俭积累"翻译成了"留存检验"，DCF公理的资金侧地基。
+- [2026-10-11 11:32] (ai) tension对端落地（2026-10-11资本论卷一读毕）：马克思原始蓄积章批判的'原罪寓言'（勤俭中坚vs怠惰挥霍）正是本砖的节俭叙事——斯密节俭积累律解释增量复利（日常运营层），force-midwife-of-new-society主张暴力解释存量起点（历史创世层）；两者时间尺度不同可并存：现金流模型用斯密，股权结构与政策风险审计用马克思。见tower/force-midwife-of-new-society.md
