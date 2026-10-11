@@ -9,8 +9,8 @@ triggers:
 commands:
   - doctor
   - fetch
-version: 44
-updated_at: 2026-10-11T08:55:57
+version: 45
+updated_at: 2026-10-11T10:47:45
 ---
 
 # Playbook
@@ -103,3 +103,4 @@ conversation-start freshness probe:
 - [2026-10-08 21:18] (ai) XBRL concept chains go stale: GOOGL switched revenue tag RevenueFromContractWithCustomerExcludingAssessedTax->Revenues in 2025, first-concept-wins extraction silently locks onto the dead series; always pick the freshest-covering concept (max visible period end) when rebuilding fundamentals as-of a past date (backtest_us_20251008.py)
 - [2026-10-08 22:32] (ai) 盘中窗口数据新鲜度口径(2026-10-08): ①数据年龄看内容时间不看manifest mtime——doctor显示0.5h但quotes内容仍是10-07收盘=实际18h,盘中交易前必须核实quotes口径 ②fetch默认复用日内quotes(旧收盘价),盘中必须--refresh强制重拉 ③报价源故障声明精确到生效源('腾讯fallback生效,EM冷却至23:13'而非'EM封禁中')
 - [2026-10-11 08:55] (ai) PS 5.1 quirk (2026-10-11, GGS fetch): .ps1 saved as UTF-8 without BOM is read as ANSI -> Chinese path literals become mojibake -> [IO.File]::WriteAllText dies 'Illegal characters in path' after a long fetch run (all content lost). Fix: keep fetch scripts pure-ASCII (write to tmp/ ASCII path, verify, then Move-Item inline to the Chinese library destination — inline commands pass Unicode correctly); web-parsed titles decode fine, only script-file literals corrupt. Also: guishuji.com throttles every few pages with empty responses - retry x4 with backoff + per-section cache files, never one big in-memory buffer.
+- [2026-10-11 10:47] (ai) 同文件多笔Edit并行调用存在写覆盖竞态: 同一消息里对同一文件的多个Edit互不可见、后写吃掉前写(实测tower/alchemy-of-finance.md三笔并行只存活最后一笔, canon-fifty.md版本号笔同样丢失)——同一文件多处修改必须逐笔串行发消息, 或合并为单笔大段替换; 落盘后用Read核对行号连贯性可当场发现丢失
