@@ -12,9 +12,10 @@ links:
   - "refines:class-analysis-1926"
   - "refines:thinking-fast-slow"
   - "applies-to:mr-market"
-version: 1
+  - "tension:reform-most-dangerous-moment"
+version: 2
 created_at: 2026-10-11T01:56:03
-updated_at: 2026-10-11T01:56:03
+updated_at: 2026-10-11T08:53:03
 ---
 
 ## 论证
