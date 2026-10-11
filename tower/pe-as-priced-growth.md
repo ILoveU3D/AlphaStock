@@ -13,9 +13,9 @@ links:
   - "derives-from:dcf-universal-law"
   - "refines:dcf-growth-three-laws"
   - "applies-to:master-graham"
-version: 3
+version: 4
 created_at: 2026-10-11T14:34:14
-updated_at: 2026-10-11T18:24:20
+updated_at: 2026-10-11T20:21:51
 ---
 
 ## 公式与出处
@@ -47,3 +47,4 @@ updated_at: 2026-10-11T18:24:20
 ## Field Notes
 - [2026-10-11 15:44] (ai) 2026-10-11 落地为机器旗：本砖倒用形式已进入 QMF 管道——L1 宽池两列 graham_g/expectation_gap + L2 单向否决旗 expectation_overreach（consensus.py GRAHAM_G_FLAG=15/EXPECTATION_GAP_FLAG=15，user mandate）；首日实盘捕获 PLTR（pe178.7，munger/livermore/sheng 三票照样否决）与 WAT（pe109.8）——格雷厄姆的算术第一次以代码身份坐在 L2 否决席上
 - [2026-10-11 18:24] (ai) 勒庞注（contagion-not-reason+fixed-belief-floating-opinion）：市场为未证实增长付钱的通道是断言-重复-传染而非论证——graham_g被'众所周知'地重复得越久越接近传染深度峰值而非证据峰值；expectation_overreach的本质是固定虚构的免检溢价，首次公开审视（做空报告/证伪文/监管问询）是溶剂，不须正确即能终结溢价。
+- [2026-10-11 20:21] (ai) Sutton RL注（dcf-as-optimal-value-function+gordon-bellman-fixpoint）：格雷厄姆公式价值=EPS×(8.5+2g)是价值函数不动点的线性参数化（PE为g的仿射函数），Gordon V=D/(r−g)是其双曲亲戚——两者都是贝尔曼不动点的显示解特例；线性形式里r≤g发散边界在g>0一侧不可见，这正是公式对g无上限约束（德州仪器软肋）的数学根源。

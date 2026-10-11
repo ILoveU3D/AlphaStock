@@ -15,9 +15,9 @@ links:
   - "refines:mr-market"
   - "refines:narrative-economics"
   - "applies-to:dcf-universal-law"
-version: 2
+version: 3
 created_at: 2026-10-11T16:46:51
-updated_at: 2026-10-11T18:24:35
+updated_at: 2026-10-11T20:21:19
 ---
 
 ## 原文依据（第二十五、二十九至三十二章+第四十六章地价节，跨session逐字读毕）
@@ -38,3 +38,4 @@ updated_at: 2026-10-11T18:24:35
 ## Field Notes
 - [2026-10-11] (ai) 成砖：《资本论》卷三第五篇精读分形，卷三头号矿——DCF公式的政治经济学原点。status=principle；验证方向：股息收益率与国债收益率的历史贴合度（资本化公式的市场检验）。
 - [2026-10-11 18:24] (ai) 勒庞注（fixed-belief-floating-opinion）：层级补充——虚拟资本'脱离实体独立涨落'的载体=固定信念层：市值资本化的对象是预期，预期的体制层是未被审视的固定虚构（'只能靠不被审视而存活'），信念断裂时价格无需实体恶化即蒸发——泡沫与崩盘都不需要企业变坏，只需要虚构被质疑。
+- [2026-10-11 20:21] (ai) Sutton RL注（gordon-bellman-fixpoint）：马克思资本化V=E/I与Gordon模型是同一数学对象的两个版本——资本化=贝尔曼不动点的零增长解（g=0），Gordon V=D/(r−g)=增长率非零的不动点推广；1867年的政治经济学与2020年的决策科学在终值公式上握手。

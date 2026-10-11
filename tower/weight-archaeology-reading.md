@@ -16,9 +16,9 @@ links:
   - "applies-to:undervaluation-signed-by-tower"
   - "applies-to:consequence-is-last-moat"
   - "applies-to:deliberate-practice"
-version: 34
+version: 35
 created_at: 2026-10-10T20:11:19
-updated_at: 2026-10-11T03:08:57
+updated_at: 2026-10-11T20:21:28
 ---
 
 # 权重考古阅读法（Weight Archaeology）
@@ -77,3 +77,4 @@ updated_at: 2026-10-11T03:08:57
 - [2026-10-11 02:22] (ai) (ai) Munger教学法（Talk Three）：父亲讲McFayden课时刻意用需要'轻微脑力够一下'的间接方式，'因为必须自己够到，我握了一辈子'；'好的文学让读者为理解稍微够一下——自己够到的东西被打得更牢'（承诺一致性原理在学习上的正用）——阅读协议推论：塔砖的statement只给断言、论证放body，正是让读者'够一下'的设计；深读时先猜后读的收益有心理学根据。
 - [2026-10-11 02:40] (ai) P17 批四2007-2016蒸馏完成：新砖4（three-asset-classes三大资产类别、raining-gold-bucket天上下金子拿桶接、regulated-compact受监管契约、default-cashflow-not-collateral违约=现金流断裂），notes 41条挂41砖，great-good-gruesome三分类从严降级为franchise-moat note；批四五大主题=资产类别总檄文、危机下重手、监管契约、信贷现金流本体论、金禧双文（Charlie系统15条+Warren忏悔全集）；塔346砖。下批：批五2017-2024全读。
 - [2026-10-11 03:08] (ai) P18 批五2017-2024蒸馏完成（P2巴菲特股东信48封全读收官）：新砖3块——few-winners-work-wonders（58年=约12个真正好决策，weeds wither as flowers bloom，Mistakes fade away; winners can forever blossom）、hedge-dont-forecast（日本仓位货币中性结构：不可知的对冲掉、可知的留下来，股息8.12亿vs利息1.35亿正carry）、size-anchor-on-returns（规模是超额回报的锚：净值占标普宇宙6%，战列舰掉头，slightly better+materially less risk为诚实预期）。notes 34条挂30砖：owner-earnings/risk-redefined/helpers-ecology/three-asset-classes/three-nevers/organization-greatness-dcf/economic-goodwill/institutional-imperative/acquisition-discipline/board-three-structures/retention-test/stocks-for-the-long-run/buyback-authenticity-test/mr-market/emt-refutation/talent-is-love-times-time/eminent-dead-friends/solon-lifetime-accounting/culture-veto-first/insurance-underwriting-discipline/regulated-compact/raining-gold-bucket/time-is-friend/micro-over-macro/temperament-wiring/bet-on-business-over-manager/reliability-supervirtue/permanent-capital-structure/inflation-tax/growth-is-value-component/capitalism-three-parts/error-taxonomy/wonderful-at-fair/deferred-tax-float。塔415砖。P2巴菲特股东信1977-2024共48封全量通读+五批蒸馏全部完成。下批：P3 Marks备忘录（library/marks/已备）。
+- [2026-10-11 20:21] (ai) Sutton RL注（credit-assignment-noise）：先写后看=资格迹的决策日记版——先写在奖励到达前锁定'证据→判断'映射（RL术语：存轨迹不等回报），后看只更新机制信念不做单笔归因；延迟奖励归因带噪是数学结构（样本量1的单轨迹回归不可能收敛），复盘纪律的数学天花板。
