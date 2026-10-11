@@ -11,9 +11,10 @@ tags:
 links:
   - "refines:acquisition-discipline"
   - "refines:state-and-revolution"
-version: 1
+  - "tension:centralization-inherits-itself"
+version: 2
 created_at: 2026-10-11T04:43:34
-updated_at: 2026-10-11T04:43:34
+updated_at: 2026-10-11T08:53:01
 ---
 
 ## 原文（第三章§1+§5，第四章§5）
