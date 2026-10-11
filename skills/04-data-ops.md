@@ -9,8 +9,8 @@ triggers:
 commands:
   - doctor
   - fetch
-version: 43
-updated_at: 2026-10-08T22:32:10
+version: 44
+updated_at: 2026-10-11T08:55:57
 ---
 
 # Playbook
@@ -102,3 +102,4 @@ conversation-start freshness probe:
 - [2026-10-08 16:33] (ai) 2026-10-08节后首日坑: 快照a_quotes是上一交易日收盘(carry forward, gate提示'carried'), 当日真实收盘只存在于live kline——做当日广度/涨跌分析必须用fetch_kline_any实算, 快照pct_chg差一个session; 交叉验证法: snapshot price == kline prev_close 即说明quotes滞后一天
 - [2026-10-08 21:18] (ai) XBRL concept chains go stale: GOOGL switched revenue tag RevenueFromContractWithCustomerExcludingAssessedTax->Revenues in 2025, first-concept-wins extraction silently locks onto the dead series; always pick the freshest-covering concept (max visible period end) when rebuilding fundamentals as-of a past date (backtest_us_20251008.py)
 - [2026-10-08 22:32] (ai) 盘中窗口数据新鲜度口径(2026-10-08): ①数据年龄看内容时间不看manifest mtime——doctor显示0.5h但quotes内容仍是10-07收盘=实际18h,盘中交易前必须核实quotes口径 ②fetch默认复用日内quotes(旧收盘价),盘中必须--refresh强制重拉 ③报价源故障声明精确到生效源('腾讯fallback生效,EM冷却至23:13'而非'EM封禁中')
+- [2026-10-11 08:55] (ai) PS 5.1 quirk (2026-10-11, GGS fetch): .ps1 saved as UTF-8 without BOM is read as ANSI -> Chinese path literals become mojibake -> [IO.File]::WriteAllText dies 'Illegal characters in path' after a long fetch run (all content lost). Fix: keep fetch scripts pure-ASCII (write to tmp/ ASCII path, verify, then Move-Item inline to the Chinese library destination — inline commands pass Unicode correctly); web-parsed titles decode fine, only script-file literals corrupt. Also: guishuji.com throttles every few pages with empty responses - retry x4 with backoff + per-section cache files, never one big in-memory buffer.
