@@ -12,9 +12,9 @@ tags:
 links:
   - "refines:falsificationism"
   - "applies-to:tech-is-not-product"
-version: 2
+version: 3
 created_at: 2026-10-10T23:17:28
-updated_at: 2026-10-11T01:58:26
+updated_at: 2026-10-12T00:00:00
 ---
 
 ﻿## 论证
@@ -25,6 +25,19 @@ updated_at: 2026-10-11T01:58:26
 - 诚实第一原则："你绝不能欺骗自己——而你是最容易被自己欺骗的人"
 - 从零重建：不接受"别人都这么算"作为论据
 
+## 全书52章逐字深读完成（2026-10-12）：22颗分形砖
+
+全书精读（library/feynman/reading-log.md，逐章逐字）后按"方程→结论"同构迁移纪律分形（不做修辞类比），六组22砖：
+
+- **对称性组（第52章收官）**：moat-as-invariance-group（护城河=现金流不变性群+Noether审计）/ no-value-conservation-law（市场无时间平移对称→无α守恒）/ chirality-lock-in（冻结的偶然+自我传播=标准/文化）/ weak-interaction-alpha-layer（量化因子=强作用层，α矿脉在弱作用层+吴实验协议）/ near-symmetry-alpha-niche（α存在于日光之门的倒刻缝隙）/ galileo-superdog-bones（尺度破缺：规模化支付不成比例结构成本）
+- **热学组（第46章）**：isothermal-ratchet-temperature-gap（等温棘轮不出功：护城河必须建立在温差上）/ order-initial-condition-memory（秩序=初始条件的记忆：判据=没看过的地方是否有序）
+- **力学组（第18/26章）**：value-center-of-mass（价值质心+内力外力律）/ least-time-capital-path（资本按介质速度折弯+平底不是针尖）
+- **光学/辐射组（第27/28/31/32章）**：terminal-value-focal-length（终值=现金流透镜的固有焦距）/ complex-refractive-index-disclosure（披露虚部决定折价）/ acceleration-pricing（匀速不辐射：市场只对二阶导定价）/ rayleigh-scattering-horizon（持有期=光学路径：颜色由路径长度决定）/ retarded-potential-lag（财报=过去决策的推迟场）
+- **波动组（第23/30/48/49/50/51章）**：phase-group-velocity-split（叙事超光速价值不能：泡沫=高色散区）/ nonlinear-crisis-physics（整流/谐波/互调∝幅度²：常态模型禁止外推）/ cherenkov-premium-cone（超认知速增长自动产生溢价锥）/ shock-wave-bubble-endgame（激波不可预警+崩盘不可逆）/ resonance-q-narrative-memory（叙事的记忆持久性=Q值）/ rayleigh-criterion-window（观察窗口<周期则原理上不可分辨）/ quantized-valuation-levels（估值修复是跃迁不是爬坡）
+
+待需求驱动的砖坯（阅读日志三星级素材，已记录未成砖）：守恒律=不可解系统的唯一抓手（10-1）/ 伪力=坐标系错误（12-5）/ 非保守力不存在（14-4）/ 迈克尔逊-莫雷零结果（15-3）/ 光锥三部曲（17-3）/ 进动：压力产生垂直响应（20-3）/ 同一方程统治一切领域（21-1）/ 叠加原理与格林函数（25-2）/ 干涉项2A₁A₂cosΔφ（29-5）/ 全同粒子=完全竞争（52-2）/ 傅科摆内转检测（52-2）/ 微观可逆宏观不可逆（52-2）/ 火星人电话低带宽测试（52-6）/ 能量均分与内部自由度（39-5）/ 涨落-耗散定理（41-4/43-5）/ 漂移速度与迁移率（43-3）/ 可逆引擎上限定理（44-3）/ 熵是态函数（44-6）/ 共轭对代换ΔU=ΔQ+AΔB（45-2）/ 三环节闭环（47-3）/ 波长≫自由程条件（47-2）/ 毕达哥拉斯三要素与协和规则（50-1/50-3）/ 视觉信息预处理（35-1/36-6）/ 侧抑制与边缘增强（36-6）/ 复眼最优尺寸δ=√(λr)（36-4）/ 观察即扰动（37-6）/ 测不准原理是承重墙（37-8）/ 有限波列Δx·Δk≥2π（38-1/38-2）/ 泡利不相容=物质坚固（38-4）/ 经典混沌预测视界对数增长（38-6）/ 平衡推理=信息放大器（42-5）/ 无记忆等待时间（43-1）/ 混合熵=分布本身是价值变量（46-4）
+
 ## Field Notes
 - [2026-10-10] (ai) 成砖：藏书吸收（费曼《费曼物理学讲义·卷一》）；种子级先验蒸馏、未经深读，Phase 5 深读队列待验；status=principle=借来未验证，对话中真正调用/验证后升 law 并分形。
 - [2026-10-11 01:58] (ai) 巴菲特2001术语檄文：'Bad terminology is the enemy of good thinking'——保险业'Loss Development'应改名'oops'：损失不是后来长出来的，它们一直在那里，后来长出来的是管理层的认知；命名错误让全行业假装负债是生长的而非欠下的——知道名字≠知道东西的保险版。
+- [2026-10-12] (ai) 全书52章逐字深读完成（Caltech官方版抓取入库，跨session五批推进），分形22砖全principle；本书是canon唯一"用物理学给投资概念做数学同构"的书：护城河（不变性群）、α衰减（对称破缺）、价值陷阱（跃迁禁戒）、泡沫（高色散）、披露折价（复折射率虚部）等十余个既有概念各获物理户口；砖坯清单留34条待需求驱动（阅读日志三星级素材全存档）。
