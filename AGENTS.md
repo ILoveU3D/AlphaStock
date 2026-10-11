@@ -386,9 +386,13 @@ position-sizing discipline.
    mean_composite — can only be a reason NOT to pick (veto/display),
    never a ranking input:
    **L1** `masters-vote` (wide pool = vote_count≥1 & ~veto_hard where
-   veto_hard = intel_red | borrowed_dividend | profit_spike; cycle_trap
-   excluded post-live-pass; ranked by core_score only — never from a
-   single strategy's top rank, never by vote count. 量化只否决、AI
+   veto_hard = intel_red | borrowed_dividend | profit_spike |
+   expectation_overreach; cycle_trap excluded post-live-pass; ranked by
+   core_score only — never from a single strategy's top rank, never by
+   vote count. Pool rows carry the Graham-audit display columns
+   `graham_g` (implied growth the price pays for, (pe−8.5)/2) and
+   `expectation_gap` (graham_g − realized growth) — veto/display
+   context, never ranking inputs. 量化只否决、AI
    做选择: the AI reads the whole pool and picks the deep-review
    list; `--check` runs the live cycle-trap pass on that shortlist;
    `--top N` is a legacy shortlist, not a selection mechanism.
@@ -398,7 +402,12 @@ position-sizing discipline.
    spot (-15%,-5%), DCF downgraded to an honest "失败变持有" note,
    mandatory 短炒警示 discipline block) →
    **L2** veto flags (cycle_trap = pe_divergence ≥ 1.5, cycle_warn ≥
-   1.25, profit_spike ≥ +200%, intel red flags: insider selling /
+   1.25, profit_spike ≥ +200%, expectation_overreach = Graham audit —
+   implied g (pe−8.5)/2 ≥ 15% AND >15pp above realized growth, rev_yoy
+   preferred / profit_yoy fallback; one-directional, never fires on
+   cheapness; FCF-free so it covers the HK/US names where
+   dcf_implied_g is imputed — user mandate 2026-10-11; intel red
+   flags: insider selling /
    解禁减持 / 粉饰 / 借钱分红) → **L3** AI three-core deep review with
    written argumentation duty (business model: moat + machine
    lifecycle; culture: founder + 本分审计, behavior-level evidence

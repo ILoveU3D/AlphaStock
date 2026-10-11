@@ -11,8 +11,11 @@ quant half of the fusion code-enforced:
   (zero votes = out, veto_hard = out) but NEVER rank — ranking belongs
   to core_score (strategy/cores.py).
 - snapshot flags: ``profit_spike`` (profit_yoy >= +200, low-base /
-  one-off rebound) and ``veto_hard`` (intel_red / borrowed_dividend /
-  profit_spike) for the whole pool.
+  one-off rebound), ``expectation_overreach`` (Graham expectation
+  audit: implied growth (pe-8.5)/2 >= 15% AND more than 15pp above the
+  realized growth — paying for unproven growth; one-directional, never
+  fires on cheapness) and ``veto_hard`` (intel_red / borrowed_dividend /
+  profit_spike / expectation_overreach) for the whole pool.
 - ``forward_pe_divergence``: live A-share pass — TTM EPS vs the
   analyst-consensus current-year EPS.  eps_ttm / eps_fwd >= 1.5 means
   the market expects earnings to fall by a third or more: the classic
@@ -37,6 +40,22 @@ PROFIT_SPIKE_PCT = 200.0
 # warning (market prices earnings falling by >= 1/3, resp. >= 1/4)
 CYCLE_TRAP_RATIO = 1.5
 CYCLE_WARN_RATIO = 1.25
+# Graham expectation audit (user mandate 2026-10-11): the 1949 formula
+# reversed — implied growth the price pays for = (pe - 8.5) / 2.  The
+# veto flag is ONE-DIRECTIONAL: it only fires when the market pays for
+# growth the company has not yet proven, never on cheapness.  FCF-free
+# (needs only pe_ttm), so it covers exactly the HK/US names where the
+# reverse-DCF anchor (dcf_implied_g) is imputed for lack of FCF data.
+GRAHAM_BASE_PE = 8.5
+GRAHAM_G_FLAG = 15.0        # implied g >= 15% (pe >= 38.5)
+EXPECTATION_GAP_FLAG = 15.0  # implied g - realized growth > 15pp
+
+
+def _num(df: pd.DataFrame, col: str) -> pd.Series:
+    """Numeric column or an all-NaN series when the column is absent."""
+    if col in df.columns:
+        return pd.to_numeric(df[col], errors="coerce")
+    return pd.Series(float("nan"), index=df.index)
 
 
 def _master_strategies():
@@ -87,7 +106,14 @@ def add_snapshot_flags(df: pd.DataFrame) -> pd.DataFrame:
 
     ``veto_hard`` is the only snapshot-side exclusion semantics left
     (2026-09-29 redesign): intel red flags, borrowed dividend, one-off
-    profit spike.  cycle_trap belongs to the live pass (CLI layer).
+    profit spike, expectation overreach (Graham audit, 2026-10-11).
+    cycle_trap belongs to the live pass (CLI layer).
+
+    Also adds the two L1 display columns of the Graham audit:
+    ``graham_g`` (implied growth the price pays for) and
+    ``expectation_gap`` (graham_g minus realized growth — revenue yoy
+    preferred as the steadier series, profit yoy fallback).  Both are
+    veto/display context only, never ranking keys.
     """
     out = df.copy()
     py = pd.to_numeric(out.get("profit_yoy"), errors="coerce")
@@ -95,7 +121,16 @@ def add_snapshot_flags(df: pd.DataFrame) -> pd.DataFrame:
     intel_red = pd.to_numeric(out.get("intel_red"), errors="coerce") == 1
     borrowed = pd.to_numeric(out.get("borrowed_dividend"),
                              errors="coerce") == 1
-    out["veto_hard"] = intel_red | borrowed | out["profit_spike"]
+    graham_g = (_num(out, "pe_ttm") - GRAHAM_BASE_PE) / 2.0
+    out["graham_g"] = graham_g
+    realized = _num(out, "rev_yoy").fillna(_num(out, "profit_yoy"))
+    out["expectation_gap"] = graham_g - realized
+    out["expectation_overreach"] = (
+        (graham_g >= GRAHAM_G_FLAG)
+        & (out["expectation_gap"] > EXPECTATION_GAP_FLAG)
+    ).fillna(False)
+    out["veto_hard"] = (intel_red | borrowed | out["profit_spike"]
+                        | out["expectation_overreach"])
     return out
 
 

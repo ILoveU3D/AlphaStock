@@ -121,6 +121,71 @@ class TestSnapshotFlags:
                             "veto_hard"].iloc[0])
 
 
+class TestGrahamExpectationAudit:
+    """Graham 8.5+2g reversed: implied growth vs realized (2026-10-11)."""
+
+    def _audit_frame(self):
+        rows = [
+            # g=(50-8.5)/2=20.75, realized 5 -> gap 15.75: FLAGGED
+            {"market": "US", "code": "EXP1", "pe_ttm": 50.0,
+             "rev_yoy": 5.0, "profit_yoy": 5.0},
+            # same price, growth proven (rev 40) -> NOT flagged
+            {"market": "US", "code": "EXP2", "pe_ttm": 50.0,
+             "rev_yoy": 40.0, "profit_yoy": 40.0},
+            # below the implied-g threshold (pe 30 -> g 10.75): no flag
+            {"market": "US", "code": "EXP3", "pe_ttm": 30.0,
+             "rev_yoy": -5.0, "profit_yoy": -5.0},
+            # rev_yoy missing -> profit_yoy fallback (30) rescues:
+            # g=(40-8.5)/2=15.75 >= 15 but gap = -14.25 -> no flag
+            {"market": "US", "code": "EXP4", "pe_ttm": 40.0,
+             "profit_yoy": 30.0},
+            # everything missing -> fail-open, no flag
+            {"market": "US", "code": "EXP5"},
+        ]
+        return pd.DataFrame(rows)
+
+    def test_columns_and_flag_joins_veto(self):
+        df = cs.add_snapshot_flags(self._audit_frame())
+        r1 = df.loc[df["code"] == "EXP1"].iloc[0]
+        assert abs(r1["graham_g"] - 20.75) < 1e-9
+        assert abs(r1["expectation_gap"] - 15.75) < 1e-9
+        assert bool(r1["expectation_overreach"])
+        # the flag is part of the hard veto (one-directional L2 flag)
+        assert bool(r1["veto_hard"])
+
+    def test_one_directional(self):
+        df = cs.add_snapshot_flags(self._audit_frame())
+        # proven growth at the same price is never flagged
+        assert not bool(df.loc[df["code"] == "EXP2",
+                               "expectation_overreach"].iloc[0])
+        # cheap / below-threshold prices are never flagged
+        assert not bool(df.loc[df["code"] == "EXP3",
+                               "expectation_overreach"].iloc[0])
+        # profit_yoy fallback when rev_yoy is missing
+        assert not bool(df.loc[df["code"] == "EXP4",
+                               "expectation_overreach"].iloc[0])
+        # NaN inputs fail open
+        assert not bool(df.loc[df["code"] == "EXP5",
+                               "expectation_overreach"].iloc[0])
+        assert not bool(df.loc[df["code"] == "EXP5",
+                               "veto_hard"].iloc[0])
+
+    def test_existing_frames_without_rev_yoy_still_work(self):
+        # the legacy test frame has no rev_yoy column: realized growth
+        # falls back to profit_yoy
+        df = cs.add_snapshot_flags(_frame())
+        assert "graham_g" in df.columns and "expectation_gap" in df.columns
+        # cheap rows never fire (pe 12 -> g 1.75; pe 4 -> g -2.25)
+        assert not bool(df.loc[df["code"] == "000001",
+                               "expectation_overreach"].iloc[0])
+        assert not bool(df.loc[df["code"] == "000002",
+                               "expectation_overreach"].iloc[0])
+        # 000003 (pe 60, profit_yoy -30 via fallback) is a genuine
+        # overreach: g 25.75 vs realized -30 -> gap 55.75
+        assert bool(df.loc[df["code"] == "000003",
+                           "expectation_overreach"].iloc[0])
+
+
 class TestForwardPEDivergence:
     def test_price_cancels(self):
         # divergence == eps_ttm / eps_fwd; price must cancel.
