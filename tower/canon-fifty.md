@@ -13,9 +13,9 @@ links:
   - "refines:latticework-gap-map"
   - "applies-to:weight-archaeology-reading"
   - "refines:absorb-delta-not-duplicate"
-version: 7
+version: 8
 created_at: 2026-10-10T23:31:25
-updated_at: 2026-10-11T11:15:00
+updated_at: 2026-10-11T11:20:00
 ---
 
 ## 两轨制
@@ -45,7 +45,7 @@ updated_at: 2026-10-11T11:15:00
 10. 思考，快与慢 11. 社会性动物 12. 乌合之众 13. 正义之心
 
 ### 历史、社会与政治（9）
-14. 枪炮、病菌与钢铁 15. 国家为什么会失败（全文未获取标记跳过：联盟导购/Cloudflare拦截，精读需纸书或新源） 16. 旧制度与大革命 — ✅已深读（8砖：种子statement升级为五环论证链+7分形〔6 principle+1 observation〕，2026-10-11全书逐字读毕；冯棠商务版1328行含注释两附录；两对tension：与smash-dont-inherit〔打碎处方vs继承诊断〕、与declining-strata-most-radical〔存量损失引擎vs增量期望引擎〕；头号矿=reform-most-dangerous-moment期望差引擎） 17. 通往奴役之路 — ✅已深读（8砖：种子升级+6分形+1观察，2026-10-11全书逐字读毕；中华典藏中译本459KB入库 library/hayek/；与21的tension对已展开） 18. 国富论 — ✅已深读（9分形砖+种子statement升级五卷合成，2026-10-11全书逐字读毕；中华典藏中译本1718行/1130KB+英文Gutenberg全本入库 library/smith/；头号矿=smith-net-income-prototype纯收入原型〔FCF的1776年直系源，与marx-deduction-list成先声链〕；两处tension锚：capital-world-citizen↔state-and-revolution〔资本外逃证明vs全盘国有回应〕、consumption-sole-end↔military-first-customer〔起源可军事终值必消费〕） 19. 资本论（中文三卷全本入库 library/marx/） 20. 中国社会各阶级分析 — ✅已深读（8砖：种子+7分形，2026-10-11全文逐字读毕） 21. 国家与革命 — ✅已深读（8砖：种子+6分形+1观察，2026-10-11全书逐字读毕；编译局全本入库 library/lenin/） 22. 芯片战争 — ✅已深读（10分形砖+种子承接，2026-10-11全书逐字读毕；蔡树军中译本10372行/30.9万字全文入库 library/miller/；两处tension：与single-factor-maximization〔地理极限化制造护城河+靶子〕、与ricardo-second-order-china〔自由贸易输送技术vs断点反制〕）
+14. 枪炮、病菌与钢铁 — ✅已深读（9砖=种子v2近因-终极因四层因果链合成+8分形，2026-10-11全书逐字读毕；上海译文2006谢延光译本1176行/26.9万字符入库 library/diamond/，kgbook mobi解包零丢失验证；分形清单：anna-karenina-principle〔AND门/OR门=否决制筛选的史前论证，头号矿〕/food-surplus-social-fcf〔剩余密度=组织进化燃料，refines smith-net-income-prototype〕/domestication-innate-constraints〔禀赋定上限，refines business-model-first〕/power-law-calorie-concentration〔价值向极少数载体集中〕/invention-before-need〔DCF适用边界：期权区vs自我催化区〕/kleptocracy-four-pillars〔权力维持机制，与worst-get-on-top成权力双砖〕/tasmania-effect〔能力是流量隔离即退化，与geographic-concentration-paradox成位置论tension两极〕/axis-propagation-friction〔扩张速度由结构同质性决定〕） 15. 国家为什么会失败（全文未获取标记跳过：联盟导购/Cloudflare拦截，精读需纸书或新源） 16. 旧制度与大革命 — ✅已深读（8砖：种子statement升级为五环论证链+7分形〔6 principle+1 observation〕，2026-10-11全书逐字读毕；冯棠商务版1328行含注释两附录；两对tension：与smash-dont-inherit〔打碎处方vs继承诊断〕、与declining-strata-most-radical〔存量损失引擎vs增量期望引擎〕；头号矿=reform-most-dangerous-moment期望差引擎） 17. 通往奴役之路 — ✅已深读（8砖：种子升级+6分形+1观察，2026-10-11全书逐字读毕；中华典藏中译本459KB入库 library/hayek/；与21的tension对已展开） 18. 国富论 — ✅已深读（9分形砖+种子statement升级五卷合成，2026-10-11全书逐字读毕；中华典藏中译本1718行/1130KB+英文Gutenberg全本入库 library/smith/；头号矿=smith-net-income-prototype纯收入原型〔FCF的1776年直系源，与marx-deduction-list成先声链〕；两处tension锚：capital-world-citizen↔state-and-revolution〔资本外逃证明vs全盘国有回应〕、consumption-sole-end↔military-first-customer〔起源可军事终值必消费〕） 19. 资本论（中文三卷全本入库 library/marx/） 20. 中国社会各阶级分析 — ✅已深读（8砖：种子+7分形，2026-10-11全文逐字读毕） 21. 国家与革命 — ✅已深读（8砖：种子+6分形+1观察，2026-10-11全书逐字读毕；编译局全本入库 library/lenin/） 22. 芯片战争 — ✅已深读（10分形砖+种子承接，2026-10-11全书逐字读毕；蔡树军中译本10372行/30.9万字全文入库 library/miller/；两处tension：与single-factor-maximization〔地理极限化制造护城河+靶子〕、与ricardo-second-order-china〔自由贸易输送技术vs断点反制〕）
 
 ### 哲学与思想（6）
 23. 论语（伦理=本分审计的中文源代码） 24. 道德经（变化本体论：反者道之动） 25. 传习录（知行·心学版） 26. 实践论（知行·唯物版，与25成tension对） 27. 矛盾论（主要矛盾分析=行业分析承重墙） 28. 猜想与反驳（认识论地基）
