@@ -38,7 +38,7 @@ updated_at: 2026-10-11T01:00:00
 5. 聪明的投资者（格雷厄姆） — 种子
 6. 怎样选择成长股（费雪） — 种子
 7. 投资最重要的事（Marks） — 种子（Phase 3）
-8. 穷查理宝典 — 种子→深读中（英文全本已入库：stripe.press 官方免费版，770K字符，含十一场讲话全集）
+8. 穷查理宝典 — ✅已深读（2026-10-11全书读毕：Ch1-3+十一场讲话全文逐字；Talk 1-10分批蒸馏74砖，Talk Eleven《人类误判心理学》25倾向蒸馏7增量砖——first-conclusion-lock/persian-messenger-syndrome/past-success-attribution-audit/self-regard-endowment-bias/contrast-blindness-trend-death/availability-misweighing/authority-misinfluence-governance——+9注补已有砖；全书累计81砖）
 9. 金融炼金术（索罗斯） — 种子（Phase 3）
 
 ### 心理与行为（4）
@@ -88,3 +88,4 @@ canon 管"书"；Phase 2-4 的实时账本（巴菲特信原文/Marks备忘录/�
 - [2026-10-11 04:45] (ai) 第21本《国家与革命》全书逐字读毕并分形6砖+1观察（中华典藏9页补齐第三章§2-4/第六章§1-2缺口，编译局全本83.6K字入库 library/lenin/）。头号矿=marx-deduction-list（自由现金流公式的1875先声）；三组tension对成立（真诚机会主义↔机构强制力、考茨基回避术↔对冲不预测、国家机器↔通往奴役之路待哈耶克深读展开）。canon历史组已深读2/9。
 - [2026-10-11 08:20] (ai) 第17本《通往奴役之路》全书逐字读毕（王明毅/冯兴元1997中译本，1118行全文）并产出8砖：种子statement升级为全书论证链，分形6块principle（knowledge-dispersion-price-signal/law-vs-discretion/worst-get-on-top/economic-control-total-control/two-kinds-of-security/scale-consensus-inverse-law）+1块observation（truth-termination）。tension对落地：与state-and-revolution双向链接（law-vs-discretion/economic-control-total-control各带角度），与engels-trust-prophecy两条张力（知识轴/价值轴）。头号矿=worst-get-on-top（文化审计的机制层）与economic-control-total-control（DCF公理的产权前提）。canon历史组已深读3/9（20/21/17）。
 - [2026-10-11 08:30] (ai) 书源战役第二轮（两代理并行检索）：资本论/国富论中文/旧制度中文已在前会话入库（上条04:45前的书源记录已过时）；本轮新增找到：金融炼金术（100md，中文PDF401页+TXT573KB）、枪炮病菌与钢铁（100md，中信2022中译本，TXT/PDF/EPUB）、芯片战争（100md，中文蔡树军译+英文Scribner版双全本）、投资最重要的事（openelib，中信升级版EPUB全文）。仍未获全文：聪明的投资者/怎样选择成长股（115lu实测为诱饵跳转站，无合法免费全文源，标记跳过、种子砖垫着）、国家为什么会失败（中文无源；英文pdfdrive/zoboko有人机验证待浏览器手工）。100md为http-only站，curl可用。
+- [2026-10-11 09:30] (ai) 第8本《穷查理宝典》全书逐字读毕（stripe.press英文官方版，4003行全读完）：Talk Eleven《人类误判心理学》（2005扩展版，芒格81岁凭记忆约50小时重写25倾向）为收官场次，增量蒸馏7砖+9注（Talk 1-10的74砖已在前批完成，累计81砖，canon投资组已深读4/9）。头号矿=availability-misweighing（「不产生成堆数字的因素」要特别强调——本系统「量化只否决、AI做选择」三核等权架构的心理学地基）与persian-messenger-syndrome（坏消息通路=组织认知供氧管，文化核审计的行为级证据）。芯片战争PDF已下载验证（357页4.7MB蔡树军译本入库 library/miller/）；三本（投资最重要的事/国家为什么会失败/枪炮病菌与钢铁）浏览器代理下载中。

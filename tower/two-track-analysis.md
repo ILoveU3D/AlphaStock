@@ -12,9 +12,9 @@ links:
   - "refines:thinking-fast-slow"
   - "refines:poor-charlies-almanack"
   - "applies-to:master-munger"
-version: 3
+version: 4
 created_at: 2026-10-11T02:07:46
-updated_at: 2026-10-11T02:49:09
+updated_at: 2026-10-11T08:32:00
 ---
 
 ## 论证
@@ -26,3 +26,4 @@ updated_at: 2026-10-11T02:49:09
 
 ## Field Notes
 - [2026-10-11 02:39] (ai) 2008年approval sedates the brain=心理轨道对分析轨道的麻醉：顾问与董事会的一致赞同让CEO的大脑停止风险计算；伯克希尔的结构性反麻醉=无收购部、无helper压力、inhuman patience（前十年净增仅一个生意）、收购第二顾问唱反调疗法——制度设计先行于个人意志力。
+- [2026-10-11 08:32] (ai) Talk 11=双轨分析理性轨的完整弹药库——2005扩展版25倾向全文就是心理轨的对冲清单（Talk 1-10的零散心理讨论在此汇编成系统）；使用协议：重仓决策把25倾向当检查单过一遍（五常客：激励超级反应/第一结论锁/社会证明/剥夺反应/易得性错估）；新增7砖入位：first-conclusion-lock/persian-messenger-syndrome/past-success-attribution-audit/self-regard-endowment-bias/contrast-blindness-trend-death/availability-misweighing/authority-misinfluence-governance。
