@@ -9,9 +9,9 @@ tags:
   - psychology
 links:
   - "applies-to:master-graham"
-version: 14
+version: 15
 created_at: 2026-09-20T16:24:21
-updated_at: 2026-10-11T12:47:46
+updated_at: 2026-10-11T13:06:37
 ---
 
 ## 论证
@@ -31,3 +31,4 @@ updated_at: 2026-10-11T12:47:46
 - [2026-10-11 02:36] (ai) 2013年农场邻居寓言=市场先生的伯克希尔版：农场邻居每天随心情喊价是天大的优势，但股票持有人常被同胞的癫狂传染——流动性从纯粹的祝福变成诅咒；2016年恐慌期两牢记：弥漫的恐惧是投资者的朋友（送上便宜货），个人的恐惧是敌人；2013年非专业投资者处方同源：盯着球场，别盯记分牌。
 - [2026-10-11 03:05] (ai) 2021-2023市场先生判词补完。business-pickers宣言：'Charlie and I are not stock-pickers; we are business-pickers'；shooting-fish-in-a-barrel=公开市场偶尔以美妙价格卖美妙生意，谈判交易中罕见且永不批量；公开市场退出错误也更容易。2023赌场论：市场会seize up甚至vanish（1914年关四个月、2001年关几天）；2008年9月即时全球瘫痪——通讯速度与技术便利使instant worldwide paralysis成为可能；'today's active participants are neither more emotionally stable nor better taught than when I was in school'；'markets now exhibit far more casino-like behavior'——casino now resides in many homes and daily tempts the occupants；华尔街真正让汁液流动的是feverish activity——'whatever foolishness can be marketed will be vigorously marketed'；结局循环：政客愤怒、肇事者rich and unpunished溜走、邻居bewildered poorer vengeful——'Money, he learns, has trumped morality.'伯克希尔的Not-So-Secret Weapon=以巨额资金+确定性履约即时响应市场瘫痪的能力（2023：能处理超越历史任何量级的金融灾难，危机时做国家的资产帮忙灭火，不做点火者）。
 - [2026-10-11 12:47] (ai) 哲学战役批二（论语）：对市场爱恶的独立验证义务——'众恶之，必察焉；众好之，必察焉'（卫灵公）：众人厌恶的必须亲自审查、众人喜爱的也必须亲自审查——两个方向的群体一致都不构成证据，只构成待检验的假设；孔子版本的'逆势'不是自动反做，是拒绝让人群替代自己的检验工序。
+- [2026-10-11 13:06] (ai) 哲学战役批三（道德经）：独立观察位的肖像——'众人熙熙，如享太牢，如春登台；我独泊兮其未兆……俗人昭昭，我独昏昏；俗人察察，我独闷闷'（20）：众人在宴会与春台（FOMO的群像），善为士者澹兮其若海——逆向不是姿态是信息结构：在众声喧哗处保持未兆之泊。
