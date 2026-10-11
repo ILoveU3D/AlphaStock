@@ -10,10 +10,13 @@ tags:
 links:
   - "refines:on-practice"
   - "tension:conjectures-refutations"
-version: 1
+version: 2
 created_at: 2026-10-11T12:18:54
-updated_at: 2026-10-11T12:18:54
+updated_at: 2026-10-11T13:38:58
 ---
 
 ## 论证
 （待论证）
+
+## Field Notes
+- [2026-10-11 13:38] (ai) 哲学战役批四（传习录）：tension 注（阳明侧）：'哑子吃苦瓜，与你说不得。你要知此苦，还须你自吃'=毛'你要知道梨子的滋味，你就得变革梨子，亲口吃一吃'——直接经验优先，两说同归。分歧在真理检验标准：阳明=良知自证（'尔那一点良知是尔自家底准则'，内部准则），毛=社会实践的结果（外部标准）。参 unity-of-knowledge-action 砖。

@@ -12,9 +12,9 @@ links:
   - "refines:excess-professionalism-overconfidence"
   - "refines:ceo-measurement-as-culture-evidence"
   - "applies-to:master-munger"
-version: 1
+version: 2
 created_at: 2026-10-11T08:30:47
-updated_at: 2026-10-11T08:30:47
+updated_at: 2026-10-11T13:39:08
 ---
 
 ## 原文（Talk Eleven 倾向12）
@@ -42,3 +42,6 @@ updated_at: 2026-10-11T08:30:47
 - 禀赋效应的持仓版：已持有=已拥有，卖出评估必须用"今天空仓会买吗"的置换检验剥离禀赋溢价；对自己写的thesis在复核时按"别人写的"标准重审。
 - 托尔斯泰效应的持仓审计：差业绩+管理层解释（行业周期/一次性因素/宏观）连续两个季度出现=借口模式启动，按"可修而不修是坏品格"计价。
 - 组织识别：找借口文化 vs meritocratic demanding culture（敢开除最差者）是文化核的分水岭证据；伯克希尔式"42年零CEO跳槽"背后是要求苛刻+公平的文化。
+
+## Field Notes
+- [2026-10-11 13:39] (ai) 哲学战役批四（传习录）：心学判词互证：'人生大病，只是一傲字。为子而傲必不孝，为臣而傲必不忠，为父而傲必不慈，为友而傲必不信……胸中切不可有，有即傲也。古先圣人许多好处，也只是无我而已，无我自能谦。谦者众善之基，傲者众恶之魁'——心理学的自视过高数据，心学给出道德机制：傲=胸中一有，谦=无我。

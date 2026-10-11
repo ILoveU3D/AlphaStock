@@ -10,10 +10,13 @@ tags:
 links:
   - "refines:circle-of-competence"
   - "refines:risk-redefined"
-version: 1
+version: 2
 created_at: 2026-10-11T03:03:09
-updated_at: 2026-10-11T03:03:09
+updated_at: 2026-10-11T13:39:21
 ---
 
 ## 论证
 （待论证）
+
+## Field Notes
+- [2026-10-11 13:39] (ai) 哲学战役批四（传习录）：规矩尺度喻=不预测的原型：'良知之于节目时变，犹规矩尺度之于方圆长短也。节目时变之不可预定，犹方圆长短之不可胜穷也。故规矩诚立，则不可欺以方圆，而天下之方圆不可胜用矣……良知诚致，则不可欺以节目时变，而天下之节目时变不可胜应矣'——不预测每个新情形，只磨内在标准。参 liangzhi-inner-compass。
