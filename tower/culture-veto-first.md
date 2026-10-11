@@ -14,9 +14,9 @@ links:
   - "applies-to:causes-not-outcomes"
   - "refines:ceo-measurement-as-culture-evidence"
   - "applies-to:master-duan"
-version: 10
+version: 11
 created_at: 2026-10-10T20:51:32
-updated_at: 2026-10-11T03:06:30
+updated_at: 2026-10-11T12:47:02
 ---
 
 ## 论证
@@ -31,3 +31,4 @@ updated_at: 2026-10-11T03:06:30
 - [2026-10-11 00:43] (ai) 巴菲特1983年13条股东手册之坦诚条款：'在公开场合误导他人的CEO，最终会在私下里误导自己'——坦诚不是道德装饰，是防自欺的认知卫生；报告义务=以股东想要的信息为标准、报喜也报忧；自欺先于欺人，文化审计从报告措辞的诚实度开始。
 - [2026-10-11 02:38] (ai) 2010年双年致经理人备忘录=文化否决制的内部成文：我们可以承受亏钱——甚至很多钱，但承受不起损失声誉——哪怕一丝声誉；头版测试=每个行为以登上本地报纸头版、被配偶孩子读到为标准；Everybody else is doing it是提不出好理由时的同义语；犹豫该不该做时就已经越线；坏消息必须立即上报（Salomon教训）；Culture, more than rule books, determines how an organization behaves。
 - [2026-10-11 03:06] (ai) 2023年McCulloch铁律+2022信任治理=文化否决的制度两面。McCulloch（1863年首任货币监理署长致全国银行）：'Never deal with a rascal under the expectation that you can prevent him from cheating you'——许多以为能管住流氓的银行家都领教了这条智慧，我也是：'People are not that easy to read. Sincerity and empathy can easily be faked. That is as true now as it was in 1863.'2022治理版：'Berkshire emphasizes trust over rules to an unusual – some would say extreme – degree'；经营错误可以理解，'our tolerance for personal misconduct is zero'；'The disposition of money unmasks humans'——钱的处置方式揭掉人的面具（储户画像once-a-saver always-a-saver；股东中罕见look-at-me资产与dynasty-building）。
+- [2026-10-11 12:47] (ai) 哲学战役批二（论语）：文化否决的儒家判词组——'如有周公之才之美，使骄且吝，其余不足观也已'（泰伯：骄吝=对一切才华的一票否决）；'季氏富于周公，而求也为之聚敛而附益之。子曰：非吾徒也，小子鸣鼓而攻之可也'（先进：为恶东家效力=绝交级否决）；'邦有道，谷；邦无道，谷，耻也'（宪问：在无道市场赚钱本身是耻——利润来源审计）；'君子疾夫舍曰欲之而必为之辞'（季氏：想要而找借口=动机粉饰红旗）；'小人之过也必文'（子张：文过饰非是小人签名——管理层归因语言审计：听财报会里的'宏观环境'出现频率）；'浸润之谮，肤受之愬，不行焉，可谓明也已矣'（颜渊：对渗透式叙事与切肤控诉的免疫力=明）。
