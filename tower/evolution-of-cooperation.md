@@ -13,18 +13,27 @@ links:
   - "applies-to:culture-veto-first"
   - "applies-to:benfen-motive-purity"
   - "applies-to:uniform-pricing"
-version: 1
+version: 3
 created_at: 2026-10-10T23:17:32
-updated_at: 2026-10-10T23:17:32
+updated_at: 2026-10-12T00:57:33
 ---
 
-﻿## 论证
-合作不需要信任需要结构：重复囚徒博弈锦标赛里胜出的总是一报还一报族——善良（绝不先背叛）+可激怒（当场报复）+宽容（翻篇即合作）+清晰（策略可被对方读懂）；充要条件=未来的影子足够长（再见面概率×贴现），一次性博弈里善良必死；迁移：企业文化=把内部博弈的影子拉长，对供应链/渠道的压榨在重复博弈里是自杀。
+## 论证（v2 全书合成，2026-10-12 全书逐字读毕）
+合作不需要信任需要结构——这是全书最反直觉也最扎实的结论。重复囚徒博弈锦标赛（两轮，14+62程序）里胜出的总是"一报还一报"（TFT）族：善良（绝不先背叛——前8名全部善良，不善良平均401分 vs 善良472-504分）+可激怒（当场报复——命题4：善良策略要集体稳定必须能被对方的第一次背叛所激怒）+宽容（翻篇即合作——噪音环境下"一报还十分之九报"最优）+清晰（策略可被对方读懂——对方能预判你的反应并据此优化自己的行为）。充要条件=未来的影子足够长（w=耐心×持续概率，命题2：TFT集体稳定当且仅当w不小于(T-R)/(T-P)与(T-R)/(R-S)的较大者）；一次性博弈里善良必死，已知次数的博弈从第一步就双方背叛（倒推坍缩）。
 
-## 砖坯（可分形为独立砖）
-- 影子长度：合作的充要条件，审计=问"双方明天还要不要见面"
-- 可激怒性：不当老好人——无报复能力的善良招来剥削
-- 清晰性：策略必须可被对方读懂，捉摸不定=邀请对方永远背叛
+合作的进化三阶段（第一章）：起始（小群体在背叛世界里立足——5%同类相遇率足够侵入ALL D群体）→中间（回报策略在多样环境中成长——生态模拟TFT持续增长而哈林顿与猎物一起消亡）→最后（防止侵入——棘轮作用："一旦基于回报的合作在群体中建立起来，它就不能够被试图占人便宜的一个小群体所征服"）。
+
+第九章最小假设集：合作不需要理性、语言承诺、信任、利他主义、中央权威——"他们的行为替他们说话""既然细菌都能玩这些游戏，人和国家当然也能"；需要识别+记忆+w足够大。哲学收束句："合作的基础不是真正的信任，而是关系的持续性。"
+
+## 迁移（三线）
+①企业文化=把内部博弈的影子拉长：对供应链/渠道的压榨在重复博弈里是自杀（反射效应三层次：直接效果/间接效果/反射链）；文化审计的唯物主义方法=不问善意问结构（换防交接的一句话=文化的最小定义）。
+②长期持有=绝对收益逻辑：TFT从未赢过任何单局却总成绩第一——"赢得竞赛不是靠打击对方，而是靠从对方引出使双方有好处的行为"；"其他人的成功是你自己成功的前提"（持仓生态里对手赚钱是你的合作剩余）。
+③收束句："一报还一报的成功不是由于它比与它打交道的任何人做得更好。它的成功是靠从其他人那里引出合作而不是靠背叛他们。"——复利投资者的目标函数。
+
+## 分形砖（12块，全principle）
+w-patience-times-continuation（未来的影子=贴现的存在论）/finite-horizon-unraveling（已知终点的合作崩塌）/betrayal-threshold-arithmetic（背叛的定价公式与合作阈值）/stereotype-self-confirming（标签折价的均衡结构）/trust-is-continuity（合作的基础是持续性不是信任）/provocability-speed（最快反应原则）/harvester-ecological-death（收割型生意的生态宿命）/territorial-nydegger-amplification（领地结构：局部优势的非线性放大）/trust-markov-asymmetry（信任破坏的不对称）/cluster-two-stage-coldstart（小群体两阶段冷启动）/characterization-safety-position（安全地位：担得起背叛才配合作）/cornered-opponent-desperation（w坍缩制造极端）。
 
 ## Field Notes
 - [2026-10-10] (ai) 成砖：藏书吸收（阿克塞尔罗德《合作的进化》）；种子级先验蒸馏、未经深读，Phase 5 深读队列待验；status=principle=借来未验证，对话中真正调用/验证后升 law 并分形。
+- [2026-10-12] (ai) v2 全书合成：全书逐字读毕（中译全本329KB，正文九章+附录A竞赛结果+附录B命题证明+参考文献+译后记，跨session十一批），74条DCF素材台账见library/axelrod/reading-log.md；12块分形砖全principle建毕，砖坯清零。全书地位：DCF公理的博弈论地基——Gordon公式/安全边际/能力圈/护城河/品牌/造假定价六个既有概念各获博弈户口；与Sutton的MDP地基、Meadows的系统地基在公理的三脚架上合龙。
+- [2026-10-12 00:57] (ai) v2全书合成（2026-10-12读毕）：种子statement保持'合作不需要信任需要结构'主线，新增三阶段进化+最小假设集+三线迁移；12分形砖全principle：w-patience-times-continuation/finite-horizon-unraveling/betrayal-threshold-arithmetic/stereotype-self-confirming/trust-is-continuity/provocability-speed/harvester-ecological-death/territorial-nydegger-amplification/trust-markov-asymmetry/cluster-two-stage-coldstart/characterization-safety-position/cornered-opponent-desperation
