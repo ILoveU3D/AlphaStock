@@ -13,9 +13,9 @@ links:
   - "refines:latticework-gap-map"
   - "applies-to:weight-archaeology-reading"
   - "refines:absorb-delta-not-duplicate"
-version: 6
+version: 7
 created_at: 2026-10-10T23:31:25
-updated_at: 2026-10-11T10:26:00
+updated_at: 2026-10-11T11:15:00
 ---
 
 ## 两轨制
@@ -39,7 +39,7 @@ updated_at: 2026-10-11T10:26:00
 6. 怎样选择成长股（费雪） — 种子（全文未获取标记跳过：本批搜索未得可用源）
 7. 投资最重要的事（Marks） — 种子（Phase 3；书源已解决=官方备忘录全集1990-2025入库 library/marks/：25MB PDF+4.9MB txt，书的章节即备忘录的扩展编排）
 8. 穷查理宝典 — ✅已深读（2026-10-11全书读毕：Ch1-3+十一场讲话全文逐字；Talk 1-10分批蒸馏74砖，Talk Eleven《人类误判心理学》25倾向蒸馏7增量砖——first-conclusion-lock/persian-messenger-syndrome/past-success-attribution-audit/self-regard-endowment-bias/contrast-blindness-trend-death/availability-misweighing/authority-misinfluence-governance——+9注补已有砖；全书累计81砖）
-9. 金融炼金术（索罗斯） — 种子（Phase 3；全文未获取标记跳过：本批搜索未得可用源）
+9. 金融炼金术（索罗斯） — ✅已深读（2026-10-11全书逐字读毕：1999海南版孙忠译2522行全文，library/soros/；8分形砖+种子承接：reflexivity-intermittency〔认知/参与双函数，DCF近均衡可用-远均衡降格=头号矿〕/credit-collateral-spiral〔信贷-抵押螺旋三定律，与default-cashflow-not-collateral成tension〕/boom-bust-eight-stages〔荣枯八阶段〕/self-defeating-prophecy〔预言自我扼杀+表达即损耗〕/edge-model〔边缘模型：兜底信号可信度=有限存量〕/social-science-dn-critique〔D-N批判：DCF=公理与纪律非定律与仪器，与conjectures-refutations部分决裂〕/alchemy-rules-not-laws〔规则非定律无圣杯〕/crash-1987-power-shift〔1987权力转移，重心东移半证伪〕）
 
 ### 心理与行为（4）
 10. 思考，快与慢 11. 社会性动物 12. 乌合之众 13. 正义之心
@@ -91,3 +91,4 @@ canon 管"书"；Phase 2-4 的实时账本（巴菲特信原文/Marks备忘录/�
 - [2026-10-11 09:30] (ai) 第8本《穷查理宝典》全书逐字读毕（stripe.press英文官方版，4003行全读完）：Talk Eleven《人类误判心理学》（2005扩展版，芒格81岁凭记忆约50小时重写25倾向）为收官场次，增量蒸馏7砖+9注（Talk 1-10的74砖已在前批完成，累计81砖，canon投资组已深读4/9）。头号矿=availability-misweighing（「不产生成堆数字的因素」要特别强调——本系统「量化只否决、AI做选择」三核等权架构的心理学地基）与persian-messenger-syndrome（坏消息通路=组织认知供氧管，文化核审计的行为级证据）。芯片战争PDF已下载验证（357页4.7MB蔡树军译本入库 library/miller/）；三本（投资最重要的事/国家为什么会失败/枪炮病菌与钢铁）浏览器代理下载中。
 - [2026-10-11 10:35] (ai) 第22本《芯片战争》全书逐字读毕（蔡树军中译本355页，PDF→TXT提取10372行，跨session分两批读完）并分形10砖（全数principle）：摩尔定律产业契约/地理集中悖论/资本门槛护城河/ASML整合型垄断/代工大联盟/武器化相互依赖/瓶颈半衰期/军事第一客户/激励设计成本革命/需求冲击误诊；种子砖statement全数承接、砖坯清零。两处tension落地（single-factor-maximization/ricardo-second-order-china），计算碎片化论点按absorb-delta-not-duplicate并入gpu-platform-cocreation轨道。canon历史组已深读4/9（20/21/17/22），canon总计已深读8/40。下一步：等三本下载代理结果（金融炼金术优先），或先入国富论/资本论（中文全本已在库）。
 - [2026-10-11 10:26] (ai) 第18本《国富论》全书逐字读毕并分形9砖+种子statement升级五卷合成（中华典藏中译本1718行/1130KB，中英全本入库 library/smith/）。头号矿=smith-net-income-prototype（纯收入原型=FCF的1776年直系源，与marx-deduction-list成先声链：斯密定义净额→马克思社会总量版→巴菲特股东版）；利率本质纠偏（利息随资本利润率非货币量，法定利率低于市场必失败）；赋税四原则确定性优先/股份公司三条件/资本世界公民/公债三重真相（机能转化+基金挪用+假偿还破产）/重税减收拉弗原型均成砖。两处tension锚：capital-world-citizen↔state-and-revolution（资本外逃证明vs全盘国有回应）、consumption-sole-end↔military-first-customer（起源可军事终值必消费）。canon历史组已深读6/9（总10/40）。补记：第22本列表标记前漏，本次补上；《金融炼金术》全文已由后台代理入库 library/soros/（1999海南版孙忠译2522行，真书确认），队列下一本。
+- [2026-10-11 11:15] (ai) 第9本《金融炼金术》全书逐字读毕（1999海南版孙忠译2522行，library/soros/，缺附录不影响主文）并分形8砖（全数principle）：reflexivity-intermittency（认知/参与双函数分解，DCF近均衡可用-远均衡降格假设检验=头号矿）/credit-collateral-spiral（不对称律+纸面收益律+转折点律；与default-cashflow-not-collateral成tension=现金流先于抵押的审计顺序）/boom-bust-eight-stages（补Kindleberger考验期质检+觉醒期主观领先）/self-defeating-prophecy（预报触发补救、信心强度反比律、表达即损耗、反反潮流）/edge-model（逼近边缘-退回循环，兜底信号可信度=有限存量，2008后验）/social-science-dn-critique（波普尔部分决裂：受证伪主义、拒方法论统一论；DCF=公理与纪律非定律与仪器）/alchemy-rules-not-laws（社会领域只有规则没有定律，无圣杯；技能不折旧、定律因公开而变形）/crash-1987-power-shift（投资组合保险=反身性机构化身；债权国→债务国；重心东移点名日本半证伪=诚实资产；Fed兜底=道德风险第一笔大额支出）。种子砖砖坯清零、版本升3。canon投资组已深读5/9，canon总计11/40。书源注：《聪明的投资者》《怎样选择成长股》维持跳过标记；《枪炮、病菌与钢铁》《国家为什么会失败》两个下载代理仍在后台跑。
