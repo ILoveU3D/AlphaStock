@@ -15,9 +15,9 @@ links:
   - "refines:mr-market"
   - "refines:narrative-economics"
   - "applies-to:dcf-universal-law"
-version: 1
+version: 2
 created_at: 2026-10-11T16:46:51
-updated_at: 2026-10-11T16:46:51
+updated_at: 2026-10-11T18:24:35
 ---
 
 ## 原文依据（第二十五、二十九至三十二章+第四十六章地价节，跨session逐字读毕）
@@ -37,3 +37,4 @@ updated_at: 2026-10-11T16:46:51
 
 ## Field Notes
 - [2026-10-11] (ai) 成砖：《资本论》卷三第五篇精读分形，卷三头号矿——DCF公式的政治经济学原点。status=principle；验证方向：股息收益率与国债收益率的历史贴合度（资本化公式的市场检验）。
+- [2026-10-11 18:24] (ai) 勒庞注（fixed-belief-floating-opinion）：层级补充——虚拟资本'脱离实体独立涨落'的载体=固定信念层：市值资本化的对象是预期，预期的体制层是未被审视的固定虚构（'只能靠不被审视而存活'），信念断裂时价格无需实体恶化即蒸发——泡沫与崩盘都不需要企业变坏，只需要虚构被质疑。

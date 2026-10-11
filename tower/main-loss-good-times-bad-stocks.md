@@ -13,9 +13,9 @@ links:
   - "refines:margin-of-safety"
   - "refines:average-earnings-power"
   - "applies-to:master-graham"
-version: 1
+version: 2
 created_at: 2026-10-11T14:34:28
-updated_at: 2026-10-11T14:34:28
+updated_at: 2026-10-11T18:24:38
 ---
 
 ## 格雷厄姆的损失来源排序
@@ -39,3 +39,6 @@ updated_at: 2026-10-11T14:34:28
 - L2 红旗 cycle_trap（pe_divergence ≥ 1.5、cycle_warn ≥ 1.25）与 profit_spike（≥ +200%）正是"把当前好收益当收益能力"的机器检测——量化在这里只做否决，完全对齐格雷厄姆的损失来源诊断。
 - GSL 案例（2026-09-15，docs/analysis/20260915_undervalued_gsl.md）：景气顶点的周期股以成长股价格卖出、量化两策略第一而大师 6:1 否决——现代版完整复刻本砖。QMF 融合管道的存在理由就是让这类标的死在 L2，不出现在推荐里。
 - 与 average-earnings-power 成对：那块砖给分母纪律（跨周期均值），本砖给损失诊断（繁荣期单年收益冒充收益能力是亏损的主引擎）。
+
+## Field Notes
+- [2026-10-11 18:24] (ai) 勒庞注（prestige-premium）：心理机制补充——繁荣期买劣质股付高价的群体动力学=为名望付费（累计成功自动免检）+固定虚构'繁荣永存'的免检期；清算端带报复性过冲（群体对跌落英雄'视为平等者并报复曾经的屈服'）——所以主要损失的两端都有群体放大器，买入端与卖出端都不是中性的。
