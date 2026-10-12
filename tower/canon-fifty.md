@@ -13,9 +13,9 @@ links:
   - "refines:latticework-gap-map"
   - "applies-to:weight-archaeology-reading"
   - "refines:absorb-delta-not-duplicate"
-version: 33
+version: 34
 created_at: 2026-10-10T23:31:25
-updated_at: 2026-10-12T17:30:00
+updated_at: 2026-10-12T18:07:50
 ---
 
 ## 两轨制
@@ -121,3 +121,4 @@ canon 管"书"；Phase 2-4 的实时账本（巴菲特信原文/Marks备忘录/�
 - [2026-10-12 14:20] (ai) 第11本《社会性动物》全书逐字读毕（中译全本library/aronson/aronson_full.txt 4788行/1.25MB第九版，跳过标记按可反转条款撤销——本地全文在库触发）并分形9砖（全principle，详细清单见#11条目）+种子social-animal v1→v2全书合成。心理组4/4收官（思考快与慢/社会性动物/乌合之众/正义之心），canon总计38/40。本书=DCF心理估值模块的机制层：Kahneman现象学×Aronson机制链×Le Bon群体产品×Soros反身表述。剩余未深读2本：#28猜想与反驳（popper_full.txt 1.15MB已入库）/#34概率论沉思录（jaynes_book.txt 2.06MB已入库）。
 - [2026-10-12 14:56] (ai) 第28本《猜想与反驳》全书逐字读毕（上海译文中译全本library/popper/popper_full.txt 3363行/1.15MB，导论+正文20章+附录6节技术注释，2026-10-11用户指令跳过标记按可反转条款撤销——本地全文在库触发；跨session推进：前置session导论-第十八章前半+本session第十八章末-第十九章〔我们时代的历史〕-第二十章〔人文主义和理性〕-附录〔经验内容/检验严格性/逼真性/数值例子/人造语言/逼真性史注〕-目录收束）并分形8砖（全principle，详细清单见#28条目：induction-swamp-basis/content-is-what-it-forbids/severe-test-evidence/verisimilitude-bold-conjecture/contradiction-intolerance/piecemeal-vs-utopian/conditional-prediction-not-prophecy/critical-tradition-second-order）+种子conjectures-refutations v1→v2全书合成+falsificationism（law）挂入分形索引+6注挂既有砖（falsificationism/confirmation-conservatism/hedge-dont-forecast/self-fulfilling-prophecy/practice-cognition-cycle/entropy-expectation-gap）。本书地位：全塔认识论地基/裁判系统——falsificationism（law，摩尔三证伪集对话验证）的原典；'可证伪'从门槛升级为度量体系（经验内容=潜在证伪者类/检验严格性公式/逼真度），价值投资的纪律系统在认识论上的身份=把波普尔P1→TT→EE→P2四段式装进仓位管理的工程（L1经验内容门槛/L2否决=证伪执行层/L3书面论证=批判传统个人版/L4逼真性比较/thesis池=猜想容器）。哲学组6/6收官（论语/道德经/传习录/实践论/矛盾论/猜想与反驳），canon总计39/40——毛循环与波普尔四段式的tension收窄为检验者与起点之别（practice-cognition-cycle注），认识论-心学-唯物三足会师。剩最后一本：#34概率论沉思录（Jaynes 2.06MB英文已入库）。附带勘误：#11行内标记滞后于其Field Note（前置session漏更行内），本次补翻。
 - [2026-10-12 17:30] (ai) 第34本《概率论沉思录》全书逐字读毕（英文全本library/jaynes/jaynes_book.txt 25071行/2066KB，正文22章+附录A/B/C+References+Bibliography+作者索引+主题索引完整，约2M字符英文多session工程，跨多session推进）并分形10砖（全principle，详细清单见#34条目）+种子jaynes-probability-logic v2全书六支柱合成；DCF素材199条台账见library/jaynes/reading-log.md。**canon-fifty 40/40全书收官**：投资9+心理4+历史社会政治9+哲学6+硬科学10+文学传记1+方法1，精读四十计划全部完成——塔的多学科地基自此齐装；认识论层三方合龙（Popper论点裁判×Jaynes证据称重×香农预期差度量）。候补席第一顺位尼各马可伦理学（phronesis实践智慧）待触发。
+- [2026-10-12 18:07] (ai) 触发检测复检（2026-10-12晚，用户常设指令再次触发）：canon 40/40收官后复检零剩余——40条目全部已深读、无跳过在岗（历史跳过标记均已按可反转条款撤销并读毕）、37个library目录全部有全文、每书≥5砖达标；唯一残留=adler台账Ch8/Ch10两处跨session'进行中'废标记已清除（防未来检测误报）。未来触发检测程序：解析本砖33-61行条目状态列→grep跳过标记→扫描library各reading-log未读毕标记，三查全空即零剩余。
