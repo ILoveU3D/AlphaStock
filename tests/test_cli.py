@@ -1,4 +1,4 @@
-"""Tests for the value_genie CLI (python -m value_genie)."""
+"""Tests for the polar_star CLI (python -m polar_star)."""
 
 import json
 from pathlib import Path
@@ -7,8 +7,8 @@ from types import SimpleNamespace
 import pandas as pd
 import pytest
 
-from value_genie import config
-from value_genie.__main__ import (_parse_markets, _parse_weights,
+from polar_star import config
+from polar_star.__main__ import (_parse_markets, _parse_weights,
                                   build_parser, main)
 
 
@@ -75,11 +75,11 @@ def test_screen_writes_outputs(snapshot, tmp_path, capsys):
     assert list(df["rank"]) == [1, 2]
 
     text = md_path.read_text(encoding="utf-8")
-    assert "# Value Genie - 20260201 - balanced" in text
+    assert "# Polar Star - 20260201 - balanced" in text
     assert "- **stocks**: 2" in text
 
     console = capsys.readouterr().out
-    assert "Value Genie screen" in console
+    assert "Polar Star screen" in console
     assert "strategy : balanced" in console
     assert "600519" in console
 
@@ -138,7 +138,7 @@ def test_screen_json_pure_stdout(snapshot, tmp_path, capsys):
     assert data["count"] == 2
     assert [r["code"] for r in data["rows"]] == ["600519", "AAPL"]
     assert data["rows"][0]["pe_ttm"] == 25.0   # full precision kept
-    assert "Value Genie screen" not in out     # no banner chatter
+    assert "Polar Star screen" not in out     # no banner chatter
     assert not (out_dir / "20260201_balanced.csv").exists()  # no exports
 
 
@@ -337,7 +337,7 @@ def test_profile_assess_score_bounds(pdirs, capsys):
 
 def test_masters_vote_culture_distilled_overlay(
         mv_snapshot, pdirs, capsys):
-    from value_genie import profile as prof
+    from polar_star import profile as prof
     prof.assess("A", "000001", culture_score=88, agent="kimi-k3")
     rc = main(["masters-vote", "--data-dir", str(mv_snapshot),
                "--no-check", "--json"])
@@ -367,7 +367,7 @@ def test_masters_vote_without_distillations_unchanged(
 
 
 def test_fetch_calls_pipeline(snapshot, tmp_path, monkeypatch, capsys):
-    from value_genie import __main__ as cli
+    from polar_star import __main__ as cli
 
     calls = []
 
@@ -387,7 +387,7 @@ def test_fetch_calls_pipeline(snapshot, tmp_path, monkeypatch, capsys):
 
 
 def test_fetch_refresh_flag(snapshot, tmp_path, monkeypatch):
-    from value_genie import __main__ as cli
+    from polar_star import __main__ as cli
 
     seen = {}
 
@@ -410,7 +410,7 @@ def test_fetch_bad_market(tmp_path):
 # ---------------------------------------------------------------------------
 # AI-toolkit commands (ask / compare / overview / doctor / skill)
 # ---------------------------------------------------------------------------
-from value_genie.resolve import Match
+from polar_star.resolve import Match
 
 
 def fake_result(m):
@@ -424,13 +424,13 @@ def fake_result(m):
 
 class TestAsk:
     def test_ask_brief(self, capsys, monkeypatch):
-        monkeypatch.setattr("value_genie.doctor.freshness_gate",
+        monkeypatch.setattr("polar_star.doctor.freshness_gate",
                             lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr(
-            "value_genie.resolve.resolve",
+            "polar_star.resolve.resolve",
             lambda q, **k: [Match("A", "600001", "Alpha Co", 100.0, "1")])
         monkeypatch.setattr(
-            "value_genie.analyze.analyze_stock",
+            "polar_star.analyze.analyze_stock",
             lambda m, snapshot_dir=None, horizon=None: fake_result(m))
         rc = main(["ask", "Alpha Co"])
         out = capsys.readouterr().out
@@ -440,14 +440,14 @@ class TestAsk:
         assert "also matched" not in out
 
     def test_ask_shows_alternatives(self, capsys, monkeypatch):
-        monkeypatch.setattr("value_genie.doctor.freshness_gate",
+        monkeypatch.setattr("polar_star.doctor.freshness_gate",
                             lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr(
-            "value_genie.resolve.resolve",
+            "polar_star.resolve.resolve",
             lambda q, **k: [Match("A", "600001", "Alpha Co", 100.0, "1"),
                             Match("HK", "02555", "茶百道", 50.0, "116")])
         monkeypatch.setattr(
-            "value_genie.analyze.analyze_stock",
+            "polar_star.analyze.analyze_stock",
             lambda m, snapshot_dir=None, horizon=None: fake_result(m))
         rc = main(["ask", "alpha"])
         cap = capsys.readouterr()
@@ -460,14 +460,14 @@ class TestAsk:
         """--json stdout must stay pure JSON even when the resolution
         hint fires (hint goes to stderr)."""
         import json
-        monkeypatch.setattr("value_genie.doctor.freshness_gate",
+        monkeypatch.setattr("polar_star.doctor.freshness_gate",
                             lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr(
-            "value_genie.resolve.resolve",
+            "polar_star.resolve.resolve",
             lambda q, **k: [Match("A", "600001", "Alpha Co", 100.0, "1"),
                             Match("HK", "02555", "茶百道", 50.0, "116")])
         monkeypatch.setattr(
-            "value_genie.analyze.analyze_stock",
+            "polar_star.analyze.analyze_stock",
             lambda m, snapshot_dir=None, horizon=None: fake_result(m))
         rc = main(["ask", "alpha", "--json"])
         cap = capsys.readouterr()
@@ -484,10 +484,10 @@ class TestAsk:
         (snap / "master.csv").write_text(
             "market,code,name\nA,600001,Alpha Co\n", encoding="utf-8")
         seen = {}
-        monkeypatch.setattr("value_genie.doctor.freshness_gate",
+        monkeypatch.setattr("polar_star.doctor.freshness_gate",
                             lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr(
-            "value_genie.resolve.resolve",
+            "polar_star.resolve.resolve",
             lambda q, **k: [Match("A", "600001", "Alpha Co", 100.0, "1")])
 
         def _fake_analyze(m, snapshot_dir=None, horizon=None):
@@ -495,7 +495,7 @@ class TestAsk:
             return fake_result(m)
 
         monkeypatch.setattr(
-            "value_genie.analyze.analyze_stock", _fake_analyze)
+            "polar_star.analyze.analyze_stock", _fake_analyze)
         rc = main(["ask", "Alpha Co", "--data-dir", str(tmp_path),
                    "--json"])
         assert rc == 0
@@ -504,13 +504,13 @@ class TestAsk:
 
     def test_ask_json(self, capsys, monkeypatch):
         import json
-        monkeypatch.setattr("value_genie.doctor.freshness_gate",
+        monkeypatch.setattr("polar_star.doctor.freshness_gate",
                             lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr(
-            "value_genie.resolve.resolve",
+            "polar_star.resolve.resolve",
             lambda q, **k: [Match("A", "600001", "Alpha Co", 100.0, "1")])
         monkeypatch.setattr(
-            "value_genie.analyze.analyze_stock",
+            "polar_star.analyze.analyze_stock",
             lambda m, snapshot_dir=None, horizon=None: fake_result(m))
         rc = main(["ask", "Alpha Co", "--json"])
         data = json.loads(capsys.readouterr().out)
@@ -518,21 +518,21 @@ class TestAsk:
         assert data["code"] == "600001"
 
     def test_ask_no_match_returns_2(self, capsys, monkeypatch):
-        monkeypatch.setattr("value_genie.doctor.freshness_gate",
+        monkeypatch.setattr("polar_star.doctor.freshness_gate",
                             lambda d=None, market=None: ("PASS", "ok"))
-        monkeypatch.setattr("value_genie.resolve.resolve",
+        monkeypatch.setattr("polar_star.resolve.resolve",
                             lambda q, **k: [])
         assert main(["ask", "nonsense"]) == 2
         assert "no match" in capsys.readouterr().err
 
     def test_compare(self, capsys, monkeypatch):
-        monkeypatch.setattr("value_genie.doctor.freshness_gate",
+        monkeypatch.setattr("polar_star.doctor.freshness_gate",
                             lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr(
-            "value_genie.resolve.resolve",
+            "polar_star.resolve.resolve",
             lambda q, **k: [Match("A", "600001", "Alpha Co", 100.0, "1")])
         monkeypatch.setattr(
-            "value_genie.analyze.compare_stocks",
+            "polar_star.analyze.compare_stocks",
             lambda ms, snapshot_dir=None: pd.DataFrame([{
                 "market": "A", "code": "600001", "name": "Alpha Co",
                 "price": 10.0, "pe_ttm": 10.0, "pe_pctile": 83.3,
@@ -544,13 +544,13 @@ class TestAsk:
         assert "Alpha Co" in out
 
     def test_compare_json(self, capsys, monkeypatch):
-        monkeypatch.setattr("value_genie.doctor.freshness_gate",
+        monkeypatch.setattr("polar_star.doctor.freshness_gate",
                             lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr(
-            "value_genie.resolve.resolve",
+            "polar_star.resolve.resolve",
             lambda q, **k: [Match("A", "600001", "Alpha Co", 100.0, "1")])
         monkeypatch.setattr(
-            "value_genie.analyze.compare_stocks",
+            "polar_star.analyze.compare_stocks",
             lambda ms, snapshot_dir=None: pd.DataFrame([{
                 "market": "A", "code": "600001", "name": "Alpha Co",
                 "price": 10.0, "pe_ttm": 10.0, "pe_pctile": 83.3,
@@ -565,10 +565,10 @@ class TestAsk:
 
 class TestOverviewCli:
     def test_overview(self, capsys, monkeypatch):
-        monkeypatch.setattr("value_genie.doctor.freshness_gate",
+        monkeypatch.setattr("polar_star.doctor.freshness_gate",
                             lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr(
-            "value_genie.overview.market_overview",
+            "polar_star.overview.market_overview",
             lambda markets=None, top_n=10, data_dir=None: {
                 "snapshot": "20260901", "markets": {}})
         rc = main(["overview"])
@@ -582,10 +582,10 @@ class TestOverviewCli:
              "price": 1500.0, "pe_ttm": 25.0, "rev_yoy": 15.0,
              "roe": 30.0, "composite_score": 60.0,
              "drawdown_52w": float("nan")}])
-        monkeypatch.setattr("value_genie.doctor.freshness_gate",
+        monkeypatch.setattr("polar_star.doctor.freshness_gate",
                             lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr(
-            "value_genie.overview.market_overview",
+            "polar_star.overview.market_overview",
             lambda markets=None, top_n=10, data_dir=None: {
                 "snapshot": "20260901",
                 "markets": {"A": {"candidates": 100,
@@ -609,10 +609,10 @@ class TestFreshnessGate:
 
     def test_ask_blocked_on_fail(self, capsys, monkeypatch):
         monkeypatch.setattr(
-            "value_genie.doctor.freshness_gate",
+            "polar_star.doctor.freshness_gate",
             lambda d=None, market=None: ("FAIL", "no snapshots found"))
         monkeypatch.setattr(
-            "value_genie.resolve.resolve",
+            "polar_star.resolve.resolve",
             lambda q, **k: [Match("A", "600001", "X", 100.0, "1")])
         rc = main(["ask", "X"])
         err = capsys.readouterr().err
@@ -622,13 +622,13 @@ class TestFreshnessGate:
 
     def test_ask_warns_but_proceeds_on_warn(self, capsys, monkeypatch):
         monkeypatch.setattr(
-            "value_genie.doctor.freshness_gate",
+            "polar_star.doctor.freshness_gate",
             lambda d=None, market=None: ("WARN", "snapshot age: 3 days"))
         monkeypatch.setattr(
-            "value_genie.resolve.resolve",
+            "polar_star.resolve.resolve",
             lambda q, **k: [Match("A", "600001", "Alpha Co", 100.0, "1")])
         monkeypatch.setattr(
-            "value_genie.analyze.analyze_stock",
+            "polar_star.analyze.analyze_stock",
             lambda m, snapshot_dir=None, horizon=None: fake_result(m))
         rc = main(["ask", "Alpha Co"])
         err = capsys.readouterr().err
@@ -646,12 +646,12 @@ class TestFreshnessGate:
             return ("PASS", "data is fresh")
 
         monkeypatch.setattr(
-            "value_genie.doctor.freshness_gate", fake_gate)
+            "polar_star.doctor.freshness_gate", fake_gate)
         monkeypatch.setattr(
-            "value_genie.resolve.resolve",
+            "polar_star.resolve.resolve",
             lambda q, **k: [Match("US", "AAPL", "Apple", 100.0, "105")])
         monkeypatch.setattr(
-            "value_genie.analyze.analyze_stock",
+            "polar_star.analyze.analyze_stock",
             lambda m, snapshot_dir=None, horizon=None: fake_result(m))
         rc = main(["ask", "AAPL"])
         assert rc == 0
@@ -660,13 +660,13 @@ class TestFreshnessGate:
     def test_ask_no_check_skips_gate(self, capsys, monkeypatch):
         called = []
         monkeypatch.setattr(
-            "value_genie.doctor.freshness_gate",
+            "polar_star.doctor.freshness_gate",
             lambda d=None, market=None: called.append(d) or ("FAIL", "should not run"))
         monkeypatch.setattr(
-            "value_genie.resolve.resolve",
+            "polar_star.resolve.resolve",
             lambda q, **k: [Match("A", "600001", "Alpha Co", 100.0, "1")])
         monkeypatch.setattr(
-            "value_genie.analyze.analyze_stock",
+            "polar_star.analyze.analyze_stock",
             lambda m, snapshot_dir=None, horizon=None: fake_result(m))
         rc = main(["ask", "Alpha Co", "--no-check"])
         assert rc == 0
@@ -674,10 +674,10 @@ class TestFreshnessGate:
 
     def test_compare_blocked_on_fail(self, capsys, monkeypatch):
         monkeypatch.setattr(
-            "value_genie.doctor.freshness_gate",
+            "polar_star.doctor.freshness_gate",
             lambda d=None, market=None: ("FAIL", "no snapshots"))
         monkeypatch.setattr(
-            "value_genie.resolve.resolve",
+            "polar_star.resolve.resolve",
             lambda q, **k: [Match("A", "600001", "X", 100.0, "1")])
         rc = main(["compare", "X", "Y"])
         err = capsys.readouterr().err
@@ -686,7 +686,7 @@ class TestFreshnessGate:
 
     def test_overview_blocked_on_fail(self, capsys, monkeypatch):
         monkeypatch.setattr(
-            "value_genie.doctor.freshness_gate",
+            "polar_star.doctor.freshness_gate",
             lambda d=None, market=None: ("FAIL", "no snapshots"))
         rc = main(["overview"])
         err = capsys.readouterr().err
@@ -696,7 +696,7 @@ class TestFreshnessGate:
 
 class TestDoctorCli:
     def test_doctor_exit_zero_on_pass(self, capsys, monkeypatch):
-        monkeypatch.setattr("value_genie.doctor.run_checks",
+        monkeypatch.setattr("polar_star.doctor.run_checks",
                             lambda data_dir=None: [("PASS", "-", "ok")])
         rc = main(["doctor"])
         assert rc == 0
@@ -704,7 +704,7 @@ class TestDoctorCli:
 
     def test_doctor_exit_one_on_fail(self, capsys, monkeypatch):
         monkeypatch.setattr(
-            "value_genie.doctor.run_checks",
+            "polar_star.doctor.run_checks",
             lambda data_dir=None: [("FAIL", "-", "no snapshots found")])
         rc = main(["doctor"])
         assert rc == 1
@@ -712,7 +712,7 @@ class TestDoctorCli:
 
     def test_doctor_json(self, capsys, monkeypatch):
         monkeypatch.setattr(
-            "value_genie.doctor.run_checks",
+            "polar_star.doctor.run_checks",
             lambda data_dir=None: [("PASS", "-", "ok"),
                                    ("WARN", "A", "kline lag 3 day(s)")])
         rc = main(["doctor", "--json"])
@@ -746,10 +746,10 @@ class TestRecommendJsonCli:
                     {"market": "A", "code": "600519", "name": "Moutai",
                      "composite_score": 60.0, "pe_ttm": 25.0}]),
                 "health": _HEALTH}
-        monkeypatch.setattr("value_genie.doctor.freshness_gate",
+        monkeypatch.setattr("polar_star.doctor.freshness_gate",
                             lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr(
-            "value_genie.recommend.build_recommendation",
+            "polar_star.recommend.build_recommendation",
             lambda *a, **k: fake)
         rc = main(["recommend", "--user", "u1", "--json"])
         data = json.loads(capsys.readouterr().out)
@@ -762,14 +762,14 @@ class TestRecommendJsonCli:
 
 class TestHoldingListJsonCli:
     def test_holding_list_json(self, capsys, monkeypatch):
-        monkeypatch.setattr("value_genie.doctor.freshness_gate",
+        monkeypatch.setattr("polar_star.doctor.freshness_gate",
                             lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr(
-            "value_genie.users.load_user",
+            "polar_star.users.load_user",
             lambda uid: SimpleNamespace(id="u1", name="U1", holdings=[],
                                         style={}))
         monkeypatch.setattr(
-            "value_genie.recommend.holdings_health",
+            "polar_star.recommend.holdings_health",
             lambda user, snap_dir=None: _HEALTH)
         rc = main(["holding", "list", "u1", "--json"])
         out = capsys.readouterr().out
@@ -789,7 +789,7 @@ class TestSkillCli:
 
     def test_skill_note_roundtrip(self, capsys, monkeypatch, tmp_path):
         import shutil as _sh
-        from value_genie import config as cfg, skills as sk
+        from polar_star import config as cfg, skills as sk
         d = tmp_path / "skills"
         _sh.copytree(cfg.SKILLS_DIR, d)
         monkeypatch.setattr(cfg, "SKILLS_DIR", d)
@@ -801,7 +801,7 @@ class TestSkillCli:
 
     def test_skill_edit_adds_trigger(self, capsys, monkeypatch, tmp_path):
         import shutil as _sh
-        from value_genie import config as cfg, skills as sk
+        from polar_star import config as cfg, skills as sk
         d = tmp_path / "skills"
         _sh.copytree(cfg.SKILLS_DIR, d)
         monkeypatch.setattr(cfg, "SKILLS_DIR", d)
@@ -835,13 +835,13 @@ class TestParserSurface:
 
 class TestIntelCmd:
     def _patch(self, monkeypatch, report_result):
-        monkeypatch.setattr("value_genie.doctor.freshness_gate",
+        monkeypatch.setattr("polar_star.doctor.freshness_gate",
                             lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr(
-            "value_genie.resolve.resolve",
+            "polar_star.resolve.resolve",
             lambda q, **k: [Match("A", "688795", "摩尔线程-U", 100.0, "1")])
         monkeypatch.setattr(
-            "value_genie.intel.report.build_intel_report",
+            "polar_star.intel.report.build_intel_report",
             lambda m, snapshot_dir=None, asof=None: report_result)
 
     def _result(self):
@@ -868,15 +868,15 @@ class TestIntelCmd:
         assert payload["match"]["code"] == "688795"
 
     def test_no_match_returns_2(self, capsys, monkeypatch):
-        monkeypatch.setattr("value_genie.doctor.freshness_gate",
+        monkeypatch.setattr("polar_star.doctor.freshness_gate",
                             lambda d=None, market=None: ("PASS", "ok"))
-        monkeypatch.setattr("value_genie.resolve.resolve",
+        monkeypatch.setattr("polar_star.resolve.resolve",
                             lambda q, **k: [])
         rc = main(["intel", "不存在股"])
         assert rc == 2
 
     def test_freshness_fail_blocks(self, capsys, monkeypatch):
-        monkeypatch.setattr("value_genie.doctor.freshness_gate",
+        monkeypatch.setattr("polar_star.doctor.freshness_gate",
                             lambda d=None, market=None: ("FAIL", "no snapshot"))
         rc = main(["intel", "摩尔线程"])
         captured = capsys.readouterr()
@@ -886,7 +886,7 @@ class TestIntelCmd:
     def test_no_check_skips_gate(self, capsys, monkeypatch):
         called = []
         monkeypatch.setattr(
-            "value_genie.doctor.freshness_gate",
+            "polar_star.doctor.freshness_gate",
             lambda d=None, market=None: called.append(1) or ("FAIL", "x"))
         self._patch(monkeypatch, self._result())
         rc = main(["intel", "摩尔线程", "--no-check"])
@@ -897,7 +897,7 @@ class TestIntelCmd:
 # ---------------------------------------------------------------------------
 # ask intel integration (P2 Task 8)
 # ---------------------------------------------------------------------------
-from value_genie.analyze import risk_flags
+from polar_star.analyze import risk_flags
 
 
 class TestAskIntelIntegration:
@@ -910,17 +910,17 @@ class TestAskIntelIntegration:
         return base
 
     def test_risk_flag_when_intel_red(self, capsys, monkeypatch):
-        monkeypatch.setattr("value_genie.doctor.freshness_gate",
+        monkeypatch.setattr("polar_star.doctor.freshness_gate",
                             lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr(
-            "value_genie.resolve.resolve",
+            "polar_star.resolve.resolve",
             lambda q, **k: [Match("A", "688795", "摩尔线程-U", 100.0, "1")])
         result = self._fake_result(intel={
             "unlock_pct_30d": 12.0, "unlock_pct_90d": 12.0,
             "holder_cut_flag": 1.0, "dilution_flag": 0.0,
             "eq_flags": 2.0, "intel_red": 1.0})
         monkeypatch.setattr(
-            "value_genie.analyze.analyze_stock",
+            "polar_star.analyze.analyze_stock",
             lambda m, snapshot_dir=None, horizon=None: result)
         rc = main(["ask", "摩尔线程"])
         out = capsys.readouterr().out
@@ -929,16 +929,16 @@ class TestAskIntelIntegration:
         assert "解禁" in out and "减持" in out
 
     def test_no_flag_when_clean(self, capsys, monkeypatch):
-        monkeypatch.setattr("value_genie.doctor.freshness_gate",
+        monkeypatch.setattr("polar_star.doctor.freshness_gate",
                             lambda d=None, market=None: ("PASS", "ok"))
         monkeypatch.setattr(
-            "value_genie.resolve.resolve",
+            "polar_star.resolve.resolve",
             lambda q, **k: [Match("A", "688795", "摩尔线程-U", 100.0, "1")])
         result = self._fake_result(intel={
             "unlock_pct_30d": 0.0, "holder_cut_flag": 0.0,
             "dilution_flag": 0.0, "eq_flags": 0.0, "intel_red": 0.0})
         monkeypatch.setattr(
-            "value_genie.analyze.analyze_stock",
+            "polar_star.analyze.analyze_stock",
             lambda m, snapshot_dir=None, horizon=None: result)
         rc = main(["ask", "摩尔线程"])
         out = capsys.readouterr().out

@@ -221,12 +221,12 @@ Sun 的失败不在方法，在信任与合规。反复出现的模式：
 ## 十、AI 执行层
 
 工具链：
-1. `python -m value_genie screen --strategy sheng --top 20`
+1. `python -m polar_star screen --strategy sheng --top 20`
    跑筛(用户委托 2026-09-01)。
 2. 叠加制度/地缘/市场/情绪四层检查 + 催化剂日历，cut or
    downgrade 名单并说明理由。
-3. 对 survivors：`python -m value_genie ask <name> --evidence`。
-4. 催化剂与情绪：`python -m value_genie intel <name>`(新闻
+3. 对 survivors：`python -m polar_star ask <name> --evidence`。
+4. 催化剂与情绪：`python -m polar_star intel <name>`(新闻
    热度变化、公告日历、机构持仓变化)。
 
 关键问题清单(每只候选必须回答)：

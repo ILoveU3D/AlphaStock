@@ -3,7 +3,7 @@
 import pandas as pd
 import pytest
 
-from value_genie.strategy.registry import (
+from polar_star.strategy.registry import (
     DataSource,
     Strategy,
     evaluate_gates,

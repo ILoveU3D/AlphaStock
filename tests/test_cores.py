@@ -9,8 +9,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from value_genie import config
-from value_genie.strategy import cores
+from polar_star import config
+from polar_star.strategy import cores
 
 
 def _df(**cols):

@@ -4,9 +4,9 @@ import json
 
 import pytest
 
-from value_genie import config
-from value_genie.model import archive as marc
-from value_genie.model import store
+from polar_star import config
+from polar_star.model import archive as marc
+from polar_star.model import store
 
 
 @pytest.fixture

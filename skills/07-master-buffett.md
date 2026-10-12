@@ -228,12 +228,12 @@ why 持续：浮存金成本长期 < T-bill 收益，结构上永远有弹药。
 8. -50% 回撤下你是否愿意持有 5 年？（Duan 纪律层）
 
 **工具调用（user mandate 流程）**：
-1. `python -m value_genie screen --strategy buffett --top 20` 跑筛
+1. `python -m polar_star screen --strategy buffett --top 20` 跑筛
    （user mandate 2026-09-01：必跑）
 2. 在 top names 上叠加 policy / geopolitics / market regime /
    sentiment 检查；说明砍掉/降级的标的和理由
-3. `python -m value_genie ask <name> --evidence` 跑证据层
-4. `python -m value_genie intel <name>` 跑舆情（解禁/减持/管理层诚信
+3. `python -m polar_star ask <name> --evidence` 跑证据层
+4. `python -m polar_star intel <name>` 跑舆情（解禁/减持/管理层诚信
    ——user mandate 2026-09-09）
 
 **Answer Template**：

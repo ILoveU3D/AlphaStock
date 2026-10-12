@@ -1,10 +1,10 @@
-"""Tests for value_genie.model.store (local-only model persistence)."""
+"""Tests for polar_star.model.store (local-only model persistence)."""
 
 import pandas as pd
 import pytest
 
-from value_genie import config
-from value_genie.model import store
+from polar_star import config
+from polar_star.model import store
 
 
 @pytest.fixture

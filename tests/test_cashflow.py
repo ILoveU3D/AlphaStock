@@ -5,8 +5,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from value_genie.fetch import pipeline as pl
-from value_genie.strategy.factors import PILLAR_FACTORS
+from polar_star.fetch import pipeline as pl
+from polar_star.strategy.factors import PILLAR_FACTORS
 
 
 def _master():

@@ -419,7 +419,7 @@ def render_recommend(result: dict) -> str:
     user = result["user"]
     health = result["health"]
     cands = result["candidates"]
-    lines = [f"== Value Genie recommend — 用户 {user.id} ({user.name}) =="]
+    lines = [f"== Polar Star recommend — 用户 {user.id} ({user.name}) =="]
     lines.append(f"snapshot : {result['snapshot']}")
     style_bits = []
     if user.has_style():

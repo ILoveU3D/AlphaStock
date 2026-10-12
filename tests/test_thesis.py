@@ -1,12 +1,12 @@
-"""Tests for value_genie.thesis (tower-fed pool registry, 论点喂池)."""
+"""Tests for polar_star.thesis (tower-fed pool registry, 论点喂池)."""
 
 import json
 
 import pandas as pd
 import pytest
 
-from value_genie import config
-from value_genie import thesis as th
+from polar_star import config
+from polar_star import thesis as th
 
 
 @pytest.fixture

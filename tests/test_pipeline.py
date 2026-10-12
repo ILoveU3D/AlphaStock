@@ -1,4 +1,4 @@
-"""Tests for value_genie.fetch.pipeline (all network fetchers mocked)."""
+"""Tests for polar_star.fetch.pipeline (all network fetchers mocked)."""
 
 import json
 from datetime import date, timedelta
@@ -6,8 +6,8 @@ from datetime import date, timedelta
 import pandas as pd
 import pytest
 
-from value_genie import config
-from value_genie.fetch import pipeline as pl
+from polar_star import config
+from polar_star.fetch import pipeline as pl
 
 
 # ---------------------------------------------------------------------------
@@ -35,10 +35,10 @@ def _quotes(rows):
 
 
 def stub_intel_fetchers(monkeypatch):
-    """Patch value_genie.intel.radar's fetchers: 600519 unlock 8% in
+    """Patch polar_star.intel.radar's fetchers: 600519 unlock 8% in
     10d (red flag), 000858 active buyback, 600519 balance row (no eq
     trigger: rece 20 < 15+10)."""
-    from value_genie.intel import radar as _radar
+    from polar_star.intel import radar as _radar
     _d10 = (date.today() + timedelta(days=10)).isoformat()
     monkeypatch.setattr(_radar, "fetch_a_unlocks", lambda s, e: pd.DataFrame([
         {"code": "600519", "name": "Kweichow Moutai", "free_date": _d10,
@@ -206,7 +206,7 @@ def patched_fetchers(monkeypatch, counters):
     # run_fetch imports this one lazily inside the function body, so the
     # patch must land on the defining module (keeps the suite hermetic)
     monkeypatch.setattr(
-        "value_genie.fetch.fundamentals.fetch_fx_usdcny", lambda: 7.25)
+        "polar_star.fetch.fundamentals.fetch_fx_usdcny", lambda: 7.25)
     monkeypatch.setattr(pl, "fetch_kline_any", fake_kline)
     # keep run_fetch hermetic: real user holdings would hit the network
     monkeypatch.setattr(pl, "collect_watch_symbols", lambda *a, **k: [])
@@ -576,14 +576,14 @@ def test_hk_lane_b_empty_without_fundamentals():
 # ---------------------------------------------------------------------------
 class TestCollectWatchSymbols:
     def test_collects_and_dedupes_across_users(self, monkeypatch):
-        from value_genie.resolve import Match
+        from polar_star.resolve import Match
 
         class FakeUser:
             def __init__(self, *holds):
                 self.holdings = holds
 
         monkeypatch.setattr(
-            "value_genie.users.list_users",
+            "polar_star.users.list_users",
             lambda: [
                 FakeUser(Match("A", "688795", "摩尔线程-U", 1.0, "1"),
                          Match("US", "BRK_B", "BRK-B", 1.0, "106")),
@@ -594,8 +594,8 @@ class TestCollectWatchSymbols:
                        ("US", "BRK_B", "BRK-B")]
 
     def test_capped_at_watchlist_max(self, monkeypatch):
-        from value_genie import config as cfg
-        from value_genie.resolve import Match
+        from polar_star import config as cfg
+        from polar_star.resolve import Match
 
         class FakeUser:
             def __init__(self, *holds):
@@ -603,7 +603,7 @@ class TestCollectWatchSymbols:
 
         holds = [Match("A", f"60000{i}", f"N{i}", 1.0, "1")
                  for i in range(5)]
-        monkeypatch.setattr("value_genie.users.list_users",
+        monkeypatch.setattr("polar_star.users.list_users",
                             lambda: [FakeUser(*holds)])
         monkeypatch.setattr(cfg, "WATCHLIST_MAX", 2)
         assert len(pl.collect_watch_symbols()) == 2
@@ -612,7 +612,7 @@ class TestCollectWatchSymbols:
         def boom():
             raise OSError("users dir unreadable")
 
-        monkeypatch.setattr("value_genie.users.list_users", boom)
+        monkeypatch.setattr("polar_star.users.list_users", boom)
         assert pl.collect_watch_symbols() == []
 
 

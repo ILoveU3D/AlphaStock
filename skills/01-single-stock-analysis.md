@@ -18,7 +18,7 @@ updated_at: 2026-10-12T22:33:08
 Answer "what do you think of X" with a verdict first, evidence later.
 
 1. Resolve the name (Chinese, code or ticker all work):
-   `python -m value_genie ask 茶百道`
+   `python -m polar_star ask 茶百道`
    The command prints the resolved label plus close alternative matches —
    if the resolution looks wrong, retry with a more specific name.
 2. Read the brief output: verdict band, live price, three key numbers
@@ -29,7 +29,7 @@ Answer "what do you think of X" with a verdict first, evidence later.
    numbers. State the data-as-of line verbatim. Do NOT dump the full
    metric table unless asked.
 4. When the human asks "why" / "证据" / "reasons", run:
-   `python -m value_genie ask 茶百道 --evidence`
+   `python -m polar_star ask 茶百道 --evidence`
    and walk through the metric/percentile table, pillar scores and risk
    flags in plain language.
 5. For machine-readable consumption use `--json`.
@@ -58,7 +58,7 @@ Answer "what do you think of X" with a verdict first, evidence later.
 - New listings may have no kline history; momentum metrics show as "-".
 - After answering, if you learned something reusable (a resolution
   quirk, a data gap workaround), append a field note:
-  `python -m value_genie skill note single-stock-analysis "lesson"`
+  `python -m polar_star skill note single-stock-analysis "lesson"`
 
 ## Field Notes
 - [2026-09-01 01:56] (ai) smoke test note: verified against 20260901 snapshot

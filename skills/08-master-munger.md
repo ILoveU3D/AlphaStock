@@ -216,9 +216,9 @@ updated_at: 2026-09-15T10:00:00
 ### 工具调用
 
 ```
-python -m value_genie screen --strategy munger --top 20
-python -m value_genie ask <name> --evidence
-python -m value_genie intel <name>     # 管理层诚信、激励机制
+python -m polar_star screen --strategy munger --top 20
+python -m polar_star ask <name> --evidence
+python -m polar_star intel <name>     # 管理层诚信、激励机制
 ```
 
 `munger` 策略硬门槛即反向过滤：ROE≥20%、毛利率≥40%、

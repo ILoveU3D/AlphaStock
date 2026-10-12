@@ -6,9 +6,9 @@ import pandas as pd
 import pytest
 import requests
 
-from value_genie.fetch import driver, health as hm
-from value_genie.fetch import quotes as q
-from value_genie.strategy import registry
+from polar_star.fetch import driver, health as hm
+from polar_star.fetch import quotes as q
+from polar_star.strategy import registry
 
 
 @pytest.fixture()

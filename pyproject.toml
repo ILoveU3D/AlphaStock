@@ -3,9 +3,9 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "value-genie"
+name = "polar-star"
 version = "1.0.0"
-description = "Value Genie (价值投资精灵) - a full-market A/HK/US value-investment stock screener driven by AI agents through its CLI (no human UI)"
+description = "Polar Star (北极星) - a full-market A/HK/US value-investment stock screener driven by AI agents through its CLI (no human UI)"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
@@ -25,7 +25,7 @@ dependencies = [
 dev = ["pytest>=7.4"]
 
 [tool.setuptools.packages.find]
-include = ["value_genie*"]
+include = ["polar_star*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

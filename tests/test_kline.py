@@ -1,11 +1,11 @@
-"""Tests for value_genie.fetch.kline (no network)."""
+"""Tests for polar_star.fetch.kline (no network)."""
 
 from datetime import datetime
 from unittest.mock import patch
 
 import pandas as pd
 
-from value_genie.fetch import kline as k
+from polar_star.fetch import kline as k
 
 
 def _em_payload(lines):
@@ -140,7 +140,7 @@ class TestTxSymbolCandidates:
 
 
 def config_us_suffixes():
-    from value_genie import config
+    from polar_star import config
     return set(config.US_TX_SUFFIX.values())
 
 

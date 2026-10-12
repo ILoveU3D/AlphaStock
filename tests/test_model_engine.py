@@ -1,8 +1,8 @@
-"""Tests for value_genie.model.engine (pure driver-based FCFF DCF)."""
+"""Tests for polar_star.model.engine (pure driver-based FCFF DCF)."""
 
 import pytest
 
-from value_genie.model import engine
+from polar_star.model import engine
 
 
 def _scenario(g=0.10, m=0.20, da=0.03, capex=0.05, nwc=0.10):

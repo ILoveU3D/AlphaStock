@@ -1,11 +1,11 @@
-"""Tests for value_genie.fetch.http (no network)."""
+"""Tests for polar_star.fetch.http (no network)."""
 
 import json
 from unittest.mock import MagicMock, patch
 
 import requests
 
-from value_genie.fetch import http
+from polar_star.fetch import http
 
 
 class TestNum:

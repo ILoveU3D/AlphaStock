@@ -1,10 +1,10 @@
-"""Tests for value_genie.intel.radar (no network)."""
+"""Tests for polar_star.intel.radar (no network)."""
 
 from datetime import date, timedelta
 
 import pandas as pd
 
-from value_genie.intel import radar
+from polar_star.intel import radar
 
 
 def _snap(tmp_path, fins=None, cfs=None):

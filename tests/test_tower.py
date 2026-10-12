@@ -1,8 +1,8 @@
-"""Tests for value_genie.tower (cognitive tower brick store)."""
+"""Tests for polar_star.tower (cognitive tower brick store)."""
 
 from pathlib import Path
 
-from value_genie import tower as tw
+from polar_star import tower as tw
 
 SAMPLE = """---
 id: dcf-universal-law

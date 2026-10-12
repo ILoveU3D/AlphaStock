@@ -1,11 +1,11 @@
-"""Tests for value_genie.report (snapshot loading, screening, exports)."""
+"""Tests for polar_star.report (snapshot loading, screening, exports)."""
 
 from pathlib import Path
 
 import pandas as pd
 import pytest
 
-from value_genie import report
+from polar_star import report
 
 
 # ---------------------------------------------------------------------------
@@ -226,10 +226,10 @@ def test_export_csv(tmp_path):
 def test_export_markdown(tmp_path):
     top = report.screen(_master(), top_n=3)
     path = report.export_markdown(
-        top, tmp_path / "out" / "top.md", title="Value Genie - test",
+        top, tmp_path / "out" / "top.md", title="Polar Star - test",
         meta={"snapshot": "20260201", "strategy": "balanced"})
     text = path.read_text(encoding="utf-8")
-    assert text.startswith("# Value Genie - test")
+    assert text.startswith("# Polar Star - test")
     assert "- **snapshot**: 20260201" in text
     assert "- **strategy**: balanced" in text
     assert "| rank | market | code | name |" in text

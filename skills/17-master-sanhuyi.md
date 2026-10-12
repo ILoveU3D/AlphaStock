@@ -190,11 +190,11 @@ Answer "散户乙会怎么看X" with the free-shares lens: 股票的目的
 ## 10. AI 执行层
 
 ### 命令链
-1. `python -m value_genie screen --strategy sanhuyi --top 20`
+1. `python -m polar_star screen --strategy sanhuyi --top 20`
    ——跑硬准则筛。
-2. 对幸存者 `python -m value_genie ask X --evidence`——跑
+2. 对幸存者 `python -m polar_star ask X --evidence`——跑
    证据层（ROE/OCF/分红历史）。
-3. `python -m value_genie intel X`——跑舆情（分红方案变化、
+3. `python -m polar_star intel X`——跑舆情（分红方案变化、
    管理层诚信、行业景气）。
    - `dividend_yield` 来自 pipeline（A: 东财分红事件表按宣告
      年聚合；HK: F10 DIVIDEND_RATE 优先，div_paid fallback；
@@ -239,7 +239,7 @@ Answer "散户乙会怎么看X" with the free-shares lens: 股票的目的
 
 1. 自己跑筛（用户授权）：
    ```
-   python -m value_genie screen --strategy sanhuyi --top 20
+   python -m polar_star screen --strategy sanhuyi --top 20
    ```
 2. 对幸存者问分红问题：这家企业第 10 年会真金白银（不是借
    钱）地分出一条增长的分红吗？跑 `ask X --evidence` 加

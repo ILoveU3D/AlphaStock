@@ -213,7 +213,7 @@ def _markdown_table(df: pd.DataFrame) -> str:
     return "\n".join(lines)
 
 
-def export_markdown(df: pd.DataFrame, path, title="Value Genie report",
+def export_markdown(df: pd.DataFrame, path, title="Polar Star report",
                     meta: dict | None = None) -> Path:
     """Write the ranked table plus run metadata as a Markdown file."""
     path = Path(path)

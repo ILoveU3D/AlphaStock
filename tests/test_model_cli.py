@@ -4,8 +4,8 @@ import json
 
 import pytest
 
-from value_genie import __main__ as cli
-from value_genie import config
+from polar_star import __main__ as cli
+from polar_star import config
 
 
 @pytest.fixture
@@ -15,7 +15,7 @@ def mdir(tmp_path, monkeypatch):
 
 
 def _seed(market="US", code="TEST"):
-    from value_genie.model import store
+    from polar_star.model import store
     years = [{"fy": y, "revenue": 100.0 * (1.1 ** (y - 2021)),
               "ebit": 20.0, "net_income": 15.0, "da": 3.0, "capex": 5.0,
               "ocf": 18.0, "cash": 20.0, "debt": 10.0, "shares": 10.0}
@@ -62,7 +62,7 @@ def test_build_without_history_fails(capsys, mdir, monkeypatch):
 
 def test_set_requires_reason(capsys, mdir, monkeypatch):
     _seed()
-    from value_genie.model import store
+    from polar_star.model import store
     store.save_assumptions(store.default_assumptions("US", "TEST"))
     monkeypatch.setattr(cli, "_resolve_stock_or_exit",
                         lambda q: _FakeMatch())
@@ -79,7 +79,7 @@ def test_set_currency_accepts_string(capsys, mdir, monkeypatch):
     # currency is the one non-numeric top-level key (listing-currency
     # tag for CNY-reporting HK models)
     _seed()
-    from value_genie.model import store
+    from polar_star.model import store
     store.save_assumptions(store.default_assumptions("US", "TEST"))
     monkeypatch.setattr(cli, "_resolve_stock_or_exit",
                         lambda q: _FakeMatch())
@@ -97,7 +97,7 @@ def test_list_json(capsys, mdir):
 
 
 def test_gather_json(capsys, mdir, monkeypatch):
-    from value_genie.model import gather as mg
+    from polar_star.model import gather as mg
     monkeypatch.setattr(cli, "_resolve_stock_or_exit",
                         lambda q: _FakeMatch())
     monkeypatch.setattr(mg, "gather",
@@ -130,7 +130,7 @@ def test_lint_exit_codes(capsys, mdir, monkeypatch):
                         lambda q: _FakeMatch())
     # no dossier -> 1
     assert cli.main(["model", "lint", "US:TEST", "--json"]) == 1
-    from value_genie.model import archive as marc
+    from polar_star.model import archive as marc
     marc.save_archive(marc.new_archive("US", "TEST"))
     rc = cli.main(["model", "lint", "US:TEST", "--json"])
     assert rc == 1                            # empty dossier INCOMPLETE
@@ -142,7 +142,7 @@ def test_status_json(capsys, mdir):
     rc = cli.main(["model", "status", "--json"])
     assert rc == 0
     assert json.loads(capsys.readouterr().out) == []
-    from value_genie.model import archive as marc
+    from polar_star.model import archive as marc
     marc.save_archive(marc.new_archive("US", "TEST", name="T"))
     rc = cli.main(["model", "status", "--json"])
     out = json.loads(capsys.readouterr().out)
@@ -152,7 +152,7 @@ def test_status_json(capsys, mdir):
 def test_show_json_wraps_dossier_and_valuation(capsys, mdir, monkeypatch):
     monkeypatch.setattr(cli, "_resolve_stock_or_exit",
                         lambda q: _FakeMatch())
-    from value_genie.model import archive as marc
+    from polar_star.model import archive as marc
     marc.save_archive(marc.new_archive("US", "TEST", name="T"))
     rc = cli.main(["model", "show", "US:TEST", "--json"])
     assert rc == 0

@@ -250,13 +250,13 @@ is the company's, not the market's. Volatility is the market's mood.
 
 1. Run the screen yourself (user mandate):
    ```
-   python -m value_genie screen --strategy duan --top 20
+   python -m polar_star screen --strategy duan --top 20
    ```
 2. Apply the ten-year question to survivors; cut anything whose
    answer depends on a forecast (policy support, cycle timing,
    hype).
-3. For survivors: `python -m value_genie ask <name> --evidence` +
-   `python -m value_genie intel <name>`（管理层诚信、企业文化、
+3. For survivors: `python -m polar_star ask <name> --evidence` +
+   `python -m polar_star intel <name>`（管理层诚信、企业文化、
    用户口碑）。
 4. 数据是排除工具，不是买入理由（用户 2026-09-06 原话）—
    gate 通过 + factor 高分不构成买入理由；买入理由必须从商业

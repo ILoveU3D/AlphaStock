@@ -56,7 +56,7 @@ def market_overview(snapshot_dir=None, markets=None, top_n: int = 10,
 
 
 def render_overview(ov_data: dict) -> str:
-    lines = [f"== Value Genie market overview - "
+    lines = [f"== Polar Star market overview - "
              f"snapshot {ov_data['snapshot']} =="]
     for mk, d in ov_data["markets"].items():
         lines += ["",

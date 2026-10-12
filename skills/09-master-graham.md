@@ -205,9 +205,9 @@ design，它们在 Graham 宇宙之外。
 ### 工具调用（user mandate: 自己跑 screen）
 
 ```
-python -m value_genie screen --strategy graham --top 20
-python -m value_genie ask <name> --evidence
-python -m value_genie intel <name>   # 分红连续性、会计诚信
+python -m polar_star screen --strategy graham --top 20
+python -m polar_star ask <name> --evidence
+python -m polar_star intel <name>   # 分红连续性、会计诚信
 ```
 
 Graham 的 edge 从不依赖 news flow，但 *你* 必须叠加政策/地缘/情绪

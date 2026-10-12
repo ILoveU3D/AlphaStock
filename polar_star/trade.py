@@ -91,7 +91,7 @@ def load_season(sid: str) -> dict:
     path = season_path(sid)
     if not path.exists():
         raise FileNotFoundError(
-            f"no season {sid!r}; create one with `python -m value_genie "
+            f"no season {sid!r}; create one with `python -m polar_star "
             f"trade season new {sid} --capital N --base USD --markets US,HK`")
     try:
         return json.loads(path.read_text(encoding="utf-8"))

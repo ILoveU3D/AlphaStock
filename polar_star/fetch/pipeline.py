@@ -1006,7 +1006,7 @@ def run_fetch(markets=None, data_dir=None, refresh: bool = False,
                 "markets": markets, "refresh": refresh, "datasets": {},
                 "failures": []}
     log = (lambda *a: None) if quiet else print
-    log(f"== value-genie fetch -> {snap_dir} ==")
+    log(f"== polar-star fetch -> {snap_dir} ==")
     _fail_lock = threading.Lock()
 
     def _fail(msg: str):

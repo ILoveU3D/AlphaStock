@@ -1,6 +1,6 @@
-"""Tests for value_genie.fetch.annual (annual-report text material)."""
+"""Tests for polar_star.fetch.annual (annual-report text material)."""
 
-from value_genie.fetch import annual as fa
+from polar_star.fetch import annual as fa
 
 _BA = {
     "jyps": [{"REPORT_DATE": "2026-06-30 00:00:00",
@@ -130,7 +130,7 @@ def test_slice_item_ignores_mid_sentence_item_citations():
 
 def test_us_10k_pipeline(monkeypatch):
     monkeypatch.setattr(fa, "_TENK_HTML", _TENK_HTML, raising=False)
-    from value_genie.fetch import fundamentals as fund
+    from polar_star.fetch import fundamentals as fund
     monkeypatch.setattr(fund, "load_sec_cik_map",
                         lambda: {"AAPL": "0000320193"})
     submissions = {
@@ -153,7 +153,7 @@ def test_us_10k_pipeline(monkeypatch):
 
 
 def test_us_fail_closed_without_cik(monkeypatch):
-    from value_genie.fetch import fundamentals as fund
+    from polar_star.fetch import fundamentals as fund
     monkeypatch.setattr(fund, "load_sec_cik_map", lambda: {})
     assert fa.fetch_annual("US", "ZZZZ") is None
 

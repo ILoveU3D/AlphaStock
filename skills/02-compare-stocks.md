@@ -14,7 +14,7 @@ updated_at: 2026-09-01T12:00:00
 # Playbook
 
 1. Run with all names at once (2+ supported):
-   `python -m value_genie compare 茶百道 古茗 奈雪的茶`
+   `python -m polar_star compare 茶百道 古茗 奈雪的茶`
 2. The table shows price, PE with peer percentile, revenue growth, ROE,
    blended composite percentile, verdict and risk count per name.
 3. Structure the answer around the printed takeaways: which name is
