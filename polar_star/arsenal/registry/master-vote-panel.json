@@ -1,0 +1,19 @@
+{
+  "id": "master-vote-panel",
+  "family": "veteran",
+  "stage": "cross-section",
+  "sweepable": true,
+  "status": "armed",
+  "inputs": [
+    "master.csv gate columns per master declarations"
+  ],
+  "lineage": {
+    "source": "toolkit veteran, practice-verified in the L1/L2 pipeline",
+    "note": "七大师硬门票数面板 (ex strategy/consensus.masters_vote); GSL 2026-09-15 校准"
+  },
+  "parameters": {},
+  "limits": [
+    "votes exclude (0=out), NEVER rank",
+    "missing gate columns skipped with stderr warn"
+  ]
+}

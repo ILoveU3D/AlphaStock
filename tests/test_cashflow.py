@@ -6,7 +6,7 @@ import pandas as pd
 import pytest
 
 from polar_star.fetch import pipeline as pl
-from polar_star.strategy.factors import PILLAR_FACTORS
+from polar_star.arsenal.weighted_ranking import PILLAR_FACTORS
 
 
 def _master():

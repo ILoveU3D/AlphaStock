@@ -8,10 +8,11 @@ Static fact-level aids only: category keyword -> generic meaning,
 master-row numbers -> plain-language digest, news timestamps -> heat
 counts, rating payloads -> aggregate summary. Event-specific judgment
 stays with the AI agent (model.py impact convention).
-"""
 
-from collections import Counter
-from datetime import date, datetime
+News-heat and ratings-breadth computations moved to the arsenal
+(arsenal/news_heat.py, arsenal/ratings_breadth.py) — this module keeps
+only the static meaning/digest tables.
+"""
 
 from .. import config
 
@@ -218,93 +219,3 @@ def earnings_digest(row: dict, extras: dict | None = None) -> dict | None:
         read.append("，".join(levels))
     out["read"] = "；".join(read)
     return out
-
-
-# ---------------------------------------------------------------------------
-# 新闻热度（用户要求：新闻一定要有时效性）
-# ---------------------------------------------------------------------------
-def news_heat(items: list, asof: date | None = None) -> dict | None:
-    """新闻时间线 → 热度计数（日粒度）+ 最新一条时效。
-
-    today/3天/7天 vs 前7天 → 升温/降温/持平（短线关注边际变化，
-    升温=注意力聚集，骤升往往是高潮预警）。items 新→旧由 API 保证。
-    """
-    if not items:
-        return None
-    asof = asof or date.today()
-    days = [max(0, (asof - i.event_date).days) for i in items]
-    today = sum(1 for d in days if d == 0)
-    n3 = sum(1 for d in days if d <= 2)
-    n7 = sum(1 for d in days if d <= 6)
-    prior7 = sum(1 for d in days if 7 <= d <= 13)
-    if n7 >= 3 and n7 >= 2 * prior7:
-        verdict = "升温"
-    elif prior7 >= 3 and n7 * 3 <= prior7:
-        verdict = "降温"
-    else:
-        verdict = "持平"
-    out = {"today": today, "d3": n3, "d7": n7, "prior7": prior7,
-           "verdict": verdict, "latest_hours": None}
-    st = str(items[0].payload.get("show_time") or "")
-    try:
-        t = datetime.strptime(st[:19], "%Y-%m-%d %H:%M:%S")
-        out["latest_hours"] = round(
-            (datetime.now() - t).total_seconds() / 3600.0, 1)
-    except ValueError:
-        pass
-    return out
-
-
-# ---------------------------------------------------------------------------
-# 研报汇总（用户要求：投研报告一定要全面，且权威有参考性）
-# ---------------------------------------------------------------------------
-def ratings_summary(items: list) -> dict | None:
-    """A 股评级列表（新→旧）→ 汇总：分布/上调下调/一致 EPS/目标价。
-
-    每家机构只取最新一份评级（旧评级只计入上/下调计数），覆盖机构
-    数量与主力机构名供 AI 判断权威性与覆盖密度。
-    """
-    if not items:
-        return None
-    by_org: dict[str, list] = {}
-    for i in items:
-        by_org.setdefault(i.payload.get("org") or "", []).append(i)
-    dist: Counter = Counter()
-    ups = downs = inits = 0
-    eps_now, eps_next, tps = [], [], []
-    for lst in by_org.values():
-        latest = lst[0]
-        r = latest.payload.get("rating") or ""
-        if r:
-            dist[r] += 1
-        for it in lst:
-            ch = str(it.payload.get("rating_change") or "")
-            if ch == "2":
-                ups += 1
-            elif ch == "1":
-                downs += 1
-            elif ch == "4":
-                inits += 1
-        e1 = _f(latest.payload.get("eps_this_year"))
-        e2 = _f(latest.payload.get("eps_next_year"))
-        if e1:
-            eps_now.append(e1)
-        if e2:
-            eps_next.append(e2)
-        tp = _f(latest.payload.get("target_price"))
-        if tp:
-            tps.append(tp)
-
-    def _avg(xs):
-        return round(sum(xs) / len(xs), 3) if xs else None
-
-    top = [o for o, _ in sorted(
-        Counter(i.payload.get("org") or "" for i in items).items(),
-        key=lambda kv: -kv[1]) if o][:3]
-    return {"total": len(items), "orgs": len(by_org), "top_orgs": top,
-            "distribution": dict(dist), "upgrades": ups,
-            "downgrades": downs, "initiations": inits,
-            "eps_this_year_avg": _avg(eps_now),
-            "eps_next_year_avg": _avg(eps_next),
-            "target_price_high": max(tps) if tps else None,
-            "target_price_low": min(tps) if tps else None}

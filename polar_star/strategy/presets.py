@@ -82,7 +82,7 @@ def normalize_weights(weights: dict) -> dict:
     Unknown keys are dropped, missing pillars default to 0, and the result
     is scaled to sum to 1 (all-zero input falls back to uniform).
     """
-    from .factors import PILLARS
+    from ..arsenal.weighted_ranking import PILLARS
 
     w = {p: max(0.0, float(weights.get(p, 0.0))) for p in PILLARS}
     total = sum(w.values())

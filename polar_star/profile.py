@@ -259,7 +259,7 @@ def apply_distilled_culture(df: pd.DataFrame,
     out["core_score"] = out[cols].mean(axis=1, skipna=True)
 
     if "core_gaps" in out.columns:
-        from .strategy.cores import CULTURE_UNSCORED
+        from .arsenal.core_triad import CULTURE_UNSCORED
 
         def _fix(g):
             if not isinstance(g, str) or not g:

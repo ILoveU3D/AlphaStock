@@ -5,10 +5,10 @@ import pytest
 
 from polar_star.strategy import masters  # noqa: F401 — triggers registration
 from polar_star.strategy import presets   # noqa: F401
-from polar_star.strategy.factors import add_derived_factors
+from polar_star.arsenal.graham_ceiling import add_derived_factors
+from polar_star.arsenal.statsutil import evaluate_gates
 from polar_star.strategy.registry import (
     Strategy,
-    evaluate_gates,
     get_strategy,
     list_strategies,
 )

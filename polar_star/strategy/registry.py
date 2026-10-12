@@ -193,41 +193,6 @@ def ordered_sources(data_type: str, market: str,
     return sorted(srcs, key=_key)
 
 
-# ---------------------------------------------------------------------------
-# Gate evaluation
-# ---------------------------------------------------------------------------
-def evaluate_gates(df, gates: list, market_col: str = "market") -> "pd.Series":
-    """Return a boolean mask: True if row passes all gates.
-
-    Ops:
-    - ">=", "<=" : absolute value comparison
-    - "pctl>=", "pctl<=" : within-market percentile comparison
-    """
-    import pandas as pd
-
-    if not gates:
-        return pd.Series(True, index=df.index)
-    mask = pd.Series(True, index=df.index)
-    for col, op, val in gates:
-        if col not in df.columns:
-            # skip gates whose column is unavailable (e.g. old snapshot
-            # lacking ocf_yield); warn so the user knows a filter was
-            # dropped rather than silently blocking every row.
-            import sys
-            print(f"[WARN] gate skipped: column {col!r} not in snapshot "
-                  f"(op={op}, val={val})", file=sys.stderr)
-            continue
-        s = pd.to_numeric(df[col], errors="coerce")
-        if op == ">=":
-            mask &= s >= val
-        elif op == "<=":
-            mask &= s <= val
-        elif op == "pctl>=":
-            # val is a percentile threshold; pass if stock's percentile
-            # within its market is >= val
-            pct = s.groupby(df[market_col]).rank(pct=True) * 100
-            mask &= pct >= val
-        elif op == "pctl<=":
-            pct = s.groupby(df[market_col]).rank(pct=True) * 100
-            mask &= pct <= val
-    return mask
+# NOTE (2026-10-13 zero-algorithm move): gate EVALUATION lives in
+# polar_star/arsenal/statsutil.py (evaluate_gates); this module keeps
+# only declarations — strategies, horizons, data sources.

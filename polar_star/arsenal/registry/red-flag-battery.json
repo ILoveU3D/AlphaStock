@@ -1,0 +1,23 @@
+{
+  "id": "red-flag-battery",
+  "family": "veteran",
+  "stage": "cross-section",
+  "sweepable": true,
+  "status": "armed",
+  "inputs": [
+    "master.csv: profit_yoy,intel_red,borrowed_dividend,pe_ttm,rev_yoy"
+  ],
+  "lineage": {
+    "source": "toolkit veteran, practice-verified in the L1/L2 pipeline",
+    "note": "L2 否决套: profit_spike/expectation_overreach/borrowed/intel_red (ex consensus.add_snapshot_flags); Graham audit user mandate 2026-10-11"
+  },
+  "parameters": {
+    "profit_spike_pct": 200.0,
+    "graham_g_flag": 15.0,
+    "expectation_gap_flag": 15.0
+  },
+  "limits": [
+    "one-directional: never fires on cheapness",
+    "veto-only, never ranks"
+  ]
+}

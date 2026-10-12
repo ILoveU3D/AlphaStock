@@ -3,10 +3,10 @@
 import pandas as pd
 import pytest
 
+from polar_star.arsenal.statsutil import evaluate_gates
 from polar_star.strategy.registry import (
     DataSource,
     Strategy,
-    evaluate_gates,
     get_sources,
     get_strategy,
     list_strategies,

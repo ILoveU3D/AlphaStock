@@ -1,9 +1,9 @@
-"""Tests for polar_star.model.comps (trading comps table)."""
+"""Tests for polar_star.arsenal.comps_panel (trading comps table)."""
 
 import pandas as pd
 import pytest
 
-from polar_star.model import comps
+from polar_star.arsenal import comps_panel as comps
 
 
 def _master():

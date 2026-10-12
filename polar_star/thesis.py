@@ -321,7 +321,8 @@ def _scored_peers(snap_dir: Path, market: str, live: bool,
     (bounded — never the whole universe)."""
     from .analyze import build_peer_set
     from .fetch.kline import fetch_kline_any
-    from .strategy.factors import add_pillar_scores, kline_metrics
+    from .arsenal.tactical_compass import kline_metrics
+    from .arsenal.weighted_ranking import add_pillar_scores
 
     peers = build_peer_set(snap_dir, market)
     if live and not peers.empty:

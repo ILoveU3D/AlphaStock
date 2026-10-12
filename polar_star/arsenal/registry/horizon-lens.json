@@ -1,0 +1,19 @@
+{
+  "id": "horizon-lens",
+  "family": "veteran",
+  "stage": "cross-section",
+  "sweepable": true,
+  "status": "armed",
+  "inputs": [
+    "master.csv: ret_5d,ret_20d,ret_60d,ret_250d"
+  ],
+  "lineage": {
+    "source": "toolkit veteran, practice-verified in the L1/L2 pipeline",
+    "note": "四周期动量窗口互换打分 (ex strategy/horizons scoring half); declarations stay in strategy/"
+  },
+  "parameters": {},
+  "limits": [
+    "ultrashort/short answers must carry the caution discipline",
+    "missing ret columns fall back to 60d/250d with WARN"
+  ]
+}

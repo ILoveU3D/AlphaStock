@@ -2,7 +2,10 @@
 
 import pandas as pd
 
-from polar_star.strategy import consensus as cs
+from polar_star.arsenal import core_triad as cores
+from polar_star.arsenal import cycle_trap_guard as ctg
+from polar_star.arsenal import master_vote_panel as mvp
+from polar_star.arsenal import red_flag_battery as rfb
 from polar_star.strategy.registry import Strategy, list_strategies, \
     register_strategy
 
@@ -48,7 +51,7 @@ def _frame():
 
 class TestMastersVote:
     def test_votes_and_pool(self):
-        df = cs.masters_vote(_frame())
+        df = mvp.masters_vote(_frame())
         # a stock passing master gates must exist in the pool
         pool = df[df["vote_count"] >= 1]
         assert not pool.empty
@@ -78,9 +81,8 @@ class TestMastersVote:
         assert fail["masters_passed"] == ""
 
     def test_core_score_ranks_not_votes(self):
-        from polar_star.strategy import cores
-        df = cs.rank_consensus(
-            cores.add_core_scores(cs.masters_vote(_frame())), top_n=3)
+        df = cores.rank_consensus(
+            cores.add_core_scores(mvp.masters_vote(_frame())), top_n=3)
         # core_score is the ONLY ranking key (2026-09-29 redesign)
         assert df["core_score"].is_monotonic_decreasing
         # votes do NOT rank: the 3-vote cyclical peak outranks the 5-vote
@@ -93,19 +95,19 @@ class TestMastersVote:
 
     def test_legacy_fallback_without_cores(self):
         # frames lacking core columns keep the legacy vote ordering
-        df = cs.rank_consensus(cs.masters_vote(_frame()), top_n=3)
+        df = cores.rank_consensus(mvp.masters_vote(_frame()), top_n=3)
         assert df["vote_count"].is_monotonic_decreasing
 
 
 class TestSnapshotFlags:
     def test_profit_spike(self):
-        df = cs.add_snapshot_flags(_frame())
+        df = rfb.add_snapshot_flags(_frame())
         assert bool(df.loc[df["code"] == "000002", "profit_spike"].iloc[0])
         assert not bool(df.loc[df["code"] == "000001",
                                "profit_spike"].iloc[0])
 
     def test_veto_hard(self):
-        df = cs.add_snapshot_flags(_frame())
+        df = rfb.add_snapshot_flags(_frame())
         # clean compounder is not vetoed
         assert not bool(df.loc[df["code"] == "000001",
                                "veto_hard"].iloc[0])
@@ -116,7 +118,7 @@ class TestSnapshotFlags:
         # intel red flag vetoes even the clean compounder
         f = _frame()
         f.loc[f["code"] == "000001", "intel_red"] = 1
-        df2 = cs.add_snapshot_flags(f)
+        df2 = rfb.add_snapshot_flags(f)
         assert bool(df2.loc[df2["code"] == "000001",
                             "veto_hard"].iloc[0])
 
@@ -145,7 +147,7 @@ class TestGrahamExpectationAudit:
         return pd.DataFrame(rows)
 
     def test_columns_and_flag_joins_veto(self):
-        df = cs.add_snapshot_flags(self._audit_frame())
+        df = rfb.add_snapshot_flags(self._audit_frame())
         r1 = df.loc[df["code"] == "EXP1"].iloc[0]
         assert abs(r1["graham_g"] - 20.75) < 1e-9
         assert abs(r1["expectation_gap"] - 15.75) < 1e-9
@@ -154,7 +156,7 @@ class TestGrahamExpectationAudit:
         assert bool(r1["veto_hard"])
 
     def test_one_directional(self):
-        df = cs.add_snapshot_flags(self._audit_frame())
+        df = rfb.add_snapshot_flags(self._audit_frame())
         # proven growth at the same price is never flagged
         assert not bool(df.loc[df["code"] == "EXP2",
                                "expectation_overreach"].iloc[0])
@@ -173,7 +175,7 @@ class TestGrahamExpectationAudit:
     def test_existing_frames_without_rev_yoy_still_work(self):
         # the legacy test frame has no rev_yoy column: realized growth
         # falls back to profit_yoy
-        df = cs.add_snapshot_flags(_frame())
+        df = rfb.add_snapshot_flags(_frame())
         assert "graham_g" in df.columns and "expectation_gap" in df.columns
         # cheap rows never fire (pe 12 -> g 1.75; pe 4 -> g -2.25)
         assert not bool(df.loc[df["code"] == "000001",
@@ -204,17 +206,17 @@ class TestForwardPEDivergence:
         ratings_mod.fetch_stock_ratings = (
             lambda code, name="": [_Item(eps_ttm / 1.96)])
         try:
-            div = cs.forward_pe_divergence(row)
+            div = ctg.forward_pe_divergence(row)
         finally:
             ratings_mod.fetch_stock_ratings = orig
         assert div is not None
         assert abs(div - 1.96) < 0.01
-        assert div >= cs.CYCLE_TRAP_RATIO
+        assert div >= ctg.CYCLE_TRAP_RATIO
 
     def test_non_a_returns_none(self):
         row = pd.Series({"market": "US", "code": "GSL", "name": "x",
                          "price": 45.7, "pe_ttm": 4.3})
-        assert cs.forward_pe_divergence(row) is None
+        assert ctg.forward_pe_divergence(row) is None
 
     def test_no_ratings_returns_none(self):
         import polar_star.intel.ratings as ratings_mod
@@ -223,7 +225,7 @@ class TestForwardPEDivergence:
         orig = ratings_mod.fetch_stock_ratings
         ratings_mod.fetch_stock_ratings = lambda code, name="": None
         try:
-            assert cs.forward_pe_divergence(row) is None
+            assert ctg.forward_pe_divergence(row) is None
         finally:
             ratings_mod.fetch_stock_ratings = orig
 
@@ -239,7 +241,7 @@ class TestMasterRegistryIntact:
             id="vote_test_m", name="VTM", kind="master",
             weights={"value": 1.0}, gates=[("roe", ">=", 15.0)]))
         try:
-            df = cs.masters_vote(_frame())
+            df = mvp.masters_vote(_frame())
             assert "vote_vote_test_m" in df.columns
         finally:
             # restore the global registry for the rest of the suite

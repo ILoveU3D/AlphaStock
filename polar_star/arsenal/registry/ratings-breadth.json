@@ -1,0 +1,19 @@
+{
+  "id": "ratings-breadth",
+  "family": "veteran",
+  "stage": "deep",
+  "sweepable": false,
+  "status": "armed",
+  "inputs": [
+    "intel rating items (payload: org,rating,rating_change,eps_this_year,eps_next_year,target_price)"
+  ],
+  "lineage": {
+    "source": "toolkit veteran, practice-verified in the L1/L2 pipeline",
+    "note": "评级广度+修订方向+目标价带 (ex intel/interpret.ratings_summary); 顶替原 dormant analyst-revision-breadth 席位"
+  },
+  "parameters": {},
+  "limits": [
+    "A-share coverage only (HK/US 研报无源)",
+    "fact layer, never ranks"
+  ]
+}

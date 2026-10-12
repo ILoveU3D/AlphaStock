@@ -3,7 +3,7 @@
 import pandas as pd
 import pytest
 
-from polar_star.strategy import composite as c
+from polar_star.arsenal import weighted_ranking as c
 from polar_star.strategy import presets as p
 
 

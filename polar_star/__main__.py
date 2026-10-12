@@ -176,7 +176,10 @@ def cmd_masters_vote(args) -> int:
     except FileNotFoundError as exc:
         raise SystemExit(str(exc)) from None
 
-    from .strategy import consensus as cs
+    from .arsenal import core_triad as ct
+    from .arsenal import cycle_trap_guard as ctg
+    from .arsenal import master_vote_panel as mvp
+    from .arsenal import red_flag_battery as rfb
     from .strategy.registry import list_strategies
 
     # --thesis: tower-fed pool injection (thesis buys a seat, never a
@@ -203,10 +206,10 @@ def cmd_masters_vote(args) -> int:
     masters = [s.id for s in list_strategies(kind="master")]
     # three-core backfill for old snapshots (pure function, no IO) so
     # rank_consensus can order by core_score
-    from .strategy import cores as _cores
+    from .arsenal import core_triad as _cores
     if "core_score" not in master.columns:
         master = _cores.add_core_scores(master)
-    df = cs.add_snapshot_flags(cs.masters_vote(master, markets=markets))
+    df = rfb.add_snapshot_flags(mvp.masters_vote(master, markets=markets))
     # D3 hook: distilled culture scores (Phase 5 profiles) re-activate
     # the culture core for those rows only; everything else stays
     # veto-only (no proxy scoring)
@@ -249,10 +252,10 @@ def cmd_masters_vote(args) -> int:
     # AI's job at L3.  --top N keeps the legacy ranked shortlist with the
     # live pass; --check runs the live pass on an AI-chosen shortlist.
     if args.check:
-        return _masters_live_check(args, cs, pool)
+        return _masters_live_check(args, pool)
 
     if args.top is not None:
-        top = cs.rank_consensus(pool, top_n=args.top)
+        top = ct.rank_consensus(pool, top_n=args.top)
     elif horizon:
         keys = [c for c in ("short_floor", "pullback_sweet", "ret_60d")
                 if c in pool.columns]
@@ -279,14 +282,14 @@ def cmd_masters_vote(args) -> int:
             # wide mode: network pass deferred to the AI shortlist
             top.at[idx, "data_gap"] = "live pass pending (--check)"
             continue
-        div = cs.forward_pe_divergence(row)
+        div = ctg.forward_pe_divergence(row)
         if div is None:
             top.at[idx, "data_gap"] = "consensus EPS unavailable"
             continue
         top.at[idx, "pe_divergence"] = round(div, 2)
-        if div >= cs.CYCLE_TRAP_RATIO:
+        if div >= ctg.CYCLE_TRAP_RATIO:
             top.at[idx, "cycle_trap"] = True
-        elif div >= cs.CYCLE_WARN_RATIO:
+        elif div >= ctg.CYCLE_WARN_RATIO:
             top.at[idx, "cycle_warn"] = True
 
     # cycle_trap is a hard veto (2026-09-29 redesign): excluded after the
@@ -310,11 +313,11 @@ def cmd_masters_vote(args) -> int:
                 "cycle_trap_excluded": [
                     f"{r.get('market')}/{r.get('code')}"
                     for _, r in cycle_trapped.iterrows()],
-                "cycle_trap_ratio": cs.CYCLE_TRAP_RATIO,
-                "cycle_warn_ratio": cs.CYCLE_WARN_RATIO,
-                "profit_spike_pct": cs.PROFIT_SPIKE_PCT,
-                "graham_g_flag": cs.GRAHAM_G_FLAG,
-                "expectation_gap_flag": cs.EXPECTATION_GAP_FLAG}
+                "cycle_trap_ratio": ctg.CYCLE_TRAP_RATIO,
+                "cycle_warn_ratio": ctg.CYCLE_WARN_RATIO,
+                "profit_spike_pct": rfb.PROFIT_SPIKE_PCT,
+                "graham_g_flag": rfb.GRAHAM_G_FLAG,
+                "expectation_gap_flag": rfb.EXPECTATION_GAP_FLAG}
         if horizon:
             meta["horizon"] = horizon
             meta["ranking"] = ("tactical (short_floor > pullback_sweet > "
@@ -445,12 +448,13 @@ def _horizon_discipline(horizon: str) -> dict:
     }
 
 
-def _masters_live_check(args, cs, pool) -> int:
+def _masters_live_check(args, pool) -> int:
     """Live cycle-trap pass on an AI-chosen shortlist (v2, D1).
 
     The wide pool carries no per-row network checks; once L3 picks the
     deep-review names, this runs the forward-PE divergence on exactly
     those (A-shares; HK/US gaps declared)."""
+    from .arsenal import cycle_trap_guard as ctg
     rows = []
     for token in args.check:
         tok = str(token).strip().upper()
@@ -475,21 +479,21 @@ def _masters_live_check(args, cs, pool) -> int:
         elif args.no_live:
             item["data_gap"] = "live pass skipped (--no-live)"
         else:
-            div = cs.forward_pe_divergence(r)
+            div = ctg.forward_pe_divergence(r)
             if div is None:
                 item["data_gap"] = "consensus EPS unavailable"
             else:
                 item["pe_divergence"] = round(div, 2)
-                if div >= cs.CYCLE_TRAP_RATIO:
+                if div >= ctg.CYCLE_TRAP_RATIO:
                     item["cycle_trap"] = True
-                elif div >= cs.CYCLE_WARN_RATIO:
+                elif div >= ctg.CYCLE_WARN_RATIO:
                     item["cycle_warn"] = True
         rows.append(item)
     if args.json:
         print(report.to_json(pd.DataFrame(rows),
                              {"mode": "live_check",
-                              "cycle_trap_ratio": cs.CYCLE_TRAP_RATIO,
-                              "cycle_warn_ratio": cs.CYCLE_WARN_RATIO}))
+                              "cycle_trap_ratio": ctg.CYCLE_TRAP_RATIO,
+                              "cycle_warn_ratio": ctg.CYCLE_WARN_RATIO}))
         return 0
     print("== masters-vote live check (cycle-trap pass) ==")
     for it in rows:
@@ -514,7 +518,7 @@ def _masters_live_check(args, cs, pool) -> int:
 def cmd_strategy_list(args) -> int:
     """List all registered strategies (presets + masters)."""
     from .strategy.registry import list_strategies
-    from .strategy.factors import PILLARS
+    from .arsenal.weighted_ranking import PILLARS
     items = list_strategies()
     if not items:
         print("no strategies registered")
@@ -532,7 +536,7 @@ def cmd_strategy_list(args) -> int:
 
 def cmd_horizon_list(args) -> int:
     """List all registered horizons."""
-    from .strategy.factors import PILLARS
+    from .arsenal.weighted_ranking import PILLARS
     from .strategy.registry import list_horizons
     items = list_horizons()
     if not items:
@@ -2090,7 +2094,8 @@ def cmd_model(args) -> int:
         if a is None:
             a = mst.default_assumptions(m.market, m.code)
             mst.save_assumptions(a)
-        from .model import engine, comps as mcomps
+        from .model import engine
+        from .arsenal import comps_panel as mcomps
         price = _model_price(m, args)
         r = engine.run_model(h, a, price=price)
         r["comps"] = None

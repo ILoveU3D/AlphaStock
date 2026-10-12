@@ -1,0 +1,19 @@
+{
+  "id": "core-triad",
+  "family": "veteran",
+  "stage": "cross-section",
+  "sweepable": true,
+  "status": "armed",
+  "inputs": [
+    "master.csv: cash_conversion,gross_margin,roe,capex_to_ocf,fcf_yield (+culture via profiles)"
+  ],
+  "lineage": {
+    "source": "toolkit veteran, practice-verified in the L1/L2 pipeline",
+    "note": "三核绝对锚打分, core_score 唯一终排键的生产者 (ex strategy/cores+rank_consensus); reverse-DCF implied_growth r=10% tg=2.5% 10y fade"
+  },
+  "parameters": {},
+  "limits": [
+    "culture veto-only until profile distillation (D3)",
+    "missing cores imputed to market mean, declared in core_gaps (D2)"
+  ]
+}

@@ -25,9 +25,10 @@ import pandas as pd
 
 from .. import config
 from ..atomic import atomic_to_csv, atomic_write_text
-from ..strategy.composite import apply_composite
-from ..strategy import cores
-from ..strategy.factors import PILLARS, add_pillar_scores, kline_metrics
+from ..arsenal import core_triad as cores
+from ..arsenal.tactical_compass import kline_metrics
+from ..arsenal.weighted_ranking import PILLARS, add_pillar_scores, \
+    apply_composite
 from .fundamentals import (fetch_a_balance, fetch_a_cashflow,
                            fetch_a_cashflow_annual, fetch_a_dividends,
                            fetch_a_financials, fetch_a_financials_one,
