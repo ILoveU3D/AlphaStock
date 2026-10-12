@@ -10,7 +10,7 @@ from polar_star import report
 from polar_star.__main__ import build_parser, main
 from polar_star.fetch.pipeline import backfill_kline_factors
 from polar_star.resolve import Match
-from polar_star.strategy.factors import kline_metrics
+from polar_star.arsenal.tactical_compass import kline_metrics
 from polar_star.strategy import horizons  # noqa: F401 — registration
 from polar_star.strategy import masters   # noqa: F401
 from polar_star.strategy.registry import (
@@ -92,8 +92,8 @@ class TestHorizonRegistry:
         assert get_strategy("balanced").horizon == ""
 
 
-from polar_star.strategy.horizons import (apply_horizon_score,
-                                           recompute_momentum_score)
+from polar_star.arsenal.horizon_lens import (apply_horizon_score,
+                                             recompute_momentum_score)
 
 
 class TestMomentumWindow:

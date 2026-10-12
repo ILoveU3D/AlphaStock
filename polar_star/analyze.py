@@ -22,10 +22,11 @@ from .fetch.pipeline import add_cashflow_factors, apply_gates, \
 from .fetch.quotes import fetch_quotes_by_secids
 from .report import resolve_snapshot
 from .resolve import Match
-from .strategy import cores
-from .strategy.composite import apply_composite
-from .strategy.factors import PILLARS, add_pillar_scores, kline_metrics
-from .strategy.horizons import apply_horizon_score
+from .arsenal import core_triad as cores
+from .arsenal.horizon_lens import apply_horizon_score
+from .arsenal.tactical_compass import kline_metrics
+from .arsenal.weighted_ranking import PILLARS, add_pillar_scores, \
+    apply_composite
 from .strategy.registry import get_horizon, get_strategy, list_horizons
 
 # (column, label, lower_is_better) — evidence table layout

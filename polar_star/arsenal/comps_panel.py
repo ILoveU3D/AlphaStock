@@ -1,9 +1,12 @@
-"""Trading comps: same-industry peers from the snapshot master frame,
-median multiples -> implied value range for the target.
+"""comps-panel (老兵) — trading comps: same-industry peers from the
+snapshot master frame, median multiples -> implied value range.
+
+Migrated from model/comps.py in the 2026-10-13 zero-algorithm move;
+behavior byte-identical.
 
 Discipline (DCF-first, user mandate 2026-09-28): comps are a cross-check
-reference, never a buy argument. EV/EBITDA is best-effort — inputs missing
-means the multiple is declared absent, never fabricated.
+reference, never a buy argument. EV/EBITDA is best-effort — inputs
+missing means the multiple is declared absent, never fabricated.
 """
 
 import numpy as np
@@ -75,3 +78,25 @@ def _num(v):
         return f if f == f and np.isfinite(f) else None
     except (TypeError, ValueError):
         return None
+
+
+# ---------------------------------------------------------------------------
+# Weapon runner
+# ---------------------------------------------------------------------------
+def run(ctx: dict, limit: int = 10) -> dict:
+    """Peer panel + implied range for the context row."""
+    row = ctx.get("row")
+    out = {
+        "weapon": "comps-panel",
+        "anchor": "同业+市值对数距离 10 家中位倍数 → 隐含区间; "
+                  "交叉验证参考, 永不构成买入理由 (DCF-first)",
+    }
+    if row is None:
+        out["error"] = "no row in context (pass with_kline=(market, code))"
+        return out
+    peers = select_peers(ctx["master"], str(row["market"]),
+                         str(row["code"]), row.get("industry"),
+                         limit=limit)
+    table = comps_table(peers)
+    return {**out, "peers": len(peers), **table,
+            "implied": implied_range(row, table["medians"])}

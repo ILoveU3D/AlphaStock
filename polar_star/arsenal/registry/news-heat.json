@@ -1,0 +1,19 @@
+{
+  "id": "news-heat",
+  "family": "veteran",
+  "stage": "deep",
+  "sweepable": false,
+  "status": "armed",
+  "inputs": [
+    "intel news items (event_date, payload.show_time)"
+  ],
+  "lineage": {
+    "source": "toolkit veteran, practice-verified in the L1/L2 pipeline",
+    "note": "3/7日窗 vs 前7日 升降温 (ex intel/interpret.news_heat); 用户要求新闻有时效性 2026-09-09"
+  },
+  "parameters": {},
+  "limits": [
+    "fact layer, never ranks",
+    "items must be newest-first as the API guarantees"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "cycle-trap-guard",
+  "family": "veteran",
+  "stage": "deep",
+  "sweepable": false,
+  "status": "armed",
+  "inputs": [
+    "row: pe_ttm,price,market,code + live A-share consensus EPS (intel ratings source)"
+  ],
+  "lineage": {
+    "source": "toolkit veteran, practice-verified in the L1/L2 pipeline",
+    "note": "eps_ttm/eps_fwd>=1.5 周期陷阱 live 通过 (ex consensus.forward_pe_divergence); GSL TTM 4.30 vs fwd 8.41"
+  },
+  "parameters": {
+    "trap": 1.5,
+    "warn": 1.25
+  },
+  "limits": [
+    "A-share only — HK/US have no consensus-EPS source, fail-open null",
+    "NETWORK weapon: keep out of offline pipelines"
+  ]
+}

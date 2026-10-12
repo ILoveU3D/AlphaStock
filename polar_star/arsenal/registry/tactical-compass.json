@@ -1,0 +1,25 @@
+{
+  "id": "tactical-compass",
+  "family": "veteran",
+  "stage": "deep",
+  "sweepable": false,
+  "status": "armed",
+  "inputs": [
+    "daily kline (close, high; date optional) >=60 bars, 140+ for weekly trend"
+  ],
+  "lineage": {
+    "source": "toolkit veteran, practice-verified in the L1/L2 pipeline",
+    "note": "kline_metrics 全家 + D4 战术对 weekly_uptrend×pullback_from_high (ex strategy/factors kline half; tower brick weekly-trend-daily-pullback)"
+  },
+  "parameters": {
+    "min_bars": 60,
+    "sweet_spot": [
+      -15.0,
+      -5.0
+    ]
+  },
+  "limits": [
+    "behavior facts, never ranks",
+    "weekly trend needs ~28 weeks of bars"
+  ]
+}

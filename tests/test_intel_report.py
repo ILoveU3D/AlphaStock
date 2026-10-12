@@ -397,6 +397,8 @@ class TestIntelJson:
 # 含义 / 新闻时效 / 研报全面权威)
 # ---------------------------------------------------------------------------
 from polar_star.intel import interpret as ip  # noqa: E402
+from polar_star.arsenal import news_heat as _nh  # noqa: E402
+from polar_star.arsenal import ratings_breadth as _rb  # noqa: E402
 
 
 class TestNoticeMeaning:
@@ -487,7 +489,7 @@ class TestNewsHeat:
         # 4 条落在 7 天窗（09-03 距 asof 6 天，含），前 7 天窗 1 条
         items = self._items("2026-09-09", "2026-09-08", "2026-09-07",
                             "2026-09-03", "2026-09-02", "2026-08-20")
-        h = ip.news_heat(items, asof)
+        h = _nh.news_heat(items, asof)
         assert h["today"] == 1
         assert h["d3"] == 3
         assert h["d7"] == 4
@@ -498,12 +500,12 @@ class TestNewsHeat:
         asof = date(2026, 9, 9)
         items = self._items("2026-09-09", "2026-09-01", "2026-09-01",
                            "2026-09-01", "2026-09-01", "2026-09-01")
-        h = ip.news_heat(items, asof)
+        h = _nh.news_heat(items, asof)
         assert h["verdict"] == "降温"
 
     def test_empty_and_hours(self):
-        assert ip.news_heat([]) is None
-        h = ip.news_heat(
+        assert _nh.news_heat([]) is None
+        h = _nh.news_heat(
             self._items("2026-09-09", with_time=True), date(2026, 9, 9))
         assert h["latest_hours"] is not None
 
@@ -528,7 +530,7 @@ class TestRatingsSummary:
             self._item("中信", "买入", "4", eps=2.4, tp=55.0),
             self._item("国金", "中性", "1", eps=2.6, tp=45.0),
         ]
-        s = ip.ratings_summary(items)
+        s = _rb.ratings_summary(items)
         assert s["total"] == 4 and s["orgs"] == 3
         assert s["distribution"] == {"买入": 2, "中性": 1}
         assert s["upgrades"] == 1 and s["initiations"] == 1
@@ -539,7 +541,7 @@ class TestRatingsSummary:
         assert "中金" in s["top_orgs"]
 
     def test_empty(self):
-        assert ip.ratings_summary([]) is None
+        assert _rb.ratings_summary([]) is None
 
 
 class TestInterpretInReport:

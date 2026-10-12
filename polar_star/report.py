@@ -13,9 +13,9 @@ import pandas as pd
 
 from . import config
 from .atomic import atomic_to_csv
-from .strategy import cores
-from .strategy.composite import apply_composite
-from .strategy.horizons import recompute_momentum_score
+from .arsenal import core_triad as cores
+from .arsenal.horizon_lens import recompute_momentum_score
+from .arsenal.weighted_ranking import apply_composite
 from .strategy.presets import normalize_weights
 
 REPORT_COLUMNS = [
@@ -99,10 +99,10 @@ def screen(master: pd.DataFrame, strategy=None, preset=None, weights=None,
     """
     from pathlib import Path as _Path
 
-    from .strategy.factors import PILLARS, add_derived_factors, \
-        add_pillar_scores
-    from .strategy.registry import evaluate_gates, get_horizon, \
-        get_strategy
+    from .arsenal.graham_ceiling import add_derived_factors
+    from .arsenal.statsutil import evaluate_gates
+    from .arsenal.weighted_ranking import PILLARS, add_pillar_scores
+    from .strategy.registry import get_horizon, get_strategy
 
     top_n = top_n or config.DEFAULT_TOP_N
     h = get_horizon(horizon) if horizon else None

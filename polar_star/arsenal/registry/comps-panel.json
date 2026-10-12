@@ -1,0 +1,21 @@
+{
+  "id": "comps-panel",
+  "family": "veteran",
+  "stage": "deep",
+  "sweepable": false,
+  "status": "armed",
+  "inputs": [
+    "master.csv: industry,market_cap,pe_ttm,pb,ps,price"
+  ],
+  "lineage": {
+    "source": "toolkit veteran, practice-verified in the L1/L2 pipeline",
+    "note": "同行业+市值对数距离 10 家中位倍数隐含区间 (ex model/comps)"
+  },
+  "parameters": {
+    "limit": 10
+  },
+  "limits": [
+    "cross-check reference only, never a buy argument (DCF-first)",
+    "missing multiples declared absent, never fabricated"
+  ]
+}

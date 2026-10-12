@@ -131,8 +131,8 @@ def gather_peers(market: str, code: str, snap_dir,
     ``explicit`` = AI-chosen peer codes (the modeler knows the true
     comparables — e.g. 寒武纪/海光 for a new GPU listing absent from
     master.csv); falls back to industry+market-cap proximity."""
+    from ..arsenal import comps_panel as mcomps
     from ..report import load_master
-    from . import comps as mcomps
     master = load_master(snap_dir)
     row = master[(master["market"].astype(str) == market)
                  & (master["code"].astype(str) == str(code))]

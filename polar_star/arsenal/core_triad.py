@@ -1,4 +1,7 @@
-"""Three-core scoring (user mandate 2026-09-29).
+"""core-triad (老兵) — three-core scoring, the ONLY ranking keys.
+
+Migrated from strategy/cores.py (+ consensus.rank_consensus) in the
+2026-10-13 zero-algorithm move; behavior byte-identical.
 
 Business model / corporate culture / DCF cheapness are the ONLY ranking
 dimensions, equally weighted. Every other signal (pillar scores,
@@ -16,9 +19,10 @@ v2 rulings (2026-09-29):
   Rows with no donor in their market stay NaN.
 - D3 (culture): without profile distillation (Phase 5), culture is
   VETO-ONLY — the proxies (borrowed dividend, intel red, insider cuts)
-  live in the L2 veto flags (strategy/consensus.py); ``core_culture``
-  stays NaN and never enters the ranking. Pass a distilled score series
-  via ``add_core_scores(..., culture=...)`` to re-activate the third core.
+  live in the L2 veto flags (arsenal/red_flag_battery.py);
+  ``core_culture`` stays NaN and never enters the ranking. Pass a
+  distilled score series via ``add_core_scores(..., culture=...)`` to
+  re-activate the third core.
 """
 from __future__ import annotations
 
@@ -191,3 +195,52 @@ def add_core_scores(df: pd.DataFrame,
         gaps.append("; ".join(g) or None)
     out["core_gaps"] = gaps
     return out
+
+
+def rank_consensus(df: pd.DataFrame, top_n: int = 15) -> pd.DataFrame:
+    """Sort the pool by the three-core mean — the ONLY ranking key.
+
+    2026-09-29 redesign: ``core_score`` desc ranks; ``vote_count`` is
+    tie-break/display only; ``mean_composite`` never ranks.  Old
+    snapshots lacking core columns fall back to the legacy order (the
+    CLI backfills cores before calling, so the fallback is defensive).
+    """
+    if "core_score" in df.columns:
+        keys = ["core_score", "vote_count"]
+    else:
+        keys = ["vote_count", "mean_composite"]
+    out = df.sort_values(keys, ascending=False,
+                         na_position="last").head(top_n)
+    return out.reset_index(drop=True)
+
+
+# ---------------------------------------------------------------------------
+# Weapon runner
+# ---------------------------------------------------------------------------
+def run(ctx: dict, top: int = 15) -> dict:
+    """Three-core scores over the pool (+ top by core_score)."""
+    master = ctx["master"]
+    scored = add_core_scores(master)
+    if "vote_count" not in scored.columns:
+        scored["vote_count"] = 0
+    ranked = rank_consensus(scored, top)
+    cols = ["market", "code", "name", "core_score", "core_business",
+            "core_culture", "core_dcf", "dcf_implied_g", "core_gaps"]
+    cols = [c for c in cols if c in ranked.columns]
+    row = ctx.get("row")
+    single = None
+    if row is not None:
+        hit = scored[(scored["market"].astype(str) == str(row["market"]))
+                     & (scored["code"].astype(str) == str(row["code"]))]
+        if len(hit):
+            single = {c: hit.iloc[0].get(c) for c in cols
+                      if c in hit.columns}
+    return {
+        "weapon": "core-triad",
+        "anchor": "absolute economic anchors (config.CORE_ANCHORS), "
+                  "never percentiles; core_score = equal-weight mean of "
+                  "the three cores — the ONLY ranking key",
+        "pool": int(len(master)),
+        "top": ranked[cols].to_dict("records"),
+        "row": single,
+    }

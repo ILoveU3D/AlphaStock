@@ -1,0 +1,21 @@
+{
+  "id": "weighted-ranking",
+  "family": "veteran",
+  "stage": "cross-section",
+  "sweepable": true,
+  "status": "armed",
+  "inputs": [
+    "master.csv: pe_ttm,pb,ps,dividend_yield,rev_yoy,profit_yoy,rev_q_yoy,roe,gross_margin,net_margin,debt_ratio,pos_52w,volatility,drawdown_52w,ret_60d,ret_250d,ocf_yield,cash_conversion,fcf_yield"
+  ],
+  "lineage": {
+    "source": "toolkit veteran, practice-verified in the L1/L2 pipeline",
+    "note": "六支柱市场内分位 × 权重重归一化复合分 — 轨B本体 (ex strategy/factors+composite)"
+  },
+  "parameters": {
+    "min_pillars": 3
+  },
+  "limits": [
+    "percentile within each market universe; a single-stock pool ranks phantom 100 (masked)",
+    "排序引擎——家规排序键仍是 core_score, 本件为双轨之轨B"
+  ]
+}

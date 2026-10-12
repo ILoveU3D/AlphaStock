@@ -10,7 +10,7 @@ import pandas as pd
 import pytest
 
 from polar_star import config
-from polar_star.strategy import cores
+from polar_star.arsenal import core_triad as cores
 
 
 def _df(**cols):

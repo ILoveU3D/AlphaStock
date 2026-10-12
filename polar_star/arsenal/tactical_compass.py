@@ -1,36 +1,15 @@
-"""Factor computation: kline-derived metrics and per-market pillar scores.
+"""tactical-compass (老兵) — kline-derived price-behavior metrics and the
+D4 tactical floor pair (weekly_uptrend x pullback_from_high).
 
-Pillars (each 0-100 percentile within the same market's candidate pool):
-- value:     cheap PE / PB / PS and high dividend yield
-- growth:   revenue and profit YoY growth
-- quality:  ROE, gross/net margin, low leverage
-- safety:   far from 52-week high, low volatility, deep drawdown
-- momentum: 3-month and 12-month price return (trend following)
-- cashflow: operating cash flow yield and cash conversion (Buffett focus)
+Migrated from strategy/factors.py (kline half) in the 2026-10-13
+zero-algorithm move; behavior byte-identical.  Consumed by the snapshot
+pipeline (per-stock kline factor columns), ``ask`` target metrics, and
+the D4 short-floor CLI.
 """
 
 import math
 
 import pandas as pd
-
-# (column, sign) pairs per pillar; sign -1 = lower is better.
-PILLAR_FACTORS = {
-    "value": [("pe_ttm", -1), ("pb", -1), ("ps", -1),
-              ("dividend_yield", 1)],
-    "growth": [("rev_yoy", 1), ("profit_yoy", 1), ("rev_q_yoy", 1)],
-    "quality": [("roe", 1), ("gross_margin", 1), ("net_margin", 1),
-                ("debt_ratio", -1)],
-    "safety": [("pos_52w", -1), ("volatility", -1), ("drawdown_52w", 1)],
-    "momentum": [("ret_60d", 1), ("ret_250d", 1)],
-    "cashflow": [("ocf_yield", 1), ("cash_conversion", 1),
-                 ("fcf_yield", 1)],
-}
-
-# Valuation ratios are only meaningful when positive (negative PE/PB/PS
-# means losses or negative book; those rows get NaN for the sub-factor).
-POSITIVE_ONLY = {"pe_ttm", "pb", "ps"}
-
-PILLARS = ("value", "growth", "quality", "safety", "momentum", "cashflow")
 
 TRADING_DAYS_YEAR = 252
 WEEKS_52 = 252
@@ -144,61 +123,29 @@ def _interval_return(close: pd.Series, bars: int) -> float | None:
 
 
 # ---------------------------------------------------------------------------
-# Derived factors (gate inputs computed from existing columns)
+# Weapon runner
 # ---------------------------------------------------------------------------
-def add_derived_factors(df: pd.DataFrame) -> pd.DataFrame:
-    """Add gate-ready columns derived from existing snapshot columns.
-
-    Currently derives:
-    - ``pe_pb``: PE(ttm) x PB — Benjamin Graham's defensive-investor
-      rule (PE x PB <= 22.5) needs the product, not the two ratios
-      separately. Only computed when both ratios are positive; loss
-      makers / negative book get NaN, which fails `<=` gates (correct:
-      they are outside Graham's universe by construction).
-    """
-    out = df
-    if ("pe_ttm" in out.columns and "pb" in out.columns
-            and "pe_pb" not in out.columns):
-        out = out.copy()
-        pe = pd.to_numeric(out["pe_ttm"], errors="coerce")
-        pb = pd.to_numeric(out["pb"], errors="coerce")
-        out["pe_pb"] = pe.where(pe > 0) * pb.where(pb > 0)
+def run(ctx: dict) -> dict:
+    """Kline metrics for the context stock (+ tactical floor readings)."""
+    kl = ctx.get("kline")
+    out = {
+        "weapon": "tactical-compass",
+        "anchor": "weekly_uptrend (MA10W>MA20W & 26w ret>0) x "
+                  "pullback_from_high (60-bar) — D4 floor pair; "
+                  "pos_52w/returns/vol are behavior facts, never ranks",
+    }
+    if kl is None:
+        out["error"] = "no kline in context "
+        "(pass with_kline=(market, code))"
+        return out
+    m = kline_metrics(kl)
+    out["metrics"] = m
+    if "weekly_uptrend" in m and "pullback_from_high" in m:
+        pb = m["pullback_from_high"]
+        out["tactical_floor"] = {
+            "structure_up": bool(m["weekly_uptrend"]),
+            "pullback_pct": pb,
+            "sweet_spot": bool(m["weekly_uptrend"])
+            and -15.0 <= pb <= -5.0,
+        }
     return out
-
-
-# ---------------------------------------------------------------------------
-# Pillar scores
-# ---------------------------------------------------------------------------
-def add_pillar_scores(df: pd.DataFrame) -> pd.DataFrame:
-    """Add {pillar}_score columns (0-100 percentile, per market, mean of
-    available sub-factor ranks)."""
-    out = df.copy()
-    for pillar, factors in PILLAR_FACTORS.items():
-        subs = []
-        for col, sign in factors:
-            if col not in out.columns:
-                continue
-            s = pd.to_numeric(out[col], errors="coerce")
-            if col in POSITIVE_ONLY:
-                s = s.where(s > 0)
-            if sign < 0:
-                s = -s
-            # rank within each market -> 0-100 percentile; a factor with
-            # <=1 valid value in a multi-stock pool ranks against itself
-            # (phantom 100) — mask it (a genuine single-stock market
-            # keeps its 100)
-            grp = out["market"]
-            valid = s.notna().groupby(grp).transform("sum")
-            size = s.groupby(grp).transform("size")
-            ranked = s.groupby(grp).rank(pct=True) * 100.0
-            ranked = ranked.where((valid > 1) | (size == 1))
-            subs.append(ranked.rename(col))
-        if subs:
-            out[f"{pillar}_score"] = pd.concat(subs, axis=1).mean(axis=1)
-        else:
-            out[f"{pillar}_score"] = float("nan")
-    return out
-
-
-def pillar_columns() -> list:
-    return [f"{p}_score" for p in PILLARS]

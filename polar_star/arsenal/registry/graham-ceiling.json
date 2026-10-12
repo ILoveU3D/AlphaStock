@@ -1,0 +1,21 @@
+{
+  "id": "graham-ceiling",
+  "family": "value",
+  "stage": "cross-section",
+  "sweepable": true,
+  "status": "armed",
+  "inputs": [
+    "master.csv: pe_ttm,pb"
+  ],
+  "lineage": {
+    "source": "Graham, The Intelligent Investor (1949)",
+    "note": "PE×PB≤22.5 防御者天花板派生列武器化; carries add_derived_factors (ex strategy/factors)"
+  },
+  "parameters": {
+    "pe_pb": 22.5
+  },
+  "limits": [
+    "loss-makers/negative book outside universe by construction (NaN fails)",
+    "ceiling is a veto/display lens, not a rank"
+  ]
+}
