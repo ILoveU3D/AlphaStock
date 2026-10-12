@@ -9,8 +9,8 @@ triggers:
   - Is X a buy
 commands:
   - ask
-version: 28
-updated_at: 2026-10-09T20:14:52
+version: 29
+updated_at: 2026-10-12T22:33:08
 ---
 
 # Playbook
@@ -87,3 +87,4 @@ Answer "what do you think of X" with a verdict first, evidence later.
 - [2026-10-08 22:40] (ai) 强制链路(2026-10-04):任何股票任务先查模型新鲜度(model status,STALE先更新)→模型数据与大师决断同级→三核核心;只跑ask --evidence不跑intel视为不完整(2026-09-09舆情铁律,大股东减持+业绩高增背离=经典卖出信号)
 - [2026-10-08 22:41] (ai) 利润构成核查(沐曦688802样本):单季扭亏需拆经营vs投资浮盈——2026Q2净利6.12亿中含8.87亿投资浮盈+OCF/净利过低+扣非占比过低=会计扭亏非业务扭亏,警惕财报粉饰信号
 - [2026-10-09 20:14] (ai) 2026-10-09 记忆入库迁移： ①倍数口径规则(2026-09-15用户明确)=任何倍数必须标注口径(TTM/LF/forward)且从工具箱实算，禁止记忆断言； ②信息核查原则(2026-09-14)=用户提及公司事件先搜公开渠道再定性，避免叙事替代核查(塔砖recall-is-not-verdict)
+- [2026-10-12 22:33] (ai) ask 输出的 core_* 与 masters-vote 池内同股 core_* 口径可能不同（2026-10-12 实例 TCOM：池 biz 76.6/dcf 100/分 88.28 vs ask biz 95.7/dcf 68.2/分 81.9，ask 带 'backfilled kline factors'）——排名以池为准、单股细节以 ask 为准，两组数字勿混用

@@ -17,8 +17,8 @@ commands:
   - ask X --evidence
   - intel X
   - recommend --user me
-version: 44
-updated_at: 2026-10-11T15:44:53
+version: 48
+updated_at: 2026-10-12T10:58:05
 ---
 
 # Playbook
@@ -305,3 +305,7 @@ Output shape (hard rules):
 - [2026-10-11 02:51] (ai) 塔→L3通道落地(user mandate 2026-10-11): 7大师枢纽砖建立(master-duan 53成员/buffett 33/munger 70/graham 5/livermore 2/sheng 1/sanhuyi 6, 含conversation源按体系归属的dividend-backing-order与book:滚雪球), 成员砖applies-to回填, tower search master-<id>一次拉回全集(links字段参与匹配); 三分类=选股否决→L3表决/仓位纪律→L4/元认知不接; 表决理由强制引砖ID无砖降级; 后台书籍蒸馏队列并发加砖时, 每批吸收后必须即挂applies-to(吸收即链接, 已写入AGENTS.md入塔义务), 否则枢纽查询漏新砖
 - [2026-10-11 11:28] (ai) L3 七大师定性表决必须显式开票（表格+引砖ID）再进 L4——2026-10-11 用户追问'为什么没看到L3/L4的master vote'暴露口头裁决跳过开票环节的缺漏；开票结果可翻转 L4（03306 6:1 vs 03998 5:2 导致港股并列首选，HRMY 2✓4✗ 降为观察）
 - [2026-10-11 15:44] (ai) 2026-10-11 user mandate：L1 宽池新增格雷厄姆审计两列 graham_g=(pe−8.5)/2 与 expectation_gap=graham_g−已实现增长（rev_yoy 优先/profit_yoy 兜底），L2 新增单向否决旗 expectation_overreach（g≥15% 且 gap>15pp，FCF-free 覆盖 dcf_implied_g 被填充的 HK/US 票；首日即捕获 PLTR pe178.7 与 WAT pe109.8）；AI 读池时应同时对比 graham_g 与 dcf_implied_g，两尺打架=L3 深评入口信号
+- [2026-10-11 18:23] (ai) 银行/金融业 core_dcf 失真预警（2026-10-11 银行股讨论实测）：银行 FCF 无定义（经营现金流混存贷款本身），快照中中资银行 fcf_yield≈35% 为伪数、core_dcf 清一色 100 满分=artifacts；金融业标的评估须把 core_dcf 降为否决项，改看 PB/ROE/股息三件套（B 打八折后 ROE≥10% + 股息≥4.5% + 跨周期平均盈利能力）；另：快照 roe 列读数约为公开年化值一半（疑似中报未年化，招行A读6.7%），HK 银行股 pb 列缺失——三处字段层待修，修复前引用须声明
+- [2026-10-11 18:25] (ai) 银行业core_dcf结构性失真（2026-10-11用户会话发现）：银行FCF无定义（钱即原材料，经营现金流混存贷款），快照中资行fcf_yield=35%系伪信号致core_dcf满分100——银行股三核评估须将core_dcf降为否决/参考项，改用PB/ROE/股息三件套+信贷周期定位（马克思interest-bearing-capital-fetishism判例：生息资本=拜物教完成形态，DCF直套银行=磅秤量身高）；附：快照roe列疑似中报未年化（读数约为公认值一半，招行A读6.7%年化后~13%吻合），HK银行股pb列缺失——两处数据源问题待修
+- [2026-10-11 22:22] (ai) 用户规则 2026-10-11：'今日最被低估'类每日推荐——当日为该市场非交易日时直接跳过，勿基于旧收盘价新推一轮；交易日判定用 doctor --json 的 agent_rule（日历感知）；美股周六/周日必跳，哥伦布日等联邦假日股票市场照常开市
+- [2026-10-12 10:58] (ai) 2026-10-12 金融股结构性缺席宽池：masters-vote L1 池(7大师硬闸)对保险/银行/券商全零票——gm≥40%/roe 口径不适配金融业，人寿/新华/太保/银行等 master.csv core_score 池顶名字永远不进宽池；'最被低估'类回答须显式声明金融股按 PB/ROE/股息三件套另行评估(2026-10-11 银行专题框架)，勿误作'金融股无候选'。另：A股应收粉饰旗需对定期报告原文复核(吉比特 2026-10-12 案例：旗称'应收增速远超营收'，中报原文应收+17.03%<营收+48.01%、1年以内账龄99.73%——旗为数据窗口伪差)

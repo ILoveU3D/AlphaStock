@@ -9,8 +9,8 @@ triggers:
 commands:
   - doctor
   - fetch
-version: 47
-updated_at: 2026-10-11T12:52:12
+version: 48
+updated_at: 2026-10-12T22:33:10
 ---
 
 # Playbook
@@ -106,3 +106,4 @@ conversation-start freshness probe:
 - [2026-10-11 10:47] (ai) 同文件多笔Edit并行调用存在写覆盖竞态: 同一消息里对同一文件的多个Edit互不可见、后写吃掉前写(实测tower/alchemy-of-finance.md三笔并行只存活最后一笔, canon-fifty.md版本号笔同样丢失)——同一文件多处修改必须逐笔串行发消息, 或合并为单笔大段替换; 落盘后用Read核对行号连贯性可当场发现丢失
 - [2026-10-11 12:52] (ai) Book campaign 2026-10-11: openelib.org is DEAD (domain parked to ads). 100md is now WeChat-paywall (file.asp returns wx_100md contact page, no direct downloads). NEW WORKING SOURCE: nmod.net (search via /?s=<title>, book pages /book/N.html -> go.html?url=<lanzou link> + page password). Lanzou download recipe: (1) fetch share page, if arg1= present solve acw_sc__v2 by running the challenge <script> in node with DOM stubs (lz_solver.js pattern in tmp/); (2) POST apifile.woozooo.com/ajaxfile.php?file=<id> with action=downprocess, sign from page JS, p=<password> -> {zt:1,dom,url}; (3) direct link dom+/file/+url ALSO has its own acw challenge - solve again for the download domain. Zip names inside are GBK-encoded (cp437 mojibake, re-encode).
 - [2026-10-11 12:52] (ai) Book campaign 2026-10-11 #2: MOBI text extraction without calibre - pure Python works: parse PDB header (numRecords@76, record offsets@78+8i), MOBI header in rec0 (compression@0: 2=Palmdoc, textLength@4, recordCount@8, encoding@28: 65001=UTF-8, extraFlags@0xF2). Each text record has variable trailing entries (extraFlags bits) that standard varint reading gets wrong - EMPIRICAL FIX: for each record try strip 0..15 bytes, keep the strip whose Palmdoc LZ77 decompression yields EXACTLY 4096 bytes (last record: textLength-4096*(n-1)); all 127/127 records resolved uniquely. Then concat, decode UTF-8, strip tags -> txt. Fisher MOBI 549KB -> 475KB txt verified complete.
+- [2026-10-12 22:33] (ai) US 实时报价链无备用源：EM push2 全线连接错误时 ask/holding list 退回快照价并标 'live quote unavailable'（2026-10-12 晚实例），报价须声明 10-09 收盘基准而非当日盘中价

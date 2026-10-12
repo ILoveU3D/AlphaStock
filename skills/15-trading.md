@@ -14,8 +14,8 @@ commands:
   - trade sell
   - trade nav
   - trade journal
-version: 63
-updated_at: 2026-10-10T17:19:12
+version: 66
+updated_at: 2026-10-12T22:23:10
 ---
 
 # Playbook
@@ -136,3 +136,6 @@ for. Cite the nav-as-of date. Never soften risk observations.
 - [2026-10-09 19:57] (ai) 2026-10-09 PTC模型校准课: 自有DCF(10-04建,WACC9%/tg3%)加权公允123 vs 施耐德对价205——①独立DCF永远看不见协同价值(€250M成本+€800M收入协同,13x vs 21x EV/EBITA),收购对价=独立价值+协同+控制权溢价,不能拿产业资本对价直接审判独立DCF; ②真正误差源=情景集缺失M&A尾部(Autodesk 2025年追过PTC有先例却赋零权重)+base增速7%→3.5%比公司自述10%轨迹保守; ③规则修正: 模型公允是参照系不是闸门,价格>模型公允时的义务是'点名市场在为哪个我模型里没有的假设付费',不是禁止买入
 - [2026-10-09 22:21] (ai) 预置候选被估值层否决首例(20261009 EXEL): dossier QUALIFIED门槛通过≠可买, model build才是最终裁决——weighted公允29.11 vs 60.38=-51.8%+bear-67%尾部+一致目标54.87<现价+pos52=100, 四信号同向否决; 闸门顺序=dossier QUALIFIED→model fetch/build→模型层铁律(买入价不得高于自有模型公允,PTC校准课), 预置计划到执行窗口必须补跑估值层再决断; abstain合法条件举证模板: 持仓零触发+新开仓逐名否决+加仓逐名否决三段式
 - [2026-10-10 17:19] (ai) season fills JSON: dividend/fx entries carry amount/base_value only (no qty/market/name/price) — parse fills defensively with .get(); NAV-gain reconcile check: NAV gain must equal sum(realized)+sum(unrealized at avg_cost), residue <0.3% comes from 4-dp avg_cost rounding
+- [2026-10-12 15:56] (ai) 引用模型估值数字前先核对 result.json built_at：HRMY 日志(10-02补记/10-06加仓)引用公允113.5/bear50.6，磁盘现行版本(10-04 18:14重建)为公允63.2/bear28.9——引用旧版数字使bear尾部预算口径失效，HRMY持仓复盘需按现行版本重审
+- [2026-10-12 22:04] (ai) 价值仓止损校准规则(2026-10-12用户批评入册): 按bear尾部预算定仓的价值仓,价格地板必须挂在模型bear案或论点证伪点,不得挂近价噪声线——仓位语言(扛得住bear)与止损语言(扛不住5%回撤)打架时以仓位语言为准;紧价格止损(chandelier/trail)仅限战术仓. 实证:TCOM 37.87止损鞭打(两周后38.9),HRMY 37.4线缓冲3.8%被用户指出后校准至bear案28.89
+- [2026-10-12 22:23] (ai) 止盈止损v2框架(2026-10-12用户授权,塔砖floor-trigger-not-verdict): ①价值仓地板=触发器非判决——破bear案启动限时重新承销:生意完好性(intel/OCF/患者数等锚指标)+攻击签名(short interest/借券费/内部人买入/回购,US短兴趣数据待建源)+时间分量,生意侧证伪才退出;②战术仓价格即论点,chandelier(最高收22-3×ATR)收盘价确认即判决,只上不下;③止盈=公允价重新承销点非自动卖;④三重屏障结构(上/下/垂直时间屏障,Lopez de Prado)+波动率定宽(ATR倍数按仓型:波段2-3x/头寸3-4x)+MAE事后审计(胜单典型回撤分布校准线距);⑤恶意做空防御在生意锚,恶意炒作防御在L2否决层,两方向不同工具
