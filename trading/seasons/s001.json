@@ -1735,6 +1735,64 @@
         "HKD": 0.92,
         "USD": 6.6929
       }
+    },
+    {
+      "date": "2026-10-12",
+      "nav": 7800.19,
+      "cash_total": 2211.47,
+      "settling_total": 0,
+      "positions": [
+        {
+          "market": "US",
+          "code": "ZM",
+          "name": "Zoom通讯",
+          "qty": 16.0,
+          "price": 98.01,
+          "currency": "USD",
+          "value_base": 1568.16
+        },
+        {
+          "market": "US",
+          "code": "NVDA",
+          "name": "NVDA",
+          "qty": 3.0,
+          "price": 227.07,
+          "currency": "USD",
+          "value_base": 681.21
+        },
+        {
+          "market": "US",
+          "code": "HRMY",
+          "name": "HRMY",
+          "qty": 39.0,
+          "price": 38.61,
+          "currency": "USD",
+          "value_base": 1505.79
+        },
+        {
+          "market": "US",
+          "code": "ADBE",
+          "name": "Adobe Inc.",
+          "qty": 3.0,
+          "price": 236.92,
+          "currency": "USD",
+          "value_base": 710.76
+        },
+        {
+          "market": "US",
+          "code": "FUTU",
+          "name": "富途控股",
+          "qty": 10.0,
+          "price": 112.28,
+          "currency": "USD",
+          "value_base": 1122.8
+        }
+      ],
+      "fx": {
+        "CNY": 1.0,
+        "HKD": 0.92,
+        "USD": 7.2
+      }
     }
   ],
   "journal": [
@@ -1884,6 +1942,20 @@
       "nav": 7848.07,
       "day_pnl": 122.93,
       "text": "20261009(美东10:20盘中)窗口: 零交易=完整否决链后的abstain——部署率71.8%低于80%目标但每个不买都有硬理由. ①持仓5仓纪律线零触发(腾讯live核价): ZM96.00(止80.4/盈118, 10-07两笔Form4下钻=CEO袁征cashless exercise约3.5万股+董事Subotovsky 2637股@93.7-94.6=SBC例行观察项非簇集, 卖出价低于现价=非逃顶)/NVDA230.92(trail221, 最高收248.03未刷新)/HRMY39.86(止37.4余2.46, 池#3四票core90.3)/ADBE244.16(止218/盈275, 模型weighted419=+76%但10%封顶已满)/FUTU112.67(止95). ②新开仓全链否决: EXEL(池#15三票core67.2, dossier已QUALIFIED门槛通过)估值层今日build后否决——weighted公允29.11 vs 60.38=-51.8%, bear19.68=-67%尾部, comps中位23.39, 一致目标54.87<现价+BofA今日Sell41, pos52=100动量顶; 市场在为zanzalintinib PDUFA12-03成功+ANDA和解续命付费, 模型不付这个价, PTC校准课后买入价不得高于自有模型公允; SLDE能力圈外/NUTX动量顶/TCOM结构未重建(再进场扳机未到)/BZ Form4簇集否决在途/TTD PE0.15数据伪影不可验证/LOGI JKHY QLYS无dossier未过建模先行闸; PYPL今日掉出票池(0票, sheng动量门今日不过+debt_ratio75%支付浮存口径卡住基本面大师)=池外无L1基础, cores88.9+模型upside92%仅在池内时才构成候补. ③加仓路径全堵: HRMY 19.8%已顶bear尾部预算/ZM模型upside仅+6.5%太薄/FUTU无估值层过不了模型铁律/NVDA模型-63.7%否决/ADBE封顶. 结论: 现金2211(28.2%)过夜, 举证责任已逐项履行, 不为部署率买模型否决的票. 数据源: 腾讯fallback生效(EM封禁中), fetch --refresh盘中价; HRMY ratings源故障缺口声明"
+    },
+    {
+      "date": "2026-10-12",
+      "ts": "2026-10-12T21:49:17",
+      "nav": 7763.19,
+      "day_pnl": -134.79,
+      "text": "20261012(美东盘中)窗口: 零交易=否决链后abstain. ①持仓5仓纪律线零触发(腾讯live核价): ZM99.39(止80.4/盈118,一致目标118.24吻合)/NVDA227.69(trail221余3.0%,最高收248.03未刷新,StrongBuy62家目标328.72)/HRMY38.13(止37.4余仅0.73=1.9%——全组合最紧点,今日美银Sell目标30致盘中-5.3%,一致Buy11家目标47.64,破线即卖不犹豫)/ADBE237.75(止218/盈275,ratings源故障缺口声明)/FUTU112.77(止95). 5仓intel扫描零红旗. ②新开仓全链否决: 池46只,SLDE(core100,2票)能力圈外维持否决/NUTX(core97.7,3票)动量顶pos52=87.3+ret60=+26.2维持否决/TCOM(core88.3,3票)再进场扳机未到——weekly_uptrend=0+pos52=2.6+ret60=-10.8结构未重建,现价38.9vs卖出价37.87=+2.7%小幅反弹不追,守10-08承诺/BZ Form4簇集否决在途/TTD数据伪影/EXEL估值层否决在途(weighted29.11vs60.38)/JKHY LOGI QLYS等无dossier未过建模先行闸. ③加仓路径全堵: HRMY顶bear尾部预算/ZM upside薄/FUTU无估值层/NVDA模型-63.7%/ADBE封顶. 现金2211(28.3%)过夜,部署率71.7%. 数据源: 腾讯fallback(EM封禁中),fetch已刷新US全量"
+    },
+    {
+      "date": "2026-10-12",
+      "ts": "2026-10-12T22:04:44",
+      "nav": 7800.19,
+      "day_pnl": -97.79,
+      "text": "20261012补-HRMY纪律线重校准(用户批评执行,10-09已记录缓冲仅3.8%未跟进=流程漏失): 旧止37.4自相矛盾——仓位按bear尾部-27%配预算(19.1%仓位,bear兑现=-4.6%NAV开仓时已预受),止损却挂-5%,仓位语言与止损语言打架;TCOM鞭打(37.87止损→今38.9)为实证成本. 新框架:价值仓退出挂论点证伪处,不挂噪声. HRMY新线=模型bear案28.89(三情景bear28.89/base72.32/bull87.85,加权公允63.17):破28.89=市场定价坏过最坏建模情景=论点错或模型陈旧,退出;叠加生意级证伪触发(WAKIX患者数拐点/专利诉讼败诉提前专利悬崖/支付方准入崩塌/OCF-净利断裂),每窗口intel扫描执行. 今日触发器复盘:美银Sell目标30=分析师观点噪声,恰好坐在bear案上,零生意红旗,不构成退出. 其余4仓不动:NVDA trail221系趋势仓吊灯设计(战术性质,紧是特性非缺陷)/ZM80.4余19%/ADBE218余8.3%/FUTU95余16%余量充足. 规则入册:凡按bear预算定仓的价值仓,价格地板=bear案或证伪点,紧价格止损仅限战术仓"
     }
   ],
   "totals": {
