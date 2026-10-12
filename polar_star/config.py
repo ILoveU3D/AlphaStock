@@ -14,8 +14,7 @@ SNAPSHOTS_DIR = DATA_DIR / "snapshots"
 USERS_DIR = BASE_DIR / "users"    # local-only user territory, never pushed
 OUTPUT_DIR = BASE_DIR / "output"
 SKILLS_DIR = BASE_DIR / "skills"
-TOWER_DIR = BASE_DIR / "tower"   # cognitive-tower bricks, git-tracked;
-                                 # never inside the cleanable data/ tree
+TOWER_DIR = Path(__file__).resolve().parent / "tower" / "bricks"
 LATEST_POINTER = DATA_DIR / "latest.json"
 
 # ---------------------------------------------------------------------------
