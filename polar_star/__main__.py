@@ -1371,7 +1371,7 @@ def cmd_tower(args) -> int:
             return 0
 
         if args.tower_cmd == "seed":
-            from . import tower_seed as tseed
+            from .tower import seed as tseed
             result = tseed.seed_tower(d, dry_run=args.dry_run)
             if args.json:
                 print(json.dumps(result, ensure_ascii=False, indent=2))
