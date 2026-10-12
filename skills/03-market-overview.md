@@ -14,7 +14,7 @@ updated_at: 2026-09-01T17:59:36
 
 # Playbook
 
-1. Run: `python -m value_genie overview --markets A,HK --top 10`
+1. Run: `python -m polar_star overview --markets A,HK --top 10`
    (omit --markets for all three).
 2. Per market you get: candidate count, median PE/PB/revenue growth,
    breadth (% of candidates above their 52-week midpoint), top sectors

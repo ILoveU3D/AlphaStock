@@ -1,14 +1,14 @@
-"""Tests for value_genie.users (profiles, styles, holdings)."""
+"""Tests for polar_star.users (profiles, styles, holdings)."""
 
 import json
 
 import pytest
 
-from value_genie import users as usr
-from value_genie.resolve import Match
-from value_genie.strategy import masters  # noqa: F401  (register masters)
-from value_genie.strategy.presets import normalize_weights
-from value_genie.strategy.registry import get_strategy, list_strategies
+from polar_star import users as usr
+from polar_star.resolve import Match
+from polar_star.strategy import masters  # noqa: F401  (register masters)
+from polar_star.strategy.presets import normalize_weights
+from polar_star.strategy.registry import get_strategy, list_strategies
 
 
 @pytest.fixture()
@@ -260,7 +260,7 @@ def test_holding_input_validation(users_dir):
 # CLI: user / holding commands
 # ---------------------------------------------------------------------------
 def test_cli_user_create_list_show(users_dir, capsys):
-    from value_genie.__main__ import main
+    from polar_star.__main__ import main
     assert main(["user", "create", "me", "--name", "tester"]) == 0
     with pytest.raises(SystemExit):
         main(["user", "create", "me"])                  # duplicate
@@ -274,7 +274,7 @@ def test_cli_user_create_list_show(users_dir, capsys):
 
 
 def test_cli_user_set_style(users_dir, capsys):
-    from value_genie.__main__ import main
+    from polar_star.__main__ import main
     main(["user", "create", "me"])
     rc = main(["user", "set-style", "me", "--base", "buffett",
                "--weight", "value=0.3", "--gate", "roe>=15",
@@ -298,7 +298,7 @@ def test_cli_user_set_style(users_dir, capsys):
 
 
 def test_cli_holding_add_requires_user(users_dir, monkeypatch, capsys):
-    from value_genie import __main__ as cli
+    from polar_star import __main__ as cli
     monkeypatch.setattr(cli, "_resolve_stock_or_exit",
                         lambda q: _match())
     # add auto-creates the user
@@ -343,7 +343,7 @@ def test_current_user_garbage_pointer(users_dir):
 # CLI: login / logout / whoami
 # ---------------------------------------------------------------------------
 def test_cli_login_whoami_logout(users_dir, capsys):
-    from value_genie.__main__ import main
+    from polar_star.__main__ import main
     assert main(["user", "whoami"]) == 1       # no session yet
     assert main(["user", "create", "me"]) == 0  # create auto-logs-in
     assert usr.current_user() == "me"
@@ -358,7 +358,7 @@ def test_cli_login_whoami_logout(users_dir, capsys):
 
 
 def test_cli_whoami_json(users_dir, capsys):
-    from value_genie.__main__ import main
+    from polar_star.__main__ import main
     main(["user", "create", "me"])
     capsys.readouterr()
     assert main(["user", "whoami", "--json"]) == 0
@@ -370,7 +370,7 @@ def test_cli_whoami_json(users_dir, capsys):
 # CLI: session-default user resolution
 # ---------------------------------------------------------------------------
 def test_cli_user_show_defaults_to_session(users_dir, capsys):
-    from value_genie.__main__ import main
+    from polar_star.__main__ import main
     main(["user", "create", "me"])
     capsys.readouterr()
     assert main(["user", "show"]) == 0         # no id arg, uses session
@@ -378,13 +378,13 @@ def test_cli_user_show_defaults_to_session(users_dir, capsys):
 
 
 def test_cli_no_session_no_user_errors(users_dir):
-    from value_genie.__main__ import main
+    from polar_star.__main__ import main
     with pytest.raises(SystemExit):
         main(["user", "show"])                 # nothing to fall back on
 
 
 def test_cli_holding_add_defaults_to_session(users_dir, monkeypatch, capsys):
-    from value_genie import __main__ as cli
+    from polar_star import __main__ as cli
     monkeypatch.setattr(cli, "_resolve_stock_or_exit",
                         lambda q: _match())
     usr.create_user("me")

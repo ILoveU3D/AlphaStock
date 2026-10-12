@@ -5,15 +5,15 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from value_genie import analyze as az
-from value_genie import report
-from value_genie.__main__ import build_parser, main
-from value_genie.fetch.pipeline import backfill_kline_factors
-from value_genie.resolve import Match
-from value_genie.strategy.factors import kline_metrics
-from value_genie.strategy import horizons  # noqa: F401 — registration
-from value_genie.strategy import masters   # noqa: F401
-from value_genie.strategy.registry import (
+from polar_star import analyze as az
+from polar_star import report
+from polar_star.__main__ import build_parser, main
+from polar_star.fetch.pipeline import backfill_kline_factors
+from polar_star.resolve import Match
+from polar_star.strategy.factors import kline_metrics
+from polar_star.strategy import horizons  # noqa: F401 — registration
+from polar_star.strategy import masters   # noqa: F401
+from polar_star.strategy.registry import (
     get_horizon,
     get_strategy,
     list_horizons,
@@ -92,7 +92,7 @@ class TestHorizonRegistry:
         assert get_strategy("balanced").horizon == ""
 
 
-from value_genie.strategy.horizons import (apply_horizon_score,
+from polar_star.strategy.horizons import (apply_horizon_score,
                                            recompute_momentum_score)
 
 
@@ -414,7 +414,7 @@ class TestHorizonCli:
 
 class TestSkillFile:
     def test_horizon_skill_loads(self):
-        from value_genie import config, skills as sk
+        from polar_star import config, skills as sk
         items, errors = sk.load_skills(config.SKILLS_DIR)
         ids = {s.id for s in items}
         assert "horizon-framework" in ids

@@ -110,7 +110,7 @@ def load_thesis(thesis_id: str) -> Thesis:
     if not path.exists():
         raise FileNotFoundError(
             f"no thesis {thesis_id!r}; create one with "
-            f"`python -m value_genie thesis add {thesis_id} ...`")
+            f"`python -m polar_star thesis add {thesis_id} ...`")
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as exc:

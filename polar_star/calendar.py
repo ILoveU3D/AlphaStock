@@ -7,7 +7,7 @@ config.US_DST.
 
 Note: this module shadows nothing — stdlib ``calendar`` is unaffected
 (Python 3 absolute imports); always import as ``from . import calendar``
-or ``from value_genie import calendar``.
+or ``from polar_star import calendar``.
 """
 from __future__ import annotations
 

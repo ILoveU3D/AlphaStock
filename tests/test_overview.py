@@ -1,4 +1,4 @@
-"""Tests for value_genie.overview and value_genie.doctor (no network)."""
+"""Tests for polar_star.overview and polar_star.doctor (no network)."""
 
 import json
 from datetime import date
@@ -6,8 +6,8 @@ from pathlib import Path
 
 import pandas as pd
 
-from value_genie import doctor as dr
-from value_genie import overview as ov
+from polar_star import doctor as dr
+from polar_star import overview as ov
 
 
 def master_df():
@@ -192,7 +192,7 @@ class TestDoctor:
     # ------------------------------------------------------------------
     @staticmethod
     def _close_ts_map(now):
-        from value_genie import calendar
+        from polar_star import calendar
         return {mk: calendar.session_close_dt(
                     mk, calendar.last_completed_session(mk, now))
                 .isoformat()
@@ -246,7 +246,7 @@ class TestDoctor:
     def test_market_at_ages_are_per_market(self, tmp_path):
         """A partial fetch refreshes only its own market's timestamp."""
         from datetime import datetime
-        from value_genie import calendar
+        from polar_star import calendar
         snap = make_snap(tmp_path)
         now = datetime(2026, 10, 9, 18, 0)          # Friday, after close
         fresh = calendar.session_close_dt(
@@ -269,7 +269,7 @@ class TestDoctor:
         """agent_rule: closed + as-of-close -> no fetch; in-session with
         >1h data -> fetch (the 1-hour iron rule, machine-readable)."""
         from datetime import datetime, timedelta
-        from value_genie import calendar
+        from polar_star import calendar
         snap = make_snap(tmp_path)
         closed_now = datetime(2026, 10, 4, 12, 0)   # Sunday
         manifest = {"market_at": self._close_ts_map(closed_now)}

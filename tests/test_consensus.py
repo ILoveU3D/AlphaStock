@@ -2,8 +2,8 @@
 
 import pandas as pd
 
-from value_genie.strategy import consensus as cs
-from value_genie.strategy.registry import Strategy, list_strategies, \
+from polar_star.strategy import consensus as cs
+from polar_star.strategy.registry import Strategy, list_strategies, \
     register_strategy
 
 
@@ -78,7 +78,7 @@ class TestMastersVote:
         assert fail["masters_passed"] == ""
 
     def test_core_score_ranks_not_votes(self):
-        from value_genie.strategy import cores
+        from polar_star.strategy import cores
         df = cs.rank_consensus(
             cores.add_core_scores(cs.masters_vote(_frame())), top_n=3)
         # core_score is the ONLY ranking key (2026-09-29 redesign)
@@ -191,7 +191,7 @@ class TestForwardPEDivergence:
         # divergence == eps_ttm / eps_fwd; price must cancel.
         # forward_pe_divergence imports fetch_stock_ratings lazily from
         # intel.ratings, so patch that module's attribute.
-        import value_genie.intel.ratings as ratings_mod
+        import polar_star.intel.ratings as ratings_mod
         row = pd.Series({"market": "A", "code": "000009", "name": "x",
                          "price": 45.7, "pe_ttm": 4.3})
         eps_ttm = 45.7 / 4.3
@@ -217,7 +217,7 @@ class TestForwardPEDivergence:
         assert cs.forward_pe_divergence(row) is None
 
     def test_no_ratings_returns_none(self):
-        import value_genie.intel.ratings as ratings_mod
+        import polar_star.intel.ratings as ratings_mod
         row = pd.Series({"market": "A", "code": "000567", "name": "x",
                          "price": 5.8, "pe_ttm": 7.2})
         orig = ratings_mod.fetch_stock_ratings
@@ -243,5 +243,5 @@ class TestMasterRegistryIntact:
             assert "vote_vote_test_m" in df.columns
         finally:
             # restore the global registry for the rest of the suite
-            from value_genie.strategy.registry import _STRATEGIES
+            from polar_star.strategy.registry import _STRATEGIES
             _STRATEGIES.pop("vote_test_m", None)

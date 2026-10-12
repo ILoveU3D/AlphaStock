@@ -69,7 +69,7 @@ master-grade depth on fundamentals.
 
 1. Freshness gate runs automatically on ask/screen; state the
    data-as-of line in the answer.
-2. Per holding: `python -m value_genie ask <name> --evidence`
+2. Per holding: `python -m polar_star ask <name> --evidence`
    (factual base; resolution quirk: use 伯克希尔哈撒韦B for BRK.B).
 3. Run `screen --strategy <master>` for the 2-3 masters that fit the
    holdings; report gate pass/fail per holding.

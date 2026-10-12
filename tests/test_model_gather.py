@@ -5,9 +5,9 @@ import json
 import pandas as pd
 import pytest
 
-from value_genie import config
-from value_genie.model import gather as mg
-from value_genie.model import store
+from polar_star import config
+from polar_star.model import gather as mg
+from polar_star.model import store
 
 
 @pytest.fixture
@@ -43,7 +43,7 @@ def _fake_history(market, code, limit=None):
 
 def test_gather_aggregates_all_sources(mdir, snap, monkeypatch):
     monkeypatch.setattr(mg.mh, "fetch_history", _fake_history)
-    from value_genie.fetch import profiles as fp
+    from polar_star.fetch import profiles as fp
     monkeypatch.setattr(fp, "update_raw",
                         lambda m, c: {"id": f"{m}:{c}", "summary": "自述"})
     monkeypatch.setattr(mg, "gather_annual",
@@ -69,7 +69,7 @@ def test_gather_aggregates_all_sources(mdir, snap, monkeypatch):
 def test_gather_fail_closed_per_source(mdir, snap, monkeypatch):
     monkeypatch.setattr(mg.mh, "fetch_history",
                         lambda m, c, limit=None: None)
-    from value_genie.fetch import profiles as fp
+    from polar_star.fetch import profiles as fp
     monkeypatch.setattr(fp, "update_raw", lambda m, c: None)
     monkeypatch.setattr(mg, "gather_annual",
                         lambda m, c: (None, "annual down"))
@@ -89,7 +89,7 @@ def test_gather_fail_closed_per_source(mdir, snap, monkeypatch):
 
 def test_gather_skips_existing_unless_force(mdir, snap, monkeypatch):
     monkeypatch.setattr(mg.mh, "fetch_history", _fake_history)
-    from value_genie.fetch import profiles as fp
+    from polar_star.fetch import profiles as fp
     monkeypatch.setattr(fp, "update_raw",
                         lambda m, c: {"id": "x", "summary": "s"})
     monkeypatch.setattr(mg, "gather_annual",
@@ -121,7 +121,7 @@ def test_gather_peers_ai_explicit(mdir, snap, monkeypatch):
          "industry": "半导体", "market_cap": 8e10, "price": 100.0,
          "pe_ttm": 80.0, "pb": 8.0},
     ])
-    from value_genie import report as rep_mod
+    from polar_star import report as rep_mod
     monkeypatch.setattr(rep_mod, "load_master", lambda s: master)
     p, gap = mg.gather_peers("A", "688795", snap,
                              explicit=["688256", "688041", "999999"])
@@ -135,7 +135,7 @@ def test_gather_peers_ai_explicit(mdir, snap, monkeypatch):
 
 def test_gather_intel_missing_radar_is_gap(mdir, tmp_path, monkeypatch):
     monkeypatch.setattr(mg.mh, "fetch_history", _fake_history)
-    from value_genie.fetch import profiles as fp
+    from polar_star.fetch import profiles as fp
     monkeypatch.setattr(fp, "update_raw",
                         lambda m, c: {"id": "x", "summary": "s"})
     monkeypatch.setattr(mg, "gather_annual",

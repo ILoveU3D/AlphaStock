@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from value_genie import config
+from polar_star import config
 
 
 @pytest.fixture
@@ -35,7 +35,7 @@ def snap(tmp_path):
 
 
 def test_fetch_hk_lot_parses_trade_unit(monkeypatch):
-    from value_genie.fetch import fundamentals as f
+    from polar_star.fetch import fundamentals as f
     monkeypatch.setattr(
         f.DC, "get_json",
         lambda url, params=None, **kw: {"result": {"data": [
@@ -44,7 +44,7 @@ def test_fetch_hk_lot_parses_trade_unit(monkeypatch):
 
 
 def test_fetch_hk_lot_none_on_empty(monkeypatch):
-    from value_genie.fetch import fundamentals as f
+    from polar_star.fetch import fundamentals as f
     monkeypatch.setattr(f.DC, "get_json",
                         lambda url, params=None, **kw: {"result": {"data": []}})
     assert f.fetch_hk_lot("09999") is None
@@ -54,7 +54,7 @@ def test_fetch_hk_lot_none_on_empty(monkeypatch):
 # Season CRUD
 # ---------------------------------------------------------------------------
 def test_new_season_defaults(trade_dir):
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     s = tr.new_season("s001", name="第一期", base="USD", capital=2000.0,
                       markets=["US", "HK"])
     assert s["status"] == "active"
@@ -67,7 +67,7 @@ def test_new_season_defaults(trade_dir):
 
 
 def test_new_season_rejects_bad_input(trade_dir):
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     tr.new_season("s001", base="USD", capital=100.0, markets=["US"])
     with pytest.raises(ValueError):
         tr.new_season("S001", base="USD", capital=100.0, markets=["US"])
@@ -82,7 +82,7 @@ def test_new_season_rejects_bad_input(trade_dir):
 
 
 def test_season_rule_status_delete(trade_dir):
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     tr.new_season("s001", base="USD", capital=100.0, markets=["US"])
     s = tr.update_rules("s001", markets=["A", "US"])
     assert s["rules"]["markets"] == ["A", "US"]
@@ -100,7 +100,7 @@ def test_season_rule_status_delete(trade_dir):
 # Fees and board lots
 # ---------------------------------------------------------------------------
 def test_calc_fees_a_stock_min_commission():
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     # 100 shares @ 10 = 1000 gross: commission hits the 5 CNY floor
     f = tr.calc_fees("A", "600519", 100, 10.0, "buy")
     assert f["commission"] == 5.0
@@ -111,14 +111,14 @@ def test_calc_fees_a_stock_min_commission():
 
 
 def test_calc_fees_a_etf_no_stamp_no_transfer():
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     f = tr.calc_fees("A", "510300", 10000, 4.0, "sell")
     assert set(f) == {"commission"}
     assert f["commission"] == round(40000 * config.A_COMMISSION_RATE, 2)
 
 
 def test_calc_fees_hk_platform_and_stamp():
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     # 100 shares @ 400 = 40000 gross: platform = max(20, 18) = 20
     f = tr.calc_fees("HK", "00700", 100, 400.0, "buy")
     assert f["platform"] == 20.0
@@ -128,7 +128,7 @@ def test_calc_fees_hk_platform_and_stamp():
 
 
 def test_calc_fees_us_min_and_cap():
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     f = tr.calc_fees("US", "AAPL", 5, 230.0, "buy")
     assert f["platform"] == 1.99
     # 200000 shares @ 0.5 = 100000 gross; per-share 1980 > cap 1500
@@ -137,7 +137,7 @@ def test_calc_fees_us_min_and_cap():
 
 
 def test_lot_rule_a_share_classes():
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     assert tr.lot_rule("A", "688795") == (200, 1)    # STAR board
     assert tr.lot_rule("A", "600519") == (100, 100)  # SH main
     assert tr.lot_rule("A", "000001") == (100, 100)  # SZ main
@@ -148,7 +148,7 @@ def test_lot_rule_a_share_classes():
 
 
 def test_validate_qty_hk_lot(monkeypatch, trade_dir):
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     monkeypatch.setattr(tr, "hk_lot", lambda code: 100)
     assert tr.validate_qty("HK", "00700", 200) == 100
     with pytest.raises(tr.TradeError):
@@ -162,7 +162,7 @@ def test_validate_qty_hk_lot(monkeypatch, trade_dir):
 
 
 def test_validate_qty_a_and_us():
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     assert tr.validate_qty("A", "600519", 100) == 100
     with pytest.raises(tr.TradeError):
         tr.validate_qty("A", "600519", 150)
@@ -176,7 +176,7 @@ def test_validate_qty_a_and_us():
 # Trading days and settlement
 # ---------------------------------------------------------------------------
 def test_next_trading_day_skips_weekend():
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     # Fri 2026-09-04 -> +1 trading day = Mon 2026-09-07
     assert tr.next_trading_day("2026-09-04", 1) == "2026-09-07"
     # Sat 2026-09-05 -> +2 trading days = Tue 2026-09-08
@@ -184,7 +184,7 @@ def test_next_trading_day_skips_weekend():
 
 
 def _season_with_settling(trade_dir):
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     s = tr.new_season("s001", base="HKD", capital=10000.0, markets=["HK"])
     s["cash"]["HKD"] = 0.0  # all funds are in the settling queue
     s["settling"] = [{
@@ -195,7 +195,7 @@ def _season_with_settling(trade_dir):
 
 
 def test_settle_due_moves_only_matured(trade_dir):
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     _season_with_settling(trade_dir)
     s = tr.load_season("s001")
     settled = tr.settle_due(s, "2026-09-08")
@@ -206,7 +206,7 @@ def test_settle_due_moves_only_matured(trade_dir):
 
 
 def test_spendable_and_deduct_for_buy(trade_dir):
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     _season_with_settling(trade_dir)
     s = tr.load_season("s001")
     s["cash"]["HKD"] = 1000.0
@@ -227,7 +227,7 @@ PRICES = {("US", "AAPL"): 230.0, ("A", "600519"): 1500.0,
 
 @pytest.fixture
 def prices(monkeypatch):
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     def fake(market, code, name, snap_dir=None):
         p = PRICES.get((market, code))
         return (p, "live") if p is not None else (None, "")
@@ -236,17 +236,17 @@ def prices(monkeypatch):
 
 @pytest.fixture
 def hk_lot_100(monkeypatch):
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     monkeypatch.setattr(tr, "hk_lot", lambda code: 100)
 
 
 def _match(market, code, name):
-    from value_genie.resolve import Match
+    from polar_star.resolve import Match
     return Match(market, code, name, 100.0, "")
 
 
 def test_buy_us_full_flow(trade_dir, snap, prices):
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     tr.new_season("s001", base="USD", capital=2000.0, markets=["US"])
     fill = tr.buy("s001", _match("US", "AAPL", "Apple"), qty=5,
                   note="franchise at fair price",
@@ -265,7 +265,7 @@ def test_buy_us_full_flow(trade_dir, snap, prices):
 
 
 def test_buy_rejects_market_outside_rules(trade_dir, snap, prices):
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     tr.new_season("s001", base="USD", capital=20000.0, markets=["US"])
     with pytest.raises(tr.TradeError, match="not allowed"):
         tr.buy("s001", _match("HK", "00700", "Tencent"), qty=100,
@@ -273,7 +273,7 @@ def test_buy_rejects_market_outside_rules(trade_dir, snap, prices):
 
 
 def test_buy_insufficient_cash(trade_dir, snap, prices):
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     tr.new_season("s001", base="USD", capital=100.0, markets=["US"])
     with pytest.raises(tr.TradeError, match="insufficient"):
         tr.buy("s001", _match("US", "AAPL", "Apple"), qty=5,
@@ -281,7 +281,7 @@ def test_buy_insufficient_cash(trade_dir, snap, prices):
 
 
 def test_buy_no_price_rejected(trade_dir, snap, monkeypatch):
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     monkeypatch.setattr(tr, "live_price",
                         lambda m, c, n, snap_dir=None: (None, ""))
     tr.new_season("s001", base="USD", capital=10000.0, markets=["US"])
@@ -291,7 +291,7 @@ def test_buy_no_price_rejected(trade_dir, snap, monkeypatch):
 
 
 def test_buy_paused_season_rejected(trade_dir, snap, prices):
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     tr.new_season("s001", base="USD", capital=10000.0, markets=["US"])
     tr.set_season_status("s001", "paused")
     with pytest.raises(tr.TradeError, match="paused"):
@@ -300,7 +300,7 @@ def test_buy_paused_season_rejected(trade_dir, snap, prices):
 
 
 def test_buy_hk_uses_board_lot(trade_dir, snap, prices, hk_lot_100):
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     tr.new_season("s001", base="HKD", capital=100000.0, markets=["HK"])
     with pytest.raises(tr.TradeError, match="board lot"):
         tr.buy("s001", _match("HK", "00700", "Tencent"), qty=50,
@@ -316,7 +316,7 @@ def test_buy_hk_uses_board_lot(trade_dir, snap, prices, hk_lot_100):
 # Sell
 # ---------------------------------------------------------------------------
 def test_sell_a_share_t_plus_1(trade_dir, snap, prices):
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     tr.new_season("s001", base="CNY", capital=200000.0, markets=["A"])
     tr.buy("s001", _match("A", "600519", "Moutai"), qty=100,
            snap_dir=snap, today="2026-09-04")
@@ -337,7 +337,7 @@ def test_sell_a_share_t_plus_1(trade_dir, snap, prices):
 
 
 def test_sell_hk_t0_rebuy_t2_fx(trade_dir, snap, prices, hk_lot_100):
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     tr.new_season("s001", base="HKD", capital=100000.0, markets=["HK"])
     tr.buy("s001", _match("HK", "00700", "Tencent"), qty=100,
            snap_dir=snap, today="2026-09-04")
@@ -357,7 +357,7 @@ def test_sell_hk_t0_rebuy_t2_fx(trade_dir, snap, prices, hk_lot_100):
 
 def test_sell_rejects_over_selling_and_unknown(trade_dir, snap, prices,
                                                hk_lot_100):
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     tr.new_season("s001", base="HKD", capital=100000.0, markets=["HK"])
     tr.buy("s001", _match("HK", "00700", "Tencent"), qty=100,
            snap_dir=snap, today="2026-09-04")
@@ -371,7 +371,7 @@ def test_sell_rejects_over_selling_and_unknown(trade_dir, snap, prices,
 
 def test_sell_market_dropped_from_rules_still_allowed(trade_dir, snap,
                                                       prices, hk_lot_100):
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     tr.new_season("s001", base="HKD", capital=100000.0, markets=["HK"])
     tr.buy("s001", _match("HK", "00700", "Tencent"), qty=100,
            snap_dir=snap, today="2026-09-04")
@@ -385,7 +385,7 @@ def test_sell_market_dropped_from_rules_still_allowed(trade_dir, snap,
 # FX and cash movements
 # ---------------------------------------------------------------------------
 def test_fx_exchange_with_spread(trade_dir, snap):
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     tr.new_season("s001", base="USD", capital=2000.0, markets=["US", "HK"])
     fill = tr.fx("s001", "USD", "HKD", 100.0,
                  snap_dir=snap, today="2026-09-04")
@@ -398,7 +398,7 @@ def test_fx_exchange_with_spread(trade_dir, snap):
 
 
 def test_fx_rejects_bad_requests(trade_dir, snap):
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     tr.new_season("s001", base="USD", capital=100.0, markets=["US"])
     with pytest.raises(tr.TradeError, match="insufficient"):
         tr.fx("s001", "USD", "HKD", 500.0, snap_dir=snap, today="2026-09-04")
@@ -410,7 +410,7 @@ def test_fx_rejects_bad_requests(trade_dir, snap):
 
 def test_fx_blocked_while_hk_proceeds_unsettled(trade_dir, snap, prices,
                                                 hk_lot_100):
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     tr.new_season("s001", base="HKD", capital=50000.0, markets=["HK"])
     tr.buy("s001", _match("HK", "00700", "Tencent"), qty=100,
            snap_dir=snap, today="2026-09-04")
@@ -426,7 +426,7 @@ def test_fx_blocked_while_hk_proceeds_unsettled(trade_dir, snap, prices,
 
 
 def test_cash_deposit_withdraw_totals(trade_dir, snap):
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     tr.new_season("s001", base="USD", capital=2000.0, markets=["US"])
     tr.cash_move("s001", "deposit", 500.0, "USD",
                  snap_dir=snap, today="2026-09-04")
@@ -447,7 +447,7 @@ def test_dividend_counts_as_performance(trade_dir, snap):
     """A stock cash dividend raises cash but must NOT be neutralised as
     an external deposit — it is performance (JNBY 03306 ex-date case,
     2026-10-06)."""
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     tr.new_season("s001", base="HKD", capital=50000.0, markets=["HK"])
     fill = tr.cash_move("s001", "dividend", 905.0, "HKD", code="03306",
                         note="final 1.06 + special 0.75 = 1.81 x 500",
@@ -468,7 +468,7 @@ def test_withdraw_settled_proceeds_without_extra_mark(trade_dir, snap,
                                                       prices, hk_lot_100):
     """T+2-matured proceeds must be withdrawable directly — cash_move
     settles due entries first, like every other money entry point."""
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     tr.new_season("s001", base="HKD", capital=50000.0, markets=["HK"])
     tr.buy("s001", _match("HK", "00700", "Tencent"), qty=100,
            snap_dir=snap, today="2026-09-04")
@@ -486,7 +486,7 @@ def test_withdraw_settled_proceeds_without_extra_mark(trade_dir, snap,
 # NAV / status / journal
 # ---------------------------------------------------------------------------
 def test_mark_nav_multi_currency(trade_dir, snap, prices, hk_lot_100):
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     tr.new_season("s001", base="USD", capital=2000.0, markets=["US", "HK"])
     tr.buy("s001", _match("US", "AAPL", "Apple"), qty=5,
            snap_dir=snap, today="2026-09-04")
@@ -507,7 +507,7 @@ def test_mark_nav_suspended_falls_back_to_last_mark(trade_dir, snap, prices,
                                                     monkeypatch):
     """停牌持仓不杀掉整季 NAV：回退到最近一次标记价并标 stale，
     复牌后回到实价标记。"""
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     tr.new_season("s001", base="USD", capital=2000.0, markets=["US"])
     tr.buy("s001", _match("US", "AAPL", "Apple"), qty=5,
            snap_dir=snap, today="2026-09-04")
@@ -532,7 +532,7 @@ def test_mark_nav_suspended_falls_back_to_last_mark(trade_dir, snap, prices,
 def test_mark_nav_never_priced_falls_back_to_cost(trade_dir, snap,
                                                   monkeypatch):
     """从未成功标记过的持仓（买入即停牌）回退到 avg_cost 并标 stale。"""
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     tr.new_season("s001", base="USD", capital=2000.0, markets=["US"])
     s = tr.load_season("s001")
     s["positions"].append({
@@ -551,7 +551,7 @@ def test_mark_nav_never_priced_falls_back_to_cost(trade_dir, snap,
 
 
 def test_status_dual_goal_metrics(trade_dir, snap, prices):
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     tr.new_season("s001", base="USD", capital=2000.0, markets=["US"])
     tr.buy("s001", _match("US", "AAPL", "Apple"), qty=5,
            snap_dir=snap, today="2026-09-04")
@@ -567,7 +567,7 @@ def test_status_dual_goal_metrics(trade_dir, snap, prices):
 
 
 def test_journal_day_pnl(trade_dir, snap, prices):
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     tr.new_season("s001", base="USD", capital=2000.0, markets=["US"])
     tr.mark_nav("s001", snap_dir=snap, today="2026-09-04")
     j = tr.write_journal("s001", "day one: no positions yet",
@@ -585,7 +585,7 @@ def test_journal_day_pnl(trade_dir, snap, prices):
 def test_day_pnl_excludes_cash_movements(trade_dir, snap, prices):
     """Deposits/withdrawals are cash transfers, not P&L — day_pnl must
     exclude them or the review journal misattributes performance."""
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     tr.new_season("s001", base="USD", capital=2000.0, markets=["US"])
     tr.mark_nav("s001", snap_dir=snap, today="2026-09-04")
     tr.cash_move("s001", "deposit", 500.0, "USD",
@@ -606,7 +606,7 @@ def test_day_pnl_excludes_cash_movements(trade_dir, snap, prices):
 # Rendering / JSON
 # ---------------------------------------------------------------------------
 def test_render_smoke(trade_dir, snap, prices):
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     tr.new_season("s001", name="港美练手", base="USD", capital=2000.0,
                   markets=["US"])
     fill = tr.buy("s001", _match("US", "AAPL", "Apple"), qty=5,
@@ -624,7 +624,7 @@ def test_render_smoke(trade_dir, snap, prices):
 
 
 def test_to_json_pure(trade_dir, snap, prices):
-    from value_genie import trade as tr
+    from polar_star import trade as tr
     tr.new_season("s001", base="USD", capital=2000.0, markets=["US"])
     tr.buy("s001", _match("US", "AAPL", "Apple"), qty=5,
            snap_dir=snap, today="2026-09-04")
@@ -641,10 +641,10 @@ def test_to_json_pure(trade_dir, snap, prices):
 # ---------------------------------------------------------------------------
 def test_cli_season_new_and_buy(trade_dir, snap, prices, hk_lot_100,
                                 monkeypatch, capsys):
-    from value_genie.__main__ import main
-    from value_genie import trade as tr
+    from polar_star.__main__ import main
+    from polar_star import trade as tr
     monkeypatch.setattr(
-        "value_genie.__main__._resolve_stock_or_exit",
+        "polar_star.__main__._resolve_stock_or_exit",
         lambda q: _match("US", "AAPL", "Apple"))
     rc = main(["trade", "season", "new", "s001", "--name", "练手",
                "--base", "USD", "--capital", "2000", "--markets", "US"])
@@ -660,9 +660,9 @@ def test_cli_season_new_and_buy(trade_dir, snap, prices, hk_lot_100,
 
 
 def test_cli_status_json_pure(trade_dir, snap, prices, monkeypatch, capsys):
-    from value_genie.__main__ import main
+    from polar_star.__main__ import main
     monkeypatch.setattr(
-        "value_genie.__main__._resolve_stock_or_exit",
+        "polar_star.__main__._resolve_stock_or_exit",
         lambda q: _match("US", "AAPL", "Apple"))
     main(["trade", "season", "new", "s001", "--base", "USD",
           "--capital", "2000", "--markets", "US"])
@@ -676,9 +676,9 @@ def test_cli_status_json_pure(trade_dir, snap, prices, monkeypatch, capsys):
 
 
 def test_cli_rejection_message(trade_dir, snap, prices, monkeypatch, capsys):
-    from value_genie.__main__ import main
+    from polar_star.__main__ import main
     monkeypatch.setattr(
-        "value_genie.__main__._resolve_stock_or_exit",
+        "polar_star.__main__._resolve_stock_or_exit",
         lambda q: _match("US", "AAPL", "Apple"))
     main(["trade", "season", "new", "s001", "--base", "USD",
           "--capital", "100", "--markets", "US"])
@@ -690,8 +690,8 @@ def test_cli_rejection_message(trade_dir, snap, prices, monkeypatch, capsys):
 
 
 def test_cli_season_rule_close_delete(trade_dir, monkeypatch, capsys):
-    from value_genie.__main__ import main
-    from value_genie import trade as tr
+    from polar_star.__main__ import main
+    from polar_star import trade as tr
     main(["trade", "season", "new", "s001", "--base", "USD",
           "--capital", "100", "--markets", "US"])
     main(["trade", "season", "rule", "s001", "--markets", "A,HK,US"])
@@ -706,9 +706,9 @@ def test_cli_season_rule_close_delete(trade_dir, monkeypatch, capsys):
 
 def test_cli_journal_write_and_show(trade_dir, snap, prices, monkeypatch,
                                      capsys):
-    from value_genie.__main__ import main
+    from polar_star.__main__ import main
     monkeypatch.setattr(
-        "value_genie.__main__._resolve_stock_or_exit",
+        "polar_star.__main__._resolve_stock_or_exit",
         lambda q: _match("US", "AAPL", "Apple"))
     main(["trade", "season", "new", "s001", "--base", "USD",
           "--capital", "2000", "--markets", "US"])

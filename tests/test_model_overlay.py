@@ -3,8 +3,8 @@
 import pandas as pd
 import pytest
 
-from value_genie import config
-from value_genie.model import store
+from polar_star import config
+from polar_star.model import store
 
 
 @pytest.fixture
@@ -41,7 +41,7 @@ def test_overlay_end_to_end(mdir):
 
 def test_ask_model_block(mdir, monkeypatch):
     _seed_result()
-    from value_genie import analyze as az
+    from polar_star import analyze as az
     # 单股 overlay: model_summary 返回摘要 dict 或 None
     s = az.model_summary("A", "600900")
     assert s is not None

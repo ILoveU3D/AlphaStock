@@ -42,16 +42,16 @@ user asks "X 会怎么看 Y", answer within that master's natural horizon.
 ## Commands
 
 1. "短期内最推荐/最被低估的股票是什么？"
-   `python -m value_genie screen --horizon short --top 20`
+   `python -m polar_star screen --horizon short --top 20`
    (最被低估 → add `--set value=0.4 momentum=0.3` or screen value-heavy
    then check short-window momentum on survivors via `ask --evidence`.)
 2. "超短线有什么机会？"
-   `python -m value_genie screen --horizon ultrashort --top 20`
+   `python -m polar_star screen --horizon ultrashort --top 20`
 3. "X 适合中长期持有吗？"
-   `python -m value_genie ask X` — read the four-horizon profile, then
+   `python -m polar_star ask X` — read the four-horizon profile, then
    apply the qualitative overlay below, then commit to a judgment.
 4. "过巴菲特门槛的股票里短线动量最好的是谁？"
-   `python -m value_genie screen --strategy buffett --horizon short`
+   `python -m polar_star screen --strategy buffett --horizon short`
 
 ## Qualitative overlay (the part factors cannot see)
 

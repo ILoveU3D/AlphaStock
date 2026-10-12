@@ -1,11 +1,11 @@
-"""Tests for value_genie.atomic (crash-safe snapshot writes)."""
+"""Tests for polar_star.atomic (crash-safe snapshot writes)."""
 
 from pathlib import Path
 
 import pandas as pd
 import pytest
 
-from value_genie.atomic import atomic_to_csv, atomic_write_text
+from polar_star.atomic import atomic_to_csv, atomic_write_text
 
 
 class TestAtomicToCsv:

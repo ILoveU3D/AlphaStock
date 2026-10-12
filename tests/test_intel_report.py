@@ -1,14 +1,14 @@
-"""Tests for value_genie.intel.report (per-stock intelligence assembly)."""
+"""Tests for polar_star.intel.report (per-stock intelligence assembly)."""
 
 import json
 from datetime import date
 
 import pandas as pd
 
-from value_genie.fetch.http import DC
-from value_genie.intel import report as ir
-from value_genie.intel.model import IntelItem
-from value_genie.resolve import Match
+from polar_star.fetch.http import DC
+from polar_star.intel import report as ir
+from polar_star.intel.model import IntelItem
+from polar_star.resolve import Match
 
 
 def _snap(tmp_path, files: dict):
@@ -396,7 +396,7 @@ class TestIntelJson:
 # Interpretation layer (user mandate 2026-09-09: 财报能看懂 / 公告知
 # 含义 / 新闻时效 / 研报全面权威)
 # ---------------------------------------------------------------------------
-from value_genie.intel import interpret as ip  # noqa: E402
+from polar_star.intel import interpret as ip  # noqa: E402
 
 
 class TestNoticeMeaning:

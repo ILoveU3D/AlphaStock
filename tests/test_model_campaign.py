@@ -5,8 +5,8 @@ import json
 import pandas as pd
 import pytest
 
-from value_genie import config
-from value_genie.model import campaign as mc
+from polar_star import config
+from polar_star.model import campaign as mc
 
 
 class _H:
@@ -52,7 +52,7 @@ def env(tmp_path, monkeypatch):
     # the real batch fetcher returns HK_BATCH_MAP-renamed columns
     # (code/...), not the raw SECURITY_CODE field names
     monkeypatch.setattr(
-        "value_genie.fetch.fundamentals.fetch_hk_mainindicator_batch",
+        "polar_star.fetch.fundamentals.fetch_hk_mainindicator_batch",
         lambda report_date=None, quiet=False: pd.DataFrame(
             {"code": ["00700", "00991"],
              "report_date": ["2026-06-30"] * 2,
@@ -61,7 +61,7 @@ def env(tmp_path, monkeypatch):
 
 
 def _gathered(market, code):
-    from value_genie.model import store
+    from polar_star.model import store
     d = store.raw_dir(market, code)
     d.mkdir(parents=True, exist_ok=True)
     (d / "history.json").write_text("{}", encoding="utf-8")
@@ -91,7 +91,7 @@ def test_progress_counts_ready_and_modeled(env):
 
 def test_modeled_requires_complete_dossier(env):
     mc.init(str(env / "data"))
-    from value_genie.model import archive as marc
+    from polar_star.model import archive as marc
     marc.save_archive(marc.new_archive("A", "600519", name="茅台"))
     p = mc.progress()
     assert p["modeled"] == 0
@@ -119,7 +119,7 @@ def test_gather_batch_records_failures(env, monkeypatch):
         return {"id": f"{market}:{code}", "raw_dir": "/x",
                 "gathered": {"history": "/x/history.json"}, "gaps": []}
 
-    monkeypatch.setattr("value_genie.model.gather.gather", fake_gather)
+    monkeypatch.setattr("polar_star.model.gather.gather", fake_gather)
     rep = mc.gather_batch(3)
     assert rep["ok"] == 2 and rep["failed"] == 1
     assert calls == ["A:688795", "US:KO", "A:600519"]
@@ -130,7 +130,7 @@ def test_gather_batch_records_failures(env, monkeypatch):
 def test_gather_batch_backlog_cap(env, monkeypatch):
     mc.init(str(env / "data"))
     monkeypatch.setattr(
-        "value_genie.model.gather.gather",
+        "polar_star.model.gather.gather",
         lambda m, c, snap_dir=None, force=False, peers=None:
         {"id": f"{m}:{c}", "raw_dir": "/x",
          "gathered": {"history": "/x/history.json"}, "gaps": []})
@@ -144,7 +144,7 @@ def test_gather_parks_after_fail_max(env, monkeypatch):
     def boom(market, code, snap_dir=None, force=False, peers=None):
         raise RuntimeError("no data")
 
-    monkeypatch.setattr("value_genie.model.gather.gather", boom)
+    monkeypatch.setattr("polar_star.model.gather.gather", boom)
     for _ in range(mc.FAIL_MAX):
         mc.gather_batch(1)
     p = mc.progress()
@@ -155,7 +155,7 @@ def test_gather_parks_after_fail_max(env, monkeypatch):
 
 
 def test_cli_campaign_init_status_next(capsys, env):
-    from value_genie import __main__ as cli
+    from polar_star import __main__ as cli
     rc = cli.main(["model", "campaign", "init", "--data-dir",
                    str(env / "data"), "--json"])
     assert rc == 0
@@ -174,7 +174,7 @@ def test_cli_campaign_init_status_next(capsys, env):
 
 
 def test_cli_campaign_status_without_init(capsys, env):
-    from value_genie import __main__ as cli
+    from polar_star import __main__ as cli
     assert cli.main(["model", "campaign", "status", "--json"]) == 0
     assert json.loads(capsys.readouterr().out) == {"initialized": False}
 
@@ -217,7 +217,7 @@ def test_monitor_pass_logs_progress(env, monkeypatch):
         return {"id": f"{m}:{c}", "raw_dir": "/x",
                 "gathered": {"history": "/x/history.json"}, "gaps": []}
 
-    monkeypatch.setattr("value_genie.model.gather.gather", fake)
+    monkeypatch.setattr("polar_star.model.gather.gather", fake)
     rep = mc.monitor_pass(gather_n=2, retire_task=False)
     assert rep["ok"] is True and rep["complete"] is False
     log = mc.monitor_log_path().read_text(encoding="utf-8")
@@ -253,11 +253,11 @@ def test_cli_campaign_monitor(capsys, env, monkeypatch):
     _hermetic(monkeypatch, env)
     mc.init(str(env / "data"))
     monkeypatch.setattr(
-        "value_genie.model.gather.gather",
+        "polar_star.model.gather.gather",
         lambda m, c, snap_dir=None, force=False, peers=None:
         {"id": f"{m}:{c}", "raw_dir": "/x",
          "gathered": {"history": "/x/history.json"}, "gaps": []})
-    from value_genie import __main__ as cli
+    from polar_star import __main__ as cli
     assert cli.main(["model", "campaign", "monitor", "-n", "1",
                      "--json"]) == 0
     out = json.loads(capsys.readouterr().out)

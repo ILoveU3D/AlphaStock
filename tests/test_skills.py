@@ -1,8 +1,8 @@
-"""Tests for value_genie.skills (skill file store)."""
+"""Tests for polar_star.skills (skill file store)."""
 
 from pathlib import Path
 
-from value_genie import skills as sk
+from polar_star import skills as sk
 
 SAMPLE = """---
 id: demo-skill

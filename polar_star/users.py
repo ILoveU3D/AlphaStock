@@ -98,7 +98,7 @@ def load_user(user_id: str) -> UserProfile:
     if not path.exists():
         raise FileNotFoundError(
             f"no user {user_id!r}; create one with "
-            f"`python -m value_genie user create {user_id}`")
+            f"`python -m polar_star user create {user_id}`")
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as exc:

@@ -1,13 +1,13 @@
-# AGENTS.md — Value Genie for AI Agents
+# AGENTS.md — Polar Star for AI Agents
 
-You are operating **Value Genie**, a value-investment research toolkit
+You are operating **Polar Star**, a value-investment research toolkit
 covering A-share, Hong Kong and US equities. This file tells you what
 the toolkit can do, when to use what, and how to leave it smarter than
 you found it.
 
 ## What this repo is
 
-- `python -m value_genie fetch` builds a dated snapshot: full-market
+- `python -m polar_star fetch` builds a dated snapshot: full-market
   quotes + financials (Eastmoney / SEC EDGAR), dual-lane funnel to
   ~200 candidates per market (lane A 错杀: cheap on pe/pb/ps; lane B
   复利机器: roe/gm/debt quality gates with no cheapness gate, so
@@ -22,13 +22,13 @@ you found it.
   SEC companyconcept, A-share single-stock filters) into
   `watchlist.csv`; `holding list` / `recommend` read it as fallback
   when a holding is absent from `master.csv`.
-- `python -m value_genie trade ...` manages the AI's own virtual
+- `python -m polar_star trade ...` manages the AI's own virtual
   portfolio (multi-season paper trading): CITIC/ZA-Bank fee models,
   T+1/T+2 settlement, board-lot checks, multi-currency cash with FX
   spread, daily NAV marking, withdrawal tracking and a review journal.
   Seasons live in git-tracked `trading/seasons/`; lessons accumulate in
   the `trading` skill Field Notes.
-- `python -m value_genie tower ...` manages the **cognitive tower**
+- `python -m polar_star tower ...` manages the **cognitive tower**
   (认知巴别塔): philosophy bricks distilled from conversations,
   masters and 105+ books, with DCF as the single axiom. Bricks live
   in the git-tracked `tower/` dir — see the Cognitive tower section
@@ -136,37 +136,37 @@ never leave the machine.
 
 | The human asks | Skill | Command |
 |---|---|---|
-| "你怎么看待X / what do you think of X" | single-stock-analysis | `python -m value_genie ask X` |
-| "...but why / 证据" | single-stock-analysis | `python -m value_genie ask X --evidence` |
-| "X和Y哪个好 / X vs Y" | compare-stocks | `python -m value_genie compare X Y` |
-| "今天给我推荐股票（按我的风格、结合我的持仓）" | user-recommend | `python -m value_genie recommend`（缺省取 session 当前用户） |
-| "推荐/最被低估/量化+大师最优" | fused-quant-master | `python -m value_genie masters-vote`（L1 宽池=量化只否决、AI 从全池选深评名单 + core_score 唯一排序）+ L2 红旗 + L3 三核深评与大师定性 + L4 融合裁决，per skills/18 — user mandate 2026-09-15: 融合，不分情况讨论；2026-09-29: 三核（商业模式/企业文化/DCF）为唯一排序键，量化只否决 AI 做选择 |
-| "短线/超短线有什么机会" | fused-quant-master | `python -m value_genie masters-vote --horizon short|ultrashort`（D4 战术模式：floor=真生意 core_business≥50 + 周K结构上行 + 无否决，甜点区=60日高点回撤 5-15%，同一融合管道 + 纪律块；塔砖 weekly-trend-daily-pullback） |
-| "把塔砖断言的机器注入候选池 / 管理产业论点" | fused-quant-master | `python -m value_genie masters-vote --thesis <id>` + `thesis list|show|add|amend|retire`（见 Thesis pools 节） |
-| "读公司原文 / 蒸馏商业模式与文化" | fused-quant-master | `python -m value_genie profile fetch|show|assess|list|status`（见 Company profiles 节——蒸馏回写后文化核恢复打分，profiles/ 本地-only 永不推送） |
-| "建财务模型 / DCF估值 / 可比公司" | fused-quant-master | `python -m value_genie model gather|write|show|lint|status X`（AI 手工建模工作台：gather 聚合素材→AI 写理解层〔飞轮/文化/reverse-DCF 三件套+世界叙事+自由维度〕→lint 合格线〔信息量≥财报〕；估值层 fetch|build|set|list；触发条件见 skills/19；DCF 钩平行 D3 进 core_dcf；models/ 本地-only 永不推送） |
-| "设置/修改我的投资风格" | user-profile | `python -m value_genie user set-style me --base buffett --weight value=0.3` |
-| "录入/修改/查看我的持仓" | user-portfolio | `python -m value_genie holding add|update|remove|list` |
+| "你怎么看待X / what do you think of X" | single-stock-analysis | `python -m polar_star ask X` |
+| "...but why / 证据" | single-stock-analysis | `python -m polar_star ask X --evidence` |
+| "X和Y哪个好 / X vs Y" | compare-stocks | `python -m polar_star compare X Y` |
+| "今天给我推荐股票（按我的风格、结合我的持仓）" | user-recommend | `python -m polar_star recommend`（缺省取 session 当前用户） |
+| "推荐/最被低估/量化+大师最优" | fused-quant-master | `python -m polar_star masters-vote`（L1 宽池=量化只否决、AI 从全池选深评名单 + core_score 唯一排序）+ L2 红旗 + L3 三核深评与大师定性 + L4 融合裁决，per skills/18 — user mandate 2026-09-15: 融合，不分情况讨论；2026-09-29: 三核（商业模式/企业文化/DCF）为唯一排序键，量化只否决 AI 做选择 |
+| "短线/超短线有什么机会" | fused-quant-master | `python -m polar_star masters-vote --horizon short|ultrashort`（D4 战术模式：floor=真生意 core_business≥50 + 周K结构上行 + 无否决，甜点区=60日高点回撤 5-15%，同一融合管道 + 纪律块；塔砖 weekly-trend-daily-pullback） |
+| "把塔砖断言的机器注入候选池 / 管理产业论点" | fused-quant-master | `python -m polar_star masters-vote --thesis <id>` + `thesis list|show|add|amend|retire`（见 Thesis pools 节） |
+| "读公司原文 / 蒸馏商业模式与文化" | fused-quant-master | `python -m polar_star profile fetch|show|assess|list|status`（见 Company profiles 节——蒸馏回写后文化核恢复打分，profiles/ 本地-only 永不推送） |
+| "建财务模型 / DCF估值 / 可比公司" | fused-quant-master | `python -m polar_star model gather|write|show|lint|status X`（AI 手工建模工作台：gather 聚合素材→AI 写理解层〔飞轮/文化/reverse-DCF 三件套+世界叙事+自由维度〕→lint 合格线〔信息量≥财报〕；估值层 fetch|build|set|list；触发条件见 skills/19；DCF 钩平行 D3 进 core_dcf；models/ 本地-only 永不推送） |
+| "设置/修改我的投资风格" | user-profile | `python -m polar_star user set-style me --base buffett --weight value=0.3` |
+| "录入/修改/查看我的持仓" | user-portfolio | `python -m polar_star holding add|update|remove|list` |
 | "审视我的持仓 / 深度分析持仓" | holding-deep-review | `holding list` 先看体检，再 `ask X --evidence` per holding + `screen --strategy <master>` (business model, moat, culture, earn/lose paths, two master frameworks) |
-| "X的舆情/解禁/公告/研报/财报解读" | intel | `python -m value_genie intel X`（A 全板块；HK 公告+新闻，研报无源；US EDGAR 披露+新闻+一致评级；含解释层：财报速读/公告含义〔…〕/新闻热度/研报汇总，user mandate 2026-09-09） |
-| "现在港股有什么机会 / what's attractive now" | market-overview | `python -m value_genie overview --markets HK` |
-| "数据新鲜吗 / is the data current" | data-ops | `python -m value_genie doctor` |
-| "巴菲特会怎么看X" | master-buffett | `python -m value_genie screen --strategy buffett` + `ask X --evidence` |
-| "芒格会怎么看X / 反过来想" | master-munger | `python -m value_genie screen --strategy munger` + `ask X --evidence` |
-| "格雷厄姆会怎么看X / 市场先生" | master-graham | `python -m value_genie screen --strategy graham` + `ask X --evidence` |
-| "利弗莫尔会怎么看X / 趋势" | master-livermore | `python -m value_genie screen --strategy livermore` + `ask X --evidence` |
-| "段永平会怎么选X" | master-duan | `python -m value_genie screen --strategy duan` + `ask X --evidence` |
-| "孙宇晨会怎么看X / 热点股" | master-sheng | `python -m value_genie screen --strategy sheng` + `ask X --evidence` |
-| "散户乙会怎么看X / 免费股票/成本收回" | master-sanhuyi | `python -m value_genie screen --strategy sanhuyi` + `ask X --evidence` |
+| "X的舆情/解禁/公告/研报/财报解读" | intel | `python -m polar_star intel X`（A 全板块；HK 公告+新闻，研报无源；US EDGAR 披露+新闻+一致评级；含解释层：财报速读/公告含义〔…〕/新闻热度/研报汇总，user mandate 2026-09-09） |
+| "现在港股有什么机会 / what's attractive now" | market-overview | `python -m polar_star overview --markets HK` |
+| "数据新鲜吗 / is the data current" | data-ops | `python -m polar_star doctor` |
+| "巴菲特会怎么看X" | master-buffett | `python -m polar_star screen --strategy buffett` + `ask X --evidence` |
+| "芒格会怎么看X / 反过来想" | master-munger | `python -m polar_star screen --strategy munger` + `ask X --evidence` |
+| "格雷厄姆会怎么看X / 市场先生" | master-graham | `python -m polar_star screen --strategy graham` + `ask X --evidence` |
+| "利弗莫尔会怎么看X / 趋势" | master-livermore | `python -m polar_star screen --strategy livermore` + `ask X --evidence` |
+| "段永平会怎么选X" | master-duan | `python -m polar_star screen --strategy duan` + `ask X --evidence` |
+| "孙宇晨会怎么看X / 热点股" | master-sheng | `python -m polar_star screen --strategy sheng` + `ask X --evidence` |
+| "散户乙会怎么看X / 免费股票/成本收回" | master-sanhuyi | `python -m polar_star screen --strategy sanhuyi` + `ask X --evidence` |
 | Macro / gold / geopolitics | macro-themes | framework + `overview` / `ask --evidence` |
-| "你的虚拟盘怎么样 / 你的资产情况" | trading | `python -m value_genie trade status` |
-| "虚拟盘买入/卖出 X" | trading | `python -m value_genie trade buy/sell <season> X --qty N --note 理由` |
-| "复盘虚拟盘 / 记教训" | trading | `python -m value_genie trade journal <season> --text ...` + `skill note trading "..."` |
-| "看看你的战绩 / 总结赛季" | trading | `python -m value_genie trade status/nav/journal --json` → AI 成文总结（无 dashboard，AI 即看板；赛季全员共享） |
-| "短期内最推荐/最被低估的股票" | horizon-framework | `python -m value_genie screen --horizon short` |
-| "超短线/短线有什么机会" | horizon-framework | `python -m value_genie screen --horizon ultrashort`（必须附短炒警示） |
-| "X适合中长期持有吗" | horizon-framework | `python -m value_genie ask X`（四周期剖面）+ 14 号 playbook 质性层 |
-| Philosophy / 处世 / 人生问题 / how to value | cognitive-tower | `python -m value_genie tower search <query>` 查塔作答（见 Cognitive tower 节家规） |
+| "你的虚拟盘怎么样 / 你的资产情况" | trading | `python -m polar_star trade status` |
+| "虚拟盘买入/卖出 X" | trading | `python -m polar_star trade buy/sell <season> X --qty N --note 理由` |
+| "复盘虚拟盘 / 记教训" | trading | `python -m polar_star trade journal <season> --text ...` + `skill note trading "..."` |
+| "看看你的战绩 / 总结赛季" | trading | `python -m polar_star trade status/nav/journal --json` → AI 成文总结（无 dashboard，AI 即看板；赛季全员共享） |
+| "短期内最推荐/最被低估的股票" | horizon-framework | `python -m polar_star screen --horizon short` |
+| "超短线/短线有什么机会" | horizon-framework | `python -m polar_star screen --horizon ultrashort`（必须附短炒警示） |
+| "X适合中长期持有吗" | horizon-framework | `python -m polar_star ask X`（四周期剖面）+ 14 号 playbook 质性层 |
+| Philosophy / 处世 / 人生问题 / how to value | cognitive-tower | `python -m polar_star tower search <query>` 查塔作答（见 Cognitive tower 节家规） |
 | "新手 / 导航 / 这是什么 / 带我去X / 参观" | navigation | 无专用命令——按 skills/20-navigation 渐进讲解（AI 即导览，一次只讲一层，无状态） |
 
 ## Cognitive tower (认知巴别塔)
@@ -183,7 +183,7 @@ tensions included (marked, never resolved by deletion). Statuses:
 refuted`; migrations require a reason and are archived as Field
 Notes; `refuted` bricks are never deleted (errors are assets).
 
-- Commands: `python -m value_genie tower list|show|add|note|link|
+- Commands: `python -m polar_star tower list|show|add|note|link|
   set|search|stats|seed` — all `--json`-capable. Tower commands do
   **not** run the freshness gate: the tower depends on no market
   snapshot.
@@ -233,7 +233,7 @@ skill-attention arbitrage), `falsification` (explicit kill
 conditions), `members` (market:code list), `industry_hints`
 (discovery aid), and `status` (active/retired).
 
-- Commands: `python -m value_genie thesis list|show|add|amend|retire|
+- Commands: `python -m polar_star thesis list|show|add|amend|retire|
   remove` — all `--json`-capable; `show --discover` scans the
   snapshot for industry-hint matches not yet members. Thesis
   commands do **not** run the freshness gate.
@@ -266,7 +266,7 @@ veto-only until a distillation activates it.
   dir which is **gitignored LOCAL-ONLY — never pushed to any remote**.
   The schema is stable (source / raw_hash / scores / argument texts)
   so the store can later become a portable dataset.
-- Commands: `python -m value_genie profile fetch|show|assess|list|
+- Commands: `python -m polar_star profile fetch|show|assess|list|
   status` — all `--json`-capable. Profile commands do **not** run the
   freshness gate. Sources: A = 东财 F10 机构概况；HK = 东财 HKF10
   公司概况；US = SEC submissions meta + stockanalysis 简介.
@@ -302,7 +302,7 @@ North-Star DCF get stronger.
   asset) / history.json / assumptions.json / result.json (valuation
   layer). **gitignored LOCAL-ONLY — never pushed** (user mandate
   2026-10-02: the model is proprietary judgment).
-- Commands: `python -m value_genie model gather|write|show|lint|status`
+- Commands: `python -m polar_star model gather|write|show|lint|status`
   (workbench) + `fetch|build|set|list` (valuation layer) + `campaign
   init|status|next|gather` (full-market campaign queue, user mandate
   2026-10-04: tiered queue holdings→funnel→market in
@@ -347,17 +347,17 @@ by the skill filenames 07-12), plus one user-introduced folk master
 | 6 | Justin Sun | `sheng` | Attention economics + narrative momentum | ret_60d≥0, 波动率市场内前40%（pctl≥60） |
 | 7 | 散户乙 (folk, user-added 2026-09-10) | `sanhuyi` | 赚免费股票：股息复利 + 成本收回（持有纪律层） | ROE≥15%, 负债率≤60%, OCF yield≥4%, 股息率≥2.5%, 借钱分红否决 |
 
-`python -m value_genie strategy list` shows all strategies (presets +
+`python -m polar_star strategy list` shows all strategies (presets +
 masters). `screen --strategy <id>` applies the master's gates and
 weights. Each master has a skill playbook in `skills/` — read it
 before answering in that voice.
 
 Playbooks live in `skills/` — read the relevant one before answering.
-`python -m value_genie skill list` indexes them.
+`python -m polar_star skill list` indexes them.
 
 ## Holding-period dimension
 
-Four horizons (registry-backed, `python -m value_genie horizon list`):
+Four horizons (registry-backed, `python -m polar_star horizon list`):
 ultrashort (1-10 交易日, ret_5d+ret_20d), short (10日-3月,
 ret_20d+ret_60d), mid (3月-3年, 估值修复+业绩兑现), long (3年+,
 商业模式+现金流). `screen --horizon H` screens under the horizon;
@@ -448,7 +448,7 @@ After answering, if you hit a quirk or found a better procedure
 (resolution trick, source failure workaround, ambiguity in a skill),
 record it in one concrete line:
 
-    python -m value_genie skill note single-stock-analysis "smartbox resolves names missing from snapshot after delistings"
+    python -m polar_star skill note single-stock-analysis "smartbox resolves names missing from snapshot after delistings"
 
 Notes append to the skill's Field Notes; every future agent inherits
 them. Body/trigger rewrites are the only human-supervised channel,

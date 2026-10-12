@@ -1,10 +1,10 @@
-"""Tests for value_genie.strategy.factors."""
+"""Tests for polar_star.strategy.factors."""
 
 import numpy as np
 import pandas as pd
 import pytest
 
-from value_genie.strategy import factors as f
+from polar_star.strategy import factors as f
 
 
 def _kline(closes):

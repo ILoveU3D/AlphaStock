@@ -3,10 +3,10 @@
 import pandas as pd
 import pytest
 
-from value_genie.strategy import masters  # noqa: F401 — triggers registration
-from value_genie.strategy import presets   # noqa: F401
-from value_genie.strategy.factors import add_derived_factors
-from value_genie.strategy.registry import (
+from polar_star.strategy import masters  # noqa: F401 — triggers registration
+from polar_star.strategy import presets   # noqa: F401
+from polar_star.strategy.factors import add_derived_factors
+from polar_star.strategy.registry import (
     Strategy,
     evaluate_gates,
     get_strategy,

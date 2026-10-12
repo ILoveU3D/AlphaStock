@@ -1,8 +1,8 @@
-"""Tests for value_genie.model.history parsers (network monkeypatched)."""
+"""Tests for polar_star.model.history parsers (network monkeypatched)."""
 
 import pytest
 
-from value_genie.model import history as mh
+from polar_star.model import history as mh
 
 
 def _tag(rows, unit="USD"):

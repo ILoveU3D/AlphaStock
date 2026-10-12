@@ -1,11 +1,11 @@
-"""Tests for value_genie.fetch.quotes (no network)."""
+"""Tests for polar_star.fetch.quotes (no network)."""
 
 from types import SimpleNamespace
 
 import pandas as pd
 import pytest
 
-from value_genie.fetch.quotes import (_parse_clist_rows,
+from polar_star.fetch.quotes import (_parse_clist_rows,
                                       exclude_non_operating_names,
                                       exclude_risk_names,
                                       fetch_quote_any, fetch_quote_tx)
@@ -86,7 +86,7 @@ class TestExcludeNonOperatingNames:
 
 class TestFetchMarketQuotes:
     def test_retries_failed_page(self, monkeypatch):
-        from value_genie.fetch import quotes as q
+        from polar_star.fetch import quotes as q
 
         pages = [None, {"data": {"total": 1, "diff": [_row()]}}]
         calls = []
@@ -102,8 +102,8 @@ class TestFetchMarketQuotes:
         assert calls == [1, 1]  # page 1 failed once, then retried OK
 
     def test_gives_up_after_retry_cap(self, monkeypatch):
-        from value_genie import config
-        from value_genie.fetch import quotes as q
+        from polar_star import config
+        from polar_star.fetch import quotes as q
 
         calls = []
 
@@ -121,7 +121,7 @@ class TestFetchMarketQuotes:
 
     def test_mid_pagination_failure_retries_same_page(self, monkeypatch):
         """A failed page N>1 must be retried, not silently truncated."""
-        from value_genie.fetch import quotes as q
+        from polar_star.fetch import quotes as q
 
         pages = {
             1: [{"data": {"total": 3, "diff": [_row("600001"),
@@ -145,8 +145,8 @@ class TestFetchMarketQuotes:
     def test_mid_pagination_failure_warns_on_partial(self, monkeypatch,
                                                      capsys):
         """Exhausted retries mid-universe must WARN, not break silently."""
-        from value_genie import config
-        from value_genie.fetch import quotes as q
+        from polar_star import config
+        from polar_star.fetch import quotes as q
 
         calls = []
 
@@ -170,7 +170,7 @@ class TestFetchMarketQuotes:
     def test_partial_universe_is_flagged(self, monkeypatch):
         """Retry-exhausted mid-universe pages must flag the frame partial
         so the pipeline never persists half a market as complete."""
-        from value_genie.fetch import quotes as q
+        from polar_star.fetch import quotes as q
 
         def fake_get(path, params=None, **kw):
             if params["pn"] == 1:
@@ -187,7 +187,7 @@ class TestFetchMarketQuotes:
         assert df.attrs.get("partial") is True
 
     def test_complete_universe_not_flagged(self, monkeypatch):
-        from value_genie.fetch import quotes as q
+        from polar_star.fetch import quotes as q
 
         monkeypatch.setattr(q, "em_push2_get", lambda *a, **k: {
             "data": {"total": 1, "diff": [_row()]}})
@@ -218,7 +218,7 @@ def _tx_session(payload: bytes, status: int = 200):
 
 class TestFetchQuoteTx:
     def test_parses_gbk_payload(self, monkeypatch):
-        from value_genie.fetch import quotes as q
+        from polar_star.fetch import quotes as q
 
         # layout: idx1 name, idx2 code, idx3 price, idx4 prev close
         raw = 'v_sh588060="1~上证科创ETF~588060~1.05~1.04~1.06~1.03~...~";'
@@ -232,13 +232,13 @@ class TestFetchQuoteTx:
             (1.05 / 1.04 - 1.0) * 100.0)
 
     def test_garbage_returns_none(self, monkeypatch):
-        from value_genie.fetch import quotes as q
+        from polar_star.fetch import quotes as q
 
         monkeypatch.setattr(q, "TX", _tx_session(b"pv_none=1;"))
         assert q.fetch_quote_tx("sh000000") is None
 
     def test_http_error_returns_none(self, monkeypatch):
-        from value_genie.fetch import quotes as q
+        from polar_star.fetch import quotes as q
 
         monkeypatch.setattr(q, "TX", _tx_session(b"", status=502))
         assert q.fetch_quote_tx("sh588060") is None
@@ -246,7 +246,7 @@ class TestFetchQuoteTx:
 
 class TestFetchQuoteAny:
     def test_em_ulist_preferred(self, monkeypatch):
-        from value_genie.fetch import quotes as q
+        from polar_star.fetch import quotes as q
 
         monkeypatch.setattr(
             q, "fetch_quotes_by_secids",
@@ -256,7 +256,7 @@ class TestFetchQuoteAny:
         assert out["price"] == 1500.0
 
     def test_tencent_fallback_for_out_of_universe_etf(self, monkeypatch):
-        from value_genie.fetch import quotes as q
+        from polar_star.fetch import quotes as q
 
         monkeypatch.setattr(q, "fetch_quotes_by_secids",
                             lambda s: pd.DataFrame())
@@ -271,7 +271,7 @@ class TestFetchQuoteAny:
         assert out["market_id"] == ""
 
     def test_all_sources_fail_returns_none(self, monkeypatch):
-        from value_genie.fetch import quotes as q
+        from polar_star.fetch import quotes as q
 
         monkeypatch.setattr(q, "fetch_quotes_by_secids",
                             lambda s: pd.DataFrame())
@@ -307,7 +307,7 @@ class TestFetchMarketQuotesTx:
         })
 
     def test_a_share_batch_mapping(self, monkeypatch):
-        from value_genie.fetch import quotes as q
+        from polar_star.fetch import quotes as q
 
         monkeypatch.setattr(q, "TX", _tx_market_tx([
             ("sh600519", _tx_parts(**{"1": "贵州茅台", "2": "600519"})),
@@ -332,7 +332,7 @@ class TestFetchMarketQuotesTx:
         assert df.attrs["fallback"] == "tencent"
 
     def test_hk_no_pb(self, monkeypatch):
-        from value_genie.fetch import quotes as q
+        from polar_star.fetch import quotes as q
 
         uni = pd.DataFrame({"code": ["01258"], "industry": ["Metals"],
                             "market_id": ["116"]})
@@ -346,7 +346,7 @@ class TestFetchMarketQuotesTx:
         assert df.iloc[0]["market_id"] == "116"
 
     def test_us_code_from_request_symbol_map(self, monkeypatch):
-        from value_genie.fetch import quotes as q
+        from polar_star.fetch import quotes as q
 
         uni = pd.DataFrame({"code": ["AAPL"], "industry": ["Tech"],
                             "market_id": ["105"]})
@@ -358,7 +358,7 @@ class TestFetchMarketQuotesTx:
         assert df.iloc[0]["code"] == "AAPL"   # not the '.OQ' payload form
 
     def test_skips_none_and_short_rows(self, monkeypatch):
-        from value_genie.fetch import quotes as q
+        from polar_star.fetch import quotes as q
 
         monkeypatch.setattr(q, "TX", _tx_session(
             b'v_sh600519="none";\nv_sz000001="1~short";\n'))
@@ -366,12 +366,12 @@ class TestFetchMarketQuotesTx:
         assert q.fetch_market_quotes_tx("A", universe=self._universe()).empty
 
     def test_empty_universe_returns_empty(self):
-        from value_genie.fetch import quotes as q
+        from polar_star.fetch import quotes as q
 
         assert q.fetch_market_quotes_tx("A", universe=pd.DataFrame()).empty
 
     def test_em_outage_triggers_tx_fallback(self, monkeypatch):
-        from value_genie.fetch import quotes as q
+        from polar_star.fetch import quotes as q
 
         monkeypatch.setattr(q, "em_push2_get", lambda *a, **k: None)
         monkeypatch.setattr(q.time, "sleep", lambda s: None)
@@ -383,7 +383,7 @@ class TestFetchMarketQuotesTx:
 
     def test_partial_em_prefers_complete_tx(self, monkeypatch):
         """A complete Tencent-degraded universe beats a partial EM one."""
-        from value_genie.fetch import quotes as q
+        from polar_star.fetch import quotes as q
 
         def fake_get(path, params=None, **kw):
             if params["pn"] == 1:
@@ -403,7 +403,7 @@ class TestFetchMarketQuotesTx:
 
     def test_tx_failure_keeps_partial_em(self, monkeypatch):
         """When Tencent also fails the partial EM frame survives, flagged."""
-        from value_genie.fetch import quotes as q
+        from polar_star.fetch import quotes as q
 
         def fake_get(path, params=None, **kw):
             if params["pn"] == 1:

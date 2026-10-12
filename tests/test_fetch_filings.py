@@ -1,13 +1,13 @@
-"""Tests for value_genie.fetch.filings (cninfo disclosure PDFs)."""
+"""Tests for polar_star.fetch.filings (cninfo disclosure PDFs)."""
 
 import json
 
 import pytest
 
-from value_genie import config
-from value_genie.fetch import filings as ff
-from value_genie.model import gather as mg
-from value_genie.model import store
+from polar_star import config
+from polar_star.fetch import filings as ff
+from polar_star.model import gather as mg
+from polar_star.model import store
 
 
 def _fake_annual_text(body_chars=6000):

@@ -1,8 +1,8 @@
-"""Tests for value_genie.resolve (no network)."""
+"""Tests for polar_star.resolve (no network)."""
 
 import pandas as pd
 
-from value_genie import resolve as rs
+from polar_star import resolve as rs
 
 
 class TestParseCodeForm:

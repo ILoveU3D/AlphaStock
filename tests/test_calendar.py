@@ -1,4 +1,4 @@
-"""Tests for value_genie.calendar (pure functions, no IO).
+"""Tests for polar_star.calendar (pure functions, no IO).
 
 Pins the 2026 static tables: weekends, holidays, half days, US DST and
 the cross-market cases the freshness gate depends on (a closed CN
@@ -7,7 +7,7 @@ market must not stall US answers — user mandate 2026-10-08).
 
 from datetime import date, datetime
 
-from value_genie import calendar as cal
+from polar_star import calendar as cal
 
 
 class TestIsTradingDay:

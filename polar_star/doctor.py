@@ -132,7 +132,7 @@ def run_checks(data_dir=None, now: datetime | None = None) -> list:
         snap = resolve_snapshot(data_dir)
     except FileNotFoundError:
         return [("FAIL", "-",
-                 "no snapshots found; run: python -m value_genie fetch")]
+                 "no snapshots found; run: python -m polar_star fetch")]
     out = [("PASS", "-", f"latest snapshot: {snap.name}")]
     manifest = _read_manifest(snap)
     d = _parse_day(snap.name)
@@ -296,16 +296,16 @@ def run_checks(data_dir=None, now: datetime | None = None) -> list:
 def _recommended_action(checks: list):
     """None or a fetch hint, mirroring the console renderer."""
     if any(c[0] == "FAIL" and "no snapshots" in c[2] for c in checks):
-        return "python -m value_genie fetch"
+        return "python -m polar_star fetch"
     if (any(c[0] == "FAIL" for c in checks)
             or any(c[0] == "WARN" and "age" in c[2] for c in checks)):
-        return "python -m value_genie fetch   (refresh stale data)"
+        return "python -m polar_star fetch   (refresh stale data)"
     return None
 
 
 def render_checks(checks: list) -> str:
     icon = {"PASS": "ok  ", "WARN": "warn", "FAIL": "FAIL"}
-    lines = ["== Value Genie doctor =="]
+    lines = ["== Polar Star doctor =="]
     for status, market, msg in checks:
         lines.append(f"[{icon[status]}] {market:>3}  {msg}")
     action = _recommended_action(checks)

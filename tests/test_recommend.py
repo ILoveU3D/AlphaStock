@@ -1,13 +1,13 @@
-"""Tests for value_genie.recommend (screening + holdings health)."""
+"""Tests for polar_star.recommend (screening + holdings health)."""
 
 import json
 
 import pandas as pd
 import pytest
 
-from value_genie import recommend as rec
-from value_genie import users as usr
-from value_genie.resolve import Match
+from polar_star import recommend as rec
+from polar_star import users as usr
+from polar_star.resolve import Match
 
 
 def _master() -> pd.DataFrame:
@@ -241,7 +241,7 @@ def test_render_recommend_contains_sections(data_dir, fake_live):
     _user_with_holdings()
     result = rec.build_recommendation("me", snap_dir=snap, top_n=5)
     text = rec.render_recommend(result)
-    assert "Value Genie recommend" in text
+    assert "Polar Star recommend" in text
     assert "持仓体检" in text
     assert "组合观察" in text
     assert "推荐候选" in text
@@ -259,7 +259,7 @@ def test_render_holdings_empty_portfolio(data_dir):
 # CLI
 # ---------------------------------------------------------------------------
 def test_cli_recommend(data_dir, fake_live, capsys):
-    from value_genie.__main__ import main
+    from polar_star.__main__ import main
     _user_with_holdings()
     rc = main(["recommend", "--user", "me",
                "--data-dir", str(data_dir), "--no-check", "--top", "5"])
@@ -274,14 +274,14 @@ def test_cli_recommend(data_dir, fake_live, capsys):
 
 
 def test_cli_recommend_unknown_user(data_dir, fake_live):
-    from value_genie.__main__ import main
+    from polar_star.__main__ import main
     with pytest.raises(SystemExit):
         main(["recommend", "--user", "ghost",
               "--data-dir", str(data_dir), "--no-check"])
 
 
 def test_cli_holding_list(data_dir, fake_live, capsys):
-    from value_genie.__main__ import main
+    from polar_star.__main__ import main
     _user_with_holdings()
     rc = main(["holding", "list", "me", "--data-dir", str(data_dir),
                "--no-check"])
@@ -291,7 +291,7 @@ def test_cli_holding_list(data_dir, fake_live, capsys):
 
 
 def test_cli_recommend_defaults_to_session_user(data_dir, fake_live, capsys):
-    from value_genie.__main__ import main
+    from polar_star.__main__ import main
     _user_with_holdings()
     usr.login("me")
     # no --user — resolved from the session pointer

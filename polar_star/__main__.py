@@ -1,22 +1,22 @@
 """Command-line interface: fetch market data, screen snapshots, analyze.
 
 Usage:
-    python -m value_genie fetch [--markets A,HK,US] [--refresh]
-    python -m value_genie screen [--strategy balanced|buffett|garp|...]
+    python -m polar_star fetch [--markets A,HK,US] [--refresh]
+    python -m polar_star screen [--strategy balanced|buffett|garp|...]
                                  [--set value=0.4] [--top 20]
                                  [--markets A,HK] [--snapshot DATE]
-    python -m value_genie masters-vote [--top 15] [--no-live]
-    python -m value_genie strategy list
-    python -m value_genie source list
-    python -m value_genie ask 茶百道 [--evidence] [--json]
-    python -m value_genie compare 茶百道 古茗
-    python -m value_genie overview [--markets A,HK] [--top 10]
-    python -m value_genie recommend [--user me] [--top 10]
-    python -m value_genie user create|list|show|set-style ...
-    python -m value_genie holding add|update|remove|list ...
-    python -m value_genie doctor
-    python -m value_genie skill list|show|note|edit ...
-    python -m value_genie tower list|show|add|note|link|set|search|stats|seed ...
+    python -m polar_star masters-vote [--top 15] [--no-live]
+    python -m polar_star strategy list
+    python -m polar_star source list
+    python -m polar_star ask 茶百道 [--evidence] [--json]
+    python -m polar_star compare 茶百道 古茗
+    python -m polar_star overview [--markets A,HK] [--top 10]
+    python -m polar_star recommend [--user me] [--top 10]
+    python -m polar_star user create|list|show|set-style ...
+    python -m polar_star holding add|update|remove|list ...
+    python -m polar_star doctor
+    python -m polar_star skill list|show|note|edit ...
+    python -m polar_star tower list|show|add|note|link|set|search|stats|seed ...
 
 Every data command (ask / screen / compare / overview / recommend /
 holding list / doctor) accepts ``--json``: stdout becomes pure JSON
@@ -139,7 +139,7 @@ def cmd_screen(args) -> int:
         print(report.to_json(top, meta))
         return 0
 
-    print(f"== Value Genie screen ==")
+    print(f"== Polar Star screen ==")
     print(f"snapshot : {snap_dir.name}")
     print(f"strategy : {label} ({report.describe_weights(profile)})")
     if args.horizon:
@@ -155,7 +155,7 @@ def cmd_screen(args) -> int:
     csv_path = report.export_csv(top, out_dir / f"{stem}.csv")
     md_path = report.export_markdown(
         top, out_dir / f"{stem}.md",
-        title=f"Value Genie - {snap_dir.name} - {label}",
+        title=f"Polar Star - {snap_dir.name} - {label}",
         meta={"snapshot": snap_dir.name, "strategy": label,
               "weights": report.describe_weights(profile),
               "markets": ", ".join(markets or config.MARKETS),
@@ -334,7 +334,7 @@ def cmd_masters_vote(args) -> int:
         print(report.to_json(top, meta))
         return 0
 
-    print("== Value Genie masters-vote (QMF L1/L2) ==")
+    print("== Polar Star masters-vote (QMF L1/L2) ==")
     print(f"snapshot : {snap_dir.name}")
     print(f"masters  : {', '.join(masters)}")
     print(f"markets  : {', '.join(markets or config.MARKETS)}")
@@ -1068,8 +1068,8 @@ def _check_freshness(args, market=None) -> bool:
         status, msg = dr.freshness_gate(data_dir)
     if status == "FAIL":
         print(f"[FRESHNESS BLOCKED] {msg}", file=sys.stderr)
-        print("run `python -m value_genie doctor` for details, "
-              "or `python -m value_genie fetch` to refresh.",
+        print("run `python -m polar_star doctor` for details, "
+              "or `python -m polar_star fetch` to refresh.",
               file=sys.stderr)
         return False
     if status == "WARN":
@@ -1166,7 +1166,7 @@ def cmd_compare(args) -> int:
         print(json.dumps({"stocks": report.df_records(df)},
                          ensure_ascii=False, indent=2))
         return 0
-    print("== Value Genie compare ==")
+    print("== Polar Star compare ==")
     print(df.to_string(index=False, float_format=lambda v: f"{v:.1f}"))
     if len(df) >= 2:
         cheap = df.dropna(subset=["pe_pctile"])
@@ -2175,7 +2175,7 @@ def build_parser() -> argparse.ArgumentParser:
     horizon_ids = [h.id for h in list_horizons()]
 
     parser = argparse.ArgumentParser(
-        prog="value_genie", description=__doc__,
+        prog="polar_star", description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest="command", required=True)
 

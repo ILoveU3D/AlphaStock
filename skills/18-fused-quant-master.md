@@ -42,7 +42,7 @@ DCF 估值是等价的三个核心，是对候选股票排序的**唯一**依据
 
 ### L1 — 宽池层（代码，`masters-vote`）
 
-`python -m value_genie masters-vote [--json]`
+`python -m polar_star masters-vote [--json]`
 
 - Default output is the **wide pool** (D1, user mandate 2026-09-29:
   量化只否决、AI 做选择）: every stock with ≥1 master vote and no
@@ -58,7 +58,7 @@ DCF 估值是等价的三个核心，是对候选股票排序的**唯一**依据
   出局；单个大师不过仅在展示层呈现，不构成否决。
 - **Ranking = `core_score` only** — equal-weight mean of the three
   cores (business / culture / dcf), each scored on absolute anchors
-  (no percentiles; see `value_genie/strategy/cores.py`). A missing
+  (no percentiles; see `polar_star/strategy/cores.py`). A missing
   core is imputed to the market mean and declared loudly in
   `core_gaps` (D2); a stock whose cores are entirely NaN fails the
   data-sufficiency veto. The culture core is veto-only until a
@@ -96,7 +96,7 @@ DCF 估值是等价的三个核心，是对候选股票排序的**唯一**依据
 
 ### 短线/超短线路径（D4，`--horizon short|ultrashort`）
 
-`python -m value_genie masters-vote --horizon short [--json]`
+`python -m polar_star masters-vote --horizon short [--json]`
 
 Tactical mode runs the **full L1-L4 fusion** — a short-horizon pick
 is still a fused pick, never a momentum screen. The floor verifies a
@@ -143,17 +143,17 @@ The culture core is veto-only until the AI distills an assessment
 (D3). The loop — run it for every stock that reaches the L3
 deep-review list:
 
-1. `python -m value_genie profile fetch X` — pull raw source text
+1. `python -m polar_star profile fetch X` — pull raw source text
    into `data/profiles/raw/` (cleanable, regenerable): A = 东财 F10
    机构概况， HK = 东财 HKF10 公司概况， US = SEC submissions meta +
    stockanalysis 简介.
-2. `python -m value_genie profile show X` — read the raw text
+2. `python -m polar_star profile show X` — read the raw text
    **plus** `intel X` （财报速读 / 公告含义 / 新闻热度）. This is
    the L3 read entry for business model and culture.
 3. Run the three-core argumentation to the standards above —
    culture evidence is behavior-level only （说过 vs 做到 / 资本
    配置 / 拒绝过什么 / 压力期选择）, no adjectives.
-4. `python -m value_genie profile assess X --business-score N \
+4. `python -m polar_star profile assess X --business-score N \
    --culture-score N --moat-type ... --lifecycle ... --benfen "..." \
    --business-arg "..." --culture-arg "..." --dcf-arg "..." \
    --verdict "..."` — write the distillation.

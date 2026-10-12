@@ -1,11 +1,11 @@
-"""Tests for value_genie.analyze (no network)."""
+"""Tests for polar_star.analyze (no network)."""
 
 from pathlib import Path
 
 import pandas as pd
 
-from value_genie import analyze as az
-from value_genie.resolve import Match
+from polar_star import analyze as az
+from polar_star.resolve import Match
 
 
 class TestPercentile:

@@ -1,13 +1,13 @@
-"""Tests for value_genie.intel source registration + datacenter
+"""Tests for polar_star.intel source registration + datacenter
 fetchers (all network mocked)."""
 
-from value_genie.strategy.registry import get_sources, list_sources
+from polar_star.strategy.registry import get_sources, list_sources
 
 
 def test_import_intel_alone_extends_eastmoney():
     """Importing intel must be order-safe: intel/__init__ imports fetch
     first so the eastmoney entry exists before capabilities extend."""
-    import value_genie.intel  # noqa: F401 — deliberately no fetch import
+    import polar_star.intel  # noqa: F401 — deliberately no fetch import
     ds = {s.id: s for s in list_sources()}["eastmoney"]
     assert "events:A" in ds.capabilities
     assert "announce:A" in ds.capabilities
@@ -16,8 +16,8 @@ def test_import_intel_alone_extends_eastmoney():
 
 
 def test_registration_is_idempotent():
-    import value_genie.intel  # noqa: F401
-    import value_genie.intel.sources as src
+    import polar_star.intel  # noqa: F401
+    import polar_star.intel.sources as src
     src._register_intel_sources()   # second call must not duplicate caps
     ds = {s.id: s for s in list_sources()}["eastmoney"]
     assert ds.capabilities.count("events:A") == 1
@@ -29,7 +29,7 @@ def test_registration_is_idempotent():
 import pandas as pd
 import pytest
 
-from value_genie.intel import _dc
+from polar_star.intel import _dc
 
 
 def _dc_json(rows, count=None, pages=1):
@@ -117,7 +117,7 @@ class TestDcReport:
 # ---------------------------------------------------------------------------
 # A-share announcement fetchers (解禁/增减持/回购/定增)
 # ---------------------------------------------------------------------------
-from value_genie.intel import announcements as ann
+from polar_star.intel import announcements as ann
 
 
 class TestFetchAUnlocks:
@@ -211,7 +211,7 @@ class TestFetchAPlacements:
 # ---------------------------------------------------------------------------
 # A-share earnings fetchers (业绩预告/披露预约/资产负债表)
 # ---------------------------------------------------------------------------
-from value_genie.intel import earnings as ear
+from polar_star.intel import earnings as ear
 
 
 class TestFetchAForecasts:
@@ -273,7 +273,7 @@ class TestFetchABalance:
 # P2: per-stock intel capabilities + EM_WEB singleton / URL constants
 # ---------------------------------------------------------------------------
 def test_import_intel_extends_news_ratings_capabilities():
-    import value_genie.intel  # noqa: F401
+    import polar_star.intel  # noqa: F401
     ds = {s.id: s for s in list_sources()}["eastmoney"]
     assert "news:A" in ds.capabilities
     assert "ratings:A" in ds.capabilities
@@ -284,8 +284,8 @@ def test_import_intel_extends_news_ratings_capabilities():
 
 
 def test_em_web_singleton_and_urls():
-    from value_genie.fetch.http import EM_WEB
-    from value_genie import config
+    from polar_star.fetch.http import EM_WEB
+    from polar_star import config
     assert EM_WEB.name == "EM_WEB"
     assert config.EM_NOTICE_URL.startswith("https://np-anotice-stock")
     assert config.EM_NEWS_URL.startswith("https://np-listapi")
@@ -300,7 +300,7 @@ def test_em_web_singleton_and_urls():
 # ---------------------------------------------------------------------------
 from datetime import date, timedelta
 
-from value_genie.intel import news as nws
+from polar_star.intel import news as nws
 
 
 def _news_json(rows):
@@ -429,7 +429,7 @@ class TestFetchStockNewsMultiMarket:
 # ---------------------------------------------------------------------------
 # Per-stock analyst ratings (reportapi)
 # ---------------------------------------------------------------------------
-from value_genie.intel import ratings as rtg
+from polar_star.intel import ratings as rtg
 
 
 def _rating_row(**over):
@@ -575,7 +575,7 @@ class TestFetchUsConsensus:
 # ---------------------------------------------------------------------------
 # Per-stock notice list (np-anotice-stock) + batch fetcher code filters
 # ---------------------------------------------------------------------------
-from value_genie.intel import announcements as ann2  # ann already imported
+from polar_star.intel import announcements as ann2  # ann already imported
 
 
 def _notice_json(rows):
@@ -800,23 +800,23 @@ class TestBatchFetcherCodeFilter:
 # ---------------------------------------------------------------------------
 class TestP3SourceRegistration:
     def test_eastmoney_caps(self):
-        import value_genie.intel  # noqa: F401 — registration side effect
+        import polar_star.intel  # noqa: F401 — registration side effect
         caps = [s for s in list_sources() if s.id == "eastmoney"][0]
         for cap in ("notice:HK", "news:HK", "news:US"):
             assert cap in caps.capabilities
 
     def test_sec_edgar_notice_us(self):
-        import value_genie.intel  # noqa: F401
+        import polar_star.intel  # noqa: F401
         caps = [s for s in list_sources() if s.id == "sec_edgar"][0]
         assert "notice:US" in caps.capabilities
 
     def test_stockanalysis_registered(self):
-        import value_genie.intel  # noqa: F401
+        import polar_star.intel  # noqa: F401
         caps = [s for s in list_sources() if s.id == "stockanalysis"]
         assert caps and "ratings:US" in caps[0].capabilities
 
     def test_source_orders(self):
-        import value_genie.intel  # noqa: F401
+        import polar_star.intel  # noqa: F401
         assert [s.id for s in get_sources("notice", "HK")] == ["eastmoney"]
         assert [s.id for s in get_sources("notice", "US")] == ["sec_edgar"]
         assert [s.id for s in get_sources("news", "US")] == ["eastmoney"]

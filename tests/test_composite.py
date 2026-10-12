@@ -1,10 +1,10 @@
-"""Tests for value_genie.strategy.presets and composite."""
+"""Tests for polar_star.strategy.presets and composite."""
 
 import pandas as pd
 import pytest
 
-from value_genie.strategy import composite as c
-from value_genie.strategy import presets as p
+from polar_star.strategy import composite as c
+from polar_star.strategy import presets as p
 
 
 class TestPresets:

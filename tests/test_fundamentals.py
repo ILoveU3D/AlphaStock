@@ -1,4 +1,4 @@
-"""Tests for value_genie.fetch.fundamentals (no network)."""
+"""Tests for polar_star.fetch.fundamentals (no network)."""
 
 from datetime import date
 from types import SimpleNamespace
@@ -6,7 +6,7 @@ from types import SimpleNamespace
 import pandas as pd
 import pytest
 
-from value_genie.fetch import fundamentals as f
+from polar_star.fetch import fundamentals as f
 
 
 class TestCandidateReportDates:
@@ -557,7 +557,7 @@ class TestHkCashflow:
 
 class TestUsCashflowFrames:
     def test_spec_contains_new_concepts(self):
-        from value_genie import config
+        from polar_star import config
         concepts = {c for c, _, _ in config.US_FRAMES_SPEC}
         assert "PaymentsToAcquirePropertyPlantAndEquipment" in concepts
         assert "PaymentsOfDividendsCommonStock" in concepts

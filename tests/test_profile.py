@@ -1,11 +1,11 @@
-"""Tests for value_genie.profile (Phase 5 local-only company profiles)."""
+"""Tests for polar_star.profile (Phase 5 local-only company profiles)."""
 
 import json
 
 import pandas as pd
 import pytest
 
-from value_genie import config, profile as prof
+from polar_star import config, profile as prof
 
 
 @pytest.fixture
@@ -234,7 +234,7 @@ class TestGitignore:
 
 class TestFetchers:
     def test_a_share_payload(self, pdir, monkeypatch):
-        from value_genie.fetch import profiles as pf
+        from polar_star.fetch import profiles as pf
         payload = {"result": {"data": [{
             "SECUCODE": "600900.SH", "SECURITY_NAME_ABBR": "长江电力",
             "ORG_NAME": "中国长江电力股份有限公司",
@@ -255,12 +255,12 @@ class TestFetchers:
         assert raw["source"] == "eastmoney_f10_org_basicinfo"
 
     def test_a_share_empty_fails_closed(self, pdir, monkeypatch):
-        from value_genie.fetch import profiles as pf
+        from polar_star.fetch import profiles as pf
         monkeypatch.setattr(pf.DC, "get_json", lambda *a, **k: None)
         assert pf.fetch_profile_a("600900") is None
 
     def test_hk_payload(self, pdir, monkeypatch):
-        from value_genie.fetch import profiles as pf
+        from polar_star.fetch import profiles as pf
         payload = {"result": {"data": [{
             "SECUCODE": "00998.HK", "SECURITY_NAME_ABBR": "中信银行",
             "ORG_NAME": "中信银行股份有限公司",
@@ -277,8 +277,8 @@ class TestFetchers:
         assert raw["source"] == "eastmoney_hkf10_orgprofile"
 
     def test_us_payload(self, pdir, monkeypatch):
-        from value_genie.fetch import profiles as pf
-        import value_genie.fetch.fundamentals as fnd
+        from polar_star.fetch import profiles as pf
+        import polar_star.fetch.fundamentals as fnd
         monkeypatch.setattr(fnd, "load_sec_cik_map",
                             lambda: {"NVDA": 1045810})
         monkeypatch.setattr(pf.SEC, "get_json", lambda *a, **k: {
@@ -296,15 +296,15 @@ class TestFetchers:
         assert raw["source"] == "stockanalysis+sec_submissions"
 
     def test_us_both_sources_down_fails_closed(self, pdir, monkeypatch):
-        from value_genie.fetch import profiles as pf
-        import value_genie.fetch.fundamentals as fnd
+        from polar_star.fetch import profiles as pf
+        import polar_star.fetch.fundamentals as fnd
         monkeypatch.setattr(fnd, "load_sec_cik_map", lambda: {})
         monkeypatch.setattr(pf.SA, "get_text", lambda *a, **k: None)
         assert pf.fetch_profile_us("NVDA") is None
 
     def test_update_raw_persists_and_keeps_old_on_failure(
             self, pdir, monkeypatch):
-        from value_genie.fetch import profiles as pf
+        from polar_star.fetch import profiles as pf
         prof.save_raw(_raw(summary="old"))
         monkeypatch.setattr(pf, "fetch_profile",
                             lambda m, c: None)

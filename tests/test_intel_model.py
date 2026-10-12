@@ -1,8 +1,8 @@
-"""Tests for value_genie.intel.model (no network)."""
+"""Tests for polar_star.intel.model (no network)."""
 
 from datetime import date
 
-from value_genie.intel import model
+from polar_star.intel import model
 
 
 class TestIntelItem:
