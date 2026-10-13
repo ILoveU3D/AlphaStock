@@ -13,14 +13,14 @@ triggers:
   - 值得买
 commands:
   - "masters-vote [--check MARKET:CODE ...] [--horizon short|ultrashort] [--thesis ID] [--json]"
-  - "arsenal screen|scan <id> [--market US] [--json]"
-  - "arsenal run <id> --on X | battery --on X [--json]"
+  - arsenal screen|scan <id> [--market US] [--json]
+  - arsenal run <id> --on X | battery --on X [--json]
   - profile fetch|show|assess|list|status
   - ask X --evidence
   - intel X
   - recommend --user me
-version: 49
-updated_at: 2026-10-13T00:00:00
+version: 50
+updated_at: 2026-10-13T11:08:32
 ---
 
 # Playbook
@@ -331,3 +331,4 @@ Output shape (hard rules):
 - [2026-10-11 18:25] (ai) 银行业core_dcf结构性失真（2026-10-11用户会话发现）：银行FCF无定义（钱即原材料，经营现金流混存贷款），快照中资行fcf_yield=35%系伪信号致core_dcf满分100——银行股三核评估须将core_dcf降为否决/参考项，改用PB/ROE/股息三件套+信贷周期定位（马克思interest-bearing-capital-fetishism判例：生息资本=拜物教完成形态，DCF直套银行=磅秤量身高）；附：快照roe列疑似中报未年化（读数约为公认值一半，招行A读6.7%年化后~13%吻合），HK银行股pb列缺失——两处数据源问题待修
 - [2026-10-11 22:22] (ai) 用户规则 2026-10-11：'今日最被低估'类每日推荐——当日为该市场非交易日时直接跳过，勿基于旧收盘价新推一轮；交易日判定用 doctor --json 的 agent_rule（日历感知）；美股周六/周日必跳，哥伦布日等联邦假日股票市场照常开市
 - [2026-10-12 10:58] (ai) 2026-10-12 金融股结构性缺席宽池：masters-vote L1 池(7大师硬闸)对保险/银行/券商全零票——gm≥40%/roe 口径不适配金融业，人寿/新华/太保/银行等 master.csv core_score 池顶名字永远不进宽池；'最被低估'类回答须显式声明金融股按 PB/ROE/股息三件套另行评估(2026-10-11 银行专题框架)，勿误作'金融股无候选'。另：A股应收粉饰旗需对定期报告原文复核(吉比特 2026-10-12 案例：旗称'应收增速远超营收'，中报原文应收+17.03%<营收+48.01%、1年以内账龄99.73%——旗为数据窗口伪差)
+- [2026-10-13 11:08] (ai) 2026-10-13 A/HK 双轨齐射trace：arsenal screen 17透镜收敛72只（银行保险带3票领衔+焦作万方3票，后者被自有模型戳穿仅+7%公平=铝周期顶部盈利幻觉）；masters-vote 461池头名=江南布衣93.9/波司登92.3/芭田86.1（文化核市场均值填补）/吉比特73.8（三核全实）；battery×3=江南green、芭田green、吉比特amber（3/8强度信号可算且全真，覆盖不足非红灯）；活体--check 6码零周期陷阱。裁决：吉比特（A）+江南布衣（HK）；芭田无模型卷宗按skills/19不得出L4买入裁决，降级研究线索。QUIRK：epv-scan A股分支直接取最新半年报利润（2026-06-30 H1）不年化——吉比特10.9亿/芭田6.0亿/焦作万方12.3亿均为H1口径，A股EPV系统性低估约2倍，epv_ratio读数需×2修正，收敛名单A股东偏保守（待修）。
