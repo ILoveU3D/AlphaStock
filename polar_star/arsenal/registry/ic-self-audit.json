@@ -1,0 +1,17 @@
+{
+  "id": "ic-self-audit",
+  "family": "calibration",
+  "stage": "deep",
+  "sweepable": false,
+  "status": "dormant",
+  "inputs": [],
+  "lineage": {
+    "source": "house quant hygiene; Grinold & Kahn, Active Portfolio Management (1999) — IC as the canonical skill measure",
+    "note": "rank-IC of our own scores vs forward returns needs a dated snapshot time series; single snapshot post 2026-10-13 cleanup"
+  },
+  "parameters": {},
+  "limits": [
+    "dormant: snapshot time series absent (single snapshot)",
+    "wake: >= 3 dated snapshots"
+  ]
+}

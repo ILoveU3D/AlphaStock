@@ -1,0 +1,19 @@
+{
+  "id": "gross-profitability",
+  "family": "quality",
+  "stage": "cross-section",
+  "sweepable": true,
+  "status": "armed",
+  "inputs": [
+    "us_financials.csv: gross_profit,assets (US only)"
+  ],
+  "lineage": {
+    "source": "Novy-Marx, The Other Side of Value: The Gross Profitability Premium (JFE 2013)",
+    "note": "毛利/总资产; 仅美股有 gross_profit+assets, A/HK data_gap 声明"
+  },
+  "parameters": {},
+  "limits": [
+    "US only — A rows: no total-assets field (A); HK rows: no balance sheet (HK); both NaN + data_gap, never substituted",
+    "percentile universe = US rows with data only"
+  ]
+}

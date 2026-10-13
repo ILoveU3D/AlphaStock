@@ -1,0 +1,19 @@
+{
+  "id": "earnings-yield-scan",
+  "family": "value",
+  "stage": "cross-section",
+  "sweepable": true,
+  "status": "armed",
+  "inputs": [
+    "master.csv: pe_ttm,dividend_yield"
+  ],
+  "lineage": {
+    "source": "Graham / house DCF rule",
+    "note": "E/P 盈利收益率 + 股息率 = 现金回报复合分 (100/PE + 股息率), 市场内分位排序"
+  },
+  "parameters": {},
+  "limits": [
+    "loss-makers (pe_ttm<=0/NaN) outside the lens -> NaN, never zero-filled",
+    "dividend_yield NaN treated as 0 in the sum (no detected payout)"
+  ]
+}

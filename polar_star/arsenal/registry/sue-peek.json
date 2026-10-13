@@ -1,0 +1,17 @@
+{
+  "id": "sue-peek",
+  "family": "value",
+  "stage": "cross-section",
+  "sweepable": false,
+  "status": "dormant",
+  "inputs": [],
+  "lineage": {
+    "source": "Ball & Brown (1968) / standard SUE",
+    "note": "标准化未预期盈余; 等待一致预期 EPS 时间序列源"
+  },
+  "parameters": {},
+  "limits": [
+    "missing: expected-EPS consensus time-series (A ratings carry per-report eps fields, not a quarterly consensus timeline; US/HK none)",
+    "wake condition: consensus EPS series source"
+  ]
+}

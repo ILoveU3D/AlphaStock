@@ -1,0 +1,24 @@
+{
+  "id": "ivol-lottery-gate",
+  "family": "price",
+  "stage": "cross-section",
+  "sweepable": true,
+  "status": "armed",
+  "inputs": ["kline: close (per swept stock, all markets)"],
+  "lineage": {
+    "source": "Ang, Hodrick, Xing & Zhang (2006) + Bali, Cakici & Whitelaw (2011)",
+    "note": "ivol = OLS 残差年化波动% (同一等权市场代理); max_ret_21d = 近 21 根最大日收益%; 彩票型收益与高特质波动是否决胜场"
+  },
+  "parameters": {
+    "ivol_veto_pctl": 80,
+    "max_veto_pctl": 80,
+    "lottery_window": 21,
+    "max_obs": 250
+  },
+  "limits": [
+    "veto-leaning: ivol_veto / lottery_veto are veto flags, never ranks",
+    "DECLARED sweep cost: reads every swept stock's kline once per scan",
+    "DECLARED proxy: same equal-weight market portfolio as low-beta-bab",
+    "rows without kline / <10 OLS obs / <21 daily returns -> NaN + data_gap"
+  ]
+}

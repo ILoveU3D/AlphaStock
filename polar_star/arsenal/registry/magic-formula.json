@@ -1,0 +1,20 @@
+{
+  "id": "magic-formula",
+  "family": "value",
+  "stage": "cross-section",
+  "sweepable": true,
+  "status": "armed",
+  "inputs": [
+    "master.csv: pe_ttm,roe"
+  ],
+  "lineage": {
+    "source": "Greenblatt, The Little Book That Beats the Market (2005)",
+    "note": "便宜+好双排名: E/P 分位 + ROE 分位相加; E/P 与 ROE 替代 EBIT/EV 与 EBIT/(NWC+净固定资产) — 快照无 EBIT/EV 组件, 机制保留输入为声明替代"
+  },
+  "parameters": {},
+  "limits": [
+    "E/P and ROE stand in for canonical EBIT/EV and EBIT/(NWC+net fixed assets) — declared substitutes, snapshot lacks EBIT/EV components",
+    "loss-makers (pe<=0/NaN) and roe<=0 outside the lens -> NaN",
+    "no earnings-yield/roc weighting knob — equal double rank by construction"
+  ]
+}

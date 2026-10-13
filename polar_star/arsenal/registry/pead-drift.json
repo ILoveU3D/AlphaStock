@@ -1,0 +1,17 @@
+{
+  "id": "pead-drift",
+  "family": "value",
+  "stage": "cross-section",
+  "sweepable": false,
+  "status": "dormant",
+  "inputs": [],
+  "lineage": {
+    "source": "Bernard & Thomas (1989)",
+    "note": "盈余公告后漂移; 依赖 SUE, 与 sue-peek 同一休眠理由"
+  },
+  "parameters": {},
+  "limits": [
+    "missing: expected-EPS consensus time-series (SUE input) + earnings-announcement event calendar",
+    "wake condition: consensus EPS series source + announcement event feed"
+  ]
+}

@@ -36,8 +36,12 @@ def add_derived_factors(df: pd.DataFrame) -> pd.DataFrame:
 # ---------------------------------------------------------------------------
 # Weapon runner
 # ---------------------------------------------------------------------------
-def scan_frame(df: pd.DataFrame) -> pd.DataFrame:
-    """pe_pb + within-market percentile + pass flag, for scan/screen."""
+def scan_frame(df: pd.DataFrame, snap=None) -> pd.DataFrame:
+    """pe_pb + within-market percentile + pass flag, for scan/screen.
+
+    ``snap`` is part of the weapon scan contract (kline-backed lenses
+    need the snapshot dir); this lens is master-pure and ignores it.
+    """
     out = add_derived_factors(df.copy())
     pe_pb = pd.to_numeric(out.get("pe_pb"), errors="coerce")
     out["graham_pass"] = pe_pb <= GRAHAM_PE_PB

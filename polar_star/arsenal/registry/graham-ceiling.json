@@ -14,6 +14,10 @@
   "parameters": {
     "pe_pb": 22.5
   },
+  "scan_sort": {
+    "column": "pe_pb",
+    "ascending": true
+  },
   "limits": [
     "loss-makers/negative book outside universe by construction (NaN fails)",
     "ceiling is a veto/display lens, not a rank"

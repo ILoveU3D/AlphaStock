@@ -1,0 +1,17 @@
+{
+  "id": "short-interest-monitor",
+  "family": "regime",
+  "stage": "deep",
+  "sweepable": false,
+  "status": "dormant",
+  "inputs": [],
+  "lineage": {
+    "source": "market micro-structure practice — biweekly short interest as contrarian/squeeze gauge",
+    "note": "FINRA biweekly short-interest feed (or exchange filing equivalent) not built; no price/volume proxy fabricated"
+  },
+  "parameters": {},
+  "limits": [
+    "dormant: missing FINRA biweekly short-interest feed",
+    "wake: short-interest data source (FINRA / exchange filings)"
+  ]
+}

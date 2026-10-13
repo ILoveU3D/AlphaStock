@@ -1,0 +1,22 @@
+{
+  "id": "yield-compass",
+  "family": "income",
+  "stage": "deep",
+  "sweepable": true,
+  "status": "armed",
+  "inputs": [
+    "master.csv: pe_ttm,dividend_yield"
+  ],
+  "lineage": {
+    "source": "house cash-return rule (现金回报复合分) + 散户乙 免费股票 (skill 17)",
+    "note": "cash_return = 100/PE + dy; payback years flat = 100/dy; growth-adjusted via geometric-series closed form"
+  },
+  "parameters": {
+    "g": 0.0
+  },
+  "limits": [
+    "loss-makers: cash_return None (earnings-yield leg undefined)",
+    "no-dividend rows: payback None; NaN dividend leg treated as 0 inside cash_return only (declared)",
+    "growth-adjusted payback None when a decaying stream (g<0) never recovers the price"
+  ]
+}

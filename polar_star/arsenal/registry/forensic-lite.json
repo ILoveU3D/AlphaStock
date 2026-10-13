@@ -1,0 +1,24 @@
+{
+  "id": "forensic-lite",
+  "family": "forensic",
+  "stage": "cross-section",
+  "sweepable": true,
+  "status": "armed",
+  "inputs": ["master.csv: rev_yoy", "a_balance.csv: rece_yoy", "us_financials.csv: profit,ocf,assets"],
+  "lineage": {
+    "source": "Beneish (1999)",
+    "note": "可批量字段先行, 全量归纵深; 逐指数对照 Beneish 阈值 (DSRI>1.465 / SGI>1.608 / TATA>0.018)"
+  },
+  "parameters": {
+    "dsri_dubious": 1.465,
+    "sgi_dubious": 1.608,
+    "tata_dubious": 0.018,
+    "min_indices": 2
+  },
+  "limits": [
+    "subset != canonical 8-index M-score — no pseudo M-score is ever computed from the subset with the original weights",
+    "DSRI approximation declared: yoy growth ratios stand in for the receivables/sales ratio-of-ratios (A only)",
+    "TATA US only; SGI all markets; verdict only when >=2 indices available, else data_gap",
+    "DSRI NaN when rev_yoy <= -100 (non-positive denominator)"
+  ]
+}

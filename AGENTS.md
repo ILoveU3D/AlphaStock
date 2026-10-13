@@ -31,8 +31,16 @@ you found it.
 - `python -m polar_star tower ...` manages the **cognitive tower**
   (认知巴别塔): philosophy bricks distilled from conversations,
   masters and 105+ books, with DCF as the single axiom. Bricks live
-  in the git-tracked `tower/` dir — see the Cognitive tower section
+  in the git-tracked `polar_star/tower/bricks/` dir (inside the
+  package since 2026-10-13) — see the Cognitive tower section
   for the mandatory lookup/absorb loop.
+- `python -m polar_star arsenal ...` runs the **quant arsenal**
+  (量化武器库): every quantitative algorithm in the toolkit — one
+  weapon = one module + one registry entry, each carrying verified
+  lineage. Modules and the JSON registry live in
+  `polar_star/arsenal/`; `strategy/` holds strategy *declarations*
+  only. See the Quant arsenal section for the dual-track doctrine
+  and the usage discipline.
 - Analysis commands read the latest snapshot (and live quotes where
   noted) — no LLM runs inside the toolkit; you write the prose.
 - There is **no human UI**: the CLI is the only entry point and AI
@@ -41,8 +49,9 @@ you found it.
 
 ## Freshness contract (code-enforced)
 
-- `ask`, `compare`, `overview`, `recommend`, `holding list`, and
-  `trade buy/sell/fx/cash/dividend/nav/journal/status` run a
+- `ask`, `compare`, `overview`, `recommend`, `holding list`,
+  `trade buy/sell/fx/cash/dividend/nav/journal/status`, and
+  `arsenal run/scan/battery/screen` run a
   **freshness gate** before any output. The gate calls
   `doctor.run_checks()` internally:
   - **FAIL** (no snapshot / ancient data >7 days) → command prints
@@ -86,7 +95,7 @@ you found it.
 
 - Every data command accepts `--json`: `ask`, `screen`, `compare`,
   `overview`, `recommend`, `holding list`, `doctor`, and every
-  `tower` / `thesis` / `profile` subcommand.
+  `tower` / `thesis` / `profile` / `arsenal` subcommand.
 - With `--json`, stdout is **pure JSON** — full float precision,
   NaN→null, no banner lines, no `wrote ...` chatter. `screen --json`
   also skips the CSV/Markdown side-effect files. Exit codes and the
@@ -142,6 +151,9 @@ never leave the machine.
 | "今天给我推荐股票（按我的风格、结合我的持仓）" | user-recommend | `python -m polar_star recommend`（缺省取 session 当前用户） |
 | "推荐/最被低估/量化+大师最优" | fused-quant-master | `python -m polar_star masters-vote`（L1 宽池=量化只否决、AI 从全池选深评名单 + core_score 唯一排序）+ L2 红旗 + L3 三核深评与大师定性 + L4 融合裁决，per skills/18 — user mandate 2026-09-15: 融合，不分情况讨论；2026-09-29: 三核（商业模式/企业文化/DCF）为唯一排序键，量化只否决 AI 做选择 |
 | "短线/超短线有什么机会" | fused-quant-master | `python -m polar_star masters-vote --horizon short|ultrashort`（D4 战术模式：floor=真生意 core_business≥50 + 周K结构上行 + 无否决，甜点区=60日高点回撤 5-15%，同一融合管道 + 纪律块；塔砖 weekly-trend-daily-pullback） |
+| "全市场武器齐射 / 证据矩阵选股" | fused-quant-master | `python -m polar_star arsenal screen --market US`（轨A：全部 armed 透镜齐射 → 股票×透镜证据矩阵 + 收敛名单；与轨B 加权排序双轨呈报，见 Quant arsenal 节——换管 masters-vote 需单独授权） |
+| "用某件武器横扫市场 / 查武器库" | fused-quant-master | `python -m polar_star arsenal scan <id> --market US [--top N]` + `arsenal list|show|stats`（注册表读取不过新鲜度门） |
+| "单股武器解剖 / 深度简报" | fused-quant-master | `python -m polar_star arsenal run <id> --on X [--param k=v]` / `arsenal battery --on X`（全部 armed 纵深兵器齐射单股，forensic-audit 排首；剑序见调用纪律 v2） |
 | "把塔砖断言的机器注入候选池 / 管理产业论点" | fused-quant-master | `python -m polar_star masters-vote --thesis <id>` + `thesis list|show|add|amend|retire`（见 Thesis pools 节） |
 | "读公司原文 / 蒸馏商业模式与文化" | fused-quant-master | `python -m polar_star profile fetch|show|assess|list|status`（见 Company profiles 节——蒸馏回写后文化核恢复打分，profiles/ 本地-only 永不推送） |
 | "建财务模型 / DCF估值 / 可比公司" | fused-quant-master | `python -m polar_star model gather|write|show|lint|status X`（AI 手工建模工作台：gather 聚合素材→AI 写理解层〔飞轮/文化/reverse-DCF 三件套+世界叙事+自由维度〕→lint 合格线〔信息量≥财报〕；估值层 fetch|build|set|list；触发条件见 skills/19；DCF 钩平行 D3 进 core_dcf；models/ 本地-only 永不推送） |
@@ -172,8 +184,9 @@ never leave the machine.
 ## Cognitive tower (认知巴别塔)
 
 The tower is the canonical home for philosophy — every idea worth
-keeping becomes a **brick**: one `tower/<id>.md` file (git-tracked
-top-level dir, never inside the cleanable `data/`) with a one-line
+keeping becomes a **brick**: one `polar_star/tower/bricks/<id>.md`
+file (git-tracked inside the package since 2026-10-13, never inside
+the cleanable `data/`) with a one-line
 `statement`, a `source` (`book:` / `master:` / `conversation:` /
 `ai`), a cognitive `status` and typed links (`derives-from` /
 `refines` / `contradicts` / `applies-to` / `tension`). The single
@@ -221,10 +234,11 @@ Theses are the tower→L1 pipeline: a brick's assertion about a
 money-printing machine (e.g. "memory is being repriced from cyclical
 to compute-input") becomes a named, member-carrying pool that
 `masters-vote --thesis <id>` injects into the L1 candidate universe.
-They live in the git-tracked `tower/theses/` dir (one JSON per
+They live in the git-tracked `polar_star/tower/bricks/theses/` dir
+(one JSON per
 thesis, CLI-maintained, atomic writes — never inside `data/`); a
 thesis is a tower artifact, so it lives where its brick lineage lives
-(merged 2026-09-30).
+(merged 2026-09-30; moved into the package 2026-10-13).
 
 A thesis carries: `brick` (tower lineage — the falsification trail
 that motivated it), `statement`, `reason`, `features` (the three
@@ -252,6 +266,86 @@ conditions), `members` (market:code list), `industry_hints`
   fires, `thesis retire <id> --reason "..."` immediately — retired
   theses are never deleted (like `refuted` bricks, they are assets).
   Cap: `THESIS_MAX = 40` members per pool build.
+
+## Quant arsenal (量化武器库)
+
+The arsenal is the toolkit's computation core (user mandates
+2026-10-12/13): **every quantitative algorithm lives in
+`polar_star/arsenal/`** — one weapon = one independent module
+(`<weapon-id>.py`, dashes→underscores) + one registry entry
+(`registry/<id>.json`). `strategy/` keeps strategy *declarations*
+only (ids, weights, gate DSL strings, fame order); all math lives
+here. Tower = meaning, arsenal = computation, strategy =
+declaration — the three cores of the polar_star package.
+
+- **Entry ticket**: every weapon cites a verified lineage (paper /
+  classic book / master practice / toolkit veteran) — unverified
+  experiments never enter the registry. There is **no trust
+  lifecycle**: a registered weapon is trusted; `status` is only
+  `armed` (data-ready) or `dormant` (waiting for a data source — the
+  registry entry names the exact gap; a dormant weapon's `run`
+  returns its status and reason, never fabricated numbers).
+- **Four quality gates**: ① one weapon = one complete battlefield
+  answer (fragments demoted to internal modules); ② output carries
+  its own interpretation `anchor` — no naked numbers; ③ `limits`
+  states the failure conditions; ④ synthetic-data unit tests cover
+  the pure math (runners never touch the network — `build_context`
+  is snapshot-pure).
+- **No castes**: any weapon can dissect one stock (`run --on X`) or
+  sweep a whole market (`scan --market US`); the registry's
+  `sweepable` flag only marks compute cost. Registry reads
+  (`list [--stage|--status]`, `show`, `stats`) skip the freshness
+  gate like `tower`; the four execution commands (`run`, `scan`,
+  `battery`, `screen`) pass through it.
+- `battery --on X` fires every armed deep weapon at one stock and
+  collects a briefing — **forensic-audit ranks first** (if the
+  statements can't be trusted, nothing else matters); one weapon's
+  exception never sinks the briefing (collected as `{"error"}`).
+- `screen --market US` fires every armed sweepable weapon at the
+  market universe → a stock×lens **evidence matrix** (`<wid>:<col>`
+  columns) plus a **convergence list** (≥2 value lenses agree cheap
+  ∧ zero vetoes — a *declared heuristic, never a ranking*); `--full`
+  dumps the whole matrix. One lens failing never voids the salvo
+  (collected under `failed`).
+- `scan_sort` in a registry entry declares the display ordering
+  (column + ascending) for `scan`; without it the first numeric
+  column sorts descending.
+
+**Dual-track doctrine (双轨呈报、综合评估, user mandate
+2026-10-13):** selection = track A `arsenal screen` (20+ independent
+verified lenses per stock — cheapness/quality/capital-discipline/
+price-behavior each with its own validated definition, mutual
+corroboration replacing single-score ranking) **×** track B the
+classic weighted-ranking list (kept — its undervaluation-finding
+ability is practice-proven). Both lists land on the AI's desk
+together: intersection = high-confidence candidates, divergence =
+research leads; the AI's three-core judgment (business model /
+culture / DCF) is unchanged. **Rewiring `masters-vote` onto
+`arsenal screen` (hard switch) is a post-Phase-1 action requiring
+separate user authorization** — the old L1 pipeline is untouched.
+
+**调用纪律 (usage discipline v2):**
+
+1. Registered = trusted. The only questions are "right battlefield"
+   and "right data fed" — read the weapon's `limits` field often.
+2. Draw swords on demand: every weapon call leaves one trace line
+   (which weapon, output, adopted-or-not, why) in the trading
+   journal or a skill Field Note — the evidence chain belongs to the
+   operator, scars never enter the registry itself.
+3. Deep-review sword order: `forensic-audit` first (untrustworthy
+   statements end the review) → `value-ladder` →
+   (`average-earnings-power` when cyclical) → `expectations-engine`
+   → `owner-audit`; sizing takes the minimum of
+   `sizing-compass`'s three numbers; entries are declared through
+   `barrier-forge`'s three barriers.
+4. Trading windows: tactical positions check the chandelier trail
+   mechanically (close-confirmed, only ratchets up); a broken value
+   floor wakes `regime-radar` + intel + `short-interest-monitor`
+   for a three-evidence verdict — price only rings the bell, it
+   never judges.
+5. Weapons only veto, never select: a forensic red light rejects a
+   candidate, but a green light is never a buying reason (Duan's
+   principle, Answer shape §5).
 
 ## Company profiles (公司画像, 本地-only)
 
@@ -437,10 +531,11 @@ position-sizing discipline.
 - **Memory files (2026-10-03 / 2026-10-09)**: no local memory files
   (`project_memory.md` prohibited 2026-10-03; `user_profile.md`
   prohibited 2026-10-09). All memory lives in the system libraries:
-  philosophy → `tower/` bricks, procedures → `skills/` Field Notes,
-  user state → `users/` (LOCAL-ONLY, gitignored), seasons →
-  `trading/seasons/`. New user mandates are recorded at their proper
-  layer at conversation time, never in scratch memory files.
+  philosophy → `polar_star/tower/bricks/`, procedures → `skills/`
+  Field Notes, user state → `users/` (LOCAL-ONLY, gitignored),
+  seasons → `trading/seasons/`. New user mandates are recorded at
+  their proper layer at conversation time, never in scratch memory
+  files.
 
 ## Self-refinement protocol (leave the toolkit smarter)
 

@@ -1,0 +1,23 @@
+{
+  "id": "amihud-gate",
+  "family": "price",
+  "stage": "cross-section",
+  "sweepable": true,
+  "status": "dormant",
+  "inputs": ["kline: close,amount (per swept stock)"],
+  "lineage": {
+    "source": "Amihud (2002)",
+    "note": "amihud = mean(|日收益%| / 成交额百万) 近 21 根有效 bar; 进得去出不来的一票谨慎"
+  },
+  "parameters": {
+    "window": 21,
+    "illiquid_veto_pctl": 90
+  },
+  "limits": [
+    "veto-leaning: illiquid_veto at within-market pctl >= 90, never a rank",
+    "DECLARED raw-unit caveat: amount in raw listing currency (A yuan / HK HKD / US USD) — within-market comparisons only",
+    "DECLARED sweep cost: reads every swept stock's kline once per scan",
+    "SNAPSHOT GAP (2026-10-13): kline amount column all-NaN across all three markets -> broad data_gap until an amount-carrying source fills it",
+    "<21 valid bars (amount>0, return computable) -> NaN + data_gap"
+  ]
+}

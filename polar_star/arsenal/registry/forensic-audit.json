@@ -1,0 +1,32 @@
+{
+  "id": "forensic-audit",
+  "family": "forensic",
+  "stage": "deep",
+  "sweepable": false,
+  "status": "armed",
+  "inputs": [
+    "master.csv row: pe_ttm,rev_yoy,market_cap (score selection + Altman x4)",
+    "us_financials.csv: rev,rev_prev,profit,profit_prev,ocf,capex,assets,liabilities,gross_margin (US strength/fraud/distress + peer cross-section)",
+    "a_financials.csv: revenue,profit,profit_yoy,rev_yoy,gross_margin + a_cashflow_annual.csv: ocf,capex + a_balance.csv: rece_yoy (A partial)",
+    "hk_f10.csv: revenue,profit,profit_yoy,rev_yoy,ocf + hk_cashflow.csv: ocf,capex (HK partial)"
+  ],
+  "lineage": {
+    "source": "Piotroski 2000 (F) / Mohanram 2005 (G) / Beneish 1999 (M) / Dechow et al. 1995 (modified Jones) / Roychowdhury 2006 (real EM) / Altman 1968 (Z)",
+    "note": "三层法医: strength (F/G 自动选择) + fraud (Beneish + Jones-lite + Roychowdhury-lite 交叉验证) + distress (Altman partial x4/x5)"
+  },
+  "parameters": {
+    "growth_pe_cut": 25.0,
+    "growth_rev_yoy_cut": 15.0,
+    "min_peers": 20,
+    "z_flag": 2.0,
+    "thin_coverage": 4
+  },
+  "limits": [
+    "coverage honest: score reported x/available(of canonical), never rescaled to a pseudo-9/8",
+    "US Piotroski 3/9 computable (assets_prev/liab_prev/gm_prev/shares/current-ratio gaps); A 4/9 with named proxies (profit>0 for ROA, profit_yoy>0 for dROA) + FY-ocf vs interim-profit period mismatch",
+    "Beneish canonical M-score never computable (DSRI/GMI/AQI/DEPI/SGAI/LVGI gaps); US 2/8 (SGI,TATA), A 2/8 (SGI,DSRI-approx), HK 1/8 (SGI)",
+    "Jones-lite & Roychowdhury-lite US-only (assets absent in A/HK); production-cost & discretionary-expense detectors declared gaps",
+    "Altman 2/5 components (x4,x5 US only) — no canonical Z verdict",
+    "红灯可否决，绿灯不构成买入理由 — veto instrument, never a ranking key"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "momentum-52w-high",
+  "family": "price",
+  "stage": "cross-section",
+  "sweepable": true,
+  "status": "armed",
+  "inputs": ["master.csv: pos_52w"],
+  "lineage": {
+    "source": "George & Hwang (2004)",
+    "note": "52 周高点贴近度 (pos_52w) 即锚定载体; 迁移 kline 因子使本武器成为单透镜"
+  },
+  "parameters": {},
+  "limits": [
+    "passthrough of the migrated pos_52w kline factor — inherits its 60-bar minimum history",
+    "NaN when pos_52w missing (short history), never imputed",
+    "percentiles within-market only"
+  ]
+}

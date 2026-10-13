@@ -1,0 +1,24 @@
+{
+  "id": "asset-growth-gate",
+  "family": "capital-discipline",
+  "stage": "cross-section",
+  "sweepable": false,
+  "status": "armed",
+  "inputs": [
+    "master.csv: market,code (cross-section lens is data_gap by construction)",
+    "models/<market>/<code>/raw/history.json: years[].assets|total_assets (deep, ≥2yr, currently absent)"
+  ],
+  "lineage": {
+    "source": "Cooper, Gulen, Schill, Asset Growth and the Cross-Section of Stock Returns (Journal of Finance 2008)",
+    "note": "总资产高增长是否决信号; ≥50% 阈值为 canonical top-quintile 的声明替身 (无横截面资产史)"
+  },
+  "parameters": {
+    "ag_veto_pct": 50
+  },
+  "limits": [
+    "no assets_prev anywhere in the snapshot — A: no total-assets field (a_balance has receivable/inventory only); HK: no balance sheet; US: us_financials has assets but no assets_prev",
+    "veto threshold 50% is a declared stand-in for the canonical top-quintile break (needs a full cross-section)",
+    "equity growth ≠ asset growth — never substitute (debt-funded expansion is exactly what this factor catches)",
+    "veto-leaning: never an admission rank"
+  ]
+}

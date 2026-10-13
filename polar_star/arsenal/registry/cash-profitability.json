@@ -1,0 +1,20 @@
+{
+  "id": "cash-profitability",
+  "family": "quality",
+  "stage": "cross-section",
+  "sweepable": true,
+  "status": "armed",
+  "inputs": [
+    "us_financials.csv: ocf,assets (US only)"
+  ],
+  "lineage": {
+    "source": "Ball, Gerakos, Linnainmaa, Nikolaev, Accruals, Cash Flows, and Operating Profitability (JFE 2016)",
+    "note": "现金经营盈利率实用形 ocf/assets (声明替代: 经典分子所需损益表行快照没有); 仅美股, A/HK data_gap"
+  },
+  "parameters": {},
+  "limits": [
+    "ocf/assets is a declared practical form — canonical cash operating profitability numerator lines absent from snapshot",
+    "US only — A rows: no total-assets field (A); HK rows: no balance sheet (HK); both NaN + data_gap",
+    "percentile universe = US rows with data only"
+  ]
+}
