@@ -131,8 +131,9 @@ class TestEpvScan:
         assert us["epv_per_share"] == pytest.approx(45.0)
         assert us["epv_ratio"] == pytest.approx(0.5)
         a = out[out["code"] == "600000"].iloc[0]
-        assert a["epv_ratio"] == pytest.approx(0.5)  # 2e8/(0.1*4e9)
-        assert a["epv_basis"] == "net_no_oneoff_strip"
+        # H1 YTD annualized x2: 4e8/(0.1*4e9) = 1.0
+        assert a["epv_ratio"] == pytest.approx(1.0)
+        assert a["epv_basis"] == "interim_x2_proxy"
         hk = out[out["code"] == "00700"].iloc[0]
         # interim x2: 2e10 CNY -> /0.9 HKD; ratio = (2e10/0.9)/(0.1*9e11)
         assert hk["epv_ratio"] == pytest.approx(
@@ -161,6 +162,37 @@ class TestEpvScan:
         out = epv_scan.scan_frame(self._df(), snap=tmp_path, wacc=0.05)
         us = out[out["code"] == "X"].iloc[0]
         assert us["epv_ratio"] == pytest.approx(1.0)  # halves the hurdle
+
+    def test_a_share_ytd_annualization(self, tmp_path):
+        """A rows are cumulative YTD: factor = 12/report month."""
+        _epv_snap(tmp_path)
+        pd.DataFrame({
+            "code": ["600000", "600001", "600002", "600003"],
+            "report_date": ["2026-06-30", "2026-03-31",
+                            "2025-12-31", "2026-05-15"],
+            "profit": [2.0e8, 5.0e7, 3.0e8, 1.0e8],
+        }).to_csv(tmp_path / "a_financials.csv", index=False)
+        df = pd.DataFrame({
+            "market": ["A"] * 4,
+            "code": ["600000", "600001", "600002", "600003"],
+            "name": list("abcd"),
+            "price": [10.0] * 4,
+            "market_cap": [4.0e9] * 4,
+        })
+        out = epv_scan.scan_frame(df, snap=tmp_path)
+        got = {r["code"]: r for r in out.to_dict("records")}
+        # H1 x2: 4e8/(0.1*4e9) = 1.0
+        assert got["600000"]["epv_ratio"] == pytest.approx(1.0)
+        assert got["600000"]["epv_basis"] == "interim_x2_proxy"
+        # Q1 x4: 2e8/(0.1*4e9) = 0.5
+        assert got["600001"]["epv_ratio"] == pytest.approx(0.5)
+        assert got["600001"]["epv_basis"] == "interim_x4_proxy"
+        # FY x1: 3e8/(0.1*4e9) = 0.75
+        assert got["600002"]["epv_ratio"] == pytest.approx(0.75)
+        assert got["600002"]["epv_basis"] == "annual"
+        # non-quarter-end -> gap, never fabricated
+        assert pd.isna(got["600003"]["epv_ratio"])
+        assert got["600003"]["epv_basis"].startswith("data_gap")
 
 
 class TestGrossProfitability:

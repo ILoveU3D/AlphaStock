@@ -7,12 +7,12 @@
   "inputs": [
     "master.csv: price,market_cap",
     "us_financials.csv: profit,oneoff (US)",
-    "a_financials.csv: profit,report_date (A; no one-off stripping)",
+    "a_financials.csv: profit,report_date (A; YTD 按报告期年化 ×12/month; no one-off stripping)",
     "hk_f10.csv: profit,report_type (HK; CNY->HKD via manifest fx_hkdcny)"
   ],
   "lineage": {
     "source": "Greenwald, Value Investing: From Graham to Buffett and Beyond (2001)",
-    "note": "EPV = 正常化利润/WACC 对标市值; US 剔一次性损益, A 无一次性字段不剔, HK 中报×2年化+汇率转换均声明"
+    "note": "EPV = 正常化利润/WACC 对标市值; US 剔一次性损益, A 无一次性字段不剔 + YTD 按 ×12/月份年化(H1×2/Q1×4/Q3×4/3, 零季节性声明代理), HK 中报×2年化+汇率转换均声明"
   },
   "parameters": {
     "wacc": 0.10
@@ -21,6 +21,7 @@
     "net profit stands in for EBIT×(1−t) — conservative understatement, declared",
     "maintenance-capex refinement absent",
     "HK interim-only rows annualized ×2 (declared proxy epv_basis=interim_x2_proxy)",
+    "A-share YTD profit annualized ×12/month (H1 ×2, Q1 ×4, Q3 ×4/3) — zero-seasonality declared proxy, seasonal names over/understate",
     "flat WACC, no per-stock beta — WACC is the user's knob",
     "loss-makers (profit_adj<=0) -> NaN"
   ]

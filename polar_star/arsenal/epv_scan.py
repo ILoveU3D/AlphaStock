@@ -9,7 +9,13 @@ Normalized profit by market (declared substitutes, never fabricated):
 - US: us_financials.profit - oneoff (one-off stripping; NaN oneoff = 0).
 - A:  a_financials.profit at the latest report_date per code — NO
   one-off stripping (the snapshot income report carries no one-off
-  field; declared gap).
+  field; declared gap).  Rows are cumulative YTD for the quarter
+  ending at report_date (one row per code, no report_type), so the
+  profit is annualized as profit x 12/month — H1 x2, Q1 x4,
+  Q3 x4/3, FY x1 — a zero-seasonality DECLARED proxy mirroring the
+  HK branch (epv_basis='interim_xN_proxy'; seasonal names
+  over/understate).  Non-quarter-end/unparsable dates -> NaN +
+  'data_gap' basis, never fabricated.
 - HK: hk_f10.profit — amounts are CNY, converted to HKD via the
   manifest fx_hkdcny.  When a code carries multiple report rows the
   annual one (report_type contains '年报') wins; a code with only an
@@ -74,11 +80,24 @@ def _normalized_profits(snap) -> pd.DataFrame:
                                             errors="coerce"))
             a = (a.sort_values("_rd")
                  .drop_duplicates(subset="code", keep="last"))
+            profit = pd.to_numeric(a["profit"], errors="coerce")
+            # Rows are cumulative YTD for the quarter ending at
+            # report_date: annualize as profit x 12/month (H1 x2,
+            # Q1 x4, Q3 x4/3, FY x1) — zero-seasonality declared
+            # proxy, same caliber as the HK branch.  Snapshot
+            # 20261012: 11447/11451 rows are H1 -> x2.
+            month = a["_rd"].dt.month
+            factor = month.map({3: 4.0, 6: 2.0, 9: 4.0 / 3.0, 12: 1.0})
+            basis = month.map({3: "interim_x4_proxy",
+                               6: "interim_x2_proxy",
+                               9: "interim_x1.33_proxy",
+                               12: "annual"})
+            basis = basis.where(
+                factor.notna(), "data_gap: report_date not quarter-end")
             frames.append(pd.DataFrame({
                 "market": "A", "code": a["code"].astype(str),
-                "profit_adj": pd.to_numeric(a["profit"],
-                                            errors="coerce"),
-                "epv_basis": "net_no_oneoff_strip",
+                "profit_adj": profit * factor,
+                "epv_basis": basis,
             }))
 
     hk_path = snap / "hk_f10.csv"
@@ -164,7 +183,8 @@ def run(ctx: dict, top: int = 15, wacc: float = WACC) -> dict:
         "weapon": "epv-scan",
         "anchor": f"EPV/价格 ≥1 才说明盈利能力本身值回票价 (wacc={wacc}, "
                   "用户的旋钮); 净利替代 EBIT×(1−t) 属保守低估; "
-                  "HK 中报利润 ×2 年化、CNY→HKD 均已声明",
+                  "A/HK 中期利润按报告期年化(×12/月份, 零季节性声明代理)、"
+                  "HK CNY→HKD 均已声明",
         "wacc": float(wacc),
         "pool": int(len(ctx["master"])),
         "scored": int(master["epv_ratio"].notna().sum()),
