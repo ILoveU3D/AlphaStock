@@ -1,0 +1,29 @@
+{
+  "id": "barrier-forge",
+  "family": "risk",
+  "stage": "deep",
+  "sweepable": false,
+  "status": "armed",
+  "inputs": [
+    "kline: date,open,close,high,low (daily, raw listing-currency units)"
+  ],
+  "lineage": {
+    "source": "house stop-loss v2 + Yang & Zhang (2000) drift-independent volatility + Kaufman chandelier exit",
+    "note": "YZ = overnight + k*open-close + (1-k)*Rogers-Satchell; chandelier ratchets up only, close-confirmed signal"
+  },
+  "parameters": {
+    "window": 60,
+    "k_atr": 3.0,
+    "atr_len": 14,
+    "max_holding_days": 0,
+    "floor_price": null,
+    "nav": 1000000,
+    "risk_pct": 0.01
+  },
+  "limits": [
+    "needs >= 60 bars of kline",
+    "kline currency units are raw listing currency; nav must match that currency",
+    "time barrier needs entry_date; value floor needs floor_price param",
+    "shares_by_risk None when entry <= stop (no valid risk budget, never zero-sized silently)"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "id": "owner-audit",
+  "family": "deep-value",
+  "stage": "deep",
+  "sweepable": false,
+  "status": "armed",
+  "inputs": [
+    "master.csv row: market_cap,price (oe_yield + kline mcap reconstruction)",
+    "us_financials.csv: ocf,capex,profit,div_paid (US single year)",
+    "a_cashflow_annual.csv: ocf,capex + a_financials.csv: profit + a_dividends.csv: div_paid by fy (A)",
+    "hk_f10.csv: ocf,profit + hk_cashflow.csv: ocf,capex,div_paid (HK)",
+    "models/<market>/<code>/raw/history.json: multi-year ocf,capex,net_income (convergence, optional — modeled stocks only)"
+  ],
+  "lineage": {
+    "source": "Buffett 1986 owner earnings ( Berkshire annual report ) + Buffett 1984 $1-retained yardstick",
+    "note": "资本配置三问: 业主盈余 OE=ocf-capex / $1留存是否创出$1市值 / OE与利润的收敛轨迹"
+  },
+  "parameters": {
+    "min_retained_span_years": 3.0
+  },
+  "limits": [
+    "maintenance capex DECLARED = full capex — conservative, understates OE for asset-light businesses",
+    "$1-retained usually None: snapshot klines span ~1.3y < 3y — never computed on a short window",
+    "model-history years carry no dividend field — multi-year retained would be approximated by net_income (overstatement, declared)",
+    "A/HK FY-annual cash flow vs interim profit — period mismatch declared on oe_vs_profit",
+    "红灯可否决，绿灯不构成买入理由"
+  ]
+}

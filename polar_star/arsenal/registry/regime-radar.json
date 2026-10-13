@@ -1,0 +1,27 @@
+{
+  "id": "regime-radar",
+  "family": "regime",
+  "stage": "deep",
+  "sweepable": false,
+  "status": "armed",
+  "inputs": [
+    "kline: date,close (daily, >= 120 bars; last 500 used by default)"
+  ],
+  "lineage": {
+    "source": "Adams & MacKay (2007) BOCPD + Page (1954) CUSUM + Ornstein-Uhlenbeck AR(1) half-life",
+    "note": "constant hazard 1/250, Normal-gamma conjugate Student-T predictive, numpy-only O(T^2)"
+  },
+  "parameters": {
+    "window": 500,
+    "hazard": 0.004,
+    "prior": {"mu0": 0.0, "kappa0": 1.0, "alpha0": 1.0, "beta0": 0.0001},
+    "cusum_threshold": 4.0,
+    "run_short": 10
+  },
+  "limits": [
+    "needs >= 120 bars",
+    "Gaussian BOCPD understates fat tails — change_prob optimistic around crashes (declared)",
+    "OU half-life None when |rho|>=1 (non-mean-reverting, honest)",
+    "beta0 prior sized to daily-return scale"
+  ]
+}

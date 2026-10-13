@@ -1,0 +1,25 @@
+{
+  "id": "accruals-gate",
+  "family": "quality",
+  "stage": "cross-section",
+  "sweepable": true,
+  "status": "armed",
+  "inputs": [
+    "master.csv: cash_conversion (ocf/profit ×100, all markets)",
+    "us_financials.csv: profit,ocf,assets (US canonical tata)"
+  ],
+  "lineage": {
+    "source": "Sloan, Do Stock Prices Fully Reflect Information in Accruals and Cash Flows About Future Earnings? (The Accounting Review 1996)",
+    "note": "accrual_gap = 1 − cash_conversion/100 = (NI−OCF)/NI; 分子保留 Sloan, 分母为利润 (声明替代总资产); pctl≥80 否决"
+  },
+  "parameters": {
+    "veto_pctl": 80
+  },
+  "limits": [
+    "denominator is profit, not total assets — Sloan numerator preserved, declared stand-in (A/HK have no total-assets field)",
+    "master cash_conversion is ocf/profit ×100 (percent) — the /100 is load-bearing",
+    "loss-makers flip the denominator sign; lens designed for profit-carrying rows",
+    "canonical tata available for US rows only",
+    "veto-leaning: never an admission rank"
+  ]
+}

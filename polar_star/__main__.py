@@ -1246,6 +1246,360 @@ def cmd_skill(args) -> int:
     return 0
 
 
+# ---------------------------------------------------------------------------
+# Arsenal (量化武器库)
+# ---------------------------------------------------------------------------
+def _arsenal_json(payload: dict) -> str:
+    """Pure-JSON stdout for arsenal payloads (NaN/inf -> null, numpy-safe)."""
+    import math
+
+    def _clean(o):
+        if isinstance(o, dict):
+            return {k: _clean(v) for k, v in o.items()}
+        if isinstance(o, (list, tuple)):
+            return [_clean(v) for v in o]
+        if isinstance(o, float) and (math.isnan(o) or math.isinf(o)):
+            return None
+        try:
+            import numpy as np
+            if isinstance(o, np.generic):
+                return _clean(o.item())
+        except ImportError:
+            pass
+        return o
+
+    return json.dumps(_clean(payload), ensure_ascii=False, indent=2)
+
+
+def _arsenal_params(pairs) -> dict:
+    """Parse repeatable --param k=v into a kwargs dict (float when
+    parseable, else string)."""
+    out: dict = {}
+    for kv in pairs or []:
+        k, eq, v = str(kv).partition("=")
+        if not eq:
+            raise SystemExit(f"--param expects k=v, got {kv!r}")
+        try:
+            out[k] = float(v)
+        except ValueError:
+            out[k] = v
+    return out
+
+
+def _arsenal_resolve_stock(args):
+    """Resolve --on through the normal chain (name/code/ticker)."""
+    from .resolve import resolve as resolve_stock
+    try:
+        snap = report.resolve_snapshot(args.data_dir)
+    except FileNotFoundError:
+        snap = None
+    matches = resolve_stock(args.on, snapshot_dir=snap)
+    if not matches:
+        raise SystemExit(f"no match for {args.on!r}; try a full name "
+                         f"or code")
+    if len(matches) > 1:
+        others = ", ".join(x.label() for x in matches[1:4])
+        print(f"resolved: {matches[0].label()} (also matched: {others})",
+              file=sys.stderr)
+    return matches[0]
+
+
+def cmd_arsenal(args) -> int:
+    """Arsenal CLI (量化武器库).
+
+    list/show/stats are registry reads — not freshness-gated (same
+    contract as tower/thesis).  run/scan/battery/screen read the latest
+    snapshot and pass the freshness gate (same contract as ask).
+    """
+    from . import arsenal as ar
+
+    sub = args.arsenal_cmd
+
+    if sub == "list":
+        items = ar.list_weapons(stage=args.stage or "",
+                                status=args.status or "")
+        if args.json:
+            print(_arsenal_json({"count": len(items), "weapons": items}))
+            return 0
+        print(f"{'id':<24} {'family':<18} {'stage':<13} {'sweep':<6} "
+              f"{'status':<8} lineage")
+        print("-" * 110)
+        for m in items:
+            print(f"{m['id']:<24} {m.get('family', ''):<18} "
+                  f"{m.get('stage', ''):<13} "
+                  f"{str(m.get('sweepable')):<6} {m.get('status', ''):<8} "
+                  f"{m.get('lineage', {}).get('source', '')}")
+        return 0
+
+    if sub == "show":
+        try:
+            meta = ar.get_weapon(args.weapon_id)
+        except ValueError as exc:
+            raise SystemExit(str(exc)) from None
+        if args.json:
+            print(_arsenal_json(meta))
+            return 0
+        print(f"== {meta['id']} ({meta.get('status')}) ==")
+        print(f"family: {meta.get('family')}  stage: {meta.get('stage')}  "
+              f"sweepable: {meta.get('sweepable')}")
+        lin = meta.get("lineage", {})
+        print(f"lineage: {lin.get('source', '')}")
+        if lin.get("note"):
+            print(f"  note: {lin['note']}")
+        print(f"inputs: {'; '.join(meta.get('inputs') or []) or '-'}")
+        if meta.get("parameters"):
+            print(f"parameters: {json.dumps(meta['parameters'], ensure_ascii=False)}")
+        print("limits:")
+        for lim in meta.get("limits") or []:
+            print(f"  - {lim}")
+        return 0
+
+    if sub == "stats":
+        items = ar.list_weapons()
+        by_status: dict = {}
+        by_stage: dict = {}
+        by_family: dict = {}
+        for m in items:
+            by_status[m.get("status", "?")] = \
+                by_status.get(m.get("status", "?"), 0) + 1
+            by_stage[m.get("stage", "?")] = \
+                by_stage.get(m.get("stage", "?"), 0) + 1
+            by_family[m.get("family", "?")] = \
+                by_family.get(m.get("family", "?"), 0) + 1
+        payload = {"total": len(items), "by_status": by_status,
+                   "by_stage": by_stage, "by_family": by_family,
+                   "armed_ids": [m["id"] for m in items
+                                 if m.get("status") == "armed"],
+                   "dormant_ids": [m["id"] for m in items
+                                   if m.get("status") == "dormant"]}
+        if args.json:
+            print(_arsenal_json(payload))
+            return 0
+        print(f"arsenal: {payload['total']} weapons — "
+              f"armed {by_status.get('armed', 0)}, "
+              f"dormant {by_status.get('dormant', 0)}")
+        print(f"  by stage: {by_stage}")
+        print(f"  by family: {by_family}")
+        if payload["dormant_ids"]:
+            print(f"  dormant: {', '.join(payload['dormant_ids'])}")
+        return 0
+
+    # gated subcommands
+    if not _check_freshness(args):
+        return 1
+
+    if sub == "run":
+        m = _arsenal_resolve_stock(args)
+        ctx = ar.build_context(args.data_dir, args.snapshot,
+                               with_kline=(m.market, m.code))
+        params = _arsenal_params(args.param)
+        run = ar.weapon_runner(args.weapon_id)
+        out = run(ctx, **params)
+        out.setdefault("target", f"{m.market}:{m.code} {m.name}")
+        if args.json:
+            print(_arsenal_json(out))
+            return 0
+        print(f"== arsenal run {args.weapon_id} on "
+              f"{m.market}:{m.code} {m.name} ==")
+        print(_arsenal_json(out))
+        return 0
+
+    if sub == "battery":
+        m = _arsenal_resolve_stock(args)
+        ctx = ar.build_context(args.data_dir, args.snapshot,
+                               with_kline=(m.market, m.code))
+        params = _arsenal_params(args.param)
+        deep = [w for w in ar.list_weapons(stage="deep", status="armed")]
+        # 调用纪律 (2026-10-13): forensic-audit leads the deep-review
+        # sword order — an untrustworthy statement voids the rest.
+        deep.sort(key=lambda w: (w["id"] != "forensic-audit", w["id"]))
+        results = {}
+        for w in deep:
+            try:
+                results[w["id"]] = ar.weapon_runner(w["id"])(ctx, **params)
+            except Exception as exc:  # one weapon must not kill the briefing
+                results[w["id"]] = {"weapon": w["id"],
+                                    "error": f"{type(exc).__name__}: {exc}"}
+        payload = {"target": f"{m.market}:{m.code} {m.name}",
+                   "snapshot": ctx["snap"].name,
+                   "weapons_fired": len(results), "battery": results}
+        if args.json:
+            print(_arsenal_json(payload))
+            return 0
+        print(f"== arsenal battery on {m.market}:{m.code} {m.name} "
+              f"({len(results)} deep weapons) ==")
+        print(_arsenal_json(payload))
+        return 0
+
+    if sub == "scan":
+        import importlib
+        meta = ar.get_weapon(args.weapon_id)
+        ctx = ar.build_context(args.data_dir, args.snapshot)
+        master = ctx["master"]
+        if args.market:
+            mkts = {x.strip().upper() for x in args.market.split(",")}
+            master = master[master["market"].astype(str).str.upper()
+                            .isin(mkts)]
+        mod = importlib.import_module(
+            f"polar_star.arsenal.{meta['module']}")
+        scan_frame = getattr(mod, "scan_frame", None)
+        if not callable(scan_frame):
+            raise SystemExit(
+                f"weapon {args.weapon_id!r} has no scan_frame — "
+                f"use `arsenal run <id> --on X` for deep weapons")
+        df = scan_frame(master, snap=ctx["snap"])
+        new_cols = [c for c in df.columns if c not in ctx["master"].columns]
+        num_cols = [c for c in new_cols
+                    if pd.api.types.is_numeric_dtype(df[c])]
+        # display contract: registry may name the primary column and
+        # direction ("scan_sort": {"column": ..., "ascending": ...});
+        # fallback = first numeric column, descending.
+        sort_spec = meta.get("scan_sort") or {}
+        sort_col = sort_spec.get("column")
+        sort_asc = bool(sort_spec.get("ascending", False))
+        if sort_col not in (num_cols or []):
+            sort_col = num_cols[0] if num_cols else None
+            sort_asc = False
+        ranked = df
+        if sort_col:
+            ranked = df.sort_values(sort_col, ascending=sort_asc,
+                                    na_position="last")
+        top = ranked.head(args.top)
+        show_cols = (["market", "code", "name"] + new_cols)[:14]
+        show_cols = [c for c in show_cols if c in top.columns]
+        if args.json:
+            print(report.to_json(
+                top[show_cols],
+                {"weapon": args.weapon_id, "snapshot": ctx["snap"].name,
+                 "markets": sorted(mkts) if args.market else
+                 list(config.MARKETS), "new_columns": new_cols,
+                 "sort": {"column": sort_col, "ascending": sort_asc}}))
+            return 0
+        print(f"== arsenal scan {args.weapon_id} — {len(df)} rows, "
+              f"top {args.top} by {sort_col or 'n/a'} "
+              f"({'asc' if sort_asc else 'desc'}) "
+              f"(snapshot {ctx['snap'].name}) ==")
+        print(top[show_cols].to_string(index=False))
+        return 0
+
+    if sub == "screen":
+        return _arsenal_screen(args, ar)
+
+    raise SystemExit(f"unknown arsenal subcommand {sub!r}")
+
+
+def _arsenal_screen(args, ar) -> int:
+    """轨A 重炮齐射: every armed sweepable weapon fires on the market
+    universe -> stock x lens evidence matrix + convergence list.
+
+    Convergence (declared heuristic, 2026-10-13 plan): cheap_votes >= 2
+    among the value lenses AND zero veto gates fired. Cheap/veto columns
+    are read off each weapon's own scan_frame columns — the matrix is
+    the deliverable; the convergence list is a convenience view, never a
+    ranking (L3 AI judgment selects, per the QMF doctrine).
+    """
+    import importlib
+
+    ctx = ar.build_context(args.data_dir, args.snapshot)
+    master = ctx["master"]
+    if args.market:
+        mkts = {x.strip().upper() for x in args.market.split(",")}
+        master = master[master["market"].astype(str).str.upper()
+                        .isin(mkts)]
+    base_cols = ["market", "code", "name", "price", "pe_ttm", "pb"]
+    matrix = master[[c for c in base_cols if c in master.columns]].copy()
+    fired, failed = [], {}
+    for w in ar.list_weapons(status="armed"):
+        if not w.get("sweepable"):
+            continue
+        mod = importlib.import_module(
+            f"polar_star.arsenal.{w['module']}")
+        scan_frame = getattr(mod, "scan_frame", None)
+        if not callable(scan_frame):
+            continue
+        try:
+            df = scan_frame(master, snap=ctx["snap"])
+        except Exception as exc:  # one failing lens must not void the salvo
+            failed[w["id"]] = f"{type(exc).__name__}: {exc}"
+            continue
+        new_cols = [c for c in df.columns if c not in master.columns
+                    and c not in matrix.columns]
+        if not new_cols:
+            fired.append(w["id"])
+            continue
+        keep = [c for c in new_cols
+                if pd.api.types.is_numeric_dtype(df[c])
+                or df[c].dtype == bool]
+        for c in keep[:4]:  # cap per weapon: matrix stays readable
+            matrix[f"{w['id']}:{c}"] = df[c].to_numpy()
+        fired.append(w["id"])
+
+    cheap_votes, veto_hits = _screen_convergence(matrix)
+    matrix["cheap_votes"] = cheap_votes
+    matrix["veto_hits"] = veto_hits
+    conv = matrix[(matrix["cheap_votes"] >= 2)
+                  & (matrix["veto_hits"] == 0)].sort_values(
+        "cheap_votes", ascending=False)
+    meta = {"snapshot": ctx["snap"].name,
+            "markets": sorted(mkts) if args.market else
+            list(config.MARKETS),
+            "weapons_fired": fired, "weapons_failed": failed,
+            "convergence_rule": "cheap_votes>=2 AND veto_hits==0 "
+                                "(declared heuristic, never a ranking)",
+            "rows": int(len(matrix)),
+            "converging": int(len(conv))}
+    if args.json:
+        payload = dict(meta)
+        payload["convergence"] = matrix.loc[conv.index, [
+            c for c in matrix.columns
+            if c in ("market", "code", "name", "cheap_votes", "veto_hits")
+            or c.startswith(("earnings-yield-scan", "graham-ceiling",
+                             "epv-scan", "magic-formula"))]].to_dict(
+            "records")
+        if args.full:
+            payload["matrix"] = matrix.to_dict("records")
+        print(_arsenal_json(payload))
+        return 0
+    print(f"== arsenal screen — {len(fired)} weapons fired, "
+          f"{len(matrix)} rows (snapshot {ctx['snap'].name}) ==")
+    if failed:
+        print(f"  failed lenses: {failed}")
+    print(f"convergence (cheap_votes>=2 ∧ zero veto): {len(conv)} rows")
+    show = conv[["market", "code", "name", "cheap_votes", "veto_hits"]] \
+        .head(args.top)
+    print(show.to_string(index=False))
+    return 0
+
+
+def _screen_convergence(matrix: pd.DataFrame):
+    """cheap_votes / veto_hits from the evidence-matrix columns.
+
+    Cheap lenses (value family, each weapon's own cheap marker):
+    graham-ceiling pass; earnings-yield / magic-formula / epv lens in
+    the market's top-30% (pctl>=70) or EPV>=price.  Veto columns: any
+    column whose name ends in ``_veto`` (accruals / net-issuance / ivol
+    / lottery / amihud ...).  A NaN lens never counts as a vote either
+    way (absent evidence is not evidence).
+    """
+    cheap = pd.Series(0, index=matrix.index)
+    for col in matrix.columns:
+        wid, _, cname = col.partition(":")
+        if wid == "graham-ceiling" and "pass" in cname:
+            cheap += matrix[col].fillna(False).astype(bool).astype(int)
+        elif wid in ("earnings-yield-scan", "magic-formula") \
+                and "pctl" in cname:
+            cheap += (pd.to_numeric(matrix[col], errors="coerce")
+                      >= 70).astype(int)
+        elif wid == "epv-scan" and "ratio" in cname:
+            cheap += (pd.to_numeric(matrix[col], errors="coerce")
+                      >= 1.0).astype(int)
+    veto = pd.Series(0, index=matrix.index)
+    for col in matrix.columns:
+        if col.endswith("_veto") or ":veto" in col or "veto" in col:
+            veto += matrix[col].fillna(False).astype(bool).astype(int)
+    return cheap, veto
+
+
 def cmd_tower(args) -> int:
     """Cognitive tower (认知巴别塔): philosophy bricks.
 
@@ -2619,6 +2973,63 @@ def build_parser() -> argparse.ArgumentParser:
                           help="preview without writing")
     ptw_seed.add_argument("--json", action="store_true")
     ptw.set_defaults(func=cmd_tower)
+
+    par = sub.add_parser(
+        "arsenal", help="quant arsenal (量化武器库): 47 verified "
+                        "weapons — list/show/stats + run/scan/battery/screen")
+    par_sub = par.add_subparsers(dest="arsenal_cmd", required=True)
+    par_list = par_sub.add_parser("list", help="list weapons")
+    par_list.add_argument("--stage", default="",
+                          choices=["", "cross-section", "deep"])
+    par_list.add_argument("--status", default="",
+                          choices=["", "armed", "dormant"])
+    par_list.add_argument("--json", action="store_true")
+    par_show = par_sub.add_parser("show", help="show one registry entry")
+    par_show.add_argument("weapon_id")
+    par_show.add_argument("--json", action="store_true")
+    par_stats = par_sub.add_parser("stats", help="arsenal inventory report")
+    par_stats.add_argument("--json", action="store_true")
+    for _name, _help in (
+            ("run", "deep-dive one stock with one weapon"),
+            ("battery", "fire every armed deep weapon on one stock")):
+        _p = par_sub.add_parser(_name, help=_help)
+        if _name == "run":
+            _p.add_argument("weapon_id")
+        _p.add_argument("--on", required=True,
+                        help="stock name/code/ticker (Chinese ok)")
+        _p.add_argument("--param", action="append", default=None,
+                        metavar="K=V", help="weapon parameter (repeatable)")
+        _p.add_argument("--snapshot", default=None, metavar="YYYYMMDD")
+        _p.add_argument("--data-dir", default=None)
+        _p.add_argument("--no-check", action="store_true",
+                        help="skip freshness gate (automated pipelines)")
+        _p.add_argument("--json", action="store_true")
+    par_scan = par_sub.add_parser(
+        "scan", help="sweep one weapon across a market")
+    par_scan.add_argument("weapon_id")
+    par_scan.add_argument("--market", default=None,
+                          help="comma list, e.g. US or A,HK (default: all)")
+    par_scan.add_argument("--top", type=int, default=30)
+    par_scan.add_argument("--snapshot", default=None, metavar="YYYYMMDD")
+    par_scan.add_argument("--data-dir", default=None)
+    par_scan.add_argument("--no-check", action="store_true",
+                          help="skip freshness gate (automated pipelines)")
+    par_scan.add_argument("--json", action="store_true")
+    par_scr = par_sub.add_parser(
+        "screen", help="轨A 重炮齐射: all armed sweepable weapons -> "
+                       "evidence matrix + convergence list")
+    par_scr.add_argument("--market", default=None,
+                         help="comma list, e.g. US or A,HK (default: all)")
+    par_scr.add_argument("--top", type=int, default=30)
+    par_scr.add_argument("--full", action="store_true",
+                         help="--json only: include the full evidence "
+                              "matrix, not just the convergence list")
+    par_scr.add_argument("--snapshot", default=None, metavar="YYYYMMDD")
+    par_scr.add_argument("--data-dir", default=None)
+    par_scr.add_argument("--no-check", action="store_true",
+                         help="skip freshness gate (automated pipelines)")
+    par_scr.add_argument("--json", action="store_true")
+    par.set_defaults(func=cmd_arsenal)
 
     pth = sub.add_parser(
         "thesis", help="thesis registry (论点喂池): tower-fed machine "

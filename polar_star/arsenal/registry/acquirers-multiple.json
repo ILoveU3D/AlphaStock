@@ -1,0 +1,17 @@
+{
+  "id": "acquirers-multiple",
+  "family": "value",
+  "stage": "cross-section",
+  "sweepable": false,
+  "status": "dormant",
+  "inputs": [],
+  "lineage": {
+    "source": "Gray & Carlisle, Deep Value",
+    "note": "EV/EBITDA 收购者倍数; 等待资产负债表/利润表扩字段"
+  },
+  "parameters": {},
+  "limits": [
+    "missing: EV components (cash, debt split) and EBITDA — absent from all three snapshot sources (a_balance / hk_f10 / us_financials)",
+    "wake condition: balance-sheet/income-statement expansion (cash, debt, EBITDA)"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "pendulum-gauges",
+  "family": "sentiment",
+  "stage": "deep",
+  "sweepable": false,
+  "status": "dormant",
+  "inputs": [],
+  "lineage": {
+    "source": "Howard Marks, Mastering the Market Cycle (2018) — the sentiment pendulum",
+    "note": "VIX / put-call / fund-flow dials locate the swing; feeds absent, no price-action proxy fabricated"
+  },
+  "parameters": {},
+  "limits": [
+    "dormant: missing options & volatility data source (VIX, put/call) and fund-flow feed",
+    "wake: options/volatility data source"
+  ]
+}

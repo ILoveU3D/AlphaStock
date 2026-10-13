@@ -1,0 +1,17 @@
+{
+  "id": "mae-mfe-audit",
+  "family": "calibration",
+  "stage": "deep",
+  "sweepable": false,
+  "status": "dormant",
+  "inputs": [],
+  "lineage": {
+    "source": "house stop-loss self-calibration — MAE/MFE excursion analysis of closed trades",
+    "note": "trading/seasons journal lives outside the snapshot-pure weapon context by design; needs a journal->context channel + closed trades"
+  },
+  "parameters": {},
+  "limits": [
+    "dormant: journal->context channel not built + no closed trades accumulated",
+    "wake: journal feed channel + >= 1 closed trade"
+  ]
+}

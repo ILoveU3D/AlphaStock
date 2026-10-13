@@ -1,0 +1,17 @@
+{
+  "id": "ncav-scan",
+  "family": "value",
+  "stage": "cross-section",
+  "sweepable": false,
+  "status": "dormant",
+  "inputs": [],
+  "lineage": {
+    "source": "Graham net-net (NCAV)",
+    "note": "市值低于净流动资产; 等待资产负债表扩字段"
+  },
+  "parameters": {},
+  "limits": [
+    "missing: total current assets — absent from all three snapshot sources (a_balance carries receivable/inventory only; hk_f10 / us_financials no current-asset field)",
+    "wake condition: balance-sheet expansion (total current assets)"
+  ]
+}

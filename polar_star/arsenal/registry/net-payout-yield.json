@@ -1,0 +1,21 @@
+{
+  "id": "net-payout-yield",
+  "family": "capital-discipline",
+  "stage": "cross-section",
+  "sweepable": true,
+  "status": "armed",
+  "inputs": [
+    "master.csv: dividend_yield,market_cap",
+    "a_buybacks.csv: code,amount_yuan,announce_date (A; 12m window vs snapshot date; both sides CNY)"
+  ],
+  "lineage": {
+    "source": "Boudoukh, Michaely, Richardson, Roberts, On the Importance of Measuring Payout Yield (Journal of Finance 2007)",
+    "note": "payout_yield_lb = 股息率 + 回购收益率(A股近12月公告额/市值); 净发行未量化 → 恒为下界 (lb 命名即声明)"
+  },
+  "parameters": {},
+  "limits": [
+    "net issuance amount absent → value is a LOWER BOUND (named payout_yield_lb), never the full net payout",
+    "HK/US: dividend leg only, no buyback-amount source (payout_basis=dividend_only_no_buyback_source)",
+    "missing dividend_yield treated as 0 (no detected payout)"
+  ]
+}

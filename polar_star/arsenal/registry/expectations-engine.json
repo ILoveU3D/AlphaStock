@@ -1,0 +1,30 @@
+{
+  "id": "expectations-engine",
+  "family": "deep-value",
+  "stage": "deep",
+  "sweepable": false,
+  "status": "armed",
+  "inputs": [
+    "master.csv: price,fcf_yield,pe_ttm,rev_yoy",
+    "models/<market>/<code>/assumptions.json: optional g_lo/g_mode/g_hi overrides (local-only, checked at runtime)"
+  ],
+  "lineage": {
+    "source": "DCF house axiom (tower dcf-universal-law) + Mauboussin, Expectations Investing (2001) + Rappaport CAP",
+    "note": "reverse-DCF reuses core_triad.implied_growth; MC = PERT three-point 10y FCFF + Gordon, linear fade years 6-10"
+  },
+  "parameters": {
+    "g": "PERT(g_lo,g_mode,g_hi)% default from rev_yoy (lo=max(rev,-5)-5, mode=clamp(rev,-10,20), hi=mode+5)",
+    "tg": [0.0, 2.0, 3.0],
+    "r": [8.0, 10.0, 12.0],
+    "n": 10000,
+    "seed": 42,
+    "discount": 0.10,
+    "cap_max_years": 40
+  },
+  "limits": [
+    "FCF-less rows (HK/US imputed fcf_yield): MC+CAP data_gap unless PE-positive earnings-yield proxy accepted (declared per-run)",
+    "earnings-yield proxy overstates FCF -> implied_g is a lower-bound read",
+    "PERT defaults are declared heuristics, not forecasts; override via params or AI dossier",
+    "growth fades linearly to terminal over years 6-10 (declared)"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "id": "epv-scan",
+  "family": "value",
+  "stage": "cross-section",
+  "sweepable": true,
+  "status": "armed",
+  "inputs": [
+    "master.csv: price,market_cap",
+    "us_financials.csv: profit,oneoff (US)",
+    "a_financials.csv: profit,report_date (A; no one-off stripping)",
+    "hk_f10.csv: profit,report_type (HK; CNY->HKD via manifest fx_hkdcny)"
+  ],
+  "lineage": {
+    "source": "Greenwald, Value Investing: From Graham to Buffett and Beyond (2001)",
+    "note": "EPV = 正常化利润/WACC 对标市值; US 剔一次性损益, A 无一次性字段不剔, HK 中报×2年化+汇率转换均声明"
+  },
+  "parameters": {
+    "wacc": 0.10
+  },
+  "limits": [
+    "net profit stands in for EBIT×(1−t) — conservative understatement, declared",
+    "maintenance-capex refinement absent",
+    "HK interim-only rows annualized ×2 (declared proxy epv_basis=interim_x2_proxy)",
+    "flat WACC, no per-stock beta — WACC is the user's knob",
+    "loss-makers (profit_adj<=0) -> NaN"
+  ]
+}

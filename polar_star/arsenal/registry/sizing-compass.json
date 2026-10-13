@@ -1,0 +1,31 @@
+{
+  "id": "sizing-compass",
+  "family": "risk",
+  "stage": "deep",
+  "sweepable": false,
+  "status": "armed",
+  "inputs": [
+    "master.csv: market,code (target identity)",
+    "kline: close,amount (target + per-position snap/kline/<M>_<C>.csv, last 120 common bars)"
+  ],
+  "lineage": {
+    "source": "Kelly (1956) + Ledoit-Wolf (2004) shrinkage + Amihud (2002) liquidity",
+    "note": "三数取小: half-Kelly / risk-contribution share cap / Amihud participation exit cap"
+  },
+  "parameters": {
+    "win_rate": 0.55,
+    "odds": 1.5,
+    "kelly_fraction": 0.5,
+    "risk_budget": 0.25,
+    "participation": 0.10,
+    "adv_bars": 21,
+    "rc_bars": 120,
+    "nav": 1000000
+  },
+  "limits": [
+    "single-position portfolio: risk_cap None + data_gap (share is 100% at any weight, never invented)",
+    "missing kline or amount column -> that cap None + data_gap",
+    "kline amount is raw listing currency; nav must match",
+    "half-Kelly is the declared conservative default; full Kelly reported for reference"
+  ]
+}

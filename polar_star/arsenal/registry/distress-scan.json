@@ -1,0 +1,22 @@
+{
+  "id": "distress-scan",
+  "family": "forensic",
+  "stage": "cross-section",
+  "sweepable": true,
+  "status": "armed",
+  "inputs": ["master.csv: market_cap", "us_financials.csv: liabilities,assets,rev"],
+  "lineage": {
+    "source": "Altman Z (1968) / Ohlson O (1980)",
+    "note": "困境透镜——组件不全时只报覆盖度不下判决; 永不平均或虚构缺失组件"
+  },
+  "parameters": {
+    "min_components": 4
+  },
+  "limits": [
+    "x1 working_capital/assets, x2 retained_earnings/assets, x3 EBIT/assets: GAP in all three sources",
+    "x4 market_cap/liabilities and x5 sales/assets: US only -> verdict 'partial (2/5) — no canonical verdict'",
+    "A/HK rows: 'no balance-sheet fields'",
+    "z_partial needs >=4 components — currently never — so z is always None",
+    "Ohlson O: log-assets + liabilities/assets available for US only -> partial note, no canonical O-score"
+  ]
+}

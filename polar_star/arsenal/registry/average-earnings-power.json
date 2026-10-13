@@ -1,0 +1,26 @@
+{
+  "id": "average-earnings-power",
+  "family": "value",
+  "stage": "cross-section",
+  "sweepable": false,
+  "status": "armed",
+  "inputs": [
+    "row: market_cap,pe_ttm,market,code",
+    "models/<market>/<code>/raw/history.json: years[].net_income,currency (deep, ≥7yr)",
+    "manifest.json: fx_hkdcny (HK CNY->HKD conversion)"
+  ],
+  "lineage": {
+    "source": "Graham & Dodd, Security Analysis (1934)",
+    "note": "周期股修分母: 7-10年平均盈利 PE vs pe_ttm; cycle_adjustment>1 = TTM 被周期美化"
+  },
+  "parameters": {
+    "min_years": 7,
+    "max_years": 10
+  },
+  "limits": [
+    "deep mode only — profit history from models/ dossier raw; <7 usable years -> data_gap, never extrapolated",
+    "us_financials profit_prev is one prior year — insufficient alone, declared, not used",
+    "HK history CNY vs HKD market_cap needs manifest fx_hkdcny, else data_gap",
+    "loss-cycle average (avg_profit<=0) -> data_gap, Graham lens needs positive earning power"
+  ]
+}

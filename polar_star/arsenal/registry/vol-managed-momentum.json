@@ -1,0 +1,18 @@
+{
+  "id": "vol-managed-momentum",
+  "family": "price",
+  "stage": "cross-section",
+  "sweepable": true,
+  "status": "armed",
+  "inputs": ["master.csv: ret_250d,ret_20d,volatility"],
+  "lineage": {
+    "source": "Barroso & Santa-Clara (2015)",
+    "note": "vmm = mom_12_2 / volatility; 按自身波动定档动量, 躲动量崩盘"
+  },
+  "parameters": {},
+  "limits": [
+    "inherits the mom_12_2 difference-of-cumulative-returns approximation",
+    "NaN when volatility <= 0 or missing — a zero-vol print is a data artifact, not a signal",
+    "percentiles within-market only"
+  ]
+}

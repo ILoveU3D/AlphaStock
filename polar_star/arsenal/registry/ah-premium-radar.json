@@ -1,0 +1,21 @@
+{
+  "id": "ah-premium-radar",
+  "family": "relative-value",
+  "stage": "cross-section",
+  "sweepable": false,
+  "status": "armed",
+  "inputs": ["master.csv: market,code,name,price", "kline: close (A + HK legs)", "manifest.json: fx_hkdcny"],
+  "lineage": {
+    "source": "house-unique dual-market data (A/H dual-listed premium mean-reversion)",
+    "note": "premium% = ((price_A_CNY / fx_hkdcny) / price_HK_HKD − 1) × 100; premium_z = 60 日窗口 (last−mean)/std; 均值回复雷达"
+  },
+  "parameters": {
+    "z_window": 60
+  },
+  "limits": [
+    "Engle-Granger cointegration test with MacKinnon critical values is the canonical form — DECLARED future upgrade (scipy-free table not yet wired); current = level + z, a radar never a traded signal",
+    "pair discovery is best-effort name normalization (strip 股份/有限公司/集团/H股/holdings/ltd/...); ambiguous matches logged, never guessed",
+    "<60 common kline bars or flat window -> premium_z None (level-only data_gap)",
+    "missing leg/kline/manifest fx -> data_gap per pair"
+  ]
+}

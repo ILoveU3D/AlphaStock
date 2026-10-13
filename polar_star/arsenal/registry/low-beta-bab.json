@@ -1,0 +1,24 @@
+{
+  "id": "low-beta-bab",
+  "family": "price",
+  "stage": "cross-section",
+  "sweepable": true,
+  "status": "armed",
+  "inputs": ["kline: close (per swept stock, all markets)"],
+  "lineage": {
+    "source": "Frazzini & Pedersen (2014)",
+    "note": "beta vs 等权市场代理 (声明代理——快照无指数 kline); BAB 偏好低 beta, 分位翻转 (低 beta 高分位)"
+  },
+  "parameters": {
+    "max_obs": 250,
+    "proxy_min_obs": 60,
+    "proxy_min_cover": 0.9
+  },
+  "limits": [
+    "DECLARED sweep cost: reads every swept stock's kline once per scan",
+    "DECLARED proxy: market portfolio = equal-weight mean daily return of swept same-market stocks (inner-joined dates, >=60-return members)",
+    "DECLARED poison-member guard: dates covered by <90% of members dropped, then gappy members dropped — one sparse/odd-window kline (e.g. 320 bars over 7 years) cannot collapse the strict inner join",
+    "rows without kline or <10 common observations -> NaN + data_gap",
+    "percentiles within-market only, ascending=False (low beta -> high pctl)"
+  ]
+}

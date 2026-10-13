@@ -1,0 +1,25 @@
+{
+  "id": "value-ladder",
+  "family": "deep-value",
+  "stage": "deep",
+  "sweepable": false,
+  "status": "armed",
+  "inputs": [
+    "master.csv: price,pe_ttm,pb,market_cap",
+    "us_financials.csv: profit,oneoff (US)",
+    "a_financials.csv: profit (A)",
+    "hk_f10.csv: profit (HK)"
+  ],
+  "lineage": {
+    "source": "Graham, The Intelligent Investor (1949); Greenwald EPV; Myers/Brealey PVGO decomposition",
+    "note": "four rungs: NCAV (declared gap) / Graham number / EPV / PVGO%"
+  },
+  "parameters": {
+    "wacc": 0.10
+  },
+  "limits": [
+    "NCAV rung always None: current-assets fields absent from snapshot (declared gap, never improvised)",
+    "EPV profit is per-market: US profit-oneoff, A latest profit, HK latest profit; loss-makers None",
+    "shares = market_cap/price proxy; profit and price share listing currency per source (no FX mixing)"
+  ]
+}

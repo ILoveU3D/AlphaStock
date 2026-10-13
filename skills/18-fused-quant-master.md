@@ -13,12 +13,14 @@ triggers:
   - 值得买
 commands:
   - "masters-vote [--check MARKET:CODE ...] [--horizon short|ultrashort] [--thesis ID] [--json]"
+  - "arsenal screen|scan <id> [--market US] [--json]"
+  - "arsenal run <id> --on X | battery --on X [--json]"
   - profile fetch|show|assess|list|status
   - ask X --evidence
   - intel X
   - recommend --user me
-version: 48
-updated_at: 2026-10-12T10:58:05
+version: 49
+updated_at: 2026-10-13T00:00:00
 ---
 
 # Playbook
@@ -75,6 +77,26 @@ DCF 估值是等价的三个核心，是对候选股票排序的**唯一**依据
   vote).
 - **Never recommend from a single strategy's top rank** — and never
   read vote_count as a quality ordering.
+
+#### 轨A 重炮齐射（选拔层双轨并行，user mandate 2026-10-13）
+
+`python -m polar_star arsenal screen --market US [--json]`
+
+- 选拔层现在双轨呈报、综合评估：**轨A = arsenal screen**（全部
+  armed 横截面透镜齐射 → 股票×透镜证据矩阵 + 收敛名单：≥2 件价值
+  透镜互证便宜 ∧ 零否决——声明式启发，永不排序）；**轨B = 上方
+  masters-vote 宽池**（core_score 唯一排序，实践检验过的寻低估
+  能力，保留）。
+- 两轨名单一起摆上桌：**交集 = 高置信候选，分歧 = 研究线索**；
+  AI 从两轨综合选 L3 深评名单（AI 做选择不变，三核家规不变）。
+- 单件武器调用：`arsenal scan <id> --market US`（单透镜横扫）、
+  `arsenal run <id> --on X` / `arsenal battery --on X`（单股纵深
+  齐射；剑序 forensic-audit 最先——见 AGENTS.md 调用纪律 v2）。
+- 每次武器调用留一行痕（哪件 / 输出 / 采信与否 / 为什么）进
+  trading journal 或本 skill Field Notes——证据链属于操作者。
+- 武器只否决、不选拔：绿灯永远不构成买入理由（段永平原则）。
+- **硬接管道（masters-vote 改走 arsenal screen）需用户单独授权**；
+  Phase 1 两轨平行实弹对照，对照结论成熟前旧管道一寸不动。
 
 ### L2 — 否决层（代码 flags + 规则）
 

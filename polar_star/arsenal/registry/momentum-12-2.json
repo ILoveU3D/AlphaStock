@@ -1,0 +1,18 @@
+{
+  "id": "momentum-12-2",
+  "family": "price",
+  "stage": "cross-section",
+  "sweepable": true,
+  "status": "armed",
+  "inputs": ["master.csv: ret_250d,ret_20d"],
+  "lineage": {
+    "source": "Jegadeesh & Titman (1993)",
+    "note": "mom_12_2 = ret_250d − ret_20d; 累计%收益之差近似 12-2 跳过近月的复合窗口 (log 收益下精确)"
+  },
+  "parameters": {},
+  "limits": [
+    "difference of cumulative %-returns approximates the 12-month-skip-1-month window",
+    "NaN when either leg missing (short history) — outside the momentum universe, never imputed",
+    "percentiles within-market only"
+  ]
+}

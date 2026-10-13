@@ -1,0 +1,23 @@
+{
+  "id": "bayesian-log-odds",
+  "family": "decision",
+  "stage": "deep",
+  "sweepable": false,
+  "status": "armed",
+  "inputs": [
+    "params only: prior_odds, evidence=[{name, bf}] (no market data)"
+  ],
+  "lineage": {
+    "source": "Jaynes, Probability Theory: The Logic of Science (2003) — decibel evidence scale",
+    "note": "posterior_odds = prior × ΠBF; dB = 10·log10(ΠBF); L4 decision aid"
+  },
+  "parameters": {
+    "prior_odds": 1.0,
+    "evidence": [],
+    "bands": {"strong-for": 10, "moderate-for": 5, "noise": -5, "strong-against": -10}
+  },
+  "limits": [
+    "pure param engine — Bayes factors are caller-supplied judgments, not computed here",
+    "entries with bf <= 0 skipped with a declared note, never silently counted"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "net-issuance-gate",
+  "family": "capital-discipline",
+  "stage": "cross-section",
+  "sweepable": true,
+  "status": "armed",
+  "inputs": [
+    "master.csv: dilution_flag,buyback_active (event flags, A-market coverage)"
+  ],
+  "lineage": {
+    "source": "Fama-French, Dissecting Anomalies (Journal of Finance 2008)",
+    "note": "净发行否决/回购加分: dilution_flag→net_issuer 否决, buyback_active→repurchaser 展示; 事件标志替代股本变动 (声明替代)"
+  },
+  "parameters": {},
+  "limits": [
+    "event flags stand in for split-adjusted share-count Δ — canonical share-count history absent (declared stand-in)",
+    "rows with both flags NaN (HK/US in current snapshot) -> data_gap 'no issuance events'",
+    "veto-leaning: repurchaser bonus is pctl display only, never an admission rank"
+  ]
+}
