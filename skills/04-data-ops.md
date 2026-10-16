@@ -9,8 +9,8 @@ triggers:
 commands:
   - doctor
   - fetch
-version: 48
-updated_at: 2026-10-12T22:33:10
+version: 49
+updated_at: 2026-10-15T10:59:07
 ---
 
 # Playbook
@@ -107,3 +107,4 @@ conversation-start freshness probe:
 - [2026-10-11 12:52] (ai) Book campaign 2026-10-11: openelib.org is DEAD (domain parked to ads). 100md is now WeChat-paywall (file.asp returns wx_100md contact page, no direct downloads). NEW WORKING SOURCE: nmod.net (search via /?s=<title>, book pages /book/N.html -> go.html?url=<lanzou link> + page password). Lanzou download recipe: (1) fetch share page, if arg1= present solve acw_sc__v2 by running the challenge <script> in node with DOM stubs (lz_solver.js pattern in tmp/); (2) POST apifile.woozooo.com/ajaxfile.php?file=<id> with action=downprocess, sign from page JS, p=<password> -> {zt:1,dom,url}; (3) direct link dom+/file/+url ALSO has its own acw challenge - solve again for the download domain. Zip names inside are GBK-encoded (cp437 mojibake, re-encode).
 - [2026-10-11 12:52] (ai) Book campaign 2026-10-11 #2: MOBI text extraction without calibre - pure Python works: parse PDB header (numRecords@76, record offsets@78+8i), MOBI header in rec0 (compression@0: 2=Palmdoc, textLength@4, recordCount@8, encoding@28: 65001=UTF-8, extraFlags@0xF2). Each text record has variable trailing entries (extraFlags bits) that standard varint reading gets wrong - EMPIRICAL FIX: for each record try strip 0..15 bytes, keep the strip whose Palmdoc LZ77 decompression yields EXACTLY 4096 bytes (last record: textLength-4096*(n-1)); all 127/127 records resolved uniquely. Then concat, decode UTF-8, strip tags -> txt. Fisher MOBI 549KB -> 475KB txt verified complete.
 - [2026-10-12 22:33] (ai) US 实时报价链无备用源：EM push2 全线连接错误时 ask/holding list 退回快照价并标 'live quote unavailable'（2026-10-12 晚实例），报价须声明 10-09 收盘基准而非当日盘中价
+- [2026-10-15 10:59] (ai) 2026-10-15: fetch --markets 只接受逗号分隔(A,HK); 空格分隔(A HK)报 unrecognized arguments: HK 退出码2。另: EM outage 期间腾讯回退源下 ask 单股live quote路径不可用(evidence视图回退快照价+声明flag), 但 arsenal battery 的 barrier-forge entry 能取到实时价——单股实时价可经 battery 间接获取

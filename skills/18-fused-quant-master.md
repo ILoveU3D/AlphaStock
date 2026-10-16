@@ -19,8 +19,8 @@ commands:
   - ask X --evidence
   - intel X
   - recommend --user me
-version: 51
-updated_at: 2026-10-13T14:17:02
+version: 56
+updated_at: 2026-10-15T10:59:01
 ---
 
 # Playbook
@@ -333,3 +333,8 @@ Output shape (hard rules):
 - [2026-10-12 10:58] (ai) 2026-10-12 金融股结构性缺席宽池：masters-vote L1 池(7大师硬闸)对保险/银行/券商全零票——gm≥40%/roe 口径不适配金融业，人寿/新华/太保/银行等 master.csv core_score 池顶名字永远不进宽池；'最被低估'类回答须显式声明金融股按 PB/ROE/股息三件套另行评估(2026-10-11 银行专题框架)，勿误作'金融股无候选'。另：A股应收粉饰旗需对定期报告原文复核(吉比特 2026-10-12 案例：旗称'应收增速远超营收'，中报原文应收+17.03%<营收+48.01%、1年以内账龄99.73%——旗为数据窗口伪差)
 - [2026-10-13 11:08] (ai) 2026-10-13 A/HK 双轨齐射trace：arsenal screen 17透镜收敛72只（银行保险带3票领衔+焦作万方3票，后者被自有模型戳穿仅+7%公平=铝周期顶部盈利幻觉）；masters-vote 461池头名=江南布衣93.9/波司登92.3/芭田86.1（文化核市场均值填补）/吉比特73.8（三核全实）；battery×3=江南green、芭田green、吉比特amber（3/8强度信号可算且全真，覆盖不足非红灯）；活体--check 6码零周期陷阱。裁决：吉比特（A）+江南布衣（HK）；芭田无模型卷宗按skills/19不得出L4买入裁决，降级研究线索。QUIRK：epv-scan A股分支直接取最新半年报利润（2026-06-30 H1）不年化——吉比特10.9亿/芭田6.0亿/焦作万方12.3亿均为H1口径，A股EPV系统性低估约2倍，epv_ratio读数需×2修正，收敛名单A股东偏保守（待修）。
 - [2026-10-13 14:17] (ai) epv-scan A股年化已修(aa43310): profit×12/报告月份(H1×2/Q1×4/Q3×4/3), 吉比特epv_ratio 0.45→0.897, 1035绿——2026-10-13 trace中的A股收敛名单需按×2口径重读, 名单偏保守结论作废
+- [2026-10-13 14:54] (ai) 2026-10-13 今日最被低估裁决=江南布衣03306: 轨B 93.9(三核全真/4票) × 轨A 铝周期交集被ae-power全灭(中铝33.4/云铝39.3 vs TTM~8.5=EPV收敛顶部幻觉第四五份人证)+GSL先例维持否决+芭田无卷宗降级; 好孩子01086双轨交集幸存但文化未蒸馏按家规只能否决不能加分——教训: EPV/EY透镜对商品周期股必须与ae-power配对读, 单读=接刀
+- [2026-10-13 22:34] (ai) 2026-10-13 美股最被低估run：轨A收敛17只∩轨B宽池=SLDE/GSL/REPX。SLDE双轨第一(core 100, PE~5.7, EPV, 法医绿灯)但model档案否决——五世界加权公允-24<现价.4，CR52是佛州硬市场周期顶，'现价要求W1以100%兑现'，GSL式校准第二例；NUTX同型否决(合并PE8.4是VIE/NCI幻觉，归母20.9x，加权<.5)；GSL沿用2026-09-15前案否决。终选TCOM(模型三情景加权.8 vs .9，熊市锚≈现价，净现金32%市值，三问过堂)。武器痕迹：arsenal screen US(采信，交集=高置信)、battery SLDE/HRMY(采信)、masters-vote+--check(采信，6只全过)、model show×4(决定层)。数据怪癖：SLDE/HRMY/TCOM ask实时报价不可用回退快照价、PE/PB/PS显示层为'-'，需倍数的价值透镜对这些名字可能欠开火(HRMY/TCOM缺席轨A收敛疑与此有关)——待验证。
+- [2026-10-13 22:35] (ai) 勘误(上一条痕迹的美元符号被shell吞掉，金额更正)：SLDE档案五世界加权公允 17-24 美元 < 现价 25.4 美元；NUTX 归母PE 20.9x、加权中枢 141 美元 < 现价 216.5 美元；TCOM 三情景加权 78.8 美元/ADS vs 现价 38.9 美元，熊市锚 37 美元约等于现价。结论不变：终选 TCOM。
+- [2026-10-14 11:06] (ai) 2026-10-14 A/HK 荐股日调用记录：masters-vote 宽池(A 29/HK 26 行) + arsenal screen A(180 行/74 收敛) + HK(126 行/29 收敛) 双轨齐射；采纳=轨B分歧线索吉比特/江南布衣/波司登进 L3；否决=轨A∩B 交集全簇(芭田+铝链五股, average-earnings-power cycle_adjustment 5.7x)与好孩子国际(FCF-yield 锚 GSL 同构+派息率>100% 一次性+ROE 4.3)。quirk：吉比特 dcf 核 masters-vote 池内=52.5 vs ask=93.4 同快照不一致，疑似 masters-vote 与 fetch 并发读到半写状态——masters-vote 应在 fetch 落盘后单独跑
+- [2026-10-15 10:59] (ai) 2026-10-15 A/HK 最被低估扫描: L1宽池51只(26否决:24 profit_spike/4 intel_red/1 borrowed_dividend)。终选四只跑battery: forensic-audit×2双绿灯(采信=否决 clearance, 绿灯非买入理由); value-ladder×2采信(芭田现价超格雷厄姆数8%/PVGO40% vs 中铝格雷厄姆数下方20%/PVGO19%); expectations-engine: 芭田MC+81%采信为语境, 中铝MC+190%不采信(周期峰值FCF外推, 违武器自述limits+regression-to-mean-earnings砖); cycle-trap-guard×6全通过(0.76-0.79); tactical/barrier: 两只A股周线趋势破+吊灯已触发=价值入场非趋势入场(采信为择时警示); yield-compass: 芭田cash_return 17.5 vs 中铝15.1(跨市场标尺, 采信); sizing: 半凯利12.5%绑定上限。裁决: HK=江南布衣(core 93.9全池第一,三核全验证)+波司登备选; A=芭田股份(86.1)+中国铝业周期备选

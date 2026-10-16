@@ -14,7 +14,7 @@
   "cash": {
     "CNY": 0.0,
     "HKD": 0.0,
-    "USD": 2211.47
+    "USD": 1493.44
   },
   "settling": [],
   "positions": [
@@ -52,10 +52,10 @@
       "market": "US",
       "code": "ADBE",
       "name": "Adobe Inc.",
-      "qty": 3.0,
-      "avg_cost": 241.2633,
+      "qty": 6.0,
+      "avg_cost": 240.3033,
       "currency": "USD",
-      "last_buy_date": "2026-10-02",
+      "last_buy_date": "2026-10-14",
       "lot": 1
     },
     {
@@ -522,6 +522,27 @@
       "session": "in",
       "note": "硬止37.85触发：今开37.62/盘中低37.63破线，按计划亏损上限-7%纪律执行（破线即卖不犹豫，10-07预置）；国庆催化+10/24窗口论点让位于价格纪律；卖出现金T+1到账后按无新论点不加仓原则暂持",
       "seq": 21
+    },
+    {
+      "ts": "2026-10-14T22:20:27",
+      "date": "2026-10-14",
+      "action": "buy",
+      "market": "US",
+      "code": "ADBE",
+      "name": "Adobe Inc.",
+      "qty": 3.0,
+      "price": 238.68,
+      "gross": 716.04,
+      "fees": {
+        "platform": 1.99
+      },
+      "fees_total": 1.99,
+      "cash_delta": -718.03,
+      "currency": "USD",
+      "session": "in",
+      "note": "QMF加仓(2026-10-14盘中, live 238.59): 预算语言复位后的首次执行——10-14晨记作废'10%封顶',真实约束=10-02 Form4观察项; 今日intel复核零新Form4(最近09-18簇)零红旗=观察项未升级,加仓论据按晨记承诺上桌。模型(10-04建,非stale,lint QUALIFIED)weighted 419.0=+75.6% upside, bear/base/bull=232.4/470.9/628.9; 现价距bear仅-2.6%=市场正在按'AI吃掉创意软件'的停滞情景定价,而FY2025实数=订阅96%/ARR+11.5%/OCF 100.3亿+25%/capex 0.76%营收,飞轮未断。预算: 加仓3股后6股≈1433USD≈18.5%NAV, bear兑现全仓损失≈-0.5%NAV(HRMY同框架-5%NAV的十分之一), sizing-compass取bear预算上限内。地板=模型bear 232.4(破=论点错或模型陈旧,退出); 证伪触发=切换成本蒸发实锤(Firefly ARR连续两季不及指引/CC Pro退订率拐点/生成额度定价权崩塌)。快照声明: 今日fetch后ADBE快照侧core_dcf缺annual FCF=数据缺口非生意变化(模型基于10-04 gather的10-K实数); ask live quote源故障,价采腾讯10:19ET",
+      "settle_amount": 0.0,
+      "seq": 22
     }
   ],
   "nav_history": [
@@ -1849,6 +1870,180 @@
       "fx": {
         "CNY": 1.0,
         "HKD": 0.8533,
+        "USD": 6.6966
+      }
+    },
+    {
+      "date": "2026-10-14",
+      "nav": 7762.66,
+      "cash_total": 1493.44,
+      "settling_total": 0,
+      "positions": [
+        {
+          "market": "US",
+          "code": "ZM",
+          "name": "Zoom通讯",
+          "qty": 16.0,
+          "price": 97.43,
+          "currency": "USD",
+          "value_base": 1558.88
+        },
+        {
+          "market": "US",
+          "code": "NVDA",
+          "name": "NVDA",
+          "qty": 3.0,
+          "price": 224.4,
+          "currency": "USD",
+          "value_base": 673.2
+        },
+        {
+          "market": "US",
+          "code": "HRMY",
+          "name": "HRMY",
+          "qty": 39.0,
+          "price": 38.04,
+          "currency": "USD",
+          "value_base": 1483.56
+        },
+        {
+          "market": "US",
+          "code": "ADBE",
+          "name": "Adobe Inc.",
+          "qty": 6.0,
+          "price": 238.68,
+          "currency": "USD",
+          "value_base": 1432.08
+        },
+        {
+          "market": "US",
+          "code": "FUTU",
+          "name": "富途控股",
+          "qty": 10.0,
+          "price": 112.15,
+          "currency": "USD",
+          "value_base": 1121.5
+        }
+      ],
+      "fx": {
+        "CNY": 1.0,
+        "HKD": 0.8528,
+        "USD": 6.6997
+      }
+    },
+    {
+      "date": "2026-10-15",
+      "nav": 7778.35,
+      "cash_total": 1493.44,
+      "settling_total": 0,
+      "positions": [
+        {
+          "market": "US",
+          "code": "ZM",
+          "name": "Zoom通讯",
+          "qty": 16.0,
+          "price": 95.62,
+          "currency": "USD",
+          "value_base": 1529.92
+        },
+        {
+          "market": "US",
+          "code": "NVDA",
+          "name": "NVDA",
+          "qty": 3.0,
+          "price": 216.24,
+          "currency": "USD",
+          "value_base": 648.72
+        },
+        {
+          "market": "US",
+          "code": "HRMY",
+          "name": "HRMY",
+          "qty": 39.0,
+          "price": 38.77,
+          "currency": "USD",
+          "value_base": 1512.03
+        },
+        {
+          "market": "US",
+          "code": "ADBE",
+          "name": "Adobe Inc.",
+          "qty": 6.0,
+          "price": 252.39,
+          "currency": "USD",
+          "value_base": 1514.34
+        },
+        {
+          "market": "US",
+          "code": "FUTU",
+          "name": "富途控股",
+          "qty": 10.0,
+          "price": 107.99,
+          "currency": "USD",
+          "value_base": 1079.9
+        }
+      ],
+      "fx": {
+        "CNY": 1.0,
+        "HKD": 0.8528,
+        "USD": 7.2
+      }
+    },
+    {
+      "date": "2026-10-16",
+      "nav": 7821.84,
+      "cash_total": 1493.44,
+      "settling_total": 0,
+      "positions": [
+        {
+          "market": "US",
+          "code": "ZM",
+          "name": "Zoom通讯",
+          "qty": 16.0,
+          "price": 98.51,
+          "currency": "USD",
+          "value_base": 1576.16
+        },
+        {
+          "market": "US",
+          "code": "NVDA",
+          "name": "NVDA",
+          "qty": 3.0,
+          "price": 217.23,
+          "currency": "USD",
+          "value_base": 651.69
+        },
+        {
+          "market": "US",
+          "code": "HRMY",
+          "name": "HRMY",
+          "qty": 39.0,
+          "price": 38.27,
+          "currency": "USD",
+          "value_base": 1492.53
+        },
+        {
+          "market": "US",
+          "code": "ADBE",
+          "name": "Adobe Inc.",
+          "qty": 6.0,
+          "price": 251.67,
+          "currency": "USD",
+          "value_base": 1510.02
+        },
+        {
+          "market": "US",
+          "code": "FUTU",
+          "name": "富途控股",
+          "qty": 10.0,
+          "price": 109.8,
+          "currency": "USD",
+          "value_base": 1098.0
+        }
+      ],
+      "fx": {
+        "CNY": 1.0,
+        "HKD": 0.8526,
         "USD": 7.2
       }
     }
@@ -2014,6 +2209,41 @@
       "nav": 7800.19,
       "day_pnl": -97.79,
       "text": "20261012补-HRMY纪律线重校准(用户批评执行,10-09已记录缓冲仅3.8%未跟进=流程漏失): 旧止37.4自相矛盾——仓位按bear尾部-27%配预算(19.1%仓位,bear兑现=-4.6%NAV开仓时已预受),止损却挂-5%,仓位语言与止损语言打架;TCOM鞭打(37.87止损→今38.9)为实证成本. 新框架:价值仓退出挂论点证伪处,不挂噪声. HRMY新线=模型bear案28.89(三情景bear28.89/base72.32/bull87.85,加权公允63.17):破28.89=市场定价坏过最坏建模情景=论点错或模型陈旧,退出;叠加生意级证伪触发(WAKIX患者数拐点/专利诉讼败诉提前专利悬崖/支付方准入崩塌/OCF-净利断裂),每窗口intel扫描执行. 今日触发器复盘:美银Sell目标30=分析师观点噪声,恰好坐在bear案上,零生意红旗,不构成退出. 其余4仓不动:NVDA trail221系趋势仓吊灯设计(战术性质,紧是特性非缺陷)/ZM80.4余19%/ADBE218余8.3%/FUTU95余16%余量充足. 规则入册:凡按bear预算定仓的价值仓,价格地板=bear案或证伪点,紧价格止损仅限战术仓"
+    },
+    {
+      "date": "2026-10-14",
+      "ts": "2026-10-14T14:19:25",
+      "nav": 7761.2,
+      "day_pnl": -24.26,
+      "text": "HRMY复核(浮亏-7.1%触发):论点完好,无卖出动作。证据链:①ask --evidence——三核全激活89.9(商业94.7/文化75已蒸馏/DCF100,隐含g=-5%即市场定价永续衰退);营收+21.5%(Q单季+30.3%)/ROE20.8%/FCF收益率14.8%/负债率31.6%;模型(10-04建,非stale)加权63.17=+59.4%上行,bear28.89=-22%在当前浮亏之外;②intel——零红旗,OCF/净利2.19,一致评级Buy×11目标价47.64(+29%),10-13 H.C.Wainwright Buy@55;唯一新事件=10-13 Form 8-K(内容待读,同日评级重申偏良性)。判断:-7.1%为入场时机噪声,远在熊市情景-22%之内;周K上行未破,自高点回撤-8.4%。决定:HOLD不加仓——仓位18.6%NAV已超单仓上限,US数据源今日不稳(kline滞后10-09)。纪律线重申:43前高=复核线;bear 28.89=痛点阈值;11月初Q3财报=下一证伪检查点。武器调用:ask+intel采信为持有依据。"
+    },
+    {
+      "date": "2026-10-14",
+      "ts": "2026-10-14T20:39:53",
+      "nav": 7761.2,
+      "day_pnl": -24.26,
+      "text": "20261014仓位语言修正(用户质询,重申0929授权=赛季无单仓硬cap): ①HRMY'已超单仓上限'表述作废——不加仓的真实理由=bear尾部预算已用满(仓位18.6%,bear28.89较成本-27%,兑现≈-5%NAV,开仓时预受线),仓位锚=bear预算非权重上限; ②ADBE'10%封顶已满'表述作废——真实约束=10-02 Form4内部人卖出观察项的证据减分,每窗口重新论证:模型bear232≈现价(按模型下行仅-2%),若观察项不再升级,加仓论据重新上桌; ③残余风险声明:预算语言依赖bear案准确性(HRMY公允曾有113.5→63.2两日砍半前科),任何加仓前model show核对result.json日期的流程不豁免。塔砖position-is-budget-language,skill note v68。"
+    },
+    {
+      "date": "2026-10-14",
+      "ts": "2026-10-14T22:21:11",
+      "nav": 7762.66,
+      "day_pnl": -22.8,
+      "text": "20261014(美东10:20盘中)窗口: 1笔交易=ADBE加仓3股@238.68。①持仓纪律线零触发(腾讯live核价, ask的live源故障切换): ZM97.26(止80.4/盈118)/NVDA224.65(trail221余1.6%,最高收248.03未刷新)/HRMY37.94(地板bear28.89余31%,43复核线)/ADBE238.59/FUTU112.14(止95)。5仓intel零红旗。②HRMY 10-13 8-K读毕(晨记在途项闭环): CEO Dayno 2026-12-31退休→COO Anastasiou 2027-01-01接任,Dayno顾问留任至2027; 继任者=2023-11起任董事+2026-04起COO+Lundbeck北美总裁12年=CNS专科药商业化嫡系,有序交班非证伪,文化核观察项+1(创始人离任后的本分传承,入Q3财报检查点)。③新开仓全链否决: SLDE能力圈外/NUTX动量顶(pos52=87.3,ret60+26.2未变)/TCOM扳机未到(pos52=2.6,wk_up=0,ret60-10.8,守10-08承诺)/BZ Form4簇集否决在途(10-07仍有6-K,Form4止于09-21但否决期未满)/TTD数据伪影/EXEL估值层否决在途; 估值层横扫: BKE-9.7%/LOGI-1.4%/CVSA-2.6%/CRCT-11.7%/PTC-14.6%/ZD-27.1%=模型定价贵于市场,全否; FDS+12.2%太薄; XZO(Exzeo)无kline无FCF数据不足不可建仓; TRPCF/GSL/APAM/CLBT/ACIW/RSMDF/RMD/JKHY/NBIX/FSLR/LPG/XPEL等无估值层且core中段,不过L4。④加仓路径: ADBE成交(见fill#22); HRMY bear预算满/ZM+9.5%薄/FUTU无估值层/NVDA模型-63.7%否决维持。现金1493(19.2%),部署率80.8%达标。武器调用: ask×8+intel×7+model show ADBE+估值层横扫采信为决策依据; 数据源: EM封禁中,腾讯fallback,US kline滞后10-09缺口声明(决策用live价+10-K级模型,不受影响)"
+    },
+    {
+      "date": "2026-10-15",
+      "ts": "2026-10-15T22:10:48",
+      "nav": 7777.33,
+      "day_pnl": 14.67,
+      "text": "20261015 美股窗口(盘中,腾讯报价源生效/EM封禁)——全持仓复审+abstain裁决(授权窗口,0918规训三段式举证):【持仓零触发】5/5 intel扫描零红旗。HRMY 8-K(10-12)=CEO Dayno有序退休(12/31生效+转任顾问至2027),COO Anastasiou继任(前Lundbeck北美总裁+2023-26在任董事)=计划内交接非证伪,GR品牌切换战的商业执行维度反而加分;ZM 5份Form4(10-13)XML下钻=CFO Chang/CAO McGarry均10b5-1计划内(2025-06/2026-07采纳)+RSU税扣,例行SBC变现非GSL式簇集;ADBE评级三连击(富国10-12双降Underweight/,汇丰10-13降Hold/310->267,ArtCraft开源克隆叙事+劳工部认证暂停)vs基本面Q3五连beat+上调全年指引+AI-ARR+150%+MAU10亿——叙事恶化基本面未恶化,现价~251在自有bear案232.36上方8.1%,价值地板未触发,Form4观察项(CEO信托9-17卖出3134万)维持信念减分;NVDA模型张力点名:市价213=自有公允84.89的2.5倍,市场在为'AI capex超级周期延续至2027+'这一我模型未承保的假设付费,该假设仍被 hyperscaler capex指引确认,书面证伪集(capex拐点/GM<65%/生态颠覆)零触发,敞口8.3%NAVx-50%=-4.1%NAV在预算内→按书面纪律持有,一致锚Strong Buy 62家/.72未变;FUTU仅1票(sheng)+无文化核+无模型(缺口,入campaign优先队列),舆情零红旗,中国beta 1/5。【新开仓逐名否决】SLDE=core100但livermore+sheng双动量票+52周新高(dd52=0),价值大师票0=榜首陷阱型;NUTX=09-23已定性噪声型;TCOM 3票(buffett/munger/duan)但cash_conversion 43.2%<50%+利润+103.7%=09-21利润质量否决规则持续有效(投资收益主导未变);BZ=09-30 Form4簇集否决未解除;TTD 1票+模型upside仅+16.6%;XZO 1票+无K线。【加仓逐名否决】HRMY风险预算已满(19.4%NAVxbear-25%≈-4.8%NAV);ZM自有模型upside仅+7.6%(101.70 vs 94.52);FUTU无模型层按铁律不可加仓;NVDA高于自有公允不买;ADBE无新基本面信息(评级下调是观点非基本面,不符合一手纪律新论点定义)。【裁决】abstain,部署率80.7%>=80%目标线,现金19.3%=一手弹药。武器痕迹:masters-vote宽池60/model list/intel×5/Form4 XML×2/8-K×1/Tiger live外部交叉验证。"
+    },
+    {
+      "date": "2026-10-15",
+      "ts": "2026-10-15T22:11:19",
+      "nav": 7778.35,
+      "day_pnl": 15.69,
+      "text": "勘误(20261015): 上一条复盘两处数字被shell吞掉,补记——富国10-12双降ADBE至Underweight目标价225美元;NVDA一致评级锚=Strong Buy 62家覆盖/目标价328.72美元。教训:journal含美元数字一律单引号。"
     }
   ],
   "totals": {
