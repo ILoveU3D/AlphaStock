@@ -263,3 +263,55 @@ def send_message(cfg: dict, subscribers: list, subject: str,
     atomic_write_text(log, "\n".join(sorted(sent_dates)) + "\n")
     return {"sent": True, "to": cfg["username"], "cc": cc,
             "subject": subject}
+
+
+# ---------------------------------------------------------------------------
+# Digest: L1 pool (the quant half of the fused recommendation)
+# ---------------------------------------------------------------------------
+POOL_COLUMNS = ("market", "code", "name", "core_score", "core_business",
+                "core_culture", "core_dcf", "vote_count", "masters_passed",
+                "graham_g", "expectation_gap")
+POOL_MAX = 40   # material cap for the letter (top core_score rows)
+_VETO_FLAGS = ("intel_red", "borrowed_dividend", "profit_spike",
+               "expectation_overreach")
+
+
+def build_l1_pool(master: pd.DataFrame,
+                  overlays: bool = True) -> pd.DataFrame:
+    """The masters-vote L1 wide pool (vote_count>=1 and not hard-vetoed),
+    sorted by core_score — the quant half of the fused recommendation;
+    the AI completes L2-L4 while writing the letter. Same chain as
+    cmd_masters_vote minus the live pass. overlays=False skips the
+    local profile/model stores so tests stay hermetic."""
+    from .arsenal import core_triad as _cores
+    from .arsenal import master_vote_panel as mvp
+    from .arsenal import red_flag_battery as rfb
+    df = master
+    if "core_score" not in df.columns:
+        df = _cores.add_core_scores(df)
+    df = rfb.add_snapshot_flags(mvp.masters_vote(df))
+    if overlays:
+        from . import profile as _prof
+        from .model import store as _mstore
+        df, _ = _prof.apply_distilled_culture(df)
+        df, _ = _mstore.apply_modeled_dcf(df)
+    pool = df[(df["vote_count"] >= 1) & (~df["veto_hard"])]
+    return pool.sort_values("core_score", ascending=False,
+                            na_position="last").reset_index(drop=True)
+
+
+def _truthy(v) -> bool:
+    try:
+        return bool(float(v))
+    except (TypeError, ValueError):
+        return False
+
+
+def _pool_records(pool: pd.DataFrame) -> list:
+    from . import report
+    cols = [c for c in POOL_COLUMNS if c in pool.columns]
+    head = pool.head(POOL_MAX)
+    records = report.df_records(head[cols])
+    for rec, (_, row) in zip(records, head.iterrows()):
+        rec["vetoes"] = [f for f in _VETO_FLAGS if _truthy(row.get(f))]
+    return records

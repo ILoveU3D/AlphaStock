@@ -179,3 +179,56 @@ class TestSendMessage:
                             today="2026-10-18", smtp_factory=_AuthFailSMTP)
         # failed send must not record the day
         assert not ml.sent_log_path().exists()
+
+
+def _scores(v, g, q, s, m, c):
+    return {"value_score": v, "growth_score": g, "quality_score": q,
+            "safety_score": s, "momentum_score": m, "cashflow_score": c}
+
+
+def _master_frame():
+    """Synthetic master.csv-style frame (same contract as
+    tests/test_consensus.py): row 000001 passes the five fundamental
+    masters; 000002 is a profit-spike cyclical peak (hard-vetoed);
+    000003 passes nothing."""
+    rows = [
+        {"market": "A", "code": "000001", "name": "低波优质",
+         "price": 10.0, "pe_ttm": 12.0, "pb": 1.2, "roe": 25.0,
+         "gross_margin": 60.0, "debt_ratio": 30.0, "ocf_yield": 8.0,
+         "fcf_yield": 7.0, "borrowed_dividend": 0, "dividend_yield": 3.0,
+         "profit_yoy": 20.0, "ret_60d": 5.0, "volatility": 20.0,
+         "pos_52w": 70.0, **_scores(70, 80, 90, 70, 50, 85)},
+        {"market": "A", "code": "000002", "name": "周期顶",
+         "price": 5.0, "pe_ttm": 4.0, "pb": 0.8, "roe": 25.0,
+         "gross_margin": 10.0, "debt_ratio": 40.0, "ocf_yield": 30.0,
+         "fcf_yield": 20.0, "borrowed_dividend": 0, "dividend_yield": 2.0,
+         "profit_yoy": 250.0, "ret_60d": 5.0, "volatility": 30.0,
+         "pos_52w": 70.0, **_scores(75, 65, 45, 50, 70, 65)},
+        {"market": "A", "code": "000003", "name": "全挂",
+         "price": 8.0, "pe_ttm": 60.0, "pb": 9.0, "roe": 2.0,
+         "gross_margin": 5.0, "debt_ratio": 80.0, "ocf_yield": 0.5,
+         "fcf_yield": 0.2, "borrowed_dividend": 1, "dividend_yield": 0.0,
+         "profit_yoy": -30.0, "ret_60d": -20.0, "volatility": 80.0,
+         "pos_52w": 5.0, **_scores(20, 30, 15, 25, 10, 20)},
+    ]
+    return pd.DataFrame(rows)
+
+
+class TestL1Pool:
+    def test_pool_excludes_vetoed_and_voteless(self):
+        pool = ml.build_l1_pool(_master_frame(), overlays=False)
+        assert list(pool["code"]) == ["000001"]
+
+    def test_pool_records_shape_and_vetoes(self):
+        pool = ml.build_l1_pool(_master_frame(), overlays=False)
+        records = ml._pool_records(pool)
+        assert len(records) == 1
+        rec = records[0]
+        for key in ("market", "code", "name", "core_score",
+                    "core_business", "core_culture", "core_dcf",
+                    "vote_count", "masters_passed",
+                    "graham_g", "expectation_gap", "vetoes"):
+            assert key in rec, f"missing pool key {key}"
+        assert rec["vetoes"] == []
+        # graham audit: (12 - 8.5) / 2 = 1.75 implied growth
+        assert rec["graham_g"] == pytest.approx(1.75)
