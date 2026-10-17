@@ -219,6 +219,16 @@ class TestL1Pool:
         pool = ml.build_l1_pool(_master_frame(), overlays=False)
         assert list(pool["code"]) == ["000001"]
 
+    def test_nan_flags_never_display_as_vetoes(self):
+        """Real master.csv carries NaN intel_red for HK/US rows (no intel
+        coverage); NaN is not a flag — bool(float('nan')) is True, which
+        is exactly the bug this test guards."""
+        master = _master_frame()
+        master["intel_red"] = [float("nan")] * 3
+        pool = ml.build_l1_pool(master, overlays=False)
+        records = ml._pool_records(pool)
+        assert records[0]["vetoes"] == []
+
     def test_pool_records_shape_and_vetoes(self):
         pool = ml.build_l1_pool(_master_frame(), overlays=False)
         records = ml._pool_records(pool)

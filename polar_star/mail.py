@@ -302,9 +302,10 @@ def build_l1_pool(master: pd.DataFrame,
 
 def _truthy(v) -> bool:
     try:
-        return bool(float(v))
+        f = float(v)
     except (TypeError, ValueError):
         return False
+    return f == f and f != 0.0   # NaN is not a flag (NaN != NaN)
 
 
 def _pool_records(pool: pd.DataFrame) -> list:
