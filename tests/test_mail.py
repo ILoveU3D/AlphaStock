@@ -232,3 +232,67 @@ class TestL1Pool:
         assert rec["vetoes"] == []
         # graham audit: (12 - 8.5) / 2 = 1.75 implied growth
         assert rec["graham_g"] == pytest.approx(1.75)
+
+
+def _fake_analyze(match, snapshot_dir=None, **kwargs):
+    return {"quote": {"price": 100.0, "pct_chg": 1.5,
+                      "pe_ttm": 12.0, "pb": 1.2},
+            "percentiles": {"pe_ttm": 30.0},
+            "cores": {"business": 80.0, "culture": None, "dcf": 70.0,
+                      "core_score": 75.0, "gaps": "CULTURE_VETO_ONLY"},
+            "risk_flags": ["示例旗标 verbatim"],
+            "warnings": []}
+
+
+class TestDigest:
+    def test_digest_aggregates_pool_and_watch(self, mail_tmp):
+        ml.add_subscriber("我", "me@qq.com",
+                          ["A:000001", "HK:00700", "A:000003"])
+        digest = ml.build_digest(
+            mail_tmp, ml.load_subscribers(), master=_master_frame(),
+            analyze_fn=_fake_analyze, resolve_fn=lambda q: [],
+            overlays=False)
+        assert digest["snapshot"] == mail_tmp.name
+        assert digest["data_as_of"].startswith("快照 ")
+        assert len(digest["l1_pool"]) == 1
+        watch = {w["code"]: w for w in digest["watchlist"]}
+        assert set(watch) == {"000001", "00700", "000003"}
+        # in-master stock analyzed via the injected analyze_fn
+        assert watch["000001"]["missing"] is False
+        assert watch["000001"]["price"] == 100.0
+        assert watch["000001"]["flags"] == ["示例旗标 verbatim"]
+        # absent from master + resolve miss -> declared missing
+        assert watch["00700"]["missing"] is True
+        # in master even though it passes no master gate -> analyzed
+        assert watch["000003"]["missing"] is False
+
+    def test_digest_analyze_exception_becomes_missing(self, mail_tmp):
+        def _boom(match, snapshot_dir=None, **kwargs):
+            raise RuntimeError("quote source down")
+
+        ml.add_subscriber("我", "me@qq.com", ["A:000001"])
+        digest = ml.build_digest(
+            mail_tmp, ml.load_subscribers(), master=_master_frame(),
+            analyze_fn=_boom, resolve_fn=lambda q: [], overlays=False)
+        item = digest["watchlist"][0]
+        assert item["missing"] is True
+        assert "quote source down" in item["reason"]
+
+    def test_digest_json_roundtrip(self, mail_tmp):
+        ml.add_subscriber("我", "me@qq.com", ["A:000001"])
+        digest = ml.build_digest(
+            mail_tmp, ml.load_subscribers(), master=_master_frame(),
+            analyze_fn=_fake_analyze, resolve_fn=lambda q: [],
+            overlays=False)
+        payload = json.loads(ml.digest_to_json(digest))
+        assert payload["l1_pool"][0]["code"] == "000001"
+        assert payload["watchlist"][0]["cores"]["business"] == 80.0
+
+    def test_render_summary_smoke(self, mail_tmp):
+        ml.add_subscriber("我", "me@qq.com", ["A:000001", "HK:00700"])
+        digest = ml.build_digest(
+            mail_tmp, ml.load_subscribers(), master=_master_frame(),
+            analyze_fn=_fake_analyze, resolve_fn=lambda q: [],
+            overlays=False)
+        text = ml.render_digest_summary(digest)
+        assert "L1 pool" in text and "MISSING" in text

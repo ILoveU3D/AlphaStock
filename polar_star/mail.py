@@ -315,3 +315,129 @@ def _pool_records(pool: pd.DataFrame) -> list:
     for rec, (_, row) in zip(records, head.iterrows()):
         rec["vetoes"] = [f for f in _VETO_FLAGS if _truthy(row.get(f))]
     return records
+
+
+# ---------------------------------------------------------------------------
+# Digest: watch stock summaries + the material pack
+# ---------------------------------------------------------------------------
+def _data_as_of(snap_dir: Path) -> str:
+    snap_dir = Path(snap_dir)
+    man = snap_dir / "manifest.json"
+    ts = ""
+    if man.exists():
+        ts = datetime.fromtimestamp(
+            man.stat().st_mtime).strftime("%Y-%m-%d %H:%M")
+    return f"快照 {snap_dir.name}" + (f"（更新于 {ts}）" if ts else "")
+
+
+def _resolve_watch(token: str, master, resolve_fn):
+    """'MARKET:CODE' -> Match: the master.csv row is preferred (it
+    carries market_id for live quotes); resolve_fn is the fallback;
+    None when both miss (the item becomes a declared gap)."""
+    market, _, code = token.partition(":")
+    if master is not None:
+        hit = master[(master["market"] == market)
+                     & (master["code"].astype(str) == code)]
+        if not hit.empty:
+            r = hit.iloc[0]
+            return Match(market, code, str(r.get("name") or code), 100.0,
+                         str(r.get("market_id") or ""))
+    if resolve_fn is not None:
+        for m in resolve_fn(code):
+            if m.market == market and m.code == code:
+                return m
+    return None
+
+
+def _watch_item(m: Match, result: dict) -> dict:
+    q = result.get("quote") or {}
+    return {"market": m.market, "code": m.code, "name": m.name,
+            "missing": False,
+            "price": q.get("price"), "pct_chg": q.get("pct_chg"),
+            "pe_ttm": q.get("pe_ttm"), "pb": q.get("pb"),
+            "percentiles": result.get("percentiles") or {},
+            "cores": result.get("cores") or {},
+            "flags": result.get("risk_flags") or [],
+            "warnings": result.get("warnings") or []}
+
+
+def build_digest(snap_dir, subscribers, master=None, analyze_fn=None,
+                 resolve_fn=None, overlays: bool = True) -> dict:
+    """Aggregate today's letter material: the L1 pool (recommendation
+    half) + one ask summary per deduped subscriber watch stock.
+    analyze_fn/resolve_fn are injectable so tests never touch the
+    network; a stock that fails becomes a missing item the AI must
+    declare, never a fabricated row."""
+    snap_dir = Path(snap_dir)
+    if master is None:
+        from . import report
+        master = report.load_master(snap_dir)
+    if analyze_fn is None:
+        from . import analyze as az
+        analyze_fn = az.analyze_stock
+    if resolve_fn is None:
+        from . import resolve as rs
+        resolve_fn = rs.resolve
+    pool = build_l1_pool(master, overlays=overlays)
+    watch = []
+    for token in collect_watchlist(subscribers):
+        m = _resolve_watch(token, master, resolve_fn)
+        if m is None:
+            market, _, code = token.partition(":")
+            watch.append({"market": market, "code": code, "name": "",
+                          "missing": True,
+                          "reason": "not found in snapshot or resolve "
+                                    "chain"})
+            continue
+        try:
+            watch.append(_watch_item(m, analyze_fn(m,
+                                                   snapshot_dir=snap_dir)))
+        except Exception as exc:   # one stock must never sink the digest
+            watch.append({"market": m.market, "code": m.code,
+                          "name": m.name, "missing": True,
+                          "reason": f"{type(exc).__name__}: {exc}"})
+    return {"date": date.today().isoformat(),
+            "data_as_of": _data_as_of(snap_dir),
+            "snapshot": snap_dir.name,
+            "l1_pool": _pool_records(pool),
+            "watchlist": watch}
+
+
+def _jsonable(obj):
+    """JSON-safe conversion (numpy scalars -> python, NaN -> None)."""
+    import numpy as np
+    if isinstance(obj, dict):
+        return {k: _jsonable(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [_jsonable(v) for v in obj]
+    if isinstance(obj, np.generic):
+        obj = obj.item()
+    if isinstance(obj, float) and pd.isna(obj):
+        return None
+    return obj
+
+
+def digest_to_json(digest: dict) -> str:
+    return json.dumps(_jsonable(digest), ensure_ascii=False, indent=2)
+
+
+def render_digest_summary(digest: dict) -> str:
+    lines = [f"== 每日邮件素材 {digest['date']} ==",
+             f"data-as-of: {digest['data_as_of']}",
+             f"L1 pool: {len(digest['l1_pool'])} rows "
+             f"(top by core_score)"]
+    for rec in digest["l1_pool"][:10]:
+        lines.append(f"  {rec.get('market')}:{rec.get('code')} "
+                     f"{rec.get('name')}  core={rec.get('core_score')}  "
+                     f"vetoes={','.join(rec.get('vetoes') or []) or '-'}")
+    lines.append(f"watchlist: {len(digest['watchlist'])} stocks")
+    for w in digest["watchlist"]:
+        if w.get("missing"):
+            lines.append(f"  {w['market']}:{w['code']} "
+                         f"MISSING ({w.get('reason')})")
+        else:
+            lines.append(f"  {w['market']}:{w['code']} {w.get('name')}  "
+                         f"price={w.get('price')} "
+                         f"({w.get('pct_chg')}%)  "
+                         f"flags={len(w.get('flags') or [])}")
+    return "\n".join(lines)
