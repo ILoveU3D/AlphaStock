@@ -15,9 +15,10 @@ links:
   - "refines:main-loss-good-times-bad-stocks"
   - "tension:franchise-moat"
   - "applies-to:marks-contrarian-investing"
-version: 1
+  - "applies-to:master-sheng"
+version: 2
 created_at: 2026-10-11T18:22:18
-updated_at: 2026-10-11T18:22:18
+updated_at: 2026-10-17T23:00:49
 ---
 
 ## 名望的解剖（第二卷第三章第3节）

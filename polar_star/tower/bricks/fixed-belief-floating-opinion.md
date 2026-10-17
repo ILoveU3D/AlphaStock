@@ -15,9 +15,10 @@ links:
   - "refines:revolution-as-religion"
   - "refines:pe-as-priced-growth"
   - "refines:marks-predict-limitation"
-version: 1
+  - "applies-to:master-sheng"
+version: 2
 created_at: 2026-10-11T18:22:42
-updated_at: 2026-10-11T18:22:42
+updated_at: 2026-10-17T23:00:43
 ---
 
 ## 双层结构（第二卷第四章）

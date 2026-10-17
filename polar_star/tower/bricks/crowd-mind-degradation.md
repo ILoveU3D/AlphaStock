@@ -15,9 +15,10 @@ links:
   - "refines:emt-refutation"
   - "refines:market-pari-mutuel"
   - "refines:marks-second-level-thinking"
-version: 1
+  - "applies-to:master-sheng"
+version: 2
 created_at: 2026-10-11T18:21:48
-updated_at: 2026-10-11T18:21:48
+updated_at: 2026-10-17T23:00:41
 ---
 
 ## 机制（导论+第一卷）

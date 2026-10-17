@@ -14,9 +14,10 @@ links:
   - "refines:fisher-scuttlebutt"
   - "refines:attention-economy"
   - "refines:benfen-motive-purity"
-version: 2
+  - "applies-to:master-sheng"
+version: 3
 created_at: 2026-10-11T18:22:57
-updated_at: 2026-10-12T00:16:25
+updated_at: 2026-10-17T23:00:47
 ---
 
 ## 领袖的解剖（第二卷第三章第1节）
