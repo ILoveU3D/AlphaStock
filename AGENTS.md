@@ -461,6 +461,26 @@ profile. The value DNA of this toolkit: mid/long are the promoted
 horizons; ultrashort/short answers must carry the caution line and
 position-sizing discipline.
 
+## Daily mail (每日邮件)
+
+A daily Buffett-letter-style Chinese letter (user mandate 2026-10-17,
+spec `docs/superpowers/specs/2026-10-17-daily-mail-design.md`):
+**the machine aggregates, the AI writes, the machine delivers** —
+`python -m polar_star mail digest [--json]` builds the material pack
+(L1 wide pool + one ask summary per deduped subscriber watch stock;
+freshness-gated like every data command), the AI composes the letter
+(today's pick via the fused pipeline / a story from its own knowledge
+/ watch-stock analyses — 3-5 minute read), and `python -m polar_star
+mail send --file X.html --subject "..." --data-as-of "..."` wraps it
+in the fixed serif shell and delivers it via QQ-mail SMTP
+(To: the sender mailbox, Cc: all subscribers; one send per day unless
+`--force`; `--dry-run` prints without sending). Subscribers are
+managed with `subscriber add|remove|list`; storage is LOCAL-ONLY
+under top-level `mail/` (gitignored, never pushed — SMTP credentials
+in `mail/config.json`, hand-edited once). The scheduled task
+(TRAE solo, 10:00 daily) runs: doctor → fetch if needed → digest →
+write letter → send.
+
 ## Answer shape (hard rules)
 
 1. Verdict first, one sentence. Then key numbers with units and the
