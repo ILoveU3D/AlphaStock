@@ -209,3 +209,57 @@ def html_to_text(html: str) -> str:
     """Plain-text fallback for the MIME alternative part."""
     text = unescape(_TAG_RE.sub("", html))
     return re.sub(r"\n{3,}", "\n\n", text).strip()
+
+
+# ---------------------------------------------------------------------------
+# Delivery
+# ---------------------------------------------------------------------------
+def send_message(cfg: dict, subscribers: list, subject: str,
+                 body_html: str, data_as_of: str, force: bool = False,
+                 dry_run: bool = False, today: str | None = None,
+                 smtp_factory=None) -> dict:
+    """Assemble + deliver the daily letter. To: the sender mailbox;
+    Cc: every subscriber (sender-address duplicates skipped). One send
+    per day unless force — the scheduled task must never double-mail."""
+    if not subscribers:
+        raise ValueError("no subscribers; add one with "
+                         "`python -m polar_star subscriber add`")
+    today = today or date.today().isoformat()
+    log = sent_log_path()
+    sent_dates = (set(log.read_text(encoding="utf-8").split())
+                  if log.exists() else set())
+    if today in sent_dates and not force:
+        raise ValueError(f"daily mail already sent on {today}; "
+                         f"pass --force to send again")
+    html = wrap_letter(body_html, data_as_of)
+    cc = []
+    for s in subscribers:
+        if s.email.lower() == cfg["username"].lower() or s.email in cc:
+            continue
+        cc.append(s.email)
+    msg = EmailMessage()
+    msg["Subject"] = subject
+    msg["From"] = formataddr((cfg["from_name"], cfg["username"]))
+    msg["To"] = cfg["username"]
+    if cc:
+        msg["Cc"] = ", ".join(cc)
+    msg.set_content(html_to_text(html))
+    msg.add_alternative(html, subtype="html")
+    if dry_run:
+        return {"dry_run": True, "to": cfg["username"], "cc": cc,
+                "subject": subject, "html": html}
+    factory = smtp_factory or smtplib.SMTP_SSL
+    try:
+        with factory(cfg["smtp_host"], int(cfg["smtp_port"]),
+                     timeout=30) as server:
+            server.login(cfg["username"], cfg["auth_code"])
+            server.send_message(msg, to_addrs=[cfg["username"], *cc])
+    except smtplib.SMTPAuthenticationError as exc:
+        raise ValueError(
+            "SMTP authentication failed — QQ 邮箱需要 SMTP 授权码"
+            "（不是登录密码），在 邮箱设置→账户→POP3/SMTP服务 "
+            "重新生成后更新 mail/config.json") from exc
+    sent_dates.add(today)
+    atomic_write_text(log, "\n".join(sorted(sent_dates)) + "\n")
+    return {"sent": True, "to": cfg["username"], "cc": cc,
+            "subject": subject}
