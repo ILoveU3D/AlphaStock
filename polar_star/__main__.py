@@ -13,6 +13,9 @@ Usage:
     python -m polar_star overview [--markets A,HK] [--top 10]
     python -m polar_star recommend [--user me] [--top 10]
     python -m polar_star user create|list|show|set-style ...
+    python -m polar_star mail digest [--json]
+    python -m polar_star mail send --file X.html --subject "..." --data-as-of "..."
+    python -m polar_star subscriber add|remove|list
     python -m polar_star holding add|update|remove|list ...
     python -m polar_star doctor
     python -m polar_star skill list|show|note|edit ...
@@ -163,6 +166,83 @@ def cmd_screen(args) -> int:
     print(f"\nwrote {csv_path}")
     print(f"wrote {md_path}")
     return 0
+
+
+def cmd_mail(args) -> int:
+    """Daily letter: `digest` aggregates the material (freshness-gated
+    like every data command); `send` delivers the AI-written letter —
+    no gate, it reads no market data."""
+    from . import mail as ml
+    if args.mail_cmd == "digest":
+        if not _check_freshness(args):
+            return 1
+        try:
+            snap_dir = report.resolve_snapshot(args.data_dir,
+                                               args.snapshot)
+            digest = ml.build_digest(snap_dir, ml.load_subscribers())
+        except (FileNotFoundError, ValueError) as exc:
+            raise SystemExit(str(exc)) from None
+        print(ml.digest_to_json(digest) if args.json
+              else ml.render_digest_summary(digest))
+        return 0
+    # send
+    try:
+        body = Path(args.file).read_text(encoding="utf-8")
+    except OSError as exc:
+        raise SystemExit(f"cannot read {args.file}: {exc}") from None
+    try:
+        result = ml.send_message(
+            ml.load_mail_config(), ml.load_subscribers(), args.subject,
+            body, args.data_as_of, force=args.force,
+            dry_run=args.dry_run)
+    except (ValueError, FileNotFoundError) as exc:
+        raise SystemExit(str(exc)) from None
+    if result.get("dry_run"):
+        print(f"[DRY RUN] To: {result['to']}"
+              + (f"  Cc: {', '.join(result['cc'])}"
+                 if result["cc"] else ""))
+        print(result["html"])
+    else:
+        print(f"sent: To {result['to']}"
+              + (f", Cc {len(result['cc'])}" if result["cc"] else "")
+              + f" — {result['subject']}")
+    return 0
+
+
+def cmd_subscriber(args) -> int:
+    """Subscriber registry management — not freshness-gated (same
+    contract as tower/thesis: the registry depends on no snapshot)."""
+    from dataclasses import asdict
+    from . import mail as ml
+    try:
+        if args.subscriber_cmd == "add":
+            watch = [t.strip() for t in (args.watch or "").split(",")
+                     if t.strip()]
+            sub = ml.add_subscriber(args.name, args.email, watch)
+            print(f"added {sub.email}"
+                  + (f" watching {', '.join(sub.watchlist)}"
+                     if sub.watchlist else ""))
+            return 0
+        if args.subscriber_cmd == "remove":
+            if not ml.remove_subscriber(args.email):
+                raise SystemExit(f"no subscriber {args.email!r}")
+            print(f"removed {args.email}")
+            return 0
+        subs = ml.load_subscribers()
+        if args.json:
+            print(json.dumps([asdict(s) for s in subs],
+                             ensure_ascii=False, indent=2))
+        elif not subs:
+            print("no subscribers; add one with `python -m polar_star "
+                  "subscriber add --name X --email Y`")
+        else:
+            for s in subs:
+                print(f"{s.name} <{s.email}>"
+                      + (f"  watch: {', '.join(s.watchlist)}"
+                         if s.watchlist else ""))
+        return 0
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from None
 
 
 def cmd_masters_vote(args) -> int:
@@ -2882,6 +2962,50 @@ def build_parser() -> argparse.ArgumentParser:
     po.add_argument("--json", action="store_true",
                     help="pure-JSON stdout (full precision)")
     po.set_defaults(func=cmd_overview)
+
+    pmail = sub.add_parser(
+        "mail", help="daily letter: digest the material / send the letter")
+    pmail_sub = pmail.add_subparsers(dest="mail_cmd", required=True)
+    pmail_d = pmail_sub.add_parser(
+        "digest", help="aggregate today's letter material "
+                       "(freshness-gated)")
+    pmail_d.add_argument("--json", action="store_true")
+    pmail_d.add_argument("--snapshot", default=None)
+    pmail_d.add_argument("--data-dir", dest="data_dir", default=None)
+    pmail_d.add_argument("--no-check", dest="no_check",
+                         action="store_true",
+                         help="skip the freshness gate (testing only)")
+    pmail_s = pmail_sub.add_parser(
+        "send", help="send the AI-written letter via QQ-mail SMTP")
+    pmail_s.add_argument("--file", required=True,
+                         help="HTML body fragment written by the AI")
+    pmail_s.add_argument("--subject", required=True)
+    pmail_s.add_argument("--data-as-of", dest="data_as_of",
+                         required=True,
+                         help="from the digest's data_as_of field")
+    pmail_s.add_argument("--force", action="store_true",
+                         help="override the one-send-per-day guard")
+    pmail_s.add_argument("--dry-run", dest="dry_run",
+                         action="store_true",
+                         help="assemble and print without sending")
+    pmail.set_defaults(func=cmd_mail)
+
+    psubr = sub.add_parser("subscriber",
+                           help="manage daily-mail subscribers")
+    psubr_sub = psubr.add_subparsers(dest="subscriber_cmd",
+                                     required=True)
+    psubr_a = psubr_sub.add_parser("add", help="add a subscriber")
+    psubr_a.add_argument("--name", required=True)
+    psubr_a.add_argument("--email", required=True)
+    psubr_a.add_argument("--watch", default="",
+                         help="comma-separated MARKET:CODE watchlist, "
+                              "e.g. HK:00700,A:600519")
+    psubr_r = psubr_sub.add_parser("remove",
+                                   help="remove a subscriber")
+    psubr_r.add_argument("--email", required=True)
+    psubr_l = psubr_sub.add_parser("list", help="list subscribers")
+    psubr_l.add_argument("--json", action="store_true")
+    psubr.set_defaults(func=cmd_subscriber)
 
     pdoc = sub.add_parser("doctor", help="check snapshot health/freshness")
     pdoc.add_argument("--data-dir", default=None, help="data directory")

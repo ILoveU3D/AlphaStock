@@ -296,3 +296,37 @@ class TestDigest:
             overlays=False)
         text = ml.render_digest_summary(digest)
         assert "L1 pool" in text and "MISSING" in text
+
+
+class TestCli:
+    def test_subscriber_roundtrip_and_send_dry_run(self, mail_tmp,
+                                                   capsys):
+        from polar_star.__main__ import main
+        assert main(["subscriber", "add", "--name", "我",
+                     "--email", "me@qq.com",
+                     "--watch", "HK:00700,A:600519"]) == 0
+        capsys.readouterr()   # drain the "added ..." line
+        assert main(["subscriber", "list", "--json"]) == 0
+        out = json.loads(capsys.readouterr().out)
+        assert out[0]["watchlist"] == ["HK:00700", "A:600519"]
+
+        _write_config(mail_tmp)
+        letter = mail_tmp / "letter.html"
+        letter.write_text("<h1>致股东</h1><p>正文</p>", encoding="utf-8")
+        assert main(["mail", "send", "--file", str(letter),
+                     "--subject", "北极星日报 2026-10-17",
+                     "--data-as-of", "快照 20261017", "--dry-run"]) == 0
+        out = capsys.readouterr().out
+        assert "[DRY RUN]" in out
+        assert "数据截至：快照 20261017" in out
+        # dry-run 不计入 sent.log —— 同一天真发不被拦
+        assert not ml.sent_log_path().exists()
+
+    def test_send_without_config_exits(self, mail_tmp, capsys):
+        from polar_star.__main__ import main
+        main(["subscriber", "add", "--name", "我", "--email", "me@qq.com"])
+        letter = mail_tmp / "letter.html"
+        letter.write_text("<p>正文</p>", encoding="utf-8")
+        with pytest.raises(SystemExit):
+            main(["mail", "send", "--file", str(letter),
+                  "--subject", "s", "--data-as-of", "a", "--dry-run"])
