@@ -52,3 +52,43 @@ class TestSubscriberStore:
 
     def test_empty_store(self, mail_tmp):
         assert ml.load_subscribers() == []
+
+
+def _write_config(tmp_path, **overrides):
+    cfg = {"smtp_host": "smtp.qq.com", "smtp_port": 465,
+           "username": "me@qq.com", "auth_code": "secret",
+           "from_name": "北极星"}
+    cfg.update(overrides)
+    (tmp_path / "config.json").write_text(
+        json.dumps(cfg, ensure_ascii=False), encoding="utf-8")
+    return cfg
+
+
+class TestMailConfig:
+    def test_missing_config_hint(self, mail_tmp):
+        with pytest.raises(FileNotFoundError, match="no mail config"):
+            ml.load_mail_config()
+
+    def test_missing_keys_rejected(self, mail_tmp):
+        _write_config(mail_tmp, auth_code="")
+        with pytest.raises(ValueError, match="missing keys: auth_code"):
+            ml.load_mail_config()
+
+    def test_roundtrip(self, mail_tmp):
+        cfg = _write_config(mail_tmp)
+        assert ml.load_mail_config() == cfg
+
+
+class TestLetterShell:
+    def test_wrap_letter_structure(self):
+        html = ml.wrap_letter("<h1>致股东</h1><p>正文</p>", "快照 20261017")
+        assert 'class="letter"' in html
+        assert "Georgia" in html          # serif shell, AI-invariant
+        assert "<h1>致股东</h1><p>正文</p>" in html
+        assert "数据截至：快照 20261017" in html
+        assert "不构成投资建议" in html
+
+    def test_html_to_text(self):
+        text = ml.html_to_text("<h1>标题</h1><p>一<br>二&amp;三</p>")
+        assert "<" not in text
+        assert "标题" in text and "二&三" in text

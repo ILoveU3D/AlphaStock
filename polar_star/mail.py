@@ -149,3 +149,63 @@ def collect_watchlist(subs) -> list:
             if tok not in out:
                 out.append(tok)
     return out
+
+
+# ---------------------------------------------------------------------------
+# SMTP config (hand-edited once)
+# ---------------------------------------------------------------------------
+def load_mail_config() -> dict:
+    path = config_path()
+    if not path.exists():
+        raise FileNotFoundError(
+            f"no mail config {path}; create it once with keys "
+            f"{', '.join(CONFIG_KEYS)} — QQ 邮箱授权码在 "
+            f"邮箱设置→账户→POP3/SMTP服务 开启后获取")
+    try:
+        cfg = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"corrupt mail config {path}: {exc}") from None
+    missing = [k for k in CONFIG_KEYS if not cfg.get(k)]
+    if missing:
+        raise ValueError(
+            f"mail config {path} missing keys: {', '.join(missing)}")
+    return cfg
+
+
+# ---------------------------------------------------------------------------
+# Letter shell (fixed CSS — the AI only writes the body fragment)
+# ---------------------------------------------------------------------------
+LETTER_CSS = """
+body{margin:0;padding:24px;background:#f7f5f0;}
+.letter{max-width:640px;margin:0 auto;background:#ffffff;padding:40px 48px;
+font-family:Georgia,"Songti SC","SimSun",serif;font-size:16px;line-height:1.8;
+color:#1a1a1a;}
+.letter h1{font-size:22px;border-bottom:1px solid #d8d2c4;padding-bottom:12px;}
+.letter h2{font-size:18px;margin-top:32px;color:#5b4a2f;}
+.letter table{border-collapse:collapse;width:100%;font-size:14px;}
+.letter th,.letter td{border:1px solid #d8d2c4;padding:6px 8px;text-align:left;}
+.footer{margin-top:40px;padding-top:16px;border-top:1px solid #d8d2c4;
+font-size:12px;color:#8a8578;}
+"""
+
+DISCLAIMER = "本邮件为北极星研究服务的个人订阅通讯，不构成投资建议。"
+
+
+def wrap_letter(body_html: str, data_as_of: str) -> str:
+    """Fixed shareholder-letter shell: serif single column, footer with
+    the data-as-of line (freshness contract) — the AI only writes the
+    body fragment; the shell guarantees the letter feel every day."""
+    return ('<!DOCTYPE html><html><head><meta charset="utf-8">'
+            f"<style>{LETTER_CSS}</style></head><body>"
+            f'<div class="letter">\n{body_html}\n'
+            f'<div class="footer">数据截至：{data_as_of}'
+            f"<br>{DISCLAIMER}</div>\n</div></body></html>")
+
+
+_TAG_RE = re.compile(r"<[^>]+>")
+
+
+def html_to_text(html: str) -> str:
+    """Plain-text fallback for the MIME alternative part."""
+    text = unescape(_TAG_RE.sub("", html))
+    return re.sub(r"\n{3,}", "\n\n", text).strip()
