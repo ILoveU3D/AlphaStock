@@ -176,28 +176,36 @@ def load_mail_config() -> dict:
 # Letter shell (fixed CSS — the AI only writes the body fragment)
 # ---------------------------------------------------------------------------
 LETTER_CSS = """
-body{margin:0;padding:24px;background:#f7f5f0;}
-.letter{max-width:640px;margin:0 auto;background:#ffffff;padding:40px 48px;
-font-family:Georgia,"Songti SC","SimSun",serif;font-size:16px;line-height:1.8;
-color:#1a1a1a;}
-.letter h1{font-size:22px;border-bottom:1px solid #d8d2c4;padding-bottom:12px;}
-.letter h2{font-size:18px;margin-top:32px;color:#5b4a2f;}
+body{margin:0;padding:28px;background:#c8b08a;}
+.letter{max-width:640px;margin:0 auto;background:#f6eedb;padding:44px 52px;
+border:1px solid #d9c9a4;box-shadow:0 2px 10px rgba(90,70,40,.25);
+font-family:Georgia,"Songti SC","SimSun",serif;font-size:16px;line-height:1.85;
+color:#2c2620;}
+.mast{text-align:center;font-size:15px;letter-spacing:8px;color:#7a5a33;
+border-bottom:3px double #b89d6d;padding-bottom:14px;margin-bottom:28px;}
+.letter h1{font-size:22px;color:#5e3f1c;border-bottom:1px solid #cbb98f;
+padding-bottom:12px;}
+.letter h2{font-size:18px;margin-top:34px;color:#7a4b21;letter-spacing:1px;}
 .letter table{border-collapse:collapse;width:100%;font-size:14px;}
-.letter th,.letter td{border:1px solid #d8d2c4;padding:6px 8px;text-align:left;}
-.footer{margin-top:40px;padding-top:16px;border-top:1px solid #d8d2c4;
-font-size:12px;color:#8a8578;}
+.letter th,.letter td{border:1px solid #cbb98f;padding:6px 8px;text-align:left;}
+.footer{margin-top:42px;padding-top:16px;border-top:1px solid #cbb98f;
+font-size:12px;color:#93835f;}
 """
+
+MASTHEAD = "北 极 星 日 报"
 
 DISCLAIMER = "本邮件为北极星研究服务的个人订阅通讯，不构成投资建议。"
 
 
 def wrap_letter(body_html: str, data_as_of: str) -> str:
-    """Fixed shareholder-letter shell: serif single column, footer with
-    the data-as-of line (freshness contract) — the AI only writes the
-    body fragment; the shell guarantees the letter feel every day."""
+    """Fixed shareholder-letter shell: kraft-paper parchment, masthead,
+    serif single column, footer with the data-as-of line (freshness
+    contract) — the AI only writes the body fragment; the shell
+    guarantees the letter feel every day."""
     return ('<!DOCTYPE html><html><head><meta charset="utf-8">'
             f"<style>{LETTER_CSS}</style></head><body>"
-            f'<div class="letter">\n{body_html}\n'
+            f'<div class="letter">\n<div class="mast">{MASTHEAD}</div>\n'
+            f'{body_html}\n'
             f'<div class="footer">数据截至：{data_as_of}'
             f"<br>{DISCLAIMER}</div>\n</div></body></html>")
 

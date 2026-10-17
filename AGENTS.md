@@ -481,6 +481,26 @@ in `mail/config.json`, hand-edited once). The scheduled task
 (TRAE solo, 10:00 daily) runs: doctor → fetch if needed → digest →
 write letter → send.
 
+**Letter style spec (user mandates 2026-10-17, every daily letter):**
+
+- **Voice**: 巴菲特股东信口吻 — 开场固定"各位股东"，结尾不署名；
+  辛辣、幽默、带讽刺，让人有读下去的欲望；说人话，机器词汇
+  （三核 / 百分位 / intel_red / DCF 核 / veto / L1-L4）一律翻译
+  成日常语言（"每 100 块收入 67 块是毛利""股东每一块钱一年
+  赚回三毛八""价格是 11 年半的利润"）。
+- **Every stock verdict**: 每只分析的股票必须给出**高估/低估幅度**
+  （估值假设写在明处：10% 要求回报、保守增长率≤过去实际值的一半，
+  周期股/银行股用各自纪律，不硬套）和**明确操作建议**（可以下手 /
+  观察 / 不伸手 / 等数据 / 按纪律持有）。数据缺的就老实说缺，
+  操作栏写"等数据"，不编数。
+- **推荐以美股、港股为主**；A 股名字出现时必须值得出现。
+- **Layout**: 牛皮纸（parchment）风格由排版壳承载
+  （`LETTER_CSS` — AI 只写正文片段，永远不改壳）。
+- **No meta sections**: 不单列"数据边界"段（数据问题在行文中
+  一句话交代）；不立规矩、不写免责（壳的页脚自带免责与数据截至行）。
+- 故事段保留：每期一个从 AI 知识储备里挑的故事，必须与当期
+  内容挂钩，来源（书/大师/史实）写明。
+
 ## Answer shape (hard rules)
 
 1. Verdict first, one sentence. Then key numbers with units and the
