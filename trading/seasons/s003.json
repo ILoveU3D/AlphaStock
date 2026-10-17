@@ -214,7 +214,7 @@
     },
     {
       "date": "2026-10-16",
-      "nav": 100294.17,
+      "nav": 99335.17,
       "cash_total": 32353.17,
       "settling_total": 0,
       "positions": [
@@ -223,27 +223,67 @@
           "code": "603444",
           "name": "吉比特",
           "qty": 100.0,
-          "price": 340.05,
+          "price": 334.52,
           "currency": "CNY",
-          "value_base": 34005.0
+          "value_base": 33452.0
         },
         {
           "market": "A",
           "code": "605098",
           "name": "行动教育",
           "qty": 400.0,
-          "price": 55.71,
+          "price": 54.93,
           "currency": "CNY",
-          "value_base": 22284.0
+          "value_base": 21972.0
         },
         {
           "market": "A",
           "code": "603605",
           "name": "珀莱雅",
           "qty": 200.0,
-          "price": 58.26,
+          "price": 57.79,
           "currency": "CNY",
-          "value_base": 11652.0
+          "value_base": 11558.0
+        }
+      ],
+      "fx": {
+        "CNY": 1.0,
+        "HKD": 0.8526,
+        "USD": 7.2
+      }
+    },
+    {
+      "date": "2026-10-17",
+      "nav": 99335.17,
+      "cash_total": 32353.17,
+      "settling_total": 0,
+      "positions": [
+        {
+          "market": "A",
+          "code": "603444",
+          "name": "吉比特",
+          "qty": 100.0,
+          "price": 334.52,
+          "currency": "CNY",
+          "value_base": 33452.0
+        },
+        {
+          "market": "A",
+          "code": "605098",
+          "name": "行动教育",
+          "qty": 400.0,
+          "price": 54.93,
+          "currency": "CNY",
+          "value_base": 21972.0
+        },
+        {
+          "market": "A",
+          "code": "603605",
+          "name": "珀莱雅",
+          "qty": 200.0,
+          "price": 57.79,
+          "currency": "CNY",
+          "value_base": 11558.0
         }
       ],
       "fx": {

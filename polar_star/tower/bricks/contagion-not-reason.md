@@ -15,9 +15,10 @@ links:
   - "refines:attention-economy"
   - "refines:pe-as-priced-growth"
   - "refines:truth-termination"
-version: 1
+  - "applies-to:master-sheng"
+version: 2
 created_at: 2026-10-11T18:22:01
-updated_at: 2026-10-11T18:22:01
+updated_at: 2026-10-17T23:00:39
 ---
 
 ## 三机制（第二卷第三章）

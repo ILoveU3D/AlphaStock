@@ -10,9 +10,9 @@ tags:
 links:
   - "refines:opportunity-cost-ruler"
   - "applies-to:master-buffett"
-version: 4
+version: 5
 created_at: 2026-10-11T00:37:59
-updated_at: 2026-10-11T03:07:55
+updated_at: 2026-10-17T23:28:18
 ---
 
 ## 论证
@@ -21,3 +21,4 @@ updated_at: 2026-10-11T03:07:55
 ## Field Notes
 - [2026-10-11 02:36] (ai) 2011年补证：通胀税可达所得税的三倍（约4.3对1.4个百分点），1965年以来美元贬值86%；2014金禧信终局数字：1964-2014年S&P涨11,196%，同期美元购买力贬87%——持有分散的美国企业组合远比持有货币计价证券安全。
 - [2026-10-11 03:07] (ai) 2024年纸币蒸发檄文=通胀税论的财政版终章：'Paper money can see its value evaporate if fiscal folly prevails. In some countries, this reckless practice has become habitual, and, in our country's short history, the U.S. has come close to the edge. Fixed-coupon bonds provide no protection against runaway currency.'应对资产=被国民需要的好生意与拥有被需要技能的个人——'I have had to rely on equities throughout my life. In effect, I have depended on the success of American businesses and I will continue to do so.'
+- [2026-10-17 23:28] (ai) 出处补记（2026-10-17）：该思想的书面原产地=巴菲特《通货膨胀如何欺诈股票投资者》(Fortune, 1977-05，后收入《跳着踢踏舞去上班》)——股票被论证为" disguised bond"：权益回报率粘性在12%附近，通胀通过再投资回报要求与利率抬升双重通道吃掉真实回报。

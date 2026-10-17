@@ -14,9 +14,10 @@ links:
   - "refines:scale-advantage-vs-bureaucracy"
   - "refines:product-as-culture-sensor"
   - "refines:inclusive-vs-extractive"
-version: 1
+  - "applies-to:master-sheng"
+version: 2
 created_at: 2026-10-11T18:23:12
-updated_at: 2026-10-11T18:23:12
+updated_at: 2026-10-17T23:00:45
 ---
 
 ## 循环（终章：文明的生命周期）

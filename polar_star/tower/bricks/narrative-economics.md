@@ -8,9 +8,10 @@ tags:
   - capital
   - narrative
 links:
-version: 2
+  - "applies-to:master-sheng"
+version: 3
 created_at: 2026-09-20T16:24:32
-updated_at: 2026-10-11T18:24:33
+updated_at: 2026-10-17T23:00:35
 ---
 
 ## 论证

@@ -8,9 +8,10 @@ tags:
   - human-nature
   - crowd
 links:
-version: 2
+  - "applies-to:master-sheng"
+version: 3
 created_at: 2026-09-20T16:24:28
-updated_at: 2026-10-11T18:25:00
+updated_at: 2026-10-17T23:00:51
 ---
 
 ## 论证（全书三卷结构）
