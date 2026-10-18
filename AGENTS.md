@@ -374,6 +374,38 @@ veto-only until a distillation activates it.
   until re-distilled. `profile status` lists coverage + staleness.
 - Never improvise a culture score from pillar data — no distillation
   means the culture core stays veto-only.
+- **三核齐备义务 (user mandate 2026-10-18)**: 荐股 / 分析 / 持仓
+  verdict 之前必须补全 profile —— **禁止两核半**: an undistilled
+  name gets veto power only, never a verdict. The profile is the
+  combined business-model + culture portrait and is therefore
+  mandatory, not optional: every recommendation, every ask-grade
+  analysis and every held position must carry a live (non-STALE)
+  assessment; a STALE profile is re-distilled before the verdict,
+  not after. Holdings are audited for profile coverage
+  (`profile status` × season positions) and gaps are closed at
+  discovery, as done for all 11 season holdings on 2026-10-18.
+- **全市场蒸馏战役 (user mandate 2026-10-18)**: every quoted company
+  in A/HK/US gets a distilled profile, run as a standing campaign
+  mirroring the modeling campaign's division of labor — the machine
+  builds the tiered queue (holdings → funnel by core_score → market
+  industry by industry, tier builders reused from `model/campaign.py`)
+  and bulk-fetches raw text; the AI distills one company at a time
+  across sessions. Commands: `profile campaign init|status|next`
+  (queue + derived progress, state in `profiles/campaign.json`,
+  LOCAL-ONLY; no scheduled monitor), `profile fetch-all
+  [--markets A,HK,US] [--force]` (bulk raw: A/HK paged datacenter
+  fast path with per-stock fallback, US per-stock SEC+stockanalysis;
+  fail-closed, never clobbers an existing raw on failure), and
+  `profile assess --from-json <file>` (the AI's batch pen — every
+  entry is AI-authored; the CLI transports, never judges). A STALE
+  assessment re-enters the work queue automatically.
+- **战役质量分层 (user mandate 2026-10-18)**: business core is
+  distilled for EVERY name (raw profile text + pillar data is enough
+  evidence); the culture core is scored ONLY when behavior-level
+  evidence exists (founder signals, 本分 evidence in raw/intel) —
+  otherwise culture stays veto-only, so thin-evidence scores never
+  flood `core_score` via the D3 hook. Market-tier arguments must
+  declare their evidence basis ("仅据公司简介+财务柱" etc.).
 
 ## Financial models (财务模型, 本地-only)
 
@@ -460,6 +492,52 @@ only the momentum window; `ask X` prints a four-horizon suitability
 profile. The value DNA of this toolkit: mid/long are the promoted
 horizons; ultrashort/short answers must carry the caution line and
 position-sizing discipline.
+
+## Daily mail (每日邮件)
+
+A daily Buffett-letter-style Chinese letter (user mandate 2026-10-17,
+spec `docs/superpowers/specs/2026-10-17-daily-mail-design.md`):
+**the machine aggregates, the AI writes, the machine delivers** —
+`python -m polar_star mail digest [--json]` builds the material pack
+(L1 wide pool + one ask summary per deduped subscriber watch stock;
+freshness-gated like every data command), the AI composes the letter
+(today's pick via the fused pipeline / a story from its own knowledge
+/ watch-stock analyses — 3-5 minute read), and `python -m polar_star
+mail send --file X.html --subject "..." --data-as-of "..."` wraps it
+in the fixed serif shell and delivers it via QQ-mail SMTP
+(To: the sender mailbox, Cc: all subscribers; one send per day unless
+`--force`; `--dry-run` prints without sending). Subscribers are
+managed with `subscriber add|remove|list`; storage is LOCAL-ONLY
+under top-level `mail/` (gitignored, never pushed — SMTP credentials
+in `mail/config.json`, hand-edited once). The scheduled task
+(TRAE solo, 10:00 daily) runs: doctor → fetch if needed → digest →
+write letter → send.
+
+**Letter style spec (user mandates 2026-10-17, every daily letter):**
+
+- **Voice**: 巴菲特股东信口吻 — 开场固定"各位股东"，结尾不署名；
+  辛辣、幽默、带讽刺，让人有读下去的欲望；说人话，机器词汇
+  （三核 / 百分位 / intel_red / DCF 核 / veto / L1-L4）一律翻译
+  成日常语言（"每 100 块收入 67 块是毛利""股东每一块钱一年
+  赚回三毛八""价格是 11 年半的利润"）。
+- **Every stock verdict**: 每只分析的股票必须给出**高估/低估幅度**
+  （估值假设写在明处：10% 要求回报、保守增长率≤过去实际值的一半，
+  周期股/银行股用各自纪律，不硬套）。推荐段的股票默认可以下手，
+  不标操作；只在**不能下手或有条件**时标注（观察 / 不伸手 /
+  等数据 / 按纪律持有 / 不追）。数据缺的就老实说缺，
+  操作栏写"等数据"，不编数。
+- **推荐以美股、港股为主**：推荐段每个市场（US / HK / A）各推
+  **一支**，只讲入选的，不解释谁被否决、为什么否决。
+- **Profile gate (user mandate 2026-10-18)**: 信中分析/推荐的每只
+  股票必须携带活体 profile 蒸馏（三核齐备义务 — 见 Company
+  profiles 节）——写信前先 fetch + assess；未蒸馏标的只有否决，
+  不上正文。
+- **Layout**: 牛皮纸（parchment）风格由排版壳承载
+  （`LETTER_CSS` — AI 只写正文片段，永远不改壳）。
+- **No meta sections**: 不单列"数据边界"段（数据问题在行文中
+  一句话交代）；不立规矩、不写免责（壳的页脚自带免责与数据截至行）。
+- 故事段保留：每期一个从 AI 知识储备里挑的故事，**与股票直接
+  或间接相关均可**，标准是"值得思考"；来源（书/大师/史实）写明。
 
 ## Answer shape (hard rules)
 

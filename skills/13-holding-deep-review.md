@@ -11,8 +11,8 @@ triggers:
 commands:
   - ask --evidence
   - screen --strategy <master>
-version: 16
-updated_at: 2026-10-15T19:37:27
+version: 17
+updated_at: 2026-10-18T15:02:21
 ---
 
 # Playbook
@@ -94,3 +94,4 @@ master-grade depth on fundamentals.
 - [2026-09-26 17:38] (ai) 20260926 机器生命周期季度复核（塔砖 terminal-value-vehicle-rotation）: 持仓体检在价格级P&L之外增加生意级三态判定——①机器仍在增发期=成长逻辑不变按论点持有; ②已转收租期=估值框架切换（增速指标退位, 股息率/分红率/FCF/回购纪律上位）, 从成长舱换入分红舱考核; ③机器停机=生意级证伪退出而非补仓; 换舱信号=增发窗口三特征全部消失（被充分定价+周期不再需要+套利消失）, 价格级波动永远不构成换舱信号（与钥匙孔纪律一致）; holding list体检管价格、本判定管生意, 两层分列输出
 - [2026-10-04 20:29] (ai) 买股票就是买公司(2026-10-04用户铁律): 评价/复盘任务默认链路=model status查新鲜度(STALE先更新)->model list对upside->异常票model show读world->大师决断同级参考->最后才对账目层; 只念journal=方法论错误
 - [2026-10-15 19:37] (ai) 当用户明确拒绝退出建议(如'我确定不卖')：正确收束=停止劝说+把持有决定落成书面声明(彩票化/行权条件/接受的最差结局)+预设复查路标(财报/解禁到点主动拉数据)+约束未来资金不摊低；继续施压只会触发承诺升级，把路堵死
+- [2026-10-18 15:02] (ai) user mandate 2026-10-18: holding review starts with profile coverage audit (profile status x season positions); every held position must carry a live assessment — gaps closed at discovery (11/11 season holdings covered 2026-10-18)

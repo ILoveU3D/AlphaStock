@@ -12,6 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"      # regenerable run-time state, cleanable
 SNAPSHOTS_DIR = DATA_DIR / "snapshots"
 USERS_DIR = BASE_DIR / "users"    # local-only user territory, never pushed
+MAIL_DIR = BASE_DIR / "mail"      # local-only mail territory, never pushed
 OUTPUT_DIR = BASE_DIR / "output"
 SKILLS_DIR = BASE_DIR / "skills"
 TOWER_DIR = Path(__file__).resolve().parent / "tower" / "bricks"
