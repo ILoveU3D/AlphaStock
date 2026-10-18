@@ -19,8 +19,8 @@ commands:
   - ask X --evidence
   - intel X
   - recommend --user me
-version: 56
-updated_at: 2026-10-15T10:59:01
+version: 58
+updated_at: 2026-10-18T15:02:40
 ---
 
 # Playbook
@@ -338,3 +338,5 @@ Output shape (hard rules):
 - [2026-10-13 22:35] (ai) 勘误(上一条痕迹的美元符号被shell吞掉，金额更正)：SLDE档案五世界加权公允 17-24 美元 < 现价 25.4 美元；NUTX 归母PE 20.9x、加权中枢 141 美元 < 现价 216.5 美元；TCOM 三情景加权 78.8 美元/ADS vs 现价 38.9 美元，熊市锚 37 美元约等于现价。结论不变：终选 TCOM。
 - [2026-10-14 11:06] (ai) 2026-10-14 A/HK 荐股日调用记录：masters-vote 宽池(A 29/HK 26 行) + arsenal screen A(180 行/74 收敛) + HK(126 行/29 收敛) 双轨齐射；采纳=轨B分歧线索吉比特/江南布衣/波司登进 L3；否决=轨A∩B 交集全簇(芭田+铝链五股, average-earnings-power cycle_adjustment 5.7x)与好孩子国际(FCF-yield 锚 GSL 同构+派息率>100% 一次性+ROE 4.3)。quirk：吉比特 dcf 核 masters-vote 池内=52.5 vs ask=93.4 同快照不一致，疑似 masters-vote 与 fetch 并发读到半写状态——masters-vote 应在 fetch 落盘后单独跑
 - [2026-10-15 10:59] (ai) 2026-10-15 A/HK 最被低估扫描: L1宽池51只(26否决:24 profit_spike/4 intel_red/1 borrowed_dividend)。终选四只跑battery: forensic-audit×2双绿灯(采信=否决 clearance, 绿灯非买入理由); value-ladder×2采信(芭田现价超格雷厄姆数8%/PVGO40% vs 中铝格雷厄姆数下方20%/PVGO19%); expectations-engine: 芭田MC+81%采信为语境, 中铝MC+190%不采信(周期峰值FCF外推, 违武器自述limits+regression-to-mean-earnings砖); cycle-trap-guard×6全通过(0.76-0.79); tactical/barrier: 两只A股周线趋势破+吊灯已触发=价值入场非趋势入场(采信为择时警示); yield-compass: 芭田cash_return 17.5 vs 中铝15.1(跨市场标尺, 采信); sizing: 半凯利12.5%绑定上限。裁决: HK=江南布衣(core 93.9全池第一,三核全验证)+波司登备选; A=芭田股份(86.1)+中国铝业周期备选
+- [2026-10-17 23:54] (ai) arsenal battery/run对快照外标的全体空转(09880实测):build_context只覆盖master宇宙,CLI无with_kline注入通道;ask的kline回补不进arsenal--快照外标的的value-ladder/barrier-forge只能手工计价
+- [2026-10-18 15:02] (ai) user mandate 2026-10-18: no recommendation without a completed live profile (business+culture distilled, non-STALE) — two cores plus veto-only culture is prohibited (no two-and-a-half cores); L3 shortlist candidates must be distilled before L4 verdict, STALE re-distilled first

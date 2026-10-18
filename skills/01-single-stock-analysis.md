@@ -9,8 +9,8 @@ triggers:
   - Is X a buy
 commands:
   - ask
-version: 29
-updated_at: 2026-10-12T22:33:08
+version: 32
+updated_at: 2026-10-18T15:02:18
 ---
 
 # Playbook
@@ -88,3 +88,6 @@ Answer "what do you think of X" with a verdict first, evidence later.
 - [2026-10-08 22:41] (ai) 利润构成核查(沐曦688802样本):单季扭亏需拆经营vs投资浮盈——2026Q2净利6.12亿中含8.87亿投资浮盈+OCF/净利过低+扣非占比过低=会计扭亏非业务扭亏,警惕财报粉饰信号
 - [2026-10-09 20:14] (ai) 2026-10-09 记忆入库迁移： ①倍数口径规则(2026-09-15用户明确)=任何倍数必须标注口径(TTM/LF/forward)且从工具箱实算，禁止记忆断言； ②信息核查原则(2026-09-14)=用户提及公司事件先搜公开渠道再定性，避免叙事替代核查(塔砖recall-is-not-verdict)
 - [2026-10-12 22:33] (ai) ask 输出的 core_* 与 masters-vote 池内同股 core_* 口径可能不同（2026-10-12 实例 TCOM：池 biz 76.6/dcf 100/分 88.28 vs ask biz 95.7/dcf 68.2/分 81.9，ask 带 'backfilled kline factors'）——排名以池为准、单股细节以 ask 为准，两组数字勿混用
+- [2026-10-18 00:16] (ai) 用户指令(2026-10-18):被问'梦想票(无E无FCF期权股)多少钱建仓'时,直接回答一句话--我没有造机器人的梦想,我只为净资产和融资现金出价XX/股(XX=每股净资产,清算地板);不展开三档分析,不付PVGO; doctrine见塔砖no-dream-no-premium
+- [2026-10-18 00:34] (ai) 用户反馈(2026-10-18):明确喜欢辛辣幽默的判决式口吻(与每日邮件风格规范同源),对话回答同样适用--幽默的载体是苛刻的出价纪律,不是段子本身
+- [2026-10-18 15:02] (ai) user mandate 2026-10-18: ask-grade verdict requires live profile (business+culture distilled, non-STALE) BEFORE the verdict — undistilled name = veto only, no verdict; STALE profile is re-distilled first, not after; no two-and-a-half cores
