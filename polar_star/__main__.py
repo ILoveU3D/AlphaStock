@@ -1891,6 +1891,76 @@ def cmd_thesis(args) -> int:
     return 0
 
 
+def _profile_assess_batch(args, prof) -> int:
+    """`profile assess --from-json <file>`: the AI's batch pen for the
+    full-market distillation campaign (user mandate 2026-10-18). The
+    file carries one assessment object or a list of them, each written
+    by the AI (same authorship contract as `model write key=@file` —
+    the CLI transports, never judges). Every entry is validated and
+    written via profile.assess; a bad entry never sinks the batch."""
+    import sys as _sys
+    from pathlib import Path
+    try:
+        data = json.loads(Path(args.from_json).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        print(f"--from-json unreadable: {exc}", file=_sys.stderr)
+        return 1
+    entries = data if isinstance(data, list) else [data]
+    try:
+        snap = report.resolve_snapshot()
+    except FileNotFoundError:
+        snap = None
+    from .resolve import resolve as resolve_stock
+    results = []
+    for i, e in enumerate(entries):
+        if not isinstance(e, dict) or not e.get("stock"):
+            results.append({"i": i, "ok": False,
+                            "error": "entry needs a 'stock' field"})
+            continue
+        try:
+            matches = resolve_stock(str(e["stock"]), snapshot_dir=snap)
+            if not matches:
+                raise ValueError(f"no match for {e['stock']!r}")
+            m = matches[0]
+            fl = e.get("founder_led")
+            if isinstance(fl, str):
+                fl = fl.strip().lower() in ("yes", "true", "1")
+            a = prof.assess(
+                m.market, m.code, name=e.get("name") or m.name,
+                business_score=e.get("business_score"),
+                culture_score=e.get("culture_score"),
+                moat_type=e.get("moat_type") or "",
+                machine_lifecycle=(e.get("machine_lifecycle")
+                                   or e.get("lifecycle") or ""),
+                founder_led=fl,
+                benfen=e.get("benfen") or [],
+                business_arg=e.get("business_arg") or "",
+                culture_arg=e.get("culture_arg") or "",
+                dcf_arg=e.get("dcf_arg") or "",
+                verdict=e.get("verdict") or "",
+                agent=e.get("agent") or args.agent)
+            results.append({"i": i, "ok": True, "id": a["id"],
+                            "business": a["business"]["score"],
+                            "culture": a["culture"]["score"]})
+        except Exception as exc:  # noqa: BLE001 — never sink the batch
+            results.append({"i": i, "ok": False,
+                            "stock": e.get("stock"),
+                            "error": str(exc)[:200]})
+    ok = sum(1 for r in results if r["ok"])
+    if args.json:
+        print(json.dumps({"total": len(entries), "ok": ok,
+                          "failed": len(entries) - ok,
+                          "results": results},
+                         ensure_ascii=False, indent=2, default=str))
+    else:
+        print(f"batch assess: {ok}/{len(entries)} written")
+        for r in results:
+            if not r["ok"]:
+                print(f"  FAIL [{r['i']}] {r.get('stock')}: {r['error']}",
+                      file=_sys.stderr)
+    return 0 if ok == len(entries) else 1
+
+
 def cmd_profile(args) -> int:
     """Company profiles (Phase 5): raw source text under data/ (cleanable)
     + AI-distilled assessments under profiles/ (LOCAL-ONLY, untracked).
@@ -1982,6 +2052,12 @@ def cmd_profile(args) -> int:
             return 0
 
         if args.profile_cmd == "assess":
+            if args.from_json:
+                return _profile_assess_batch(args, prof)
+            if not args.stock:
+                print("assess needs a stock (or --from-json FILE)",
+                      file=_sys.stderr)
+                return 1
             m = _resolve_stock_or_exit(args.stock)
             founder_led = None
             if args.founder_led is not None:
@@ -2007,6 +2083,85 @@ def cmd_profile(args) -> int:
                       f"culture={a['culture']['score']}; raw_hash "
                       f"{a.get('raw_hash') or 'none'})")
             return 0
+
+        if args.profile_cmd == "fetch-all":
+            from .fetch import profiles as pf
+            markets = tuple(m.strip().upper()
+                            for m in args.markets.split(","))
+            for mkt in markets:
+                if mkt not in ("A", "HK", "US"):
+                    raise ValueError(f"unknown market {mkt!r}")
+
+            def _progress(mkt, done, total):
+                if not args.json:
+                    print(f"    [{mkt}] per-stock {done}/{total}",
+                          file=_sys.stderr)
+
+            rep = pf.fetch_all(markets=markets, force=args.force,
+                               on_progress=_progress)
+            if args.json:
+                print(json.dumps(rep, ensure_ascii=False, indent=2))
+            else:
+                for mkt, r in rep.items():
+                    print(f"{mkt:<3} targets={r['targets']} "
+                          f"skipped={r['skipped']} saved={r['saved']} "
+                          f"failed={r['failed']}"
+                          + (f" (e.g. {', '.join(r['failed_ids'][:5])})"
+                             if r['failed_ids'] else ""))
+            return 0
+
+        if args.profile_cmd == "campaign":
+            from . import profile_campaign as pc
+            if args.campaign_cmd == "init":
+                pc.init(getattr(args, "data_dir", None))
+                p = pc.progress()
+                if args.json:
+                    print(json.dumps(p, ensure_ascii=False, indent=2))
+                else:
+                    print(f"campaign queue -> {pc.campaign_path()} "
+                          f"({p['queue_total']} targets, snapshot "
+                          f"{p['snapshot']})")
+                    for t in p["tiers"]:
+                        print(f"  t{t['tier']} {t['label']:<9} "
+                              f"{t['total']} targets")
+                    for g in p["gaps"]:
+                        print(f"  [gap] {g}", file=_sys.stderr)
+                return 0
+            if args.campaign_cmd == "status":
+                p = pc.progress()
+                if args.json:
+                    print(json.dumps(p, ensure_ascii=False, indent=2))
+                    return 0
+                if not p.get("initialized"):
+                    print("no campaign under profiles/ — run "
+                          "`profile campaign init`", file=_sys.stderr)
+                    return 1
+                print(f"campaign @ {p['snapshot']} — distilled "
+                      f"{p['distilled']}/{p['queue_total']} "
+                      f"({p['distilled_pct']}%), fetched-ready "
+                      f"{p['fetched']}")
+                for t in p["tiers"]:
+                    print(f"  t{t['tier']} {t['label']:<9} "
+                          f"distilled {t['distilled']}/{t['total']} "
+                          f"| fetched {t['fetched']} "
+                          f"| pending {t['pending']}")
+                return 0
+            if args.campaign_cmd == "next":
+                rows = pc.next_targets(args.n)
+                if args.json:
+                    print(json.dumps(rows, ensure_ascii=False, indent=2))
+                    return 0
+                if not rows:
+                    print("campaign queue empty (or every target "
+                          "distilled) — run `profile campaign init`")
+                    return 0
+                for r in rows:
+                    print(f"{r['id']:<14} {str(r.get('name') or ''):<16} "
+                          f"t{r['tier']} "
+                          f"{'raw-ready' if r['fetched'] else 'raw-missing'}")
+                return 0
+            raise SystemExit(f"unknown campaign subcommand "
+                             f"{args.campaign_cmd}")
 
         if args.profile_cmd == "status":
             rows = prof.list_assessments()
@@ -3115,10 +3270,37 @@ def build_parser() -> argparse.ArgumentParser:
     ppf_fetch = ppf_sub.add_parser(
         "fetch", help="fetch the raw profile for one stock (on-demand)")
     ppf_fetch.add_argument("stock")
+    ppf_fa = ppf_sub.add_parser(
+        "fetch-all", help="bulk-fetch raw profiles for the full market "
+                          "(campaign machine side, mandate 2026-10-18)")
+    ppf_fa.add_argument("--markets", default="A,HK,US",
+                        help="comma-separated subset (default A,HK,US)")
+    ppf_fa.add_argument("--force", action="store_true",
+                        help="refetch even where a raw already exists")
+    ppf_fa.add_argument("--json", action="store_true")
+    ppf_camp = ppf_sub.add_parser(
+        "campaign", help="full-market distillation campaign: tiered "
+                         "queue + progress (mandate 2026-10-18)")
+    ppf_camp_sub = ppf_camp.add_subparsers(dest="campaign_cmd",
+                                           required=True)
+    ppf_camp_init = ppf_camp_sub.add_parser(
+        "init", help="(re)build the tiered queue")
+    ppf_camp_init.add_argument("--data-dir", default=None)
+    ppf_camp_init.add_argument("--json", action="store_true")
+    ppf_camp_status = ppf_camp_sub.add_parser(
+        "status", help="per-tier distilled/fetched progress")
+    ppf_camp_status.add_argument("--json", action="store_true")
+    ppf_camp_next = ppf_camp_sub.add_parser(
+        "next", help="the AI work queue: first N undistilled targets")
+    ppf_camp_next.add_argument("-n", type=int, default=10)
+    ppf_camp_next.add_argument("--json", action="store_true")
     ppf_assess = ppf_sub.add_parser(
         "assess", help="write the AI distillation (the only writer; "
                        "feeds the culture core via the D3 hook)")
-    ppf_assess.add_argument("stock")
+    ppf_assess.add_argument("stock", nargs="?", default=None)
+    ppf_assess.add_argument("--from-json", default=None, metavar="FILE",
+                            help="batch pen: write AI-authored "
+                                 "assessment(s) from a JSON file")
     ppf_assess.add_argument("--business-score", type=float, default=None)
     ppf_assess.add_argument("--culture-score", type=float, default=None)
     ppf_assess.add_argument("--moat-type", default=None)
