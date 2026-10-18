@@ -18,6 +18,10 @@ output/
 # personal = users/.
 users/
 
+# Mail territory is LOCAL-ONLY (2026-10-17): SMTP credentials, subscriber
+# list and send log are private — never pushed to any remote
+mail/
+
 # Company profile assessments are LOCAL-ONLY (user mandate 2026-09-29):
 # never pushed to any remote; raw fetches live under the cleanable data/
 profiles/
