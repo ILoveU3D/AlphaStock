@@ -9,8 +9,8 @@ triggers:
 commands:
   - doctor
   - fetch
-version: 49
-updated_at: 2026-10-15T10:59:07
+version: 50
+updated_at: 2026-10-19T06:07:27
 ---
 
 # Playbook
@@ -108,3 +108,4 @@ conversation-start freshness probe:
 - [2026-10-11 12:52] (ai) Book campaign 2026-10-11 #2: MOBI text extraction without calibre - pure Python works: parse PDB header (numRecords@76, record offsets@78+8i), MOBI header in rec0 (compression@0: 2=Palmdoc, textLength@4, recordCount@8, encoding@28: 65001=UTF-8, extraFlags@0xF2). Each text record has variable trailing entries (extraFlags bits) that standard varint reading gets wrong - EMPIRICAL FIX: for each record try strip 0..15 bytes, keep the strip whose Palmdoc LZ77 decompression yields EXACTLY 4096 bytes (last record: textLength-4096*(n-1)); all 127/127 records resolved uniquely. Then concat, decode UTF-8, strip tags -> txt. Fisher MOBI 549KB -> 475KB txt verified complete.
 - [2026-10-12 22:33] (ai) US 实时报价链无备用源：EM push2 全线连接错误时 ask/holding list 退回快照价并标 'live quote unavailable'（2026-10-12 晚实例），报价须声明 10-09 收盘基准而非当日盘中价
 - [2026-10-15 10:59] (ai) 2026-10-15: fetch --markets 只接受逗号分隔(A,HK); 空格分隔(A HK)报 unrecognized arguments: HK 退出码2。另: EM outage 期间腾讯回退源下 ask 单股live quote路径不可用(evidence视图回退快照价+声明flag), 但 arsenal battery 的 barrier-forge entry 能取到实时价——单股实时价可经 battery 间接获取
+- [2026-10-19 06:07] (ai) profile campaign dump: PowerShell > redirection writes UTF-8 BOM into profile_next_dump.json and breaks json.load; use tmp/run_dump.py wrapper (runs dump_profile_next.py with stdout captured to file in utf-8) instead of shell redirect
