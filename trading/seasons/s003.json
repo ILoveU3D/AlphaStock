@@ -331,6 +331,46 @@
         "HKD": 0.92,
         "USD": 7.2
       }
+    },
+    {
+      "date": "2026-10-19",
+      "nav": 99776.17,
+      "cash_total": 32353.17,
+      "settling_total": 0,
+      "positions": [
+        {
+          "market": "A",
+          "code": "603444",
+          "name": "吉比特",
+          "qty": 100.0,
+          "price": 339.13,
+          "currency": "CNY",
+          "value_base": 33913.0
+        },
+        {
+          "market": "A",
+          "code": "605098",
+          "name": "行动教育",
+          "qty": 400.0,
+          "price": 54.86,
+          "currency": "CNY",
+          "value_base": 21944.0
+        },
+        {
+          "market": "A",
+          "code": "603605",
+          "name": "珀莱雅",
+          "qty": 200.0,
+          "price": 57.83,
+          "currency": "CNY",
+          "value_base": 11566.0
+        }
+      ],
+      "fx": {
+        "CNY": 1.0,
+        "HKD": 0.92,
+        "USD": 7.2
+      }
     }
   ],
   "journal": [
