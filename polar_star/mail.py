@@ -174,40 +174,110 @@ def load_mail_config() -> dict:
 
 # ---------------------------------------------------------------------------
 # Letter shell (fixed CSS — the AI only writes the body fragment)
+#
+# Research-note shell (user mandate 2026-10-19: HSBC / Morgan Stanley
+# daily-note style, IEEE-like two-column body): horizontal navy
+# masthead bar + red stripe on top, headline block (kicker / h1 /
+# .meta band / .standfirst abstract), then a table-based two-column
+# body (table.cols > td.col-main + td.col-side — tables are the only
+# layout that survives every mail client), sidebar carried by .box
+# blocks, and a dark footer band with the data-as-of line.
+#
+# Body-fragment contract (what the AI writes each day, all optional
+# except h1):
+#   <p class="kicker">每日价值研究 · 2026年10月19日</p>
+#   <h1>今日标题</h1>
+#   <p class="meta">VALUE DAILY · A股 / 港股 / 美股</p>
+#   <div class="standfirst">摘要：一两句话概括今日要点</div>
+#   <table class="cols"><tr>
+#     <td class="col-main">主栏正文（各位股东开场 / 推荐 / 故事 / 分析）</td>
+#     <td class="col-side">
+#       <div class="box"><div class="box-t">组合追踪 · 三期</div>…</div>
+#     </td>
+#   </tr></table>
+#   （全幅区段跟在 cols 表之后）
+# Data tables use <table class="data">; P&L coloring uses .up / .dn
+# (A股 convention red-up green-down); .num right-aligns numerics.
 # ---------------------------------------------------------------------------
 LETTER_CSS = """
-body{margin:0;padding:28px;background:#c8b08a;}
-.letter{max-width:640px;margin:0 auto;background:#f6eedb;padding:44px 52px;
-border:1px solid #d9c9a4;box-shadow:0 2px 10px rgba(90,70,40,.25);
-font-family:Georgia,"Songti SC","SimSun",serif;font-size:16px;line-height:1.85;
-color:#2c2620;}
-.mast{text-align:center;font-size:15px;letter-spacing:8px;color:#7a5a33;
-border-bottom:3px double #b89d6d;padding-bottom:14px;margin-bottom:28px;}
-.letter h1{font-size:22px;color:#5e3f1c;border-bottom:1px solid #cbb98f;
-padding-bottom:12px;}
-.letter h2{font-size:18px;margin-top:34px;color:#7a4b21;letter-spacing:1px;}
-.letter table{border-collapse:collapse;width:100%;font-size:14px;}
-.letter th,.letter td{border:1px solid #cbb98f;padding:6px 8px;text-align:left;}
-.footer{margin-top:42px;padding-top:16px;border-top:1px solid #cbb98f;
-font-size:12px;color:#93835f;}
+body{margin:0;padding:24px;background:#e9edf1;}
+.letter{max-width:720px;margin:0 auto;background:#ffffff;border:1px solid #d3dae2;
+font-family:Georgia,"Times New Roman","Songti SC","SimSun",serif;font-size:15.5px;
+line-height:1.8;color:#1c2530;}
+.mast{width:100%;border-collapse:collapse;background:#10243e;}
+.mast td{padding:13px 28px;}
+.mast-l{font-family:Helvetica,Arial,"Microsoft YaHei",sans-serif;font-size:18px;
+font-weight:bold;color:#ffffff;letter-spacing:6px;}
+.mast-r{text-align:right;font-family:Helvetica,Arial,"Microsoft YaHei",sans-serif;
+font-size:10.5px;color:#8fa3bd;letter-spacing:2px;white-space:nowrap;}
+.stripe{height:3px;background:#c80000;}
+.content{padding:28px 36px 24px;}
+.content p{margin:0 0 12px;}
+.kicker{font-family:Helvetica,Arial,"Microsoft YaHei",sans-serif;font-size:11px;
+font-weight:bold;letter-spacing:3px;color:#c80000;margin-bottom:8px;}
+.content h1{font-size:23px;line-height:1.35;color:#10243e;margin:0 0 10px;}
+.meta{font-family:Helvetica,Arial,"Microsoft YaHei",sans-serif;font-size:11px;
+letter-spacing:2px;color:#5a6b7f;border-top:2px solid #10243e;
+border-bottom:1px solid #c9d4de;padding:5px 0;margin-bottom:18px;}
+.standfirst{background:#f2f5f8;border-left:3px solid #10243e;padding:12px 16px;
+font-size:14px;color:#33404d;margin:0 0 22px;}
+.content h2{font-family:Helvetica,Arial,"Microsoft YaHei",sans-serif;font-size:15.5px;
+color:#10243e;letter-spacing:1px;border-left:4px solid #c80000;padding-left:8px;
+border-bottom:1px solid #c9d4de;padding-bottom:5px;margin:24px 0 10px;}
+.cols{width:100%;border-collapse:collapse;}
+.cols td{vertical-align:top;}
+.col-main{width:63%;padding-right:22px;}
+.col-side{width:37%;}
+.box{background:#f2f5f8;border:1px solid #dbe3ea;border-top:3px solid #10243e;
+padding:10px 12px;margin:0 0 14px;font-size:13px;line-height:1.6;}
+.box.red{border-top-color:#c80000;}
+.box-t{font-family:Helvetica,Arial,"Microsoft YaHei",sans-serif;font-size:11.5px;
+font-weight:bold;letter-spacing:1.5px;color:#10243e;border-bottom:1px solid #c9d4de;
+padding-bottom:4px;margin-bottom:8px;}
+.box p{margin:6px 0;}
+.letter table.data{border-collapse:collapse;width:100%;font-size:12.5px;}
+.letter table.data th{background:#10243e;color:#ffffff;font-weight:normal;
+font-size:11px;letter-spacing:1px;padding:5px 6px;text-align:left;}
+.letter table.data td{border-bottom:1px solid #dbe3ea;padding:5px 6px;}
+.letter table.data th:first-child,.letter table.data td:first-child{
+white-space:nowrap;}
+.num{text-align:right;}
+.up{color:#c80000;}
+.dn{color:#1a7a4a;}
+.mut{color:#8a94a0;font-size:11px;}
+.footer{margin-top:26px;border-top:2px solid #10243e;padding-top:12px;
+font-family:Helvetica,Arial,"Microsoft YaHei",sans-serif;font-size:11px;
+color:#8a94a0;line-height:1.6;}
+@media only screen and (max-width:620px){
+.cols td{display:block;width:100% !important;padding-right:0;}
+.col-side{padding-top:18px;}
+}
 """
 
-MASTHEAD = "北 极 星 日 报"
+MASTHEAD = "北极星研究"
+MAST_TAG = "POLAR STAR RESEARCH · VALUE DAILY"
 
 DISCLAIMER = "本邮件为北极星研究服务的个人订阅通讯，不构成投资建议。"
 
 
 def wrap_letter(body_html: str, data_as_of: str) -> str:
-    """Fixed shareholder-letter shell: kraft-paper parchment, masthead,
-    serif single column, footer with the data-as-of line (freshness
-    contract) — the AI only writes the body fragment; the shell
-    guarantees the letter feel every day."""
+    """Fixed research-note shell: navy masthead bar + red stripe,
+    IEEE-like two-column body classes, footer band with the data-as-of
+    line (freshness contract) — the AI only writes the body fragment;
+    the shell guarantees the bank-note feel every day."""
     return ('<!DOCTYPE html><html><head><meta charset="utf-8">'
             f"<style>{LETTER_CSS}</style></head><body>"
-            f'<div class="letter">\n<div class="mast">{MASTHEAD}</div>\n'
+            '<div class="letter">'
+            '<table class="mast"><tr>'
+            f'<td class="mast-l">{MASTHEAD}</td>'
+            f'<td class="mast-r">{MAST_TAG}</td>'
+            '</tr></table>'
+            '<div class="stripe"></div>\n'
+            '<div class="content">\n'
             f'{body_html}\n'
             f'<div class="footer">数据截至：{data_as_of}'
-            f"<br>{DISCLAIMER}</div>\n</div></body></html>")
+            f"<br>{DISCLAIMER}</div>\n"
+            "</div></div></body></html>")
 
 
 _TAG_RE = re.compile(r"<[^>]+>")
@@ -327,6 +397,28 @@ def _pool_records(pool: pd.DataFrame) -> list:
 
 
 # ---------------------------------------------------------------------------
+# Digest: seasons P&L (the AI's own three paper-trading seasons)
+# ---------------------------------------------------------------------------
+def build_seasons_block(snap_dir=None) -> list:
+    """Active-season P&L material for the letter (user mandate
+    2026-10-19: 每日邮件增加三期持仓盈亏和分析): NAV / day / net return
+    plus per-position unrealized P&L (cost merged by
+    trade._summary_from). Marking NAV is the designed daily mark —
+    the same path `trade status` walks."""
+    from . import trade
+    out = []
+    for s in trade.status_all(snap_dir=snap_dir):
+        out.append({"id": s["id"], "name": s["name"],
+                    "base_currency": s["base_currency"],
+                    "initial_capital": s["initial_capital"],
+                    "nav": s["nav"], "day_pnl": s["day_pnl"],
+                    "net_return_pct": s["net_return_pct"],
+                    "cash": s["cash"], "positions": s["positions"],
+                    "last_nav_date": s["last_nav_date"]})
+    return out
+
+
+# ---------------------------------------------------------------------------
 # Digest: watch stock summaries + the material pack
 # ---------------------------------------------------------------------------
 def _data_as_of(snap_dir: Path) -> str:
@@ -371,12 +463,14 @@ def _watch_item(m: Match, result: dict) -> dict:
 
 
 def build_digest(snap_dir, subscribers, master=None, analyze_fn=None,
-                 resolve_fn=None, overlays: bool = True) -> dict:
+                 resolve_fn=None, overlays: bool = True,
+                 seasons_fn=None) -> dict:
     """Aggregate today's letter material: the L1 pool (recommendation
-    half) + one ask summary per deduped subscriber watch stock.
-    analyze_fn/resolve_fn are injectable so tests never touch the
-    network; a stock that fails becomes a missing item the AI must
-    declare, never a fabricated row."""
+    half) + one ask summary per deduped subscriber watch stock + the
+    active-seasons P&L block. analyze_fn/resolve_fn/seasons_fn are
+    injectable so tests never touch the network; a stock that fails
+    becomes a missing item the AI must declare, never a fabricated
+    row; a seasons failure becomes seasons_error, same contract."""
     snap_dir = Path(snap_dir)
     if master is None:
         from . import report
@@ -387,7 +481,13 @@ def build_digest(snap_dir, subscribers, master=None, analyze_fn=None,
     if resolve_fn is None:
         from . import resolve as rs
         resolve_fn = rs.resolve
+    if seasons_fn is None:
+        seasons_fn = build_seasons_block
     pool = build_l1_pool(master, overlays=overlays)
+    try:
+        seasons, seasons_error = seasons_fn(snap_dir), None
+    except Exception as exc:   # seasons must never sink the digest
+        seasons, seasons_error = [], f"{type(exc).__name__}: {exc}"
     watch = []
     for token in collect_watchlist(subscribers):
         m = _resolve_watch(token, master, resolve_fn)
@@ -409,7 +509,9 @@ def build_digest(snap_dir, subscribers, master=None, analyze_fn=None,
             "data_as_of": _data_as_of(snap_dir),
             "snapshot": snap_dir.name,
             "l1_pool": _pool_records(pool),
-            "watchlist": watch}
+            "watchlist": watch,
+            "seasons": seasons,
+            "seasons_error": seasons_error}
 
 
 def _jsonable(obj):
@@ -449,4 +551,13 @@ def render_digest_summary(digest: dict) -> str:
                          f"price={w.get('price')} "
                          f"({w.get('pct_chg')}%)  "
                          f"flags={len(w.get('flags') or [])}")
+    if digest.get("seasons_error"):
+        lines.append(f"seasons: ERROR ({digest['seasons_error']})")
+    else:
+        lines.append(f"seasons: {len(digest.get('seasons') or [])} active")
+    for s in digest.get("seasons") or []:
+        lines.append(f"  {s['id']} {s['name']}  NAV {s['nav']:,.2f} "
+                     f"{s['base_currency']}  day {s['day_pnl']:+,.2f}  "
+                     f"net {s['net_return_pct']:+.2f}%  "
+                     f"positions {len(s['positions'])}")
     return "\n".join(lines)

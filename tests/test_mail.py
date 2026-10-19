@@ -83,7 +83,11 @@ class TestLetterShell:
     def test_wrap_letter_structure(self):
         html = ml.wrap_letter("<h1>致股东</h1><p>正文</p>", "快照 20261017")
         assert 'class="letter"' in html
-        assert "Georgia" in html          # serif shell, AI-invariant
+        assert "Georgia" in html          # serif body, AI-invariant
+        assert 'class="mast"' in html     # horizontal navy masthead bar
+        assert "北极星研究" in html
+        assert 'class="stripe"' in html   # red accent stripe
+        assert "col-main" in html and "col-side" in html   # two-col CSS
         assert "<h1>致股东</h1><p>正文</p>" in html
         assert "数据截至：快照 20261017" in html
         assert "不构成投资建议" in html
@@ -306,6 +310,52 @@ class TestDigest:
             overlays=False)
         text = ml.render_digest_summary(digest)
         assert "L1 pool" in text and "MISSING" in text
+
+
+def _fake_seasons(snap_dir=None):
+    return [{"id": "s001", "name": "第一期-纯美股", "base_currency": "USD",
+             "initial_capital": 7180.0, "nav": 7648.92, "day_pnl": 12.3,
+             "net_return_pct": 6.53, "cash": {"USD": 1493.44},
+             "positions": [{"market": "US", "code": "ZM", "name": "Zoom",
+                            "qty": 16.0, "price": 94.19, "currency": "USD",
+                            "value_base": 1507.04, "avg_cost": 80.0,
+                            "unrealized_pnl": 227.04,
+                            "unrealized_pnl_pct": 17.74}],
+             "last_nav_date": "2026-10-19"}]
+
+
+class TestDigestSeasons:
+    def test_seasons_block_carried(self, mail_tmp):
+        ml.add_subscriber("我", "me@qq.com", ["A:000001"])
+        digest = ml.build_digest(
+            mail_tmp, ml.load_subscribers(), master=_master_frame(),
+            analyze_fn=_fake_analyze, resolve_fn=lambda q: [],
+            overlays=False, seasons_fn=_fake_seasons)
+        assert digest["seasons_error"] is None
+        s = digest["seasons"][0]
+        assert s["nav"] == 7648.92
+        assert s["positions"][0]["unrealized_pnl_pct"] == 17.74
+        payload = json.loads(ml.digest_to_json(digest))
+        assert payload["seasons"][0]["id"] == "s001"
+
+    def test_seasons_failure_becomes_error_not_crash(self, mail_tmp):
+        def _boom(snap_dir=None):
+            raise RuntimeError("season store corrupted")
+
+        digest = ml.build_digest(
+            mail_tmp, [], master=_master_frame(),
+            analyze_fn=_fake_analyze, resolve_fn=lambda q: [],
+            overlays=False, seasons_fn=_boom)
+        assert digest["seasons"] == []
+        assert "season store corrupted" in digest["seasons_error"]
+
+    def test_render_summary_shows_seasons(self, mail_tmp):
+        digest = ml.build_digest(
+            mail_tmp, [], master=_master_frame(),
+            analyze_fn=_fake_analyze, resolve_fn=lambda q: [],
+            overlays=False, seasons_fn=_fake_seasons)
+        text = ml.render_digest_summary(digest)
+        assert "s001" in text and "+6.53%" in text
 
 
 class TestCli:

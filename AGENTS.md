@@ -499,12 +499,15 @@ A daily Buffett-letter-style Chinese letter (user mandate 2026-10-17,
 spec `docs/superpowers/specs/2026-10-17-daily-mail-design.md`):
 **the machine aggregates, the AI writes, the machine delivers** —
 `python -m polar_star mail digest [--json]` builds the material pack
-(L1 wide pool + one ask summary per deduped subscriber watch stock;
-freshness-gated like every data command), the AI composes the letter
-(today's pick via the fused pipeline / a story from its own knowledge
-/ watch-stock analyses — 3-5 minute read), and `python -m polar_star
-mail send --file X.html --subject "..." --data-as-of "..."` wraps it
-in the fixed serif shell and delivers it via QQ-mail SMTP
+(L1 wide pool + one ask summary per deduped subscriber watch stock +
+the active-seasons P&L block — per-position unrealized P&L merged from
+season cost, `seasons_error` declared on failure; freshness-gated like
+every data command), the AI composes the letter (today's pick via the
+fused pipeline / a story from its own knowledge / watch-stock analyses
+/ three-season holdings commentary — 3-5 minute read), and
+`python -m polar_star mail send --file X.html --subject "..."
+--data-as-of "..."` wraps it in the fixed research-note shell and
+delivers it via QQ-mail SMTP
 (To: the sender mailbox, Cc: all subscribers; one send per day unless
 `--force`; `--dry-run` prints without sending). Subscribers are
 managed with `subscriber add|remove|list`; storage is LOCAL-ONLY
@@ -532,8 +535,18 @@ write letter → send.
   股票必须携带活体 profile 蒸馏（三核齐备义务 — 见 Company
   profiles 节）——写信前先 fetch + assess；未蒸馏标的只有否决，
   不上正文。
-- **Layout**: 牛皮纸（parchment）风格由排版壳承载
-  （`LETTER_CSS` — AI 只写正文片段，永远不改壳）。
+- **Layout (user mandate 2026-10-19, supersedes the 2026-10-17
+  parchment shell)**: 研报风排版壳 — 仿汇丰 / 摩根士丹利每日研报邮件
+  × IEEE 双栏正文：顶部藏青横向刊头条 + 红色细条，标题区
+  （kicker / h1 / meta 分隔带 / standfirst 摘要框），正文表格双栏
+  （`table.cols`：主栏 63% + 侧栏 37%，侧栏用 `.box` 盒子），
+  数据表 `table.data`（深青表头），涨跌着色 `.up`/`.dn`（红涨绿跌）。
+  壳承载全部版式（`LETTER_CSS` + `wrap_letter`）—— AI 只写正文片段，
+  永远不改壳；片段契约注释在 mail.py 的 Letter shell 一节。
+- **三期持仓段 (user mandate 2026-10-19)**: 每日邮件必须包含三期
+  实盘持仓盈亏和分析 —— 素材由 digest 的 seasons 块提供
+  （NAV / 日盈亏 / 累计回报 + 逐持仓成本与浮动盈亏），侧栏
+  "组合追踪·三期" 盒子放数字，主栏 "三期实盘" 段放分析 prose。
 - **No meta sections**: 不单列"数据边界"段（数据问题在行文中
   一句话交代）；不立规矩、不写免责（壳的页脚自带免责与数据截至行）。
 - 故事段保留：每期一个从 AI 知识储备里挑的故事，**与股票直接

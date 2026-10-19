@@ -566,6 +566,21 @@ def test_status_dual_goal_metrics(trade_dir, snap, prices):
         (1948.01 + 50.0) / 2000.0 * 100 - 100, 2)
 
 
+def test_status_positions_carry_unrealized_pnl(trade_dir, snap, prices):
+    """Daily-mail material (user mandate 2026-10-19): the seasons block
+    needs per-position P&L, so _summary_from merges avg_cost from the
+    season store into the marked position rows."""
+    from polar_star import trade as tr
+    tr.new_season("s001", base="USD", capital=2000.0, markets=["US"])
+    tr.buy("s001", _match("US", "AAPL", "Apple"), qty=5,
+           snap_dir=snap, today="2026-09-04")
+    sm = tr.status_all(snap_dir=snap, today="2026-09-04")[0]
+    pos = sm["positions"][0]
+    assert pos["avg_cost"] == pytest.approx(230.398)   # (1150+1.99 fees)/5
+    assert pos["unrealized_pnl"] == pytest.approx(-1.99)   # the fees
+    assert pos["unrealized_pnl_pct"] == pytest.approx(-0.17, abs=0.01)
+
+
 def test_journal_day_pnl(trade_dir, snap, prices):
     from polar_star import trade as tr
     tr.new_season("s001", base="USD", capital=2000.0, markets=["US"])

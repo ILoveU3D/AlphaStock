@@ -19,8 +19,8 @@ commands:
   - ask X --evidence
   - intel X
   - recommend --user me
-version: 58
-updated_at: 2026-10-18T15:02:40
+version: 62
+updated_at: 2026-10-19T03:12:07
 ---
 
 # Playbook
@@ -340,3 +340,7 @@ Output shape (hard rules):
 - [2026-10-15 10:59] (ai) 2026-10-15 A/HK 最被低估扫描: L1宽池51只(26否决:24 profit_spike/4 intel_red/1 borrowed_dividend)。终选四只跑battery: forensic-audit×2双绿灯(采信=否决 clearance, 绿灯非买入理由); value-ladder×2采信(芭田现价超格雷厄姆数8%/PVGO40% vs 中铝格雷厄姆数下方20%/PVGO19%); expectations-engine: 芭田MC+81%采信为语境, 中铝MC+190%不采信(周期峰值FCF外推, 违武器自述limits+regression-to-mean-earnings砖); cycle-trap-guard×6全通过(0.76-0.79); tactical/barrier: 两只A股周线趋势破+吊灯已触发=价值入场非趋势入场(采信为择时警示); yield-compass: 芭田cash_return 17.5 vs 中铝15.1(跨市场标尺, 采信); sizing: 半凯利12.5%绑定上限。裁决: HK=江南布衣(core 93.9全池第一,三核全验证)+波司登备选; A=芭田股份(86.1)+中国铝业周期备选
 - [2026-10-17 23:54] (ai) arsenal battery/run对快照外标的全体空转(09880实测):build_context只覆盖master宇宙,CLI无with_kline注入通道;ask的kline回补不进arsenal--快照外标的的value-ladder/barrier-forge只能手工计价
 - [2026-10-18 15:02] (ai) user mandate 2026-10-18: no recommendation without a completed live profile (business+culture distilled, non-STALE) — two cores plus veto-only culture is prohibited (no two-and-a-half cores); L3 shortlist candidates must be distilled before L4 verdict, STALE re-distilled first
+- [2026-10-18 20:41] (ai) profile campaign 蒸馏惯例（2026-10-18 批次014-016确立）：伪信号⑥的 OCF 失真按同一逻辑延伸适用——保险公司（保费/准备金口径，如友邦/中国人寿）、券商（自营与客户保证金口径，如华泰/东北证券）的 OCF 收益率一律不作价值证据，business_arg 中显式声明口径噪音；银行股继续按 PB/ROE/股息三角纪律蒸馏。
+- [2026-10-19 00:22] (ai) profile campaign 并发避让（2026-10-19 实战）：多个 AI 会话并行跑蒸馏战役时，tmp/profile_next_dump.json 与 profile_batch_NNN.json 是共享文件名，会被互相覆写（对方曾在我读 dump 中途重写文件）；避让法：①dump 到私有文件名（如 profile_next_dump_p2.json）并 dump 40/60 取第 21-40 条（领先前沿一个身位）；②批次文件加 b 后缀（052b，有 002b 先例）；③提交前查 campaign status 确认号位未被占，评估落地要抢在对方 frontier dump 之前——对方节奏约 3 分钟/批，写入+assess 一气呵成即可零重叠分叉
+- [2026-10-19 02:09] (ai) profile assess --from-json 落库怪癖（batch 081/082 实测）：business 子对象只持久化 score/moat_type/machine_lifecycle/argument 四字段，输入 schema 的 founder_led 是不入库的输入辅助字段（拼错也不报错、不影响数据）；lifecycle 键落库为 machine_lifecycle；未知键被静默忽略——20/20 written 不等于每个键都被采信，撰写批次 JSON 时注意键名精确
+- [2026-10-19 03:12] (ai) profile campaign recovery: campaign next may return the same 20 targets that a previous session already distilled into tmp/profile_batch_NNN.json but never ran through profile assess (session interrupted) — always ls tmp/profile_batch_* and compare stock lists against the dump before writing a new batch; validate the leftover batch's schema (business_score/moat_type/lifecycle/founder_led/business_arg+最浅处=/证据基础:/agent) and run assess on it first to avoid double work
