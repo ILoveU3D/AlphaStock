@@ -696,6 +696,19 @@ def _summary_from(season, entry) -> dict:
         / initial * 100 - 100, 2))
     wd = (None if not initial else round(
         t["withdrawn"] / initial * 100, 2))
+    costs = {(p["market"], p["code"]): p.get("avg_cost")
+             for p in season["positions"]}
+    positions = []
+    for pos in entry["positions"]:
+        row = dict(pos)
+        cost = costs.get((row["market"], row["code"]))
+        if cost:
+            row["avg_cost"] = cost
+            row["unrealized_pnl"] = round(
+                (row["price"] - cost) * row["qty"], 2)
+            row["unrealized_pnl_pct"] = round(
+                (row["price"] / cost - 1) * 100, 2)
+        positions.append(row)
     return {
         "id": season["id"], "name": season["name"],
         "status": season["status"],
@@ -706,7 +719,7 @@ def _summary_from(season, entry) -> dict:
         "deposited": t["deposited"], "withdrawn": t["withdrawn"],
         "cash": {c: v for c, v in season["cash"].items() if v},
         "settling": [dict(e) for e in season["settling"]],
-        "positions": entry["positions"],
+        "positions": positions,
         "last_nav_date": entry["date"]}
 
 
