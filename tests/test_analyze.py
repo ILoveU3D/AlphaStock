@@ -135,11 +135,40 @@ class TestAnalyzeStock:
         snap = make_snapshot(tmp_path)
         monkeypatch.setattr(az, "fetch_quotes_by_secids",
                             lambda s: pd.DataFrame())
+        monkeypatch.setattr(az, "fetch_quote_any", lambda *a, **k: None)
         monkeypatch.setattr(az, "fetch_kline_any", lambda *a, **k: None)
         r = az.analyze_stock(Match("A", "600001", "Alpha Co", 100.0, "1"),
                              snapshot_dir=snap)
         assert r["quote"] is None
         assert any("live quote" in w for w in r["warnings"])
+
+    def test_live_quote_falls_back_to_tencent(self, monkeypatch):
+        """EM ulist down (the 2026-10-21 US digest gap): the quote must
+        come from the health-ordered fallback, never die quietly."""
+        monkeypatch.setattr(az, "fetch_quotes_by_secids",
+                            lambda s: pd.DataFrame())
+        monkeypatch.setattr(az, "fetch_quote_any",
+                            lambda m, c, mid="": {
+                                "code": c, "name": "Apple",
+                                "price": 220.5, "pct_chg": -0.4,
+                                "market_id": mid})
+        row = az.live_quote(Match("US", "AAPL", "Apple", 100.0, "105"))
+        assert row["price"] == 220.5
+        assert row["code"] == "AAPL"
+
+    def test_live_quote_empty_market_id_uses_fallback(self, monkeypatch):
+        """A US match the resolve chain could not secid-ize still gets a
+        Tencent quote (no market_id needed for usXXX symbols)."""
+        seen = {}
+
+        def fake(m, c, mid=""):
+            seen["args"] = (m, c, mid)
+            return {"code": c, "name": "AGNC", "price": 9.8}
+
+        monkeypatch.setattr(az, "fetch_quote_any", fake)
+        row = az.live_quote(Match("US", "AGNC", "AGNC", 100.0, ""))
+        assert row["price"] == 9.8
+        assert seen["args"] == ("US", "AGNC", "")
 
     def test_hk_live_quote_zfills_code(self, monkeypatch):
         seen = {}
