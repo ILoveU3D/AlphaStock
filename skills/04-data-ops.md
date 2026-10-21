@@ -9,8 +9,8 @@ triggers:
 commands:
   - doctor
   - fetch
-version: 50
-updated_at: 2026-10-19T06:07:27
+version: 55
+updated_at: 2026-10-21T14:32:18
 ---
 
 # Playbook
@@ -109,3 +109,8 @@ conversation-start freshness probe:
 - [2026-10-12 22:33] (ai) US 实时报价链无备用源：EM push2 全线连接错误时 ask/holding list 退回快照价并标 'live quote unavailable'（2026-10-12 晚实例），报价须声明 10-09 收盘基准而非当日盘中价
 - [2026-10-15 10:59] (ai) 2026-10-15: fetch --markets 只接受逗号分隔(A,HK); 空格分隔(A HK)报 unrecognized arguments: HK 退出码2。另: EM outage 期间腾讯回退源下 ask 单股live quote路径不可用(evidence视图回退快照价+声明flag), 但 arsenal battery 的 barrier-forge entry 能取到实时价——单股实时价可经 battery 间接获取
 - [2026-10-19 06:07] (ai) profile campaign dump: PowerShell > redirection writes UTF-8 BOM into profile_next_dump.json and breaks json.load; use tmp/run_dump.py wrapper (runs dump_profile_next.py with stdout captured to file in utf-8) instead of shell redirect
+- [2026-10-20 02:13] (ai) PowerShell '>' 重定向 dump 脚本输出会给 JSON 加 BOM，后续重读须用 encoding='utf-8-sig' 而非 'utf-8'（profile campaign 续跑场景验证）
+- [2026-10-20 11:21] (ai) mail digest watch rows return price=null for US/HK names even when same-snapshot master.csv carries their prices (the 'using snapshot/fallback data' flag text is not actually applied); daily-letter workflow must pull prices from master.csv directly. Also PowerShell '>' redirect writes UTF-8 BOM — read digest dumps with encoding='utf-8-sig'.
+- [2026-10-21 11:23] (ai) PowerShell5 batch quirk (2026-10-21 daily-mail): sk 中文名 --json > file via .ps1 mangles Chinese args (script read as GBK) and > writes UTF-16/BOM — drive batch CLI calls from a Python subprocess script using stock codes (03306 not 江南布衣) with encoding='utf-8', and read back with utf-8-sig; US live quotes unavailable during off-hours/EM outage — snapshot close price from master.csv is the honest fallback, AAPL/AGNC outside the funnel have no price row at all
+- [2026-10-21 12:00] (ai) 2026-10-21 US/HK digest gap root-caused: (1) mail digest's _resolve_watch built Matches with empty market_id from master.csv (master carries no market_id column) — live_quote returned None for every master-hit watch stock; market_id now comes from the resolve chain. (2) live_quote had no Tencent fallback — EM ulist served A-share secids but nothing for US/HK during the 2026-10-21 morning outage; it now falls back to fetch_quote_any (EM->Tencent health-ordered). (3) subscriber watch stocks (AAPL/AGNC) never entered the fetch backfill — collect_watch_symbols now unions mail/subscribers.json watchlists into watchlist.csv. Digest watch items additionally fill missing price/pe/pb from the snapshot row with an explicit warning. Standalone rebuild: tmp/backfill_watchlist.py pattern (build_watchlist + radar refresh=False reuses cached snapshot intel tables).
+- [2026-10-21 14:32] (ai) Env 2026-10-21: global Python is py -3 (3.14, pandas 3.0.5 + pytest 9.1.1); bare python on PATH is the TRAE-bundled 3.10 with no pandas/pytest — run all tests and toolkit commands via py -3 (supersedes the 2026-09-01 libs/.venv note)

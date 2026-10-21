@@ -14,8 +14,8 @@ commands:
   - trade sell
   - trade nav
   - trade journal
-version: 75
-updated_at: 2026-10-17T12:01:47
+version: 78
+updated_at: 2026-10-20T14:19:02
 ---
 
 # Playbook
@@ -148,3 +148,6 @@ for. Cite the nav-as-of date. Never soften risk observations.
 - [2026-10-17 00:05] (ai) 全仓纪律线机制(2026-10-17用户批准,ZM重锚机制全仓推广): ①重承销点=canonical加权公允(触及=复核义务非自动卖); ②机械离场=加权公允x1.12且无模型升级证据(BKE先例); ③价值地板=模型bear=触发器非判决(破线→限时重新承销); ④战术线仅战术仓(吊灯/结构止损收盘确认); ⑤证伪集独立触发不问价格; ⑥数字出处规则=非自有模型/结构位数字一律重锚; 无模型标的(FUTU型)机制不适用→铁律不加仓+结构止损+model build回写
 - [2026-10-17 00:37] (ai) FUTU建模断点恢复全流程(2026-10-17用户授权): 10-06会话12分片staging完好但model.json为70B桩→恢复=审核分片→model write整块装载→lint→fetch --force→修history口径(companyfacts ASC606 revenue缺利息收入,按20-F总收入修复5年值,NI/EBIT本已正确勿动)→build默认→set券商口径(shares=ADS等价股本140.19M,net_debt=0客户资金隔离,da/capex/nwc=0,tax=实际0.19)→build→按result.json回写引擎口径维度→journal纪律线; 20-F申报人无annual.json属正常gap; peers.json自动同行错行业(给EXEL)→显式同行集(IBKR/HOOD/TIGR/SCHW/300059)后comps才有意义
 - [2026-10-17 12:01] (ai) 原初两期清算事后检验（2026-10-17 vs 9-16重启清算标记）：老一期[三市练手]巨人网络卖25.97→今21.53（红旗退出再省-17%）/绿茶06831买5.165→今52周新低近60日-28%（躲过深套）/CARG 30.28(-7%)/新和成26.58(-1%唯一可持）/TCOM 40.01≈平；老二期[短线擒龙]北方铜业止损14.74→今12.34（机械止损vindicated)/CDE买21.01→今15.47(-26%，止损线18.9若执行只亏-10%)/DAVE买367.62→今367.40精确回到买点/招商轮船买20.39→今18.61（中间+127%过山车）/华新建材ROE崩至5.2%。结论：9只被清算持仓无一事后该留——方向错立即改在赛季架构层同样成立；写下的止损线不执行比没有止损更贵（CDE两遍学费）；擒龙季最大设计缺陷=无止盈机制（DAVE+78%过山车归零）。
+- [2026-10-19 21:58] (ai) 盘中标记失真案例(20261019): 下午digest三期块用盘前旧快照报价标记NAV,NVDA 185.09/ADBE 349.86严重失真(实际214.13/244.77)——授权窗口内的一切定价以live tick为准,交易复盘/汇报引用NAV前必须先fetch --refresh重标记;下午自动流程的标记数字在盘中窗口不可直接引用
+- [2026-10-19 21:58] (ai) fetch --refresh的SEC财务缺口会关停美股L1池(20261019实证): masters-vote池48行全A/HK零US,新开仓融合管道结构性关闭=合法abstain新名;但加仓现有模型内标的(低于canonical重承销点)与既定判决执行(吊灯/止损)不受影响——定价走live tick,选择走模型线表,两者都不依赖L1池
+- [2026-10-20 14:19] (ai) 周期股交叉验证规则(20261020芭田案,第六份人证): expectations-engine的MC p_undervalued在周期股上必须配average-earnings-power交叉——芭田MC p50 18.77/p_undervalued 1.0看似铁低估,ae_pe55.16 vs pe_ttm9.69 cycle_adj5.69x揭露FCF基数被周期顶盈利污染,MC结论整体作废(铝集群3.18x/GSL同型); cycle_adj>2即判MC不可信,owner-audit的OE/profit多年序列剧烈摆动(芭田22年-5.6~+18.5)是周期盈利签名的第三证人
