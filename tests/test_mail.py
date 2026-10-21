@@ -87,7 +87,10 @@ class TestLetterShell:
         assert 'class="mast"' in html     # horizontal navy masthead bar
         assert "北极星研究" in html
         assert 'class="stripe"' in html   # red accent stripe
-        assert "col-main" in html and "col-side" in html   # two-col CSS
+        # single column (mandate 2026-10-21): legacy .cols cells stack
+        # full-width unconditionally — phone clients ignore media queries
+        assert ".cols td{vertical-align:top;display:block" in html
+        assert "width:63%" not in html and "width:37%" not in html
         assert "<h1>致股东</h1><p>正文</p>" in html
         assert "数据截至：快照 20261017" in html
         assert "不构成投资建议" in html
@@ -183,6 +186,81 @@ class TestSendMessage:
                             today="2026-10-18", smtp_factory=_AuthFailSMTP)
         # failed send must not record the day
         assert not ml.sent_log_path().exists()
+
+
+class TestNavChart:
+    """{{NAV_CHART}} -> CID inline PNG (user mandate 2026-10-21:
+    收益曲线使用图像展示)."""
+
+    def setup_method(self):
+        _FakeSMTP.instances = []
+
+    @staticmethod
+    def _curves():
+        return [{"id": "s001", "label": "S1 US",
+                 "points": [("2026-09-16", 0.0),
+                            ("2026-09-17", 1.5),
+                            ("2026-09-18", -0.4)]}]
+
+    def test_send_attaches_cid_related_png(self, mail_tmp, monkeypatch):
+        from polar_star import mail_chart
+        monkeypatch.setattr(mail_chart, "seasons_curves",
+                            lambda: self._curves())
+        cfg = _write_config(mail_tmp)
+        result = ml.send_message(cfg, _subs(), "主题",
+                                 "<p>正文</p>{{NAV_CHART}}", "as-of",
+                                 today="2026-10-21",
+                                 smtp_factory=_FakeSMTP)
+        assert result["sent"] is True
+        msg, _ = _FakeSMTP.instances[0].sent[0]
+        html_part = msg.get_payload()[1]
+        assert html_part.get_content_type() == "multipart/related"
+        html = html_part.get_payload()[0].get_content()
+        assert 'src="cid:nav_curve"' in html
+        assert "{{NAV_CHART}}" not in html
+        img = html_part.get_payload()[-1]
+        assert img.get_content_type() == "image/png"
+        assert img["Content-ID"] == "<nav_curve>"   # RFC 2045 brackets
+        assert img.get_payload(decode=True)[:8] == b"\x89PNG\r\n\x1a\n"
+        # the plain-text alternative carries neither token nor cid
+        text = msg.get_payload()[0].get_content()
+        assert "{{NAV_CHART}}" not in text and "cid:" not in text
+
+    def test_dry_run_embeds_data_uri_preview(self, mail_tmp, monkeypatch):
+        from polar_star import mail_chart
+        monkeypatch.setattr(mail_chart, "seasons_curves",
+                            lambda: self._curves())
+        cfg = _write_config(mail_tmp)
+        result = ml.send_message(cfg, _subs(), "主题",
+                                 "<p>x</p>{{NAV_CHART}}", "as-of",
+                                 dry_run=True)
+        # browser-previewable: data URI instead of a dead cid reference
+        assert "data:image/png;base64," in result["html"]
+        assert "cid:nav_curve" not in result["html"]
+        assert "{{NAV_CHART}}" not in result["html"]
+
+    def test_no_curves_leaves_honest_gap_note(self, mail_tmp, monkeypatch):
+        from polar_star import mail_chart
+        monkeypatch.setattr(mail_chart, "seasons_curves", lambda: [])
+        cfg = _write_config(mail_tmp)
+        result = ml.send_message(cfg, _subs(), "主题",
+                                 "<p>x</p>{{NAV_CHART}}", "as-of",
+                                 today="2026-10-21",
+                                 smtp_factory=_FakeSMTP)
+        assert result["sent"] is True
+        msg, _ = _FakeSMTP.instances[0].sent[0]
+        # no drawable season -> declared gap, no fabricated image
+        assert msg.get_payload()[1].get_content_type() == "text/html"
+        assert "三期收益曲线暂缺" in msg.get_payload()[1].get_content()
+
+    def test_body_without_token_gets_no_image_part(self, mail_tmp):
+        cfg = _write_config(mail_tmp)
+        ml.send_message(cfg, _subs(), "主题", "<p>x</p>", "as-of",
+                        today="2026-10-21", smtp_factory=_FakeSMTP)
+        msg, _ = _FakeSMTP.instances[0].sent[0]
+        assert msg.get_payload()[1].get_content_type() == "text/html"
+        assert not any(p.get_content_type() == "image/png"
+                       for p in msg.walk())
 
 
 def _scores(v, g, q, s, m, c):
@@ -291,6 +369,48 @@ class TestDigest:
         item = digest["watchlist"][0]
         assert item["missing"] is True
         assert "quote source down" in item["reason"]
+
+    def test_resolve_watch_market_id_comes_from_resolve_chain(self):
+        """master.csv carries no market_id column — the secid prefix must
+        come from the resolve chain or the live quote dies (2026-10-21
+        digest gap); the master hit still wins the canonical name."""
+        from polar_star.resolve import Match
+
+        master = pd.DataFrame([{"market": "US", "code": "AAPL",
+                                "name": "苹果"}])
+
+        def resolve(q):
+            return [Match("US", q.upper(), q.upper(), 90.0, "105")]
+
+        m = ml._resolve_watch("US:AAPL", master, resolve)
+        assert m.market_id == "105"
+        assert m.name == "苹果"
+        assert m.score == 100.0
+        # out of master: the resolve chain alone decides
+        m2 = ml._resolve_watch("US:AGNC", master, resolve)
+        assert m2.market_id == "105"
+        assert m2.name == "AGNC"
+
+    def test_digest_watch_price_falls_back_to_snapshot(self, mail_tmp):
+        """Every live source down: the watch item still carries the
+        snapshot price/pe/pb with an explicit warning — a declared
+        fallback, never a fabricated row."""
+
+        def _dead_analyze(match, snapshot_dir=None, **kwargs):
+            return {"quote": None, "percentiles": {}, "cores": {},
+                    "risk_flags": [], "warnings": ["live quote unavailable"]}
+
+        ml.add_subscriber("我", "me@qq.com", ["A:000001"])
+        digest = ml.build_digest(
+            mail_tmp, ml.load_subscribers(), master=_master_frame(),
+            analyze_fn=_dead_analyze, resolve_fn=lambda q: [],
+            overlays=False)
+        item = digest["watchlist"][0]
+        assert item["missing"] is False
+        assert item["price"] == 10.0          # master 000001 snapshot price
+        assert item["pe_ttm"] == 12.0
+        assert item["pb"] == 1.2
+        assert any("snapshot" in w for w in item["warnings"])
 
     def test_digest_json_roundtrip(self, mail_tmp):
         ml.add_subscriber("我", "me@qq.com", ["A:000001"])
