@@ -19,8 +19,8 @@ commands:
   - ask X --evidence
   - intel X
   - recommend --user me
-version: 62
-updated_at: 2026-10-19T03:12:07
+version: 69
+updated_at: 2026-10-21T10:13:39
 ---
 
 # Playbook
@@ -344,3 +344,10 @@ Output shape (hard rules):
 - [2026-10-19 00:22] (ai) profile campaign 并发避让（2026-10-19 实战）：多个 AI 会话并行跑蒸馏战役时，tmp/profile_next_dump.json 与 profile_batch_NNN.json 是共享文件名，会被互相覆写（对方曾在我读 dump 中途重写文件）；避让法：①dump 到私有文件名（如 profile_next_dump_p2.json）并 dump 40/60 取第 21-40 条（领先前沿一个身位）；②批次文件加 b 后缀（052b，有 002b 先例）；③提交前查 campaign status 确认号位未被占，评估落地要抢在对方 frontier dump 之前——对方节奏约 3 分钟/批，写入+assess 一气呵成即可零重叠分叉
 - [2026-10-19 02:09] (ai) profile assess --from-json 落库怪癖（batch 081/082 实测）：business 子对象只持久化 score/moat_type/machine_lifecycle/argument 四字段，输入 schema 的 founder_led 是不入库的输入辅助字段（拼错也不报错、不影响数据）；lifecycle 键落库为 machine_lifecycle；未知键被静默忽略——20/20 written 不等于每个键都被采信，撰写批次 JSON 时注意键名精确
 - [2026-10-19 03:12] (ai) profile campaign recovery: campaign next may return the same 20 targets that a previous session already distilled into tmp/profile_batch_NNN.json but never ran through profile assess (session interrupted) — always ls tmp/profile_batch_* and compare stock lists against the dump before writing a new batch; validate the leftover batch's schema (business_score/moat_type/lifecycle/founder_led/business_arg+最浅处=/证据基础:/agent) and run assess on it first to avoid double work
+- [2026-10-19 22:12] (ai) 画像战役 dump 修正：PowerShell 下 python tmp/dump_profile_next.py 20 > tmp/profile_next_dump.json 会写入 UTF-8 BOM，后续读取须用 utf-8-sig（dump 条目字段为 id/name/summary/main_business/vision/meta/pillars，无 raw_missing 即无缺失）。
+- [2026-10-19 22:12] (ai) 画像战役文化分密度警报（2026-10-19）：batch 文件累计 2849 家已打文化分 169 家（5.93%），越过『低于5%』红线；本轮 batch147/148 共 40 家零文化分以拉回密度。候选但暂缓：浩洋股份（单项冠军+创始人20年+危机期零杠杆）、晨光生物（单项冠军+四国产能复制+创始人在岗）。后续批次继续 veto-only 直至密度回落到 5% 以下。
+- [2026-10-20 04:12] (ai) profile campaign dump quirk: python tmp/dump_profile_next.py 20 > tmp/profile_next_dump.json in PowerShell writes a UTF-8 BOM that breaks json.load — strip with utf-8-sig before parsing, or have the dump script write the file itself. Also dump entries use key id (not stock) and carry meta/pillars inline; batch files for profile assess --from-json use stock.
+- [2026-10-20 12:13] (ai) 画像蒸馏战役 quirk：tmp/dump_profile_next.py 的输出 JSON 带 UTF-8 BOM，PowerShell 重定向后再用 python json.load 会报 'Unexpected UTF-8 BOM'——须 open(...,encoding='utf-8-sig') 读取；另 PowerShell 5.x 不支持 && 分隔符，链命令用 ; 。dump 条目主键字段是 id 而非 stock，meta 里带 real_controller/org_form/income_structure_ratio，是 founder_led 与文化核判断的主要证据源。
+- [2026-10-20 17:22] (ai) profile campaign dump: run 'python tmp/dump_profile_next.py 20' WITHOUT shell redirection — the script writes tmp/profile_next_dump.json itself; adding '> tmp/profile_next_dump.json' causes PermissionError from dual file handles (hit 2026-10-20)
+- [2026-10-21 04:12] (ai) profile campaign: F10收入结构可能与公司简介主业矛盾（例000014沙河股份：结构示'显示器件制造93.14%'而简介为地产开发）——蒸馏时必须在business_arg中声明口径异常并按简介定位分析，严禁择一编造
+- [2026-10-21 10:13] (ai) profile 蒸馏 quirk：东财 F10 vision 字段可能与申报主业错配（如迦南科技 300412 vision 与固体制剂装备主业矛盾），按主营业务/产品口径采信、在 business_arg 中声明弃用错配字段；另 dump 重定向在 PowerShell 下会带 BOM，用 python capture_output 直写二进制落盘规避

@@ -14,6 +14,7 @@ atomic writes) and ``sent.log`` (one ISO date per successful send —
 the anti-double-send guard for the scheduled task).
 """
 
+import base64
 import json
 import re
 import smtplib
@@ -176,28 +177,30 @@ def load_mail_config() -> dict:
 # Letter shell (fixed CSS — the AI only writes the body fragment)
 #
 # Research-note shell (user mandate 2026-10-19: HSBC / Morgan Stanley
-# daily-note style, IEEE-like two-column body): horizontal navy
-# masthead bar + red stripe on top, headline block (kicker / h1 /
-# .meta band / .standfirst abstract), then a table-based two-column
-# body (table.cols > td.col-main + td.col-side — tables are the only
-# layout that survives every mail client), sidebar carried by .box
-# blocks, and a dark footer band with the data-as-of line.
+# daily-note style; layout mandate 2026-10-21: single column for phone
+# readers — 邮件取消两栏): horizontal navy masthead bar + red stripe on
+# top, headline block (kicker / h1 / .meta band / .standfirst abstract),
+# then a one-column body and a dark footer band with the data-as-of
+# line. Legacy two-column fragments (table.cols > td.col-main +
+# td.col-side) still parse — the cells stack full-width via an
+# unconditional display:block, so old letters render single-column
+# everywhere, media queries or not (phone mail clients ignore them).
 #
 # Body-fragment contract (what the AI writes each day, all optional
 # except h1):
-#   <p class="kicker">每日价值研究 · 2026年10月19日</p>
+#   <p class="kicker">每日价值研究 · 2026年10月21日</p>
 #   <h1>今日标题</h1>
 #   <p class="meta">VALUE DAILY · A股 / 港股 / 美股</p>
 #   <div class="standfirst">摘要：一两句话概括今日要点</div>
-#   <table class="cols"><tr>
-#     <td class="col-main">主栏正文（各位股东开场 / 推荐 / 故事 / 分析）</td>
-#     <td class="col-side">
-#       <div class="box"><div class="box-t">组合追踪 · 三期</div>…</div>
-#     </td>
-#   </tr></table>
-#   （全幅区段跟在 cols 表之后）
-# Data tables use <table class="data">; P&L coloring uses .up / .dn
-# (A股 convention red-up green-down); .num right-aligns numerics.
+#   正文区段直接顺序排列（各位股东开场 / 推荐 / 故事 / 分析 / 三期实盘）
+# Data tables use <table class="data"> (the three-season P&L is a
+# table, user mandate 2026-10-21: 列一个表格展示三期持仓收益以及分析);
+# P&L coloring uses .up / .dn (A股 convention red-up green-down);
+# .num right-aligns numerics; the seasons cumulative-return chart is
+# written as the {{NAV_CHART}} token — `mail send` replaces it with a
+# CID-inline PNG drawn from the live season NAV history (mandate
+# 2026-10-21: 收益曲线使用图像展示; --dry-run embeds a data URI so the
+# preview renders in a browser).
 # ---------------------------------------------------------------------------
 LETTER_CSS = """
 body{margin:0;padding:24px;background:#e9edf1;}
@@ -225,9 +228,8 @@ font-size:14px;color:#33404d;margin:0 0 22px;}
 color:#10243e;letter-spacing:1px;border-left:4px solid #c80000;padding-left:8px;
 border-bottom:1px solid #c9d4de;padding-bottom:5px;margin:24px 0 10px;}
 .cols{width:100%;border-collapse:collapse;}
-.cols td{vertical-align:top;}
-.col-main{width:63%;padding-right:22px;}
-.col-side{width:37%;}
+.cols td{vertical-align:top;display:block;width:100%;padding-right:0;}
+.col-side{padding-top:18px;}
 .box{background:#f2f5f8;border:1px solid #dbe3ea;border-top:3px solid #10243e;
 padding:10px 12px;margin:0 0 14px;font-size:13px;line-height:1.6;}
 .box.red{border-top-color:#c80000;}
@@ -249,8 +251,10 @@ white-space:nowrap;}
 font-family:Helvetica,Arial,"Microsoft YaHei",sans-serif;font-size:11px;
 color:#8a94a0;line-height:1.6;}
 @media only screen and (max-width:620px){
-.cols td{display:block;width:100% !important;padding-right:0;}
-.col-side{padding-top:18px;}
+body{padding:8px;}
+.content{padding:18px 16px 16px;}
+.mast td{padding:10px 16px;}
+.content h1{font-size:20px;}
 }
 """
 
@@ -292,6 +296,36 @@ def html_to_text(html: str) -> str:
 # ---------------------------------------------------------------------------
 # Delivery
 # ---------------------------------------------------------------------------
+NAV_CHART_TOKEN = "{{NAV_CHART}}"
+NAV_CHART_CID = "nav_curve"
+_CHART_IMG_STYLE = ("display:block;width:100%;max-width:640px;height:auto;"
+                    "border:1px solid #dbe3ea;")
+
+
+def _nav_chart_html(dry_run: bool) -> tuple:
+    """(replacement html, png bytes | None) for the {{NAV_CHART}} token.
+    Real sends reference a CID attachment; dry-runs embed a data URI so
+    the preview renders in a browser. No drawable season -> an honest
+    muted gap note — a missing curve is declared, never faked (user
+    mandate 2026-10-21: 收益曲线使用图像展示)."""
+    from . import mail_chart
+    try:
+        curves = mail_chart.seasons_curves()
+        if not curves:
+            raise ValueError("no active season with >=2 NAV marks")
+        png = mail_chart.render_seasons_png(curves)
+    except Exception as exc:   # noqa: BLE001 — the chart must never sink the letter
+        note = f"三期收益曲线暂缺：{type(exc).__name__}: {exc}"
+        return f'<p class="mut">{note}</p>', None
+    if dry_run:
+        uri = "data:image/png;base64," + base64.b64encode(png).decode("ascii")
+        src = f'src="{uri}"'
+    else:
+        src = f'src="cid:{NAV_CHART_CID}"'
+    return (f'<img {src} width="640" height="300" '
+            f'alt="三期累计收益曲线" style="{_CHART_IMG_STYLE}">'), png
+
+
 def send_message(cfg: dict, subscribers: list, subject: str,
                  body_html: str, data_as_of: str, force: bool = False,
                  dry_run: bool = False, today: str | None = None,
@@ -310,6 +344,10 @@ def send_message(cfg: dict, subscribers: list, subject: str,
         raise ValueError(f"daily mail already sent on {today}; "
                          f"pass --force to send again")
     html = wrap_letter(body_html, data_as_of)
+    chart_png = None
+    if NAV_CHART_TOKEN in html:
+        img_html, chart_png = _nav_chart_html(dry_run)
+        html = html.replace(NAV_CHART_TOKEN, img_html)
     cc = []
     for s in subscribers:
         if s.email.lower() == cfg["username"].lower() or s.email in cc:
@@ -323,6 +361,12 @@ def send_message(cfg: dict, subscribers: list, subject: str,
         msg["Cc"] = ", ".join(cc)
     msg.set_content(html_to_text(html))
     msg.add_alternative(html, subtype="html")
+    if chart_png is not None:
+        # RFC 2045 Content-ID needs angle brackets; the matching img src
+        # drops them per RFC 2392 (cid:nav_curve).
+        msg.get_payload()[1].add_related(chart_png, maintype="image",
+                                         subtype="png",
+                                         cid=f"<{NAV_CHART_CID}>")
     if dry_run:
         return {"dry_run": True, "to": cfg["username"], "cc": cc,
                 "subject": subject, "html": html}
@@ -432,21 +476,28 @@ def _data_as_of(snap_dir: Path) -> str:
 
 
 def _resolve_watch(token: str, master, resolve_fn):
-    """'MARKET:CODE' -> Match: the master.csv row is preferred (it
-    carries market_id for live quotes); resolve_fn is the fallback;
-    None when both miss (the item becomes a declared gap)."""
+    """'MARKET:CODE' -> Match. The resolve chain supplies market_id (the
+    secid prefix live quotes die without — master.csv carries no
+    market_id column, 2026-10-21 digest gap); the master hit only wins
+    the canonical name + score. None when both miss (the item becomes a
+    declared gap)."""
     market, _, code = token.partition(":")
+    name, market_id, score = "", "", 0.0
+    if resolve_fn is not None:
+        for m in resolve_fn(code):
+            if m.market == market and m.code == code:
+                name, market_id, score = m.name, m.market_id, m.score
+                break
     if master is not None:
         hit = master[(master["market"] == market)
                      & (master["code"].astype(str) == code)]
         if not hit.empty:
             r = hit.iloc[0]
-            return Match(market, code, str(r.get("name") or code), 100.0,
-                         str(r.get("market_id") or ""))
-    if resolve_fn is not None:
-        for m in resolve_fn(code):
-            if m.market == market and m.code == code:
-                return m
+            return Match(market, code,
+                         str(r.get("name") or name or code), 100.0,
+                         market_id)
+    if name:
+        return Match(market, code, name, score, market_id)
     return None
 
 
@@ -460,6 +511,38 @@ def _watch_item(m: Match, result: dict) -> dict:
             "cores": result.get("cores") or {},
             "flags": result.get("risk_flags") or [],
             "warnings": result.get("warnings") or []}
+
+
+def _watch_snapshot_prices(snap_dir: Path, master) -> dict:
+    """{(market, code): {price, pe_ttm, pb}} from the snapshot's
+    master/watchlist rows — the honest price fallback when every live
+    quote source fails (same contract as recommend / holding list)."""
+    frames = []
+    if master is not None and not master.empty:
+        frames.append(master)
+    p = Path(snap_dir) / "watchlist.csv"
+    if p.exists():
+        try:
+            frames.append(pd.read_csv(p, dtype={"code": str}))
+        except (OSError, pd.errors.ParserError, ValueError):
+            pass
+    rows: dict = {}
+    for df in frames:
+        if not {"market", "code", "price"}.issubset(df.columns):
+            continue
+        for _, r in df.iterrows():
+            key = (str(r["market"]), str(r["code"]))
+            if key in rows:
+                continue
+            try:
+                price = r.get("price")
+                if price is None or pd.isna(price):
+                    continue
+            except (TypeError, ValueError):
+                continue
+            rows[key] = {k: (None if pd.isna(r.get(k)) else r.get(k))
+                         for k in ("price", "pe_ttm", "pb")}
+    return rows
 
 
 def build_digest(snap_dir, subscribers, master=None, analyze_fn=None,
@@ -489,6 +572,7 @@ def build_digest(snap_dir, subscribers, master=None, analyze_fn=None,
     except Exception as exc:   # seasons must never sink the digest
         seasons, seasons_error = [], f"{type(exc).__name__}: {exc}"
     watch = []
+    snapshot_prices = _watch_snapshot_prices(snap_dir, master)
     for token in collect_watchlist(subscribers):
         m = _resolve_watch(token, master, resolve_fn)
         if m is None:
@@ -499,12 +583,26 @@ def build_digest(snap_dir, subscribers, master=None, analyze_fn=None,
                                     "chain"})
             continue
         try:
-            watch.append(_watch_item(m, analyze_fn(m,
-                                                   snapshot_dir=snap_dir)))
+            item = _watch_item(m, analyze_fn(m, snapshot_dir=snap_dir))
         except Exception as exc:   # one stock must never sink the digest
             watch.append({"market": m.market, "code": m.code,
                           "name": m.name, "missing": True,
                           "reason": f"{type(exc).__name__}: {exc}"})
+            continue
+        if item.get("price") is None or item.get("pe_ttm") is None \
+                or item.get("pb") is None:
+            row = snapshot_prices.get((m.market, str(m.code)))
+            filled = []
+            if row is not None:
+                for k in ("price", "pe_ttm", "pb"):
+                    if item.get(k) is None and row.get(k) is not None:
+                        item[k] = row[k]
+                        filled.append(k)
+            if filled:
+                item["warnings"].append(
+                    "live quote silent on " + "/".join(filled)
+                    + f"; filled from snapshot {Path(snap_dir).name}")
+        watch.append(item)
     return {"date": date.today().isoformat(),
             "data_as_of": _data_as_of(snap_dir),
             "snapshot": snap_dir.name,

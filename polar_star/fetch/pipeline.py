@@ -627,14 +627,17 @@ def build_master(cands_by_market: dict, snap_dir: Path,
 # Holdings watchlist (deep data for held symbols the funnel excludes)
 # ---------------------------------------------------------------------------
 def collect_watch_symbols(max_symbols: int | None = None) -> list:
-    """Deduped [(market, code, name)] across every user's holdings.
+    """Deduped [(market, code, name)] across every user's holdings and
+    every mail subscriber's watchlist.
 
     Held symbols deserve deep data even when the funnel excludes them:
     loss-makers fail the pe>0 gate (摩尔线程), ETFs sit outside the stock
     universe (科创50ETF), negative profit_yoy names fail the final gate
     (PDD), share classes used to miss the SEC ticker join (BRK_B).
-    Capped at config.WATCHLIST_MAX so a bloated portfolio cannot stall
-    the pipeline.
+    Subscriber watch stocks ride along since 2026-10-21: the daily mail
+    digest needs quotes + fundamentals for them too (AAPL/AGNC were
+    declared gaps otherwise). Capped at config.WATCHLIST_MAX so a
+    bloated portfolio cannot stall the pipeline.
     """
     from .. import users
 
@@ -642,10 +645,17 @@ def collect_watch_symbols(max_symbols: int | None = None) -> list:
     try:
         profiles = users.list_users()
     except Exception:  # noqa: BLE001 — watchlist must never break fetch
-        return []
+        profiles = []
     for u in profiles:
         for h in u.holdings:
             out.setdefault((h.market, str(h.code)), h.name)
+    try:
+        from .. import mail
+        for tok in mail.collect_watchlist(mail.load_subscribers()):
+            market, _, code = tok.partition(":")
+            out.setdefault((market, code), code)
+    except Exception:  # noqa: BLE001 — mail store must never break fetch
+        pass
     items = [(m, c, n) for (m, c), n in out.items()]
     return items[:max_symbols or config.WATCHLIST_MAX]
 

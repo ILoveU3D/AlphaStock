@@ -19,7 +19,7 @@ from .fetch.kline import (fetch_kline_any, kline_cache_path,
 from .fetch.pipeline import add_cashflow_factors, apply_gates, \
     backfill_kline_factors, load_annual_cashflows, \
     merge_a_financials, merge_hk_f10, merge_us_financials
-from .fetch.quotes import fetch_quotes_by_secids
+from .fetch.quotes import fetch_quote_any, fetch_quotes_by_secids
 from .report import resolve_snapshot
 from .resolve import Match
 from .arsenal import core_triad as cores
@@ -245,16 +245,18 @@ def build_peer_set(snapshot_dir, market: str) -> pd.DataFrame:
 
 
 def live_quote(match: Match):
-    """Real-time quote row via push2 ulist; None on failure."""
-    if not match.market_id:
-        return None
-    df = fetch_quotes_by_secids([f"{match.market_id}.{match.code}"])
-    if df.empty:
-        return None
-    row = df.iloc[0].to_dict()
-    if match.market == "HK":
-        row["code"] = str(row["code"]).zfill(5)
-    return row
+    """Real-time quote row: EM ulist first, then the health-ordered
+    fallback (EM ulist -> Tencent realtime, fetch_quote_any). An EM
+    outage must not leave the ask price-less (US digest gap,
+    2026-10-21: EM served A-share secids but nothing for US/HK)."""
+    if match.market_id:
+        df = fetch_quotes_by_secids([f"{match.market_id}.{match.code}"])
+        if not df.empty:
+            row = df.iloc[0].to_dict()
+            if match.market == "HK":
+                row["code"] = str(row["code"]).zfill(5)
+            return row
+    return fetch_quote_any(match.market, match.code, match.market_id)
 
 
 HK_F10_FIELDS = ("report_date", "revenue", "rev_yoy", "profit_yoy",

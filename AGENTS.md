@@ -535,18 +535,23 @@ write letter → send.
   股票必须携带活体 profile 蒸馏（三核齐备义务 — 见 Company
   profiles 节）——写信前先 fetch + assess；未蒸馏标的只有否决，
   不上正文。
-- **Layout (user mandate 2026-10-19, supersedes the 2026-10-17
-  parchment shell)**: 研报风排版壳 — 仿汇丰 / 摩根士丹利每日研报邮件
-  × IEEE 双栏正文：顶部藏青横向刊头条 + 红色细条，标题区
-  （kicker / h1 / meta 分隔带 / standfirst 摘要框），正文表格双栏
-  （`table.cols`：主栏 63% + 侧栏 37%，侧栏用 `.box` 盒子），
-  数据表 `table.data`（深青表头），涨跌着色 `.up`/`.dn`（红涨绿跌）。
-  壳承载全部版式（`LETTER_CSS` + `wrap_letter`）—— AI 只写正文片段，
-  永远不改壳；片段契约注释在 mail.py 的 Letter shell 一节。
-- **三期持仓段 (user mandate 2026-10-19)**: 每日邮件必须包含三期
-  实盘持仓盈亏和分析 —— 素材由 digest 的 seasons 块提供
-  （NAV / 日盈亏 / 累计回报 + 逐持仓成本与浮动盈亏），侧栏
-  "组合追踪·三期" 盒子放数字，主栏 "三期实盘" 段放分析 prose。
+- **Layout (user mandates 2026-10-19 shell + 2026-10-21 mobile
+  single column)**: 研报风排版壳 — 仿汇丰 / 摩根士丹利每日研报邮件：
+  顶部藏青横向刊头条 + 红色细条，标题区（kicker / h1 / meta 分隔带 /
+  standfirst 摘要框），数据表 `table.data`（深青表头），涨跌着色
+  `.up`/`.dn`（红涨绿跌）。**正文单栏顺序排列**（2026-10-21 取消
+  双栏，照顾手机读者；旧 `table.cols` 片段自动堆叠兼容）。壳承载全部
+  版式（`LETTER_CSS` + `wrap_letter`）—— AI 只写正文片段，永远不改壳；
+  片段契约注释在 mail.py 的 Letter shell 一节。
+- **三期持仓段 (user mandates 2026-10-19 / 2026-10-21)**: 每日邮件
+  必须包含三期实盘持仓盈亏和分析 —— 素材由 digest 的 seasons 块提供
+  （NAV / 日盈亏 / 累计回报 + 逐持仓成本与浮动盈亏）。呈现方式
+  （2026-10-21）：一张 `table.data` 汇总表展示三期 NAV / 日盈亏 /
+  累计回报（逐持仓明细可续行或入 `.box`），"三期实盘" 段放分析
+  prose；累计收益曲线写 `{{NAV_CHART}}` token，`mail send` 用
+  纯标准库渲染器（mail_chart.py，活体 season NAV 历史）把它替换为
+  CID 内联 PNG 图像 —— 无可画数据时机器自动落一句诚实缺口注记，
+  不编图。
 - **No meta sections**: 不单列"数据边界"段（数据问题在行文中
   一句话交代）；不立规矩、不写免责（壳的页脚自带免责与数据截至行）。
 - 故事段保留：每期一个从 AI 知识储备里挑的故事，**与股票直接

@@ -589,9 +589,34 @@ class TestCollectWatchSymbols:
                          Match("US", "BRK_B", "BRK-B", 1.0, "106")),
                 FakeUser(Match("A", "688795", "摩尔线程-U", 1.0, "1")),
             ])
+        monkeypatch.setattr("polar_star.mail.load_subscribers",
+                            lambda: [])
         out = pl.collect_watch_symbols()
         assert out == [("A", "688795", "摩尔线程-U"),
                        ("US", "BRK_B", "BRK-B")]
+
+    def test_subscriber_watchlist_rides_along(self, monkeypatch):
+        """Mail subscriber watch stocks join the backfill queue (the
+        AAPL/AGNC digest gap, 2026-10-21); a held duplicate keeps the
+        holding's name, never a second entry."""
+        from polar_star import mail as mmail
+        from polar_star.resolve import Match
+
+        class FakeUser:
+            def __init__(self, *holds):
+                self.holdings = holds
+
+        monkeypatch.setattr(
+            "polar_star.users.list_users",
+            lambda: [FakeUser(Match("A", "688795", "摩尔线程-U", 1.0, "1"))])
+        monkeypatch.setattr(
+            "polar_star.mail.load_subscribers",
+            lambda: [mmail.Subscriber("朋友", "f@qq.com",
+                                      ["US:AAPL", "US:AGNC", "A:688795"])])
+        out = pl.collect_watch_symbols()
+        assert out == [("A", "688795", "摩尔线程-U"),
+                       ("US", "AAPL", "AAPL"),
+                       ("US", "AGNC", "AGNC")]
 
     def test_capped_at_watchlist_max(self, monkeypatch):
         from polar_star import config as cfg
@@ -605,6 +630,8 @@ class TestCollectWatchSymbols:
                  for i in range(5)]
         monkeypatch.setattr("polar_star.users.list_users",
                             lambda: [FakeUser(*holds)])
+        monkeypatch.setattr("polar_star.mail.load_subscribers",
+                            lambda: [])
         monkeypatch.setattr(cfg, "WATCHLIST_MAX", 2)
         assert len(pl.collect_watch_symbols()) == 2
 
@@ -613,7 +640,36 @@ class TestCollectWatchSymbols:
             raise OSError("users dir unreadable")
 
         monkeypatch.setattr("polar_star.users.list_users", boom)
+        monkeypatch.setattr("polar_star.mail.load_subscribers", lambda: [])
         assert pl.collect_watch_symbols() == []
+
+    def test_user_store_failure_still_serves_subscribers(self, monkeypatch):
+        from polar_star import mail as mmail
+
+        def boom():
+            raise OSError("users dir unreadable")
+
+        monkeypatch.setattr("polar_star.users.list_users", boom)
+        monkeypatch.setattr(
+            "polar_star.mail.load_subscribers",
+            lambda: [mmail.Subscriber("朋友", "f@qq.com", ["US:AAPL"])])
+        assert pl.collect_watch_symbols() == [("US", "AAPL", "AAPL")]
+
+    def test_mail_store_failure_is_never_fatal(self, monkeypatch):
+        from polar_star.resolve import Match
+
+        class FakeUser:
+            def __init__(self, *holds):
+                self.holdings = holds
+
+        def boom():
+            raise OSError("mail store unreadable")
+
+        monkeypatch.setattr(
+            "polar_star.users.list_users",
+            lambda: [FakeUser(Match("A", "688795", "摩尔线程-U", 1.0, "1"))])
+        monkeypatch.setattr("polar_star.mail.load_subscribers", boom)
+        assert pl.collect_watch_symbols() == [("A", "688795", "摩尔线程-U")]
 
 
 def test_watchlist_deep_data_for_excluded_holdings(
