@@ -365,9 +365,14 @@ veto-only until a distillation activates it.
   fresh clones read the pack as the canonical source via loader
   fallback).
 - Commands: `python -m polar_star profile fetch|show|assess|list|
-  status|pack` — all `--json`-capable. Profile commands do **not** run
-  the freshness gate. Sources: A = 东财 F10 机构概况；HK = 东财 HKF10
-  公司概况；US = SEC submissions meta + stockanalysis 简介.
+  status|pack|crosscheck` — all `--json`-capable. Profile commands do
+  **not** run the freshness gate. Sources: A = 东财 F10 机构概况；HK = 东财 HKF10
+  公司概况；US = SEC submissions meta + stockanalysis 简介. `crosscheck X`
+  (mandate 2026-10-23) pairs the model dossier's flywheel with the
+  profile business core (machine hint flags: freshness / moat-vocabulary
+  absence / lifecycle tone clash); the AI adjudicates WHY and records
+  via `--consistent|--diverged --note "..."` — the trail lives on the
+  profile and survives re-assessment.
 - The loop (per L3 deep-review candidate): `profile fetch X` →
   `profile show X` + `intel X` （读原文） → three-core argumentation →
   `profile assess X --business-score N --culture-score N ...` → the
