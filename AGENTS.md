@@ -407,13 +407,23 @@ veto-only until a distillation activates it.
   `profile assess --from-json <file>` (the AI's batch pen — every
   entry is AI-authored; the CLI transports, never judges). A STALE
   assessment re-enters the work queue automatically.
-- **战役质量分层 (user mandate 2026-10-18)**: business core is
-  distilled for EVERY name (raw profile text + pillar data is enough
-  evidence); the culture core is scored ONLY when behavior-level
-  evidence exists (founder signals, 本分 evidence in raw/intel) —
-  otherwise culture stays veto-only, so thin-evidence scores never
-  flood `core_score` via the D3 hook. Market-tier arguments must
-  declare their evidence basis ("仅据公司简介+财务柱" etc.).
+- **战役质量分层 (user mandate 2026-10-18, amended 2026-10-23)**:
+  business AND culture cores are assessed for EVERY name (2.0
+  mandate: culture portrait mandatory, vivid and company-specific);
+  culture score is capped by evidence tier declared in the argument —
+  A (founder words / shareholder letters / dated crisis behavior,
+  third-party verifiable) unlimited, B (annual-report + news behavior
+  record) ≤70, C (company self-description only) ≤45 and marked
+  placeholder. The 2026-10-18 <5% density cap is retired in favor of
+  tier caps. Profile 2.0 re-distillation (spec
+  `docs/superpowers/specs/2026-10-23-profile-2.0-prompt.md`) requires
+  reading the annual report (A: MD&A+segments; US: 10-K Item 1/7;
+  HK: PDF gap declared) plus web due diligence (founder interviews,
+  earnings calls, lawsuits, employee reviews) BEFORE scoring — a
+  profile-summary-only score is a campaign violation. Anti-template:
+  every argument carries ≥3 company-specific dated facts; same-cluster
+  companies must be scored distinguishably (peer-relative pass first).
+  All arguments declare their evidence basis.
 
 ## Financial models (财务模型, 本地-only)
 
