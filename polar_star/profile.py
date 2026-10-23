@@ -372,22 +372,28 @@ def crosscheck(market: str, code: str) -> dict:
         fly = ((m.get("business_flywheel") or {}).get("text") or "")
         if moat and fly:
             import re as _re
-            probes = []
-            for piece in _re.split(r"[^0-9A-Za-z一-鿿]+", moat):
-                if not piece:
-                    continue
-                ascii_bits = _re.findall(r"[A-Za-z0-9]+", piece)
-                cjk = _re.sub(r"[A-Za-z0-9]+", "", piece)
-                probes.extend(b for b in ascii_bits if len(b) >= 2)
-                # CJK compounds don't tokenize on spaces — probe with
-                # sliding 2-grams so 制作人体系 matches 制作人培养体系
-                probes.extend(cjk[i:i + 2] for i in range(len(cjk) - 1))
-            if probes and not any(p in fly for p in probes):
-                hints.append(
-                    "MOAT_TOKEN_ABSENT: profile moat_type "
-                    f"('{moat}') shares no vocabulary with the model "
-                    "flywheel — same machine named two different ways, "
-                    "or genuine divergence; adjudicate")
+            if not _re.search(r"[一-鿿]", moat):
+                # ASCII snake_case label vs Chinese flywheel prose: no
+                # shared vocabulary to probe — the flag cannot test this
+                # pair, so stay silent (shallow-flag honesty).
+                pass
+            else:
+                probes = []
+                for piece in _re.split(r"[^0-9A-Za-z一-鿿]+", moat):
+                    if not piece:
+                        continue
+                    ascii_bits = _re.findall(r"[A-Za-z0-9]+", piece)
+                    cjk = _re.sub(r"[A-Za-z0-9]+", "", piece)
+                    probes.extend(b for b in ascii_bits if len(b) >= 2)
+                    # CJK compounds don't tokenize on spaces — probe with
+                    # sliding 2-grams so 制作人体系 matches 制作人培养体系
+                    probes.extend(cjk[i:i + 2] for i in range(len(cjk) - 1))
+                if probes and not any(p in fly for p in probes):
+                    hints.append(
+                        "MOAT_TOKEN_ABSENT: profile moat_type "
+                        f"('{moat}') shares no vocabulary with the model "
+                        "flywheel — same machine named two different ways, "
+                        "or genuine divergence; adjudicate")
         life = ((a.get("business") or {}).get("machine_lifecycle") or "")
         mature_kw = ("成熟", "年金", "收租", "衰退", "晚期")
         growth_kw = ("成长", "扩张", "渗透", "早期", "放量")
