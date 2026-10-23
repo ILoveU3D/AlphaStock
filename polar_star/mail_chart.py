@@ -1,12 +1,13 @@
-"""NAV curve chart for the daily letter (user mandate 2026-10-21:
-收益曲线使用图像展示).
+"""Chart renderers for the daily letter (user mandate 2026-10-21:
+收益曲线使用图像展示; 2026-10-23: 虚拟持仓逐票盈亏用图表呈现).
 
 Pure-stdlib renderer — the repo rule is pandas + requests only, so no
 matplotlib/Pillow: curves are drawn pixel-by-pixel onto an RGB canvas
 and encoded as PNG with zlib. In-image text uses a built-in 5x7 ASCII
 bitmap font (Chinese lives in the letter HTML around the image, so no
-font files are needed). ``mail send`` replaces the ``{{NAV_CHART}}``
-fragment marker with a CID-referenced <img> of this chart.
+font files are needed). ``mail send`` replaces the ``{{NAV_CHART}}`` /
+``{{POSITION_CHART}}`` fragment markers with CID-referenced <img>s of
+these charts.
 """
 
 import struct
@@ -78,6 +79,46 @@ def seasons_curves() -> list:
             out.append({"id": s["id"],
                         "label": f"S{i} {tag}".strip(),
                         "points": pts})
+    return out
+
+
+def positions_pnl() -> list:
+    """[{season, label, name, pct, pnl, currency}] — one row per open
+    position across active seasons, read-only: prices come from the
+    latest NAV mark, cost from the position itself, so the chart agrees
+    with the digest's seasons block without re-marking (no side effect
+    inside ``mail send``). pct is currency-free, so one chart spans
+    every market (absolute pnl stays in the letter's table)."""
+    from . import trade
+
+    out = []
+    for i, s in enumerate(trade.list_seasons(), start=1):
+        if s.get("status") != "active":
+            continue
+        season = trade.load_season(s["id"])
+        costs = {(p.get("market"), str(p.get("code"))): p
+                 for p in season.get("positions") or []}
+        marks = season.get("nav_history") or []
+        if not marks:
+            continue
+        for row in marks[-1].get("positions") or []:
+            key = (row.get("market"), str(row.get("code")))
+            pos = costs.get(key) or {}
+            try:
+                cost = float(pos.get("avg_cost") or 0)
+                price = float(row.get("price") or 0)
+                qty = float(row.get("qty") or pos.get("qty") or 0)
+            except (TypeError, ValueError):
+                continue
+            if cost <= 0 or price <= 0 or qty <= 0:
+                continue
+            out.append({"season": i,
+                        "label": f"{key[0]}:{key[1]}",
+                        "name": str(row.get("name")
+                                    or pos.get("name") or ""),
+                        "pct": (price / cost - 1.0) * 100.0,
+                        "pnl": (price - cost) * qty,
+                        "currency": str(row.get("currency") or "")})
     return out
 
 
@@ -286,4 +327,72 @@ def render_seasons_png(curves: list, width: int = 640,
         s = d.strftime("%m-%d")
         cv.text(max(min(x, width - pad["r"] - cv.text_width(s)),
                     pad["l"]), height - 15, s, TEXT)
+    return cv.png()
+
+
+def render_positions_png(items: list, width: int = 640) -> bytes:
+    """One horizontal bar per position: unrealized P&L % against cost
+    (currency-free, so every market shares one chart; absolute amounts
+    stay in the letter's table). Bars carry their season's palette
+    color and the label is MARKET:CODE — the 5x7 font is ASCII-only."""
+    if not items:
+        raise ValueError("no open positions to draw")
+    row_h, bar_h = 26, 10
+    pad = {"l": 104, "r": 66, "t": 34, "b": 26}
+    plot_w = width - pad["l"] - pad["r"]
+    height = pad["t"] + row_h * len(items) + pad["b"]
+
+    vals = [float(it["pct"]) for it in items]
+    vmin, vmax = min(vals + [0.0]), max(vals + [0.0])
+    span = (vmax - vmin) or 1.0
+    vmin, vmax = vmin - span * 0.12, vmax + span * 0.12
+    zero_x = pad["l"] + int((0.0 - vmin) / (vmax - vmin) * plot_w)
+
+    def x_of(v) -> int:
+        return pad["l"] + int((v - vmin) / (vmax - vmin) * plot_w)
+
+    cv = _Canvas(width, height)
+    cv.text(pad["l"], 8, "UNREALIZED P&L %", TEXT, scale=2)
+    title_end = pad["l"] + cv.text_width("UNREALIZED P&L %", scale=2)
+    lx = width - pad["r"]
+    for i in range(len(items) - 1, -1, -1):
+        season = items[i]["season"]
+        if any(it["season"] == season for it in items[:i]):
+            continue                      # one legend entry per season
+        label = f"S{season}"
+        lw = cv.text_width(label, scale=2)
+        if lx - lw - 26 < title_end + 12:
+            break
+        cv.text(lx - lw, 8, label, TEXT, scale=2)
+        cv.rect_fill(lx - lw - 16, 9, 10, 10, PALETTE[(season - 1)
+                                                      % len(PALETTE)])
+        lx -= lw + 26
+
+    # vertical grid: 5 guides + the heavier zero reference
+    for i in range(5):
+        v = vmin + (vmax - vmin) * i / 4.0
+        x = x_of(v)
+        for yy in range(pad["t"] - 4, height - pad["b"]):
+            cv.point(x, yy, GRID)
+        s = f"{v:+.1f}" if abs(v) >= 0.05 else "0.0"
+        cv.text(min(max(x - cv.text_width(s, scale=1) // 2, pad["l"]),
+                    width - pad["r"] - cv.text_width(s, scale=1)),
+                height - 14, s, TEXT, scale=1)
+    for yy in range(pad["t"] - 4, height - pad["b"]):
+        cv.point(zero_x, yy, ZERO)
+
+    for row, it in enumerate(items):
+        y = pad["t"] + row * row_h
+        color = PALETTE[(it["season"] - 1) % len(PALETTE)]
+        label = str(it["label"]).upper()
+        cv.text(pad["l"] - cv.text_width(label, scale=2) - 8,
+                y + (bar_h - 14) // 2, label, TEXT, scale=2)
+        x1 = x_of(float(it["pct"]))
+        cv.rect_fill(min(zero_x, x1), y + (bar_h - 10) // 2,
+                     abs(x1 - zero_x) or 1, 10, color)
+        vs = f"{float(it['pct']):+.1f}%"
+        vx = x1 + 6 if x1 >= zero_x else x1 - cv.text_width(vs, scale=2) - 6
+        cv.text(min(max(vx, pad["l"]), width - pad["r"]
+                    - cv.text_width(vs, scale=2)),
+                y + (bar_h - 14) // 2, vs, TEXT, scale=2)
     return cv.png()

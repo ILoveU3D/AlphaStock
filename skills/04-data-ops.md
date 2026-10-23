@@ -9,8 +9,8 @@ triggers:
 commands:
   - doctor
   - fetch
-version: 55
-updated_at: 2026-10-21T14:32:18
+version: 61
+updated_at: 2026-10-23T12:07:25
 ---
 
 # Playbook
@@ -114,3 +114,9 @@ conversation-start freshness probe:
 - [2026-10-21 11:23] (ai) PowerShell5 batch quirk (2026-10-21 daily-mail): sk 中文名 --json > file via .ps1 mangles Chinese args (script read as GBK) and > writes UTF-16/BOM — drive batch CLI calls from a Python subprocess script using stock codes (03306 not 江南布衣) with encoding='utf-8', and read back with utf-8-sig; US live quotes unavailable during off-hours/EM outage — snapshot close price from master.csv is the honest fallback, AAPL/AGNC outside the funnel have no price row at all
 - [2026-10-21 12:00] (ai) 2026-10-21 US/HK digest gap root-caused: (1) mail digest's _resolve_watch built Matches with empty market_id from master.csv (master carries no market_id column) — live_quote returned None for every master-hit watch stock; market_id now comes from the resolve chain. (2) live_quote had no Tencent fallback — EM ulist served A-share secids but nothing for US/HK during the 2026-10-21 morning outage; it now falls back to fetch_quote_any (EM->Tencent health-ordered). (3) subscriber watch stocks (AAPL/AGNC) never entered the fetch backfill — collect_watch_symbols now unions mail/subscribers.json watchlists into watchlist.csv. Digest watch items additionally fill missing price/pe/pb from the snapshot row with an explicit warning. Standalone rebuild: tmp/backfill_watchlist.py pattern (build_watchlist + radar refresh=False reuses cached snapshot intel tables).
 - [2026-10-21 14:32] (ai) Env 2026-10-21: global Python is py -3 (3.14, pandas 3.0.5 + pytest 9.1.1); bare python on PATH is the TRAE-bundled 3.10 with no pandas/pytest — run all tests and toolkit commands via py -3 (supersedes the 2026-09-01 libs/.venv note)
+- [2026-10-22 11:35] (ai) PowerShell '>' redirect writes a UTF-8 BOM into --json output files — parse with encoding='utf-8-sig', or capture JSON via a small python script instead of shell redirect (hit 2026-10-22 with mail digest)
+- [2026-10-23 03:29] (ai) Win32 保留设备名陷阱：代码恰为 CON/PRN/AUX/NUL/COM1-9/LPT1-9 的标的（如 US:CON=Concentra Group）使 raw_path 解析成 CON.json，exists()/read 永久阻塞在控制台设备——任何未先过 fetched 门就对全名单 load_raw 的脚本必挂死（前会话 find_hang/scan_remaining* 僵尸与本会话扫描均中招）；dump_profile_next/assess 安全在于先跳过 unfetched 再 load_raw。护栏：load_raw 前按保留名表过滤；此类标的 raw 在 Windows 结构性不可落地，永久 pending。
+- [2026-10-23 03:29] (ai) PowerShell 重定向(>) 会给 dump_profile_next.py 的 stdout JSON 加 UTF-8 BOM：json.load 用 utf-8 直接报 Unexpected UTF-8 BOM，一律用 utf-8-sig 读 tmp/profile_next_dump.json。
+- [2026-10-23 04:21] (ai) TRAE toolhost SUSPENDS any command it pushes to background on the 2-min timeout (CPU frozen forever, never completes — 9 zombie python procs accumulated across the 2026-10-22/23 sessions, including tmp/find_hang.py which was diagnosing this very trap): for heavy file-IO use explicit run_in_background=true and strip file-content reads (glob stems / metadata only, reuse already-verified dumps) — tmp/census_remaining2.py finished in 30s what tmp/census_remaining.py hung on
+- [2026-10-23 04:21] (ai) profile campaign 2026-10-23: dump returns 0 distillable targets — remaining 1161 = 1112 empty-meta-only raws (US OTC dregs: duplicate lines of distilled primaries BLBLF/BILI etc., warrants/units/preferreds/ETFs) + 49 raw-missing; HK 00232/06700 already out of current quotes; genuine refetch gaps incl. LNWO (Light & Wonder .4B, sole universe entry), NFE, SVA; census evidence tmp/census2_full.json; closing them needs user-authorized fetch (empty raw = skip, never fabricate)
+- [2026-10-23 12:07] (ai) profile campaign console status renders tier-3 'fetched 0' while --json shows fetched=91/pending=32 (display bug, trust --json). 2026-10-23 queue exhausted in distillable terms: remaining 123 = 91 raw-exists-but-textless (SEC SIC strings only, e.g. FMCC/FMCK preferred series) + 32 never-fetched US OTC/SPAC; dump_profile_next _has_real_text correctly skips all. Today's funnel 460 + watchlist 3 all carry live assessments; 0 companies outside the 20261022 queue.

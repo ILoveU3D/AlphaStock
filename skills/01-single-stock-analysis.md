@@ -9,8 +9,8 @@ triggers:
   - Is X a buy
 commands:
   - ask
-version: 32
-updated_at: 2026-10-18T15:02:18
+version: 38
+updated_at: 2026-10-23T15:08:56
 ---
 
 # Playbook
@@ -91,3 +91,9 @@ Answer "what do you think of X" with a verdict first, evidence later.
 - [2026-10-18 00:16] (ai) 用户指令(2026-10-18):被问'梦想票(无E无FCF期权股)多少钱建仓'时,直接回答一句话--我没有造机器人的梦想,我只为净资产和融资现金出价XX/股(XX=每股净资产,清算地板);不展开三档分析,不付PVGO; doctrine见塔砖no-dream-no-premium
 - [2026-10-18 00:34] (ai) 用户反馈(2026-10-18):明确喜欢辛辣幽默的判决式口吻(与每日邮件风格规范同源),对话回答同样适用--幽默的载体是苛刻的出价纪律,不是段子本身
 - [2026-10-18 15:02] (ai) user mandate 2026-10-18: ask-grade verdict requires live profile (business+culture distilled, non-STALE) BEFORE the verdict — undistilled name = veto only, no verdict; STALE profile is re-distilled first, not after; no two-and-a-half cores
+- [2026-10-21 22:49] (ai) user mandate 2026-10-21: 用户问股或涉数据时，凡模型/profile/dossier不全的个股必须当场补全（gather→蒸馏→写dossier→重估），不得只申报缺口
+- [2026-10-22 00:43] (ai) 两个坑:①models/profiles目录用小写market名(models/hk不是models/HK),glob大小写敏感会漏判已建模型;②model write对已存在的list型键(如culture.evidence)会TypeError且整体回滚,改旧档前先show确认结构
+- [2026-10-22 02:08] (ai) v35: 神华(01088.HK)验尸案——周期股OCF/NI七年均值1.63利润为真但利润本身是周期变量,FY2025净利542亿恰=七年均值543亿(周期中位);average-earnings-power交叉验证cycle_adj=0.94(<2.0污染线,采信);周期修分母下现价40.22高于加权公允32约23%,篡位阶梯@30-31(打平波司登)/@25-26(打平江南布衣)/贴bear@22-25;四案验尸谱系收口:携程0.43假利润/美团负值真燃烧/腾讯1.35现金超利润/神华1.63现金远超利润但利润是周期变量
+- [2026-10-23 10:51] (ai) resolve bug fixed 2026-10-23: parse_code_form greedily strips a leading 'us' (US:USAR->AR incident 2026-10-21, US:USDW->DW during profile campaign 2026-10-23); explicit US:CODE queries now nominate the full remainder as their own candidate in resolve(), so batch assess exact-match lands correctly; test_resolve 24/24 pass
+- [2026-10-23 11:01] (ai) intel 美股新闻源在 HRMY 二元事件日（10-22 AET 结案陈词，-5.95% 3.4倍量）显示近30天0条——美股重大事件须用 WebSearch + 财报日历/8-K 时间线交叉，不能信 intel 新闻空=无事发生
+- [2026-10-23 15:08] (ai) 指令2026-10-23：ask四周期剖面各档附注意力读数（事件日历+量能动量态）；无激发源且酸测试不达标的纯基态便宜标的，结论写'观察名单'不写买入（塔砖undervalued-plus-attention）

@@ -172,6 +172,44 @@ def test_cli_assess_from_json_batch(capsys, env, monkeypatch):
     assert a["culture"]["score"] is None
 
 
+def test_cli_assess_from_json_exact_code_guard(capsys, env, monkeypatch):
+    """2026-10-21 incident: 'US:USAR' resolve-ranked US:AR (Antero) first
+    and the batch pen silently overwrote Antero's profile. Explicit
+    MKT:CODE entries must land on their exact code or fail loudly."""
+    monkeypatch.setattr(config, "DATA_DIR", env / "data")
+    from polar_star import resolve as rmod
+    from polar_star import __main__ as cli
+
+    real = rmod.resolve
+
+    def fake(query, snapshot_dir=None, **kw):
+        q = str(query).upper()
+        if q == "US:USAR":
+            return [_H("US", "AR", "Antero Resources"),
+                    _H("US", "USAR", "Usa Rare Earth")]
+        if q == "US:ZZZZZ":
+            return [_H("US", "AR", "Antero Resources")]
+        return real(query, snapshot_dir=snapshot_dir, **kw)
+
+    monkeypatch.setattr(rmod, "resolve", fake)
+    batch = [
+        {"stock": "US:USAR", "business_score": 22,
+         "business_arg": "德州Round Top重稀土矿"},
+        {"stock": "US:ZZZZZ", "business_score": 50,
+         "business_arg": "解析到别家但无精确匹配"},
+    ]
+    f = env / "batch_guard.json"
+    f.write_text(json.dumps(batch, ensure_ascii=False), encoding="utf-8")
+    rc = cli.main(["profile", "assess", "--from-json", str(f), "--json"])
+    out = json.loads(capsys.readouterr().out)
+    assert rc == 1
+    assert out["ok"] == 1 and out["failed"] == 1
+    assert "refusing" in out["results"][1]["error"]
+    a = prof.load_assessment("US", "USAR")
+    assert a is not None and a["business"]["score"] == 22
+    assert prof.load_assessment("US", "AR") is None   # Antero untouched
+
+
 # --- bulk fetch (paged fast path + fallback) --------------------------------
 @pytest.fixture
 def denv(tmp_path, monkeypatch):

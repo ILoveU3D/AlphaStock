@@ -14,8 +14,8 @@ triggers:
 commands:
   - intel X
   - intel X --json
-version: 9
-updated_at: 2026-10-14T11:00:11
+version: 10
+updated_at: 2026-10-23T11:15:06
 ---
 
 # Playbook
@@ -55,3 +55,4 @@ intel X 输出五个板块（事件雷达 / 公告或披露文件时间线 / 财
 - [2026-09-09 22:39] (ai) np-listapi HK新闻偶发返回空列表(2026-09-10腾讯00700实跑0条,前日P3验证同股正常)——空列表与源失败难区分;遇到0条新闻的港股先重跑一次再下结论,勿把'无新闻'当'无关注'写进复盘
 - [2026-09-25 22:17] (ai) 2026-09-25 BZ(BOSS直聘)案例: 错杀壳必须下钻Form4交易代码。表面=完美错杀(三票,PE9.9,FCF9.5%,rev+17.3%,ret20 -24.5%),US事件雷达显示'减持计划 无'(批表不覆盖US)+披露时间线仅中性标注'Form 4 filing'; OpenInsider实查=CEO赵鹏9月S卖出~1.16亿美元(1517万股@7.25+74万股@8.23)+CMO两笔-54%持仓+董事-30%——急跌的真因是内部人派发。规程: US候选必查 openinsider.com/search?q={ticker} (www.sec.gov档案IP被封时的替代源),看S/A/P/F代码+内部人职务+占持仓%; 10%股东或CEO的S集群=一票否决(与海德OCF否决同级)。注意BZ的ADS/普通股比价(Form4价格.25 vs ADS价.5,约2:1)避免把规模读错。
 - [2026-10-14 11:00] (ai) 2026-10-14 HRMY教训：美股 notices payload 自带 items 字段（5.02=高管变动/1.01=重大协议/8.01=其他事项），宣布'无红旗'前必须读 items 而非只看雷达行——雷达批表只覆盖 A 股，对 HK/US 是空判不是零红旗；'一致评级 Buy'要查个体分布（HRMY 案例：共识Buy下藏着 BofA Sell PT30）。SEC.gov 原文获取：WebFetch 无 UA 必失败，用 Invoke-WebRequest 带 UserAgent 头可下载；渲染版 xslF345X06 XML 不含标准字段，原始 XML 需去掉路径中的 xslF345X06/ 段。
+- [2026-10-23 11:15] (ai) A股当日披露的季报不进当天快照的财报速读（digest 仍指上一期）；写信/证伪检查时直接拉 datacenter RPT_LICO_FN_CPD（SECURITY_CODE 过滤，取 REPORTDATE 最新行）拿原始季度数，再 model fetch --force + build 刷新账本——2026-10-23 吉比特三季报实测有效

@@ -164,6 +164,18 @@ def resolve(query: str, snapshot_dir=None, live: bool = True) -> list:
             # it only as a last resort below every confirmed match
             score = 10.0
         out.append(Match(form[0], form[1], q, score, form[2]))
+    if forced == "US":
+        # 2026-10-21/23 incidents: parse_code_form greedily eats a
+        # leading "us" (USAR -> AR, USDW -> DW), so an explicit
+        # "US:CODE" declaration must also nominate the full remainder
+        # as its own candidate; caller-side exact-match guards still
+        # decide which candidate lands.
+        cand = q.replace(".", "_").upper()
+        if (re.fullmatch(r"[A-Z][A-Z0-9_]{0,9}", cand)
+                and not any(m.market == "US" and m.code == cand
+                            for m in out)):
+            score = 120.0 if _us_ticker_confirmed(cand, frames, out) else 10.0
+            out.append(Match("US", cand, q, score, ""))
     best = {}
     for m in out:
         key = (m.market, m.code)
