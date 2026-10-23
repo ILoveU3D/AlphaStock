@@ -236,7 +236,8 @@ def fetch_profile_us(ticker: str) -> dict | None:
                 "state_of_incorporation":
                     _txt(d.get("stateOfIncorporation")),
                 "cik": _txt(d.get("cik")),
-                "exchanges": ",".join(d.get("exchanges") or []),
+                "exchanges": ",".join(
+                    str(x) for x in (d.get("exchanges") or []) if x),
             }
     summary = _sa_description(ticker)
     if not meta and not summary:

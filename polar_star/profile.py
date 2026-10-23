@@ -82,12 +82,16 @@ def _load_json(path: Path, what: str) -> dict:
 
 def load_raw(market: str, code: str) -> dict | None:
     p = raw_path(market, code)
-    return _load_json(p, "profile raw") if p.exists() else None
+    # is_file, not exists: Windows reserved device names (CON.json etc.)
+    # "exist" as devices, and reading them opens the console — the load
+    # then blocks forever waiting for console input (2026-10-23 incident:
+    # every direct load_raw sweep hung on US:CON).
+    return _load_json(p, "profile raw") if p.is_file() else None
 
 
 def load_assessment(market: str, code: str) -> dict | None:
     p = assessment_path(market, code)
-    return _load_json(p, "profile assessment") if p.exists() else None
+    return _load_json(p, "profile assessment") if p.is_file() else None
 
 
 def new_raw(market: str, code: str, name: str = "", source: str = "",
@@ -106,8 +110,23 @@ def new_raw(market: str, code: str, name: str = "", source: str = "",
     }
 
 
+_WINDOWS_RESERVED = {"CON", "PRN", "AUX", "NUL"} | {
+    f"COM{i}" for i in range(1, 10)} | {f"LPT{i}" for i in range(1, 10)}
+
+
+def _reject_windows_reserved(market: str, code: str) -> None:
+    stem = code.split(".")[0].upper()
+    if market.upper() == "US" and stem in _WINDOWS_RESERVED:
+        # opening/writing "<reserved>.json" targets the console device and
+        # blocks forever — fail loudly instead (2026-10-23 US:CON incident)
+        raise ValueError(
+            f"{market}:{code} collides with a Windows reserved device "
+            f"name — profile raw cannot be stored on this filesystem")
+
+
 def save_raw(raw: dict) -> Path:
     from .atomic import atomic_write_text
+    _reject_windows_reserved(raw["market"], raw["code"])
     p = raw_path(raw["market"], raw["code"])
     p.parent.mkdir(parents=True, exist_ok=True)
     atomic_write_text(p, json.dumps(raw, ensure_ascii=False, indent=2))
@@ -116,6 +135,7 @@ def save_raw(raw: dict) -> Path:
 
 def save_assessment(assessment: dict) -> Path:
     from .atomic import atomic_write_text
+    _reject_windows_reserved(assessment["market"], assessment["code"])
     p = assessment_path(assessment["market"], assessment["code"])
     p.parent.mkdir(parents=True, exist_ok=True)
     atomic_write_text(p, json.dumps(assessment, ensure_ascii=False,

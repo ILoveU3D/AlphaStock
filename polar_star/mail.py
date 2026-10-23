@@ -196,11 +196,13 @@ def load_mail_config() -> dict:
 # Data tables use <table class="data"> (the three-season P&L is a
 # table, user mandate 2026-10-21: 列一个表格展示三期持仓收益以及分析);
 # P&L coloring uses .up / .dn (A股 convention red-up green-down);
-# .num right-aligns numerics; the seasons cumulative-return chart is
-# written as the {{NAV_CHART}} token — `mail send` replaces it with a
-# CID-inline PNG drawn from the live season NAV history (mandate
-# 2026-10-21: 收益曲线使用图像展示; --dry-run embeds a data URI so the
-# preview renders in a browser).
+# .num right-aligns numerics; two chart tokens exist (mandate
+# 2026-10-21: 收益曲线使用图像展示; mandate 2026-10-23: 虚拟持仓逐票
+# 盈亏用图表呈现、自选股汇总成表不逐条散文) — `mail send` replaces
+# them with CID-inline PNGs drawn from the live season data
+# (--dry-run embeds a data URI so the preview renders in a browser):
+#   {{NAV_CHART}}     three-season cumulative net-return curves
+#   {{POSITION_CHART}} per-position unrealized P&L % bars
 # ---------------------------------------------------------------------------
 LETTER_CSS = """
 body{margin:0;padding:24px;background:#e9edf1;}
@@ -298,8 +300,21 @@ def html_to_text(html: str) -> str:
 # ---------------------------------------------------------------------------
 NAV_CHART_TOKEN = "{{NAV_CHART}}"
 NAV_CHART_CID = "nav_curve"
+POSITION_CHART_TOKEN = "{{POSITION_CHART}}"
+POSITION_CHART_CID = "pos_pnl"
 _CHART_IMG_STYLE = ("display:block;width:100%;max-width:640px;height:auto;"
                     "border:1px solid #dbe3ea;")
+
+
+def _chart_img(src_cid: str, alt: str, height: int, dry_run: bool,
+               png: bytes) -> str:
+    if dry_run:
+        uri = "data:image/png;base64," + base64.b64encode(png).decode("ascii")
+        src = f'src="{uri}"'
+    else:
+        src = f'src="cid:{src_cid}"'
+    return (f'<img {src} width="640" height="{height}" alt="{alt}" '
+            f'style="{_CHART_IMG_STYLE}">')
 
 
 def _nav_chart_html(dry_run: bool) -> tuple:
@@ -317,13 +332,27 @@ def _nav_chart_html(dry_run: bool) -> tuple:
     except Exception as exc:   # noqa: BLE001 — the chart must never sink the letter
         note = f"三期收益曲线暂缺：{type(exc).__name__}: {exc}"
         return f'<p class="mut">{note}</p>', None
-    if dry_run:
-        uri = "data:image/png;base64," + base64.b64encode(png).decode("ascii")
-        src = f'src="{uri}"'
-    else:
-        src = f'src="cid:{NAV_CHART_CID}"'
-    return (f'<img {src} width="640" height="300" '
-            f'alt="三期累计收益曲线" style="{_CHART_IMG_STYLE}">'), png
+    return _chart_img(NAV_CHART_CID, "三期累计收益曲线", 300, dry_run, png), png
+
+
+def _position_chart_html(dry_run: bool) -> tuple:
+    """(replacement html, png bytes | None) for the {{POSITION_CHART}}
+    token — per-position unrealized P&L % bars, one color per season
+    (user mandate 2026-10-23: 逐票盈亏用图表呈现). Same honest-gap
+    contract as the NAV curve: no positions -> a muted note, never a
+    fabricated chart."""
+    from . import mail_chart
+    try:
+        items = mail_chart.positions_pnl()
+        if not items:
+            raise ValueError("no open positions with cost and price")
+        png = mail_chart.render_positions_png(items)
+    except Exception as exc:   # noqa: BLE001 — the chart must never sink the letter
+        note = f"逐票盈亏图暂缺：{type(exc).__name__}: {exc}"
+        return f'<p class="mut">{note}</p>', None
+    height = 34 + 26 * len(items) + 26
+    return _chart_img(POSITION_CHART_CID, "虚拟持仓逐票浮动盈亏", height,
+                      dry_run, png), png
 
 
 def send_message(cfg: dict, subscribers: list, subject: str,
@@ -344,10 +373,16 @@ def send_message(cfg: dict, subscribers: list, subject: str,
         raise ValueError(f"daily mail already sent on {today}; "
                          f"pass --force to send again")
     html = wrap_letter(body_html, data_as_of)
-    chart_png = None
-    if NAV_CHART_TOKEN in html:
-        img_html, chart_png = _nav_chart_html(dry_run)
-        html = html.replace(NAV_CHART_TOKEN, img_html)
+    charts = []   # [(cid, png)] — every replaced token attaches its image
+    for token, builder in ((NAV_CHART_TOKEN, _nav_chart_html),
+                           (POSITION_CHART_TOKEN, _position_chart_html)):
+        if token in html:
+            img_html, png = builder(dry_run)
+            html = html.replace(token, img_html)
+            if png is not None:
+                cid = (NAV_CHART_CID if token == NAV_CHART_TOKEN
+                       else POSITION_CHART_CID)
+                charts.append((cid, png))
     cc = []
     for s in subscribers:
         if s.email.lower() == cfg["username"].lower() or s.email in cc:
@@ -361,12 +396,13 @@ def send_message(cfg: dict, subscribers: list, subject: str,
         msg["Cc"] = ", ".join(cc)
     msg.set_content(html_to_text(html))
     msg.add_alternative(html, subtype="html")
-    if chart_png is not None:
+    if charts:
         # RFC 2045 Content-ID needs angle brackets; the matching img src
-        # drops them per RFC 2392 (cid:nav_curve).
-        msg.get_payload()[1].add_related(chart_png, maintype="image",
-                                         subtype="png",
-                                         cid=f"<{NAV_CHART_CID}>")
+        # drops them per RFC 2392 (cid:nav_curve / cid:pos_pnl).
+        html_part = msg.get_payload()[1]
+        for cid, png in charts:
+            html_part.add_related(png, maintype="image", subtype="png",
+                                  cid=f"<{cid}>")
     if dry_run:
         return {"dry_run": True, "to": cfg["username"], "cc": cc,
                 "subject": subject, "html": html}

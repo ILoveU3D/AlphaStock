@@ -14,7 +14,7 @@
   "cash": {
     "CNY": 0.0,
     "HKD": 0.0,
-    "USD": 1562.39
+    "USD": 531.0
   },
   "settling": [],
   "positions": [
@@ -42,10 +42,10 @@
       "market": "US",
       "code": "ADBE",
       "name": "Adobe Inc.",
-      "qty": 6.0,
-      "avg_cost": 240.3033,
+      "qty": 10.0,
+      "avg_cost": 247.321,
       "currency": "USD",
-      "last_buy_date": "2026-10-14",
+      "last_buy_date": "2026-10-21",
       "lot": 1
     },
     {
@@ -578,6 +578,27 @@
       "note": "加仓ZM(部署率纪律,09-18用户授权'ZM论点仍成立时无需新论点'): ①今晚美股L1池结构性缺席(fetch后SEC财务缺口,池48行全A/HK),新开仓无管道,TCOM再进场因利润质量(OCF/净利0.43历史否决)今晚无法复核=合法搁置;②ZM=模型内标的,重承销点101.70 vs 现价约95=低于canonical加权公允,10-17线表机制下合法买入区;③论点完好:FY25双增(营收+4.4%/净利+88.1%)+OCF/净利1.05+今晚intel零红旗(Form4 10-13单一中性);④预算语言:现价至结构止损80.4尾部约-14.6%,加仓后ZM约22股尾部约4%NAV,HRMY预算已满不加/ADBE单名32%不加/FUTU上行薄不加;⑤部署率72%→约80%达标(授权节奏规训,拒绝机会需举证)",
       "settle_amount": 0.0,
       "seq": 24
+    },
+    {
+      "ts": "2026-10-21T21:54:50",
+      "date": "2026-10-21",
+      "action": "buy",
+      "market": "US",
+      "code": "ADBE",
+      "name": "Adobe Inc.",
+      "qty": 4.0,
+      "price": 257.35,
+      "gross": 1029.4,
+      "fees": {
+        "platform": 1.99
+      },
+      "fees_total": 1.99,
+      "cash_delta": -1031.39,
+      "currency": "USD",
+      "session": "in",
+      "note": "加仓ADBE 4股: ①价格区=live约256 vs canonical重承销点419(低39%)+bear地板232.36(下行-9.3%)=合法买入区,机械离场469.27远未触及; ②新基本面信息=CEO Narayen 10-15增持4187股(Form4观察项由信念减分转向加分,内部人方向反转)+FYQ3营收+13%/净利18.3亿美元; ③大师评估层: buffett/munger/duan质量gates(高ROE/高毛利/强OCF)历史全过,graham口径不便宜但本仓非烟蒂仓; ④生意=创意+文档云订阅机器,earn路径=订阅续费+AI功能货币化,lose路径=生成式AI颠覆创意工具入口(模型证伪集在案); ⑤仓位语言: 加仓后10股约2561=32.6%NAV,bear兑现约-2.9%NAV在风险预算内; ⑥留约536美元弹药备HRMY 11月初Q3证伪点窗口",
+      "settle_amount": 0.0,
+      "seq": 25
     }
   ],
   "nav_history": [
@@ -2298,8 +2319,8 @@
     },
     {
       "date": "2026-10-21",
-      "nav": 7811.29,
-      "cash_total": 1562.39,
+      "nav": 7880.61,
+      "cash_total": 531.0,
       "settling_total": 0,
       "positions": [
         {
@@ -2307,41 +2328,139 @@
           "code": "ZM",
           "name": "Zoom通讯",
           "qty": 22.0,
-          "price": 97.46,
+          "price": 101.25,
           "currency": "USD",
-          "value_base": 2144.12
+          "value_base": 2227.5
         },
         {
           "market": "US",
           "code": "HRMY",
           "name": "HRMY",
           "qty": 39.0,
-          "price": 38.7,
+          "price": 38.39,
           "currency": "USD",
-          "value_base": 1509.3
+          "value_base": 1497.21
         },
         {
           "market": "US",
           "code": "ADBE",
           "name": "Adobe Inc.",
-          "qty": 6.0,
-          "price": 256.73,
+          "qty": 10.0,
+          "price": 257.43,
           "currency": "USD",
-          "value_base": 1540.38
+          "value_base": 2574.3
         },
         {
           "market": "US",
           "code": "FUTU",
           "name": "富途控股",
           "qty": 10.0,
-          "price": 105.51,
+          "price": 105.06,
           "currency": "USD",
-          "value_base": 1055.1
+          "value_base": 1050.6
         }
       ],
       "fx": {
         "CNY": 1.0,
-        "USD": 6.6779
+        "HKD": 0.8509,
+        "USD": 7.2
+      }
+    },
+    {
+      "date": "2026-10-22",
+      "nav": 7813.67,
+      "cash_total": 531.0,
+      "settling_total": 0,
+      "positions": [
+        {
+          "market": "US",
+          "code": "ZM",
+          "name": "Zoom通讯",
+          "qty": 22.0,
+          "price": 99.44,
+          "currency": "USD",
+          "value_base": 2187.68
+        },
+        {
+          "market": "US",
+          "code": "HRMY",
+          "name": "HRMY",
+          "qty": 39.0,
+          "price": 38.31,
+          "currency": "USD",
+          "value_base": 1494.09
+        },
+        {
+          "market": "US",
+          "code": "ADBE",
+          "name": "Adobe Inc.",
+          "qty": 10.0,
+          "price": 255.06,
+          "currency": "USD",
+          "value_base": 2550.6
+        },
+        {
+          "market": "US",
+          "code": "FUTU",
+          "name": "富途控股",
+          "qty": 10.0,
+          "price": 105.03,
+          "currency": "USD",
+          "value_base": 1050.3
+        }
+      ],
+      "fx": {
+        "CNY": 1.0,
+        "HKD": 0.8506,
+        "USD": 6.6738
+      }
+    },
+    {
+      "date": "2026-10-23",
+      "nav": 7747.27,
+      "cash_total": 531.0,
+      "settling_total": 0,
+      "positions": [
+        {
+          "market": "US",
+          "code": "ZM",
+          "name": "Zoom通讯",
+          "qty": 22.0,
+          "price": 96.2,
+          "currency": "USD",
+          "value_base": 2116.4
+        },
+        {
+          "market": "US",
+          "code": "HRMY",
+          "name": "HRMY",
+          "qty": 39.0,
+          "price": 36.03,
+          "currency": "USD",
+          "value_base": 1405.17
+        },
+        {
+          "market": "US",
+          "code": "ADBE",
+          "name": "Adobe Inc.",
+          "qty": 10.0,
+          "price": 270.55,
+          "currency": "USD",
+          "value_base": 2705.5
+        },
+        {
+          "market": "US",
+          "code": "FUTU",
+          "name": "富途控股",
+          "qty": 10.0,
+          "price": 98.92,
+          "currency": "USD",
+          "value_base": 989.2
+        }
+      ],
+      "fx": {
+        "CNY": 1.0,
+        "USD": 6.6691
       }
     }
   ],
@@ -2590,6 +2709,27 @@
       "nav": 7651.86,
       "day_pnl": 2.94,
       "text": "20261019 授权窗口操作(周一美股早盘): ①NVDA吊灯判决执行——10-16收盘214.13<线222.46判决周五已成立,今开盘即卖3股@215.45,已实现-45.53(-6.6%),纪律闭环不重新论证; ②ZM加仓6股@95.57(22股,均价91.42)——低于canonical重承销点101.70的合法买入区,FY25双增+OCF/净利1.05+今晚intel零红旗,部署率72%→约80%(09-18规训ZM加仓免新论点); ③今晚美股L1池结构性缺席:fetch --refresh后SEC财务缺口,masters-vote池48行全A/HK零US——新开仓无融合管道,TCOM再进场因OCF/净利历史否决(0.43)今晚无法复核=合法搁置非放弃,补数据后再议; ④持仓intel全扫零红旗:ZM Form4 10-13单一中性/HRMY OCF2.19+一致Buy目标48.25/FUTU StrongBuy18家目标160.85/ADBE仅例行披露; ⑤发现下午digest三期块曾用盘前旧报价标记(NVDA185.09/ADBE349.86失真),盘中授权窗口的一切定价以live tick为准——已用fetch --refresh后重标记修正"
+    },
+    {
+      "date": "2026-10-21",
+      "ts": "2026-10-21T21:55:41",
+      "nav": 7880.61,
+      "day_pnl": 169.64,
+      "text": "20261021 授权窗口操作(周三美股盘中,21:47北京时间,fetch --markets US正常模式L1池46行US在池,定价live tick): ①加仓ADBE 4股@257.35(10股,均价约247.1)——合法买入区(live低于canonical重承销点419达39%,bear地板232.36仅-9.3%)+新基本面信息(CEO Narayen 10-15增持4187股,Form4观察项方向反转;FYQ3营收+13%)双标准满足,仓位语言=32.7%NAV×bear-9.3%≈-3.0%NAV风险预算内,留531弹药备HRMY Q3窗口; ②持仓intel全扫: ZM Form4 10-13批10-19已审中性零新事; FUTU零新披露,StrongBuy18家目标160.85,证伪点11-17Q3; ADBE新闻面富国降目标价 vs CEO增持,定性后者为内部人真金信号; ③HRMY 8-K 5.02(10-12)CEO Dayno退休计划(2026-12-31生效,顾问身份留至2027),COO Anastasiou(2026-04入职,前董事/Lundbeck北美总裁)2027-01-01接任——计划内有序交接非突发,定性amber,24h内增补dossier证伪集(10-13海底捞先例:书面纪律先于价格反应),11月初Q3证伪点叠加交接期重点跟踪; ④L1池逐名否决(举证责任): TCOM cash_conversion 43.2=OCF/净利0.43历史否决新数据再确认(<0.5无论票数); NUTX动量分位91.4顶端非错杀+波动率88.6%+NUTX型先例否决; SLDE保险股DCF核失真(货币即原料同理)+dd52=0追52周高点否决; ⑤ZM live 101.17贴重承销点101.70(-0.5%),触及义务预告=点名模型外假设+核result.json日期,非自动卖。部署率93.3%(09-18规训达标)"
+    },
+    {
+      "date": "2026-10-22",
+      "ts": "2026-10-22T14:26:05",
+      "nav": 7813.67,
+      "day_pnl": -66.94,
+      "text": "2026-10-22 ZM预复核（用户问询，触发点未到）：live 99.44 vs 加权公允101.70，还差2.3%。论据零漂移——模型2026-10-04 QUALIFIED未过期(stale=false)，期间无新财报（Q3 FY2027约11月下旬披露），intel零红旗：14条Form 4=高管RSU例行10b5-1售股节奏非信号，30天无新闻，0 risk flags。三层世界权重(0.55/0.25/0.20)维持，无上调证据亦无下调证据。执行计划钉死：价格触及101.70即启动24-48h正式再承销（重审三世界权重+假设）；若无新模型升级证据且价格>113.90(=101.70x1.12)机械清仓；bear floor 57.06仅触发线非卖点。22股@91.42，浮盈+8.8%。"
+    },
+    {
+      "date": "2026-10-22",
+      "ts": "2026-10-22T14:29:28",
+      "nav": 7813.67,
+      "day_pnl": -66.94,
+      "text": "2026-10-22 ZM正式再承销（触发=10-21盘中高点102.11>101.70，用户指正——我早间只盯实时价漏看昨日高点，触发口径=盘中触及非收盘价）：核对结果=零新信息，无新财报(Q3 FY2027约11月下旬)、intel零红旗、Form 4例行、三世界权重0.55/0.25/0.20维持、加权公允101.70不变、无模型升级证据。裁决：继续持有+机械清仓线113.90(=公允x1.12)悬挂，越过即清不讨价还价；bear floor 57.06仅触发线。现价公允附近期望收益≈0，持有理由= bull世界期权+11月财报。22股@91.42浮盈+8.8%。"
     }
   ],
   "totals": {

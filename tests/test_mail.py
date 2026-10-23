@@ -263,6 +263,61 @@ class TestNavChart:
                        for p in msg.walk())
 
 
+class TestPositionChart:
+    """{{POSITION_CHART}} -> second CID inline PNG (user mandate
+    2026-10-23: 虚拟持仓逐票盈亏用图表呈现); both chart tokens may
+    appear in one letter and each keeps its own CID."""
+
+    def setup_method(self):
+        _FakeSMTP.instances = []
+
+    @staticmethod
+    def _items():
+        return [{"season": 1, "label": "US:ZM", "pct": 5.2},
+                {"season": 3, "label": "A:603444", "pct": -10.1}]
+
+    def test_both_tokens_attach_two_related_pngs(self, mail_tmp,
+                                                 monkeypatch):
+        from polar_star import mail_chart
+        monkeypatch.setattr(mail_chart, "seasons_curves",
+                            lambda: TestNavChart._curves())
+        monkeypatch.setattr(mail_chart, "positions_pnl",
+                            lambda: self._items())
+        cfg = _write_config(mail_tmp)
+        result = ml.send_message(cfg, _subs(), "主题",
+                                 "<p>x</p>{{NAV_CHART}}"
+                                 "<p>y</p>{{POSITION_CHART}}", "as-of",
+                                 today="2026-10-23",
+                                 smtp_factory=_FakeSMTP)
+        assert result["sent"] is True
+        msg, _ = _FakeSMTP.instances[0].sent[0]
+        html_part = msg.get_payload()[1]
+        assert html_part.get_content_type() == "multipart/related"
+        html = html_part.get_payload()[0].get_content()
+        assert 'src="cid:nav_curve"' in html
+        assert 'src="cid:pos_pnl"' in html
+        assert "{{NAV_CHART}}" not in html
+        assert "{{POSITION_CHART}}" not in html
+        imgs = [p for p in html_part.get_payload()
+                if p.get_content_type() == "image/png"]
+        assert [i["Content-ID"] for i in imgs] == ["<nav_curve>",
+                                                   "<pos_pnl>"]
+        for img in imgs:
+            assert img.get_payload(decode=True)[:8] == b"\x89PNG\r\n\x1a\n"
+
+    def test_no_positions_leaves_honest_gap_note(self, mail_tmp,
+                                                 monkeypatch):
+        from polar_star import mail_chart
+        monkeypatch.setattr(mail_chart, "positions_pnl", lambda: [])
+        cfg = _write_config(mail_tmp)
+        ml.send_message(cfg, _subs(), "主题",
+                        "<p>x</p>{{POSITION_CHART}}", "as-of",
+                        today="2026-10-23", smtp_factory=_FakeSMTP)
+        msg, _ = _FakeSMTP.instances[0].sent[0]
+        assert msg.get_payload()[1].get_content_type() == "text/html"
+        assert "逐票盈亏图暂缺" in msg.get_payload()[1].get_content()
+
+
 def _scores(v, g, q, s, m, c):
     return {"value_score": v, "growth_score": g, "quality_score": q,
             "safety_score": s, "momentum_score": m, "cashflow_score": c}

@@ -11,8 +11,8 @@ triggers:
 commands:
   - ask --evidence
   - screen --strategy <master>
-version: 17
-updated_at: 2026-10-18T15:02:21
+version: 18
+updated_at: 2026-10-23T15:08:53
 ---
 
 # Playbook
@@ -95,3 +95,4 @@ master-grade depth on fundamentals.
 - [2026-10-04 20:29] (ai) 买股票就是买公司(2026-10-04用户铁律): 评价/复盘任务默认链路=model status查新鲜度(STALE先更新)->model list对upside->异常票model show读world->大师决断同级参考->最后才对账目层; 只念journal=方法论错误
 - [2026-10-15 19:37] (ai) 当用户明确拒绝退出建议(如'我确定不卖')：正确收束=停止劝说+把持有决定落成书面声明(彩票化/行权条件/接受的最差结局)+预设复查路标(财报/解禁到点主动拉数据)+约束未来资金不摊低；继续施压只会触发承诺升级，把路堵死
 - [2026-10-18 15:02] (ai) user mandate 2026-10-18: holding review starts with profile coverage audit (profile status x season positions); every held position must carry a live assessment — gaps closed at discovery (11/11 season holdings covered 2026-10-18)
+- [2026-10-23 15:08] (ai) 指令2026-10-23：持仓按周期档做注意力审计——中期仓无催化剂路径=基态等待型须过酸测试否则降仓；战术仓动能破位=纪律出场（塔砖undervalued-plus-attention）

@@ -168,3 +168,103 @@ class TestRenderSeasons:
                 if sum(1 for x in range(80, 560, 40)
                        if _pixel(png, x, y) == mc.ZERO) >= 10]
         assert rows, "no zero reference line in the plot area"
+
+
+def _season_positions(sid="s001", status="active", cur="USD",
+                      marks=None):
+    if marks is None:
+        marks = [("2026-10-22", [("US", "ZM", 10.0, 96.0, 91.0)]),
+                 ("2026-10-23", [("US", "ZM", 10.0, 96.0, 91.0)])]
+    positions = [{"market": m, "code": c, "qty": q, "avg_cost": cost,
+                  "currency": cur}
+                 for d, rows in marks
+                 for m, c, q, p, cost in rows]
+    return {"id": sid, "status": status, "base_currency": cur,
+            "initial_capital": 10000.0,
+            "positions": positions,
+            "nav_history": [
+                {"date": d,
+                 "positions": [{"market": m, "code": c, "qty": q,
+                                "price": p, "currency": cur}
+                               for m, c, q, p, _ in rows]}
+                for d, rows in marks]}
+
+
+class TestPositionsPnl:
+    def test_pnl_pct_from_latest_mark_cost(self, monkeypatch):
+        season = _season_positions()
+        monkeypatch.setattr(trade, "list_seasons",
+                            lambda: [{"id": "s001", "status": "active"}])
+        monkeypatch.setattr(trade, "load_season", lambda sid: season)
+        rows = mc.positions_pnl()
+        assert len(rows) == 1
+        r = rows[0]
+        assert r["label"] == "US:ZM"
+        assert r["pct"] == pytest.approx((96.0 / 91.0 - 1.0) * 100.0)
+        assert r["pnl"] == pytest.approx(50.0)      # (96-91) x 10
+        assert r["currency"] == "USD"
+
+    def test_paused_and_markless_seasons_skipped(self, monkeypatch):
+        paused = _season_positions(sid="s002", status="paused")
+        markless = _season_positions(sid="s003", marks=[])
+        monkeypatch.setattr(trade, "list_seasons", lambda: [
+            {"id": "s002", "status": "paused"},
+            {"id": "s003", "status": "active"}])
+        monkeypatch.setattr(trade, "load_season",
+                            lambda sid: {"s002": paused,
+                                         "s003": markless}[sid])
+        assert mc.positions_pnl() == []
+
+    def test_season_index_counts_every_season(self, monkeypatch):
+        # labels match the NAV chart's S-numbering (paused seasons count)
+        s1 = _season_positions(sid="s001", status="paused")
+        s2 = _season_positions(sid="s002", cur="HKD",
+                               marks=[("2026-10-23",
+                                       [("HK", "3306", 500.0, 22.0,
+                                         21.5)])])
+        monkeypatch.setattr(trade, "list_seasons", lambda: [
+            {"id": "s001", "status": "paused"},
+            {"id": "s002", "status": "active"}])
+        monkeypatch.setattr(trade, "load_season",
+                            lambda sid: {"s001": s1, "s002": s2}[sid])
+        rows = mc.positions_pnl()
+        assert [(r["season"], r["label"]) for r in rows] == [(2, "HK:3306")]
+
+
+class TestRenderPositions:
+    def _items(self):
+        return [
+            {"season": 1, "label": "US:ZM", "pct": 5.2},
+            {"season": 1, "label": "US:HRMY", "pct": -9.6},
+            {"season": 2, "label": "HK:3306", "pct": 2.5},
+            {"season": 3, "label": "A:603444", "pct": -10.1},
+        ]
+
+    def test_png_signature_dims_and_size(self):
+        png = mc.render_positions_png(self._items())
+        assert png[:8] == b"\x89PNG\r\n\x1a\n"
+        w, h = struct.unpack(">II", png[16:24])
+        assert w == 640
+        assert h == 34 + 26 * 4 + 26      # height grows with row count
+        assert len(png) < 100_000
+
+    def test_all_zero_renders(self):
+        items = [{"season": 1, "label": "US:ZM", "pct": 0.0}]
+        assert mc.render_positions_png(items)[:4] == b"\x89PNG"
+
+    def test_empty_rejected(self):
+        with pytest.raises(ValueError, match="no open positions"):
+            mc.render_positions_png([])
+
+    def test_bars_carry_season_palette_colors(self):
+        items = [{"season": 1, "label": "US:ZM", "pct": 5.2},
+                 {"season": 2, "label": "HK:3306", "pct": 2.5},
+                 {"season": 3, "label": "A:603444", "pct": -1.0}]
+        png = mc.render_positions_png(items)
+        row_y = [34 + 26 * i + 5 for i in range(3)]   # bar center band
+        colors = []
+        for y in row_y:
+            seen = {_pixel(png, x, y) for x in range(104, 574)}
+            hit = seen & set(mc.PALETTE)
+            colors.append(hit.pop() if hit else None)
+        assert colors == mc.PALETTE[:3]   # S1 red, S2 navy, S3 green

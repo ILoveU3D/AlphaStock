@@ -2002,6 +2002,25 @@ def _profile_assess_batch(args, prof) -> int:
             if not matches:
                 raise ValueError(f"no match for {e['stock']!r}")
             m = matches[0]
+            q = str(e["stock"])
+            if ":" in q:
+                # 2026-10-21 incident: "US:USAR" resolved to US:AR (Antero)
+                # first and silently overwrote Antero's profile — explicit
+                # MKT:CODE entries must land on their exact code or fail
+                # loudly, never on a fuzzy first match.
+                qmkt, qcode = q.split(":", 1)
+                want = prof.normalize_code(qmkt, qcode)
+                exact = next(
+                    (c for c in matches
+                     if c.market == qmkt
+                     and prof.normalize_code(c.market, c.code) == want),
+                    None)
+                if exact is None:
+                    raise ValueError(
+                        f"{q!r} resolved to {m.market}:{m.code} ({m.name}); "
+                        f"no exact match for {qmkt}:{want} — refusing to "
+                        f"write another stock's profile")
+                m = exact
             fl = e.get("founder_led")
             if isinstance(fl, str):
                 fl = fl.strip().lower() in ("yes", "true", "1")
