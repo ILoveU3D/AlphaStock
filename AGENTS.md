@@ -653,7 +653,10 @@ write letter → send.
   protection but credentials can bypass it silently, so "push
   succeeded" is NOT proof of compliance. Push only feature branches;
   PRs are opened and merged by the user on GitHub. The AI never
-  calls the GitHub API to operate PRs on the user's behalf.
+  calls the GitHub API to operate PRs on the user's behalf. PRs are
+  merged with **"Create a merge commit", never squash/rebase**
+  (user mandate: rebase/squash rewrites commit hashes → twin-commit
+  conflicts on local sync; merge commits keep hashes stable).
 - **Memory files (2026-10-03 / 2026-10-09)**: no local memory files
   (`project_memory.md` prohibited 2026-10-03; `user_profile.md`
   prohibited 2026-10-09). All memory lives in the system libraries:
