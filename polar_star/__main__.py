@@ -2073,6 +2073,16 @@ def cmd_profile(args) -> int:
     from . import profile as prof
 
     try:
+        if args.profile_cmd == "pack":
+            counts = prof.save_pack()
+            if args.json:
+                print(json.dumps({"pack": counts}, ensure_ascii=False))
+                return 0
+            total = sum(counts.values())
+            print("pack written under %s: %s (total %d)" % (
+                prof.pack_dir(),
+                ", ".join(f"{m}={n}" for m, n in counts.items()), total))
+            return 0
         if args.profile_cmd == "list":
             rows = prof.list_assessments()
             if args.json:
@@ -3402,7 +3412,8 @@ def build_parser() -> argparse.ArgumentParser:
     ppf = sub.add_parser(
         "profile", help="company profiles (Phase 5): raw source text "
                         "(data/, cleanable) + AI-distilled assessments "
-                        "(profiles/, LOCAL-ONLY — never pushed)")
+                        "(profiles/, loose files LOCAL-ONLY; the pack "
+                        "under profiles/pack/ is git-tracked)")
     ppf_sub = ppf.add_subparsers(dest="profile_cmd", required=True)
     ppf_list = ppf_sub.add_parser("list", help="list distilled assessments")
     ppf_list.add_argument("--json", action="store_true")
@@ -3437,6 +3448,10 @@ def build_parser() -> argparse.ArgumentParser:
         "next", help="the AI work queue: first N undistilled targets")
     ppf_camp_next.add_argument("-n", type=int, default=10)
     ppf_camp_next.add_argument("--json", action="store_true")
+    ppf_pack = ppf_sub.add_parser(
+        "pack", help="regenerate the git-tracked distribution pack "
+                     "(profiles/pack/<MKT>.jsonl, mandate 2026-10-23)")
+    ppf_pack.add_argument("--json", action="store_true")
     ppf_assess = ppf_sub.add_parser(
         "assess", help="write the AI distillation (the only writer; "
                        "feeds the culture core via the D3 hook)")

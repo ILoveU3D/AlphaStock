@@ -229,7 +229,11 @@ class TestGitignore:
             encoding="utf-8")
         ignored = {ln.strip() for ln in text.splitlines()
                    if ln.strip() and not ln.startswith("#")}
-        assert "profiles/" in ignored
+        # user mandate 2026-10-23: loose files stay LOCAL-ONLY, only the
+        # compressed distribution pack ships with the repo
+        assert "profiles/*" in ignored
+        assert "!profiles/pack/" in ignored
+        assert "!profiles/pack/**" in ignored
 
 
 class TestFetchers:

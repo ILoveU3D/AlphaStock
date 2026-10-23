@@ -283,14 +283,29 @@ def load_result(market: str, code: str) -> dict | None:
     return _load_json(p, "model result") if p.exists() else None
 
 
+# User mandate 2026-10-23: a model expires one month after it was built —
+# EXPIRED is treated exactly like STALE (drops out of scoring until rebuilt).
+MODEL_TTL_DAYS = 30
+
+
 def is_stale(result: dict | None, history: dict | None) -> bool:
     """Result pins the history hash it was built from; a refetched/changed
-    history (new reporting period) marks it STALE until rebuilt."""
+    history (new reporting period) marks it STALE until rebuilt. Independently,
+    a result older than MODEL_TTL_DAYS is EXPIRED (user mandate 2026-10-23)."""
     if result is None:
         return False
     if history is None:
         return True
-    return result.get("history_hash") != history.get("history_hash")
+    if result.get("history_hash") != history.get("history_hash"):
+        return True
+    built = result.get("built_at")
+    if not built:
+        return True
+    try:
+        age = datetime.now() - datetime.fromisoformat(built)
+    except ValueError:
+        return True
+    return age.days >= MODEL_TTL_DAYS
 
 
 def list_models() -> list:

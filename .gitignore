@@ -22,9 +22,13 @@ users/
 # list and send log are private — never pushed to any remote
 mail/
 
-# Company profile assessments are LOCAL-ONLY (user mandate 2026-09-29):
-# never pushed to any remote; raw fetches live under the cleanable data/
-profiles/
+# Company profile loose files are LOCAL-ONLY working store; the compressed
+# distribution pack (profiles/pack/) SHIPS with the repo (user mandate
+# 2026-10-23, superseding the 2026-09-29 never-push rule for the pack only);
+# raw fetches live under the cleanable data/
+profiles/*
+!profiles/pack/
+!profiles/pack/**
 
 # Financial models are LOCAL-ONLY (2026-10-02 design): assumptions +
 # valuation results are proprietary judgment — never pushed to any remote

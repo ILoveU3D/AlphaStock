@@ -19,8 +19,8 @@ commands:
   - ask X --evidence
   - intel X
   - recommend --user me
-version: 93
-updated_at: 2026-10-23T17:16:44
+version: 95
+updated_at: 2026-10-23T22:46:32
 ---
 
 # Playbook
@@ -375,3 +375,5 @@ Output shape (hard rules):
 - [2026-10-23 15:08] (ai) 指令细化2026-10-23：注意力权重按周期配比——超短≈50%/短≈30%/中≈15-20%/长≈5%（初始刻度，实盘校准），适用推荐+持仓+分析全场景；canonical见塔砖undervalued-plus-attention
 - [2026-10-23 16:10] (ai) profile campaign terminal state (2026-10-23): queue 13755, distilled 13632 (99.11%), STALE=0, 0 new listings vs 20261023 snapshot — the distillable queue is EXHAUSTED. The 'fetched-ready 91' in campaign status are all source-EMPTY raws: residue is non-operating securities (FMCC/FMCK preferred series G-T, FREJ/FNMA/METCI preferreds, SPAC units/warrants trailing U/W, OTC shells like GLTK/HWKE) that stockanalysis never profiles; dump_profile_next._has_real_text correctly skips them (US SIC industry strings carry no CJK and no summary/vision). Remaining 31 raw-missing are the same fringe (CON=Concentra OP unit feed artifacts, RBTK shell) plus 2 nameless HK tickers (00232/06700) already dropped from the latest quote feed. Future operators: do NOT treat the 122 residue as backlog or re-run fetch-all expecting fills — it is structural; only revisit if a name graduates to a real common-stock listing with a source profile.
 - [2026-10-23 17:16] (ai) profile campaign 2026-10-23 晚间终态复核（操作员独立验证，非转述）：全量 raw 扫描（tmp/verify_campaign_terminal.py）确认 13,617 份有正文 raw 全部持有活体评估、队内可蒸 0 家、20261023 快照 0 家新上市缺席队列、stale=0、watchlist 3 行与用户 me 全部 4 持仓（688795/ZM/HRMY/03998）画像全覆盖——战役结构性完成于 13,641 评估（队内 13,632/13,755=99.11%）。另记操作怪癖：PowerShell 的 > 重定向写 UTF-16 BOM，后续 json.load(utf-8) 全炸；用 tmp/dump_profile_to_file.py 包装脚本让 Python 自己写 UTF-8 无 BOM 文件（本会话已建）。
+- [2026-10-23 22:24] (ai) 用户授权2026-10-23: L1池深评名单若遇未建模标的,当场建模后再裁决(禁止以无模型为由跳过),模型满30天即过期(store.MODEL_TTL_DAYS)视同STALE,过期标的重建前不给判决
+- [2026-10-23 22:46] (ai) 用户授权2026-10-23: profile蒸馏有效期90天(profile.PROFILE_TTL_DAYS,对齐财报季),过期视同STALE掉出文化核;公司基本面变化(新财报/重大公告)时择机重蒸馏对应profile,不等到期;每次assess后跑profile pack刷新git追踪的发行包(profiles/pack/<MKT>.jsonl随代码上库,散文件仍本地)

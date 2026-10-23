@@ -357,12 +357,16 @@ veto-only until a distillation activates it.
 - **Storage split (user mandate 2026-09-29)**: raw fetches live under
   `data/profiles/raw/<market>/<code>.json` (cleanable, regenerable);
   assessments live in the top-level `profiles/<market>/<code>.json`
-  dir which is **gitignored LOCAL-ONLY — never pushed to any remote**.
-  The schema is stable (source / raw_hash / scores / argument texts)
-  so the store can later become a portable dataset.
+  loose store (LOCAL-ONLY working store), while the **compressed
+  distribution pack `profiles/pack/<MKT>.jsonl` (minified, one company
+  per line, sorted by code) is git-tracked and ships with the repo**
+  (user mandate 2026-10-23, superseding the 2026-09-29 never-push rule
+  for the pack only; regenerate with `profile pack` after distilling —
+  fresh clones read the pack as the canonical source via loader
+  fallback).
 - Commands: `python -m polar_star profile fetch|show|assess|list|
-  status` — all `--json`-capable. Profile commands do **not** run the
-  freshness gate. Sources: A = 东财 F10 机构概况；HK = 东财 HKF10
+  status|pack` — all `--json`-capable. Profile commands do **not** run
+  the freshness gate. Sources: A = 东财 F10 机构概况；HK = 东财 HKF10
   公司概况；US = SEC submissions meta + stockanalysis 简介.
 - The loop (per L3 deep-review candidate): `profile fetch X` →
   `profile show X` + `intel X` （读原文） → three-core argumentation →
@@ -371,7 +375,11 @@ veto-only until a distillation activates it.
   `ask` run (`core_gaps` marks `CULTURE_DISTILLED`).
 - **Staleness**: the assessment pins the raw content hash; a
   refetched/changed raw marks it STALE and it drops out of scoring
-  until re-distilled. `profile status` lists coverage + staleness.
+  until re-distilled. Independently, every profile **expires 90 days
+  after `assessed_at`** (user mandate 2026-10-23,
+  `profile.PROFILE_TTL_DAYS`) — quarterly, aligned with the earnings
+  cycle when fundamental change surfaces; EXPIRED is treated exactly
+  like STALE. `profile status` lists coverage + staleness.
 - Never improvise a culture score from pillar data — no distillation
   means the culture core stays veto-only.
 - **三核齐备义务 (user mandate 2026-10-18)**: 荐股 / 分析 / 持仓
@@ -450,9 +458,16 @@ North-Star DCF get stronger.
   keyhole quarterly falsification checks; never for funnel-wide scans
   or D4 tactical mode. Campaign order: keyholes/holdings → L3 →
   funnel candidates → industry by industry.
+  **On-the-spot modeling (user mandate 2026-10-23)**: when a
+  recommendation/scan deep-review shortlist contains an unmodeled
+  name, build the model on the spot (gather → write → lint) before
+  any verdict — "no model" is never a reason to skip a candidate.
 - **Staleness**: the result pins the history hash; a refetched history
   (new reporting period) marks it STALE and it drops out of scoring
-  until rebuilt.
+  until rebuilt. Independently, every model **expires 30 days after
+  `built_at`** (user mandate 2026-10-23, `store.MODEL_TTL_DAYS`) —
+  EXPIRED is treated exactly like STALE: out of scoring, rebuilt
+  before any verdict.
 - Never fabricate missing statement fields (A shares count, HK capex) —
   declare gaps; say per-share is untrustworthy when it is.
 

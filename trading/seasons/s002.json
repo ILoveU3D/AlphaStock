@@ -1836,7 +1836,7 @@
     },
     {
       "date": "2026-10-23",
-      "nav": 51798.5,
+      "nav": 51733.5,
       "cash_total": 14433.5,
       "settling_total": 0,
       "positions": [
@@ -1854,24 +1854,24 @@
           "code": "03998",
           "name": "波司登",
           "qty": 4000.0,
-          "price": 4.26,
+          "price": 4.245,
           "currency": "HKD",
-          "value_base": 17040.0
+          "value_base": 16980.0
         },
         {
           "market": "HK",
           "code": "06862",
           "name": "海底捞",
           "qty": 1000.0,
-          "price": 9.235,
+          "price": 9.23,
           "currency": "HKD",
-          "value_base": 9235.0
+          "value_base": 9230.0
         }
       ],
       "fx": {
         "CNY": 1.0,
         "HKD": 0.92,
-        "USD": 7.2
+        "USD": 6.6701
       }
     }
   ],

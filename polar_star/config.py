@@ -358,12 +358,12 @@ HK_ORGPROFILE_REPORT = "RPT_HKF10_INFO_ORGPROFILE"
 # ---------------------------------------------------------------------------
 # Company profiles (Phase 5, user mandate 2026-09-29): AI reads filings +
 # intel and distills business model / corporate culture assessments.
-# LOCAL-ONLY: PROFILES_DIR is gitignored and NEVER pushed (company data
-# stays on this machine); raw fetches live under the cleanable data/ tree.
-# Schema is stable (source / raw_hash / scores / argument text) so the
-# directory can later be packaged into a portable dataset.
+# Loose per-stock files are the LOCAL-ONLY working store; the compressed
+# distribution pack (PROFILES_DIR/pack/<MKT>.jsonl) is git-tracked and ships
+# with the repo (user mandate 2026-10-23). Raw fetches live under the
+# cleanable data/ tree.
 # ---------------------------------------------------------------------------
-PROFILES_DIR = BASE_DIR / "profiles"              # assessments, untracked
+PROFILES_DIR = BASE_DIR / "profiles"              # loose local; pack tracked
 PROFILE_RAW_DIR = DATA_DIR / "profiles" / "raw"   # regenerable, cleanable
 A_ORG_BASICINFO_REPORT = "RPT_F10_ORG_BASICINFO"  # A 股公司概况（探针定稿）
 SA_PROFILE_URL_TMPL = "https://stockanalysis.com/stocks/{slug}/"

@@ -19,8 +19,8 @@ commands:
   - model build X
   - model set X
   - model list
-version: 65
-updated_at: 2026-10-13T11:55:53
+version: 66
+updated_at: 2026-10-23T22:24:14
 ---
 
 # 19 · Financial Modeling（财务建模）
@@ -188,3 +188,4 @@ HK 全名单来自 mainindicator batch），状态存 `models/campaign.json`
 - [2026-10-10 18:25] (ai) model write 的 @file 路径相对仓库根目录解析（cwd），不是 models/<market>/<code> 目录——装载 US:AD 时必须写 @models/US/AD/raw/_staging/xxx.json 全相对路径；另：rdcf_*.txt 等长文写作件常为单行文件，分段处理用段落标题锚（split on 【标题】）而非换行符
 - [2026-10-12 10:58] (ai) 2026-10-12 model build 坑：assumptions 的 ebit_margin 必须是逐年列表(标量如 0.22 会使 engine.fcff_path 的 m[t] if t<len(m) 抛 TypeError)，手工设参时写 bear.ebit_margin=0.22,0.22,0.22,0.22,0.22；且自动回归会把历史衰减窗口(吉比特2023-24)外推成全情景负增长+保证金默认15%，游戏/内容类公司必须覆盖为研究结论值；model fetch 后 build 前先读 history.json 锚定基准年收入
 - [2026-10-13 11:55] (ai) IFRS16租赁密集企业(餐饮/零售)HK建模口径(2026-10-13海底捞首例): OE用NI口径margin(租赁折旧+利息已在NI扣除)时net_debt必须只算金融性债务(银行借款/票据-现金),租赁负债120.9亿不重复计入否则租赁成本双重计算; history.json的debt字段是IFRS16含租赁口径勿直抄; shares缺口手动补(东财ISSUED_COMMON_SHARES为快照常数),HK CNY报表配price_fx(CNY->HKD)使每股输出HKD,与03306批次同法
+- [2026-10-23 22:24] (ai) 用户授权2026-10-23: 荐股/扫描中进入L3深评或裁决的候选若未建模,当场建模(gather→write→lint)再出判决,适用既有触发条件,漏斗全扫仍不建;模型有效期30天(store.MODEL_TTL_DAYS,过期视同STALE掉出打分,裁决前必须重建)——built_at起算,与history_hash陈旧判定并行

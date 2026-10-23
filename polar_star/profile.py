@@ -90,8 +90,82 @@ def load_raw(market: str, code: str) -> dict | None:
 
 
 def load_assessment(market: str, code: str) -> dict | None:
+    code = normalize_code(market, code)
     p = assessment_path(market, code)
-    return _load_json(p, "profile assessment") if p.is_file() else None
+    if p.is_file():
+        return _load_json(p, "profile assessment")
+    return _pack_index(market).get(code)
+
+
+# ---------------------------------------------------------------------------
+# Distribution pack (user mandate 2026-10-23: the distilled profiles ship
+# with the code as a git-tracked asset — one minified JSONL per market, one
+# company per line, sorted by code for stable diffs). Loose per-stock files
+# remain the local working store; the pack is the read-only distribution
+# artifact, regenerated on demand with `profile pack`. On a fresh clone (no
+# loose files) the pack is the canonical source.
+# ---------------------------------------------------------------------------
+def pack_dir() -> Path:
+    return profiles_dir() / "pack"
+
+
+def _pack_path(market: str) -> Path:
+    return pack_dir() / f"{market.upper()}.jsonl"
+
+
+_pack_cache: dict = {}
+
+
+def _pack_index(market: str) -> dict:
+    """{code: assessment} from the distribution pack; cached by file mtime."""
+    p = _pack_path(market)
+    try:
+        mtime = p.stat().st_mtime
+    except OSError:
+        return {}
+    ent = _pack_cache.get(market.upper())
+    if ent and ent[0] == mtime:
+        return ent[1]
+    idx = {}
+    for line in p.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            a = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(a, dict) and a.get("code"):
+            idx[a["code"]] = a
+    _pack_cache[market.upper()] = (mtime, idx)
+    return idx
+
+
+def save_pack() -> dict:
+    """Regenerate the distribution pack from loose assessments.
+    Returns {market: row_count}."""
+    from .atomic import atomic_write_text
+    root = profiles_dir()
+    by_mkt: dict = {}
+    if root.exists():
+        for p in sorted(root.glob("*/*.json")):
+            if p.parent.name == "pack":
+                continue
+            try:
+                a = _load_json(p, "profile assessment")
+            except ValueError:
+                continue
+            by_mkt.setdefault(a["market"].upper(), []).append(a)
+    pack_dir().mkdir(parents=True, exist_ok=True)
+    counts = {}
+    for mkt, rows in sorted(by_mkt.items()):
+        rows.sort(key=lambda a: a["code"])
+        text = "\n".join(
+            json.dumps(r, ensure_ascii=False, separators=(",", ":"))
+            for r in rows) + "\n"
+        atomic_write_text(_pack_path(mkt), text)
+        counts[mkt] = len(rows)
+    return counts
 
 
 def new_raw(market: str, code: str, name: str = "", source: str = "",
@@ -208,10 +282,28 @@ def assess(market: str, code: str, name: str = "",
 # ---------------------------------------------------------------------------
 # Freshness & the culture-core hook (D3)
 # ---------------------------------------------------------------------------
+# User mandate 2026-10-23: a profile distillation expires PROFILE_TTL_DAYS
+# after assessed_at — quarterly, aligned with the earnings cycle (the moment
+# fundamental change surfaces); EXPIRED is treated exactly like STALE.
+PROFILE_TTL_DAYS = 90
+
+
 def is_stale(assessment: dict, raw: dict | None) -> bool:
     """A distillation is stale when the raw it pinned has since changed
-    (content_hash mismatch). Missing raw cannot prove staleness."""
-    if not assessment or not raw:
+    (content_hash mismatch), or when it is older than PROFILE_TTL_DAYS
+    (user mandate 2026-10-23: fundamentals change → revise on schedule).
+    Missing raw cannot prove content staleness, but the TTL still applies."""
+    if not assessment:
+        return False
+    from datetime import datetime
+    assessed = assessment.get("assessed_at")
+    if assessed:
+        try:
+            if (datetime.now() - datetime.fromisoformat(assessed)).days >= PROFILE_TTL_DAYS:
+                return True
+        except ValueError:
+            return True
+    if not raw:
         return False
     pinned = assessment.get("raw_hash")
     return bool(pinned) and pinned != raw.get("content_hash")
@@ -223,16 +315,24 @@ def list_assessments() -> list[dict]:
     import sys
     out = []
     root = profiles_dir()
-    if not root.exists():
-        return out
-    for p in sorted(root.glob("*/*.json")):
-        try:
-            a = _load_json(p, "profile assessment")
-        except ValueError as exc:
-            print(f"    [warn] {exc}", file=sys.stderr)
-            continue
-        a["raw_stale"] = is_stale(a, load_raw(a["market"], a["code"]))
-        out.append(a)
+    seen = set()
+    if root.exists():
+        for p in sorted(root.glob("*/*.json")):
+            try:
+                a = _load_json(p, "profile assessment")
+            except ValueError as exc:
+                print(f"    [warn] {exc}", file=sys.stderr)
+                continue
+            a["raw_stale"] = is_stale(a, load_raw(a["market"], a["code"]))
+            seen.add(a["id"])
+            out.append(a)
+    for mkt in ("A", "HK", "US"):
+        for code, a in _pack_index(mkt).items():
+            if a.get("id") in seen:
+                continue
+            aa = dict(a)
+            aa["raw_stale"] = is_stale(aa, load_raw(mkt, code))
+            out.append(aa)
     return out
 
 
