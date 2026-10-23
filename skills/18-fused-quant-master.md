@@ -19,8 +19,8 @@ commands:
   - ask X --evidence
   - intel X
   - recommend --user me
-version: 98
-updated_at: 2026-10-23T23:09:13
+version: 99
+updated_at: 2026-10-23T23:24:01
 ---
 
 # Playbook
@@ -380,3 +380,4 @@ Output shape (hard rules):
 - [2026-10-23 22:56] (ai) 2026-10-23持仓偏见审计:持仓期蒸馏的profile分数系统性虚高5-8分(吉比特/波司登/江南布衣/ADBE/HRMY/珀莱雅/海底捞/ZM/FUTU全部重锚),教训=蒸馏最好在建仓前完成,持仓后蒸馏必须对照跨市场锚(长电86/茅台74/腾讯80/V88/MA87/NVDA95)校准;同主体多股份线(-R柜台/A+H/Alphabet股类)分数必须对齐主线
 - [2026-10-23 23:04] (ai) 2026-10-23全扫发现:战役小市值profile存在文化分模板化漂移(约130个C_GT_B,c=52-58集群配b=40-55),极端gap已修正(IHT/摩尔线程/玖龙/宏达/三钢/瑞安/汉钟/同程/MSFT共9个);纪律重申:文化分>商业分+5时,文化论证必须引用至少一条带日期、第三方可核验的行为事件,否则压回商业分+5以内;存量123个靠90天TTL季度复审消化
 - [2026-10-23 23:09] (ai) 2026-10-23银行/公用公允尺(用户授权:不许结构性豁免):银行商业分天花板≈70(最优零售特许招行),政策性四大/邮储统一62档(让利角色=利润政策上缴非股东租金);公用事业以长电86(永久水电)为天花板,周期分母(神华64)/重谈风险专营(粤海64)/补贴依赖BOT(瀚蓝60)逐级递减;A/H同主体必须同分
+- [2026-10-23 23:24] (ai) 2026-10-23塔→profile通道上线(用户授权,先top20+持仓76个):每核bricks字段{aligned,violated}双向引用——银行家族统一标dcf-universal-law=violated(FCF未定义,三件套替代)+market-prices-dividends-4x=aligned;周期股引average-earnings-power;文化分统一引benfen-motive-purity+master-duan;profile 2.0全体接入待办

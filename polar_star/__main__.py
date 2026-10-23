@@ -2140,6 +2140,13 @@ def cmd_profile(args) -> int:
                 print(f"culture  {c.get('score')}: {c.get('argument')}")
                 if (a.get("dcf") or {}).get("argument"):
                     print(f"dcf      : {a['dcf']['argument']}")
+                for _core, _label in (("business", "business"),
+                                      ("culture", "culture"), ("dcf", "dcf")):
+                    _bk = ((a.get(_core) or {}).get("bricks") or {})
+                    _al, _vi = _bk.get("aligned") or [], _bk.get("violated") or []
+                    if _al or _vi:
+                        print(f"bricks({_label}): aligned={','.join(_al) or '-'}"
+                              f" violated={','.join(_vi) or '-'}")
                 if a.get("verdict"):
                     print(f"verdict  : {a['verdict']}")
             else:

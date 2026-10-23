@@ -238,6 +238,7 @@ def assess(market: str, code: str, name: str = "",
            founder_led=None, benfen: list | None = None,
            business_arg: str = "", culture_arg: str = "",
            dcf_arg: str = "", verdict: str = "",
+           bricks: dict | None = None,
            agent: str | None = None) -> dict:
     """Write the AI's distillation for one company.
 
@@ -245,6 +246,13 @@ def assess(market: str, code: str, name: str = "",
     without any score is just notes — keep those in the analysis prose).
     When a raw file exists the assessment pins its hash/fetch time, so a
     later re-fetch with changed content marks the distillation stale.
+
+    ``bricks`` (user mandate 2026-10-23, tower→profile channel) cites the
+    tower bricks each core leans on or breaks:
+    ``{"business": {"aligned": [...], "violated": [...]}, ...}`` —
+    aligned = the brick's pattern/law supports the reading; violated =
+    the company breaks the brick's discipline (e.g. banks mark
+    dcf-universal-law violated: FCF is undefined, the trio replaces it).
     """
     b = _check_score(business_score, "business_score")
     c = _check_score(culture_score, "culture_score")
@@ -275,6 +283,14 @@ def assess(market: str, code: str, name: str = "",
         "dcf": {"argument": dcf_arg or ""},
         "verdict": verdict or "",
     }
+    if bricks:
+        for _core in ("business", "culture", "dcf"):
+            _spec = bricks.get(_core) or {}
+            _al = [str(x) for x in (_spec.get("aligned") or [])]
+            _vi = [str(x) for x in (_spec.get("violated") or [])]
+            if _al or _vi:
+                assessment[_core]["bricks"] = {"aligned": _al,
+                                               "violated": _vi}
     save_assessment(assessment)
     return assessment
 
