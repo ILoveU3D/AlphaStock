@@ -2149,8 +2149,53 @@ def cmd_profile(args) -> int:
                               f" violated={','.join(_vi) or '-'}")
                 if a.get("verdict"):
                     print(f"verdict  : {a['verdict']}")
+                if a.get("crosscheck"):
+                    _cc = a["crosscheck"]
+                    print(f"crosscheck: {_cc.get('verdict')} "
+                          f"({str(_cc.get('at'))[:10]}) — "
+                          f"{_cc.get('note')}")
             else:
                 print("(not assessed yet — distill with `profile assess`)")
+            return 0
+
+        if args.profile_cmd == "crosscheck":
+            m = _resolve_stock_or_exit(args.stock)
+            if args.consistent or args.diverged:
+                if not args.note:
+                    print("crosscheck verdict requires --note "
+                          "(state WHY they agree or diverge)",
+                          file=_sys.stderr)
+                    return 1
+                rec = prof.record_crosscheck(
+                    m.market, m.code,
+                    "consistent" if args.consistent else "diverged",
+                    args.note)
+                print(f"crosscheck recorded: {rec['verdict']} "
+                      f"({rec['at'][:10]}) on {m.label()}")
+                return 0
+            cc = prof.crosscheck(m.market, m.code)
+            if args.json:
+                _dump_json(cc)
+                return 0
+            p, mo = cc["profile"], cc["model"]
+            print(f"== crosscheck {cc['id']} ==")
+            if p:
+                print(f"[profile {str(p['assessed_at'])[:10]}] "
+                      f"business={p['business_score']} "
+                      f"moat={p['moat_type'] or '-'} "
+                      f"lifecycle={p['machine_lifecycle'] or '-'}")
+                print(f"  arg: {p['business_argument']}")
+            if mo:
+                print(f"[model {str(mo['updated_at'])[:10]}] "
+                      f"worlds=" +
+                      ",".join(f"{w['name']}({w['weight']})"
+                               for w in mo["worlds"]))
+                print(f"  flywheel: {mo['flywheel']}")
+            for h in cc["hints"]:
+                print(f"  [hint] {h}")
+            if p and mo and not cc["hints"]:
+                print("  [hint] no shallow flags — read both texts and "
+                      "adjudicate: --consistent/--diverged --note \"...\"")
             return 0
 
         if args.profile_cmd == "fetch":
@@ -3459,6 +3504,19 @@ def build_parser() -> argparse.ArgumentParser:
         "pack", help="regenerate the git-tracked distribution pack "
                      "(profiles/pack/<MKT>.jsonl, mandate 2026-10-23)")
     ppf_pack.add_argument("--json", action="store_true")
+    ppf_cc = ppf_sub.add_parser(
+        "crosscheck", help="pair model flywheel vs profile business core; "
+                           "the AI adjudicates WHY they diverge "
+                           "(mandate 2026-10-23)")
+    ppf_cc.add_argument("stock")
+    _ccv = ppf_cc.add_mutually_exclusive_group()
+    _ccv.add_argument("--consistent", action="store_true",
+                      help="record verdict: the two writings agree")
+    _ccv.add_argument("--diverged", action="store_true",
+                      help="record verdict: they diverge (note must say why)")
+    ppf_cc.add_argument("--note", default=None,
+                        help="adjudication note (required with a verdict)")
+    ppf_cc.add_argument("--json", action="store_true")
     ppf_assess = ppf_sub.add_parser(
         "assess", help="write the AI distillation (the only writer; "
                        "feeds the culture core via the D3 hook)")

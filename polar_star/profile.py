@@ -239,6 +239,7 @@ def assess(market: str, code: str, name: str = "",
            business_arg: str = "", culture_arg: str = "",
            dcf_arg: str = "", verdict: str = "",
            bricks: dict | None = None,
+           crosscheck: dict | None = None,
            agent: str | None = None) -> dict:
     """Write the AI's distillation for one company.
 
@@ -291,6 +292,15 @@ def assess(market: str, code: str, name: str = "",
             if _al or _vi:
                 assessment[_core]["bricks"] = {"aligned": _al,
                                                "violated": _vi}
+    # crosscheck record survives re-assessment (user mandate 2026-10-23:
+    # model-flywheel vs profile consistency trail must not be silently
+    # dropped when the profile is rewritten).
+    if crosscheck is not None:
+        assessment["crosscheck"] = dict(crosscheck)
+    else:
+        _prev = load_assessment(market, code) or {}
+        if _prev.get("crosscheck"):
+            assessment["crosscheck"] = _prev["crosscheck"]
     save_assessment(assessment)
     return assessment
 
@@ -323,6 +333,118 @@ def is_stale(assessment: dict, raw: dict | None) -> bool:
         return False
     pinned = assessment.get("raw_hash")
     return bool(pinned) and pinned != raw.get("content_hash")
+
+
+# ---------------------------------------------------------------------------
+# Model x profile crosscheck (user mandate 2026-10-23)
+# ---------------------------------------------------------------------------
+# The model dossier's business_flywheel and the profile's business core are
+# two independent writings of the same fact. The machine pairs them and
+# raises shallow hint flags; the AI adjudicates WHY they diverge and records
+# the verdict on the profile (crosscheck field, survives re-assessment).
+
+def crosscheck(market: str, code: str) -> dict:
+    """Pair the profile business core with the model dossier for one stock.
+
+    Returns both texts plus deterministic hint flags (freshness, moat-token
+    absence, lifecycle tone clash). Hints are shallow on purpose — the
+    verdict ("consistent" / "diverged" + why) is the AI's, recorded via
+    record_crosscheck()."""
+    from .model import archive as _march, store as _mstore
+    a = load_assessment(market, code)
+    raw = load_raw(market, code)
+    m = _march.load_archive(market, code)
+    res = _mstore.load_result(market, code)
+    hist = _mstore.load_history(market, code)
+    hints = []
+    if a is None:
+        hints.append("PROFILE_MISSING: no distillation — nothing to check")
+    if m is None:
+        hints.append("MODEL_MISSING: no dossier — nothing to check")
+    if a is not None and is_stale(a, raw):
+        hints.append("PROFILE_STALE: distillation STALE/EXPIRED — "
+                     "re-distill before judging consistency")
+    if m is not None and _mstore.is_stale(res, hist):
+        hints.append("MODEL_STALE: valuation layer STALE/EXPIRED "
+                     "(30-day TTL / new reporting period) — rebuild first")
+    if a is not None and m is not None:
+        moat = ((a.get("business") or {}).get("moat_type") or "").strip()
+        fly = ((m.get("business_flywheel") or {}).get("text") or "")
+        if moat and fly:
+            import re as _re
+            probes = []
+            for piece in _re.split(r"[^0-9A-Za-z一-鿿]+", moat):
+                if not piece:
+                    continue
+                ascii_bits = _re.findall(r"[A-Za-z0-9]+", piece)
+                cjk = _re.sub(r"[A-Za-z0-9]+", "", piece)
+                probes.extend(b for b in ascii_bits if len(b) >= 2)
+                # CJK compounds don't tokenize on spaces — probe with
+                # sliding 2-grams so 制作人体系 matches 制作人培养体系
+                probes.extend(cjk[i:i + 2] for i in range(len(cjk) - 1))
+            if probes and not any(p in fly for p in probes):
+                hints.append(
+                    "MOAT_TOKEN_ABSENT: profile moat_type "
+                    f"('{moat}') shares no vocabulary with the model "
+                    "flywheel — same machine named two different ways, "
+                    "or genuine divergence; adjudicate")
+        life = ((a.get("business") or {}).get("machine_lifecycle") or "")
+        mature_kw = ("成熟", "年金", "收租", "衰退", "晚期")
+        growth_kw = ("成长", "扩张", "渗透", "早期", "放量")
+        life_m = any(k in life for k in mature_kw)
+        life_g = any(k in life for k in growth_kw)
+        fly_m = any(k in fly for k in mature_kw)
+        fly_g = any(k in fly for k in growth_kw)
+        if life and ((life_m and fly_g and not fly_m)
+                     or (life_g and fly_m and not fly_g)):
+            hints.append(
+                f"LIFECYCLE_TONE_CLASH: profile lifecycle='{life}' but the "
+                "flywheel reads the opposite phase — adjudicate")
+    return {
+        "id": f"{market}:{code}",
+        "profile": None if a is None else {
+            "assessed_at": a.get("assessed_at"),
+            "business_score": (a.get("business") or {}).get("score"),
+            "moat_type": (a.get("business") or {}).get("moat_type"),
+            "machine_lifecycle":
+                (a.get("business") or {}).get("machine_lifecycle"),
+            "business_argument":
+                (a.get("business") or {}).get("argument"),
+            "bricks": (a.get("business") or {}).get("bricks"),
+            "crosscheck": a.get("crosscheck"),
+        },
+        "model": None if m is None else {
+            "updated_at": m.get("updated_at"),
+            "flywheel": (m.get("business_flywheel") or {}).get("text"),
+            "culture_vision": (m.get("culture") or {}).get("vision"),
+            "reverse_dcf_implied":
+                (m.get("reverse_dcf") or {}).get("implied_world"),
+            "worlds": [{"name": w.get("name"), "weight": w.get("weight")}
+                       for w in (m.get("world_narratives") or [])],
+        },
+        "hints": hints,
+    }
+
+
+def record_crosscheck(market: str, code: str, verdict: str,
+                      note: str, agent: str | None = None) -> dict:
+    """Record the AI's consistency verdict on the profile (mandate
+    2026-10-23): verdict ∈ consistent|diverged; note must state WHY the
+    two writings differ (or that they don't)."""
+    if verdict not in ("consistent", "diverged"):
+        raise ValueError("verdict must be 'consistent' or 'diverged'")
+    a = load_assessment(market, code)
+    if a is None:
+        raise ValueError(f"no profile assessment for {market}:{code}")
+    from .model import archive as _march
+    m = _march.load_archive(market, code)
+    a["crosscheck"] = {
+        "at": _now(), "verdict": verdict, "note": note,
+        "model_updated_at": (m or {}).get("updated_at"),
+        "agent": agent,
+    }
+    save_assessment(a)
+    return a["crosscheck"]
 
 
 def list_assessments() -> list[dict]:

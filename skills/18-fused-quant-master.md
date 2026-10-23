@@ -19,8 +19,8 @@ commands:
   - ask X --evidence
   - intel X
   - recommend --user me
-version: 100
-updated_at: 2026-10-23T23:36:38
+version: 101
+updated_at: 2026-10-23T23:51:46
 ---
 
 # Playbook
@@ -382,3 +382,4 @@ Output shape (hard rules):
 - [2026-10-23 23:09] (ai) 2026-10-23银行/公用公允尺(用户授权:不许结构性豁免):银行商业分天花板≈70(最优零售特许招行),政策性四大/邮储统一62档(让利角色=利润政策上缴非股东租金);公用事业以长电86(永久水电)为天花板,周期分母(神华64)/重谈风险专营(粤海64)/补贴依赖BOT(瀚蓝60)逐级递减;A/H同主体必须同分
 - [2026-10-23 23:24] (ai) 2026-10-23塔→profile通道上线(用户授权,先top20+持仓76个):每核bricks字段{aligned,violated}双向引用——银行家族统一标dcf-universal-law=violated(FCF未定义,三件套替代)+market-prices-dividends-4x=aligned;周期股引average-earnings-power;文化分统一引benfen-motive-purity+master-duan;profile 2.0全体接入待办
 - [2026-10-23 23:36] (ai) 2026-10-23 profile 2.0战役三点强化(用户授权):①文化评估全员强制且须鲜明,分数按证据级封顶(A级创始人原话/股东信/危机行为=不限,B级年报+新闻≤70,C级纯自述≤45占位),10-18的<5%密度纪律作废由级封顶替代;②反模板化:每论证≥3个带日期专属事实点,同簇必须可区分,区分不出宁可整体降档;③证据:打分前必读财报正文(A=MD&A+分部,US=10-K Item1/7,HK=PDF缺口声明)+网络尽调(创始人访谈/业绩会/诉讼/员工评价),只看简介打分=战役违规;spec=docs/superpowers/specs/2026-10-23-profile-2.0-prompt.md
+- [2026-10-23 23:51] (ai) 2026-10-23 model×profile一致性机制上线(用户授权):profile crosscheck X=机器配对飞轮vs商业核+浅层信号旗(新鲜度/护城河词汇缺失/生命周期基调冲突),AI裁决并留痕(--consistent/--diverged --note 必须写为什么);crosscheck记录在profile上,重蒸馏自动保留;2.0战役步骤4强制:有model的公司重写后必须过crosscheck;首例=吉比特consistent(同一台机器的摘要与展开)
