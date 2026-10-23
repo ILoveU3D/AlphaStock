@@ -19,8 +19,8 @@ commands:
   - ask X --evidence
   - intel X
   - recommend --user me
-version: 95
-updated_at: 2026-10-23T22:46:32
+version: 96
+updated_at: 2026-10-23T22:56:34
 ---
 
 # Playbook
@@ -377,3 +377,4 @@ Output shape (hard rules):
 - [2026-10-23 17:16] (ai) profile campaign 2026-10-23 晚间终态复核（操作员独立验证，非转述）：全量 raw 扫描（tmp/verify_campaign_terminal.py）确认 13,617 份有正文 raw 全部持有活体评估、队内可蒸 0 家、20261023 快照 0 家新上市缺席队列、stale=0、watchlist 3 行与用户 me 全部 4 持仓（688795/ZM/HRMY/03998）画像全覆盖——战役结构性完成于 13,641 评估（队内 13,632/13,755=99.11%）。另记操作怪癖：PowerShell 的 > 重定向写 UTF-16 BOM，后续 json.load(utf-8) 全炸；用 tmp/dump_profile_to_file.py 包装脚本让 Python 自己写 UTF-8 无 BOM 文件（本会话已建）。
 - [2026-10-23 22:24] (ai) 用户授权2026-10-23: L1池深评名单若遇未建模标的,当场建模后再裁决(禁止以无模型为由跳过),模型满30天即过期(store.MODEL_TTL_DAYS)视同STALE,过期标的重建前不给判决
 - [2026-10-23 22:46] (ai) 用户授权2026-10-23: profile蒸馏有效期90天(profile.PROFILE_TTL_DAYS,对齐财报季),过期视同STALE掉出文化核;公司基本面变化(新财报/重大公告)时择机重蒸馏对应profile,不等到期;每次assess后跑profile pack刷新git追踪的发行包(profiles/pack/<MKT>.jsonl随代码上库,散文件仍本地)
+- [2026-10-23 22:56] (ai) 2026-10-23持仓偏见审计:持仓期蒸馏的profile分数系统性虚高5-8分(吉比特/波司登/江南布衣/ADBE/HRMY/珀莱雅/海底捞/ZM/FUTU全部重锚),教训=蒸馏最好在建仓前完成,持仓后蒸馏必须对照跨市场锚(长电86/茅台74/腾讯80/V88/MA87/NVDA95)校准;同主体多股份线(-R柜台/A+H/Alphabet股类)分数必须对齐主线
